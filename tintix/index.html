@@ -46,7 +46,6 @@
 
   <a class="btn ios pronto" id="btnIos" href="#"> Descargar para iPhone <span class="chip" id="chipIos">pronto</span></a>
   <a class="btn android pronto" id="btnAnd" href="#">▶ Descargar para Android <span class="chip" id="chipAnd">pronto</span></a>
-  <a class="btn jugar" id="btnApk" href="descargar/">📥 Versión de prueba (APK)</a>
 
   <div class="redes">
     <a href="https://www.instagram.com/dmith.builds" target="_blank" rel="noopener">Instagram</a>
@@ -88,7 +87,6 @@
   if (directo && location.hash !== '#quedate') location.replace(directo);
 
   // en computadora no tiene sentido ofrecer el APK
-  if (!esAndroid) document.getElementById('btnApk').style.display = 'none';
 </script>
 </body>
 </html>
