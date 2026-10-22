@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Boxeo en Casa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --tinta: #2a2238; --crema: #fff8ec; --amarillo: #ffd23f; --rojo: #ff4d6d; --verde: #3ec8a0; --azul: #4f8fff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: #1b1526; color: var(--crema); font-family: 'Baloo 2', system-ui, sans-serif; overflow: hidden; user-select: none; -webkit-user-select: none; touch-action: none; }
+  video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: .5; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
+  .hud { position: fixed; top: max(8px, env(safe-area-inset-top)); left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; pointer-events: none; z-index: 3; }
+  .pill { background: var(--crema); color: var(--tinta); border: 3px solid var(--tinta); border-radius: 14px; box-shadow: 0 3px 0 var(--tinta); padding: 1px 12px; font-weight: 800; font-size: 15px; line-height: 1.55; white-space: nowrap; }
+  .pill small { font-size: 11px; opacity: .65; letter-spacing: 1px; margin-right: 4px; }
+  .pill.grande { font-size: 24px; padding: 0 14px; }
+  .pill.reloj { background: var(--amarillo); }
+  .col { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .col.der { align-items: flex-end; }
+  #aviso { position: fixed; left: 50%; top: 38%; transform: translate(-50%, -50%); z-index: 4; text-align: center; pointer-events: none; font-weight: 800; font-size: 64px; line-height: .9; color: var(--amarillo); -webkit-text-stroke: 2.5px var(--tinta); paint-order: stroke fill; text-shadow: 4px 5px 0 var(--tinta); letter-spacing: 1px; }
+  #aviso small { display: block; font-size: 22px; color: var(--crema); -webkit-text-stroke: 1.5px var(--tinta); margin-top: 8px; }
+  .capa { position: fixed; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; padding: 18px;
+    background: radial-gradient(circle, rgba(255,210,63,.18) 1.5px, transparent 2px) 0 0/12px 12px, repeating-conic-gradient(from 0deg at 50% 45%, #5a1f33 0 7deg, #2a1424 7deg 16deg); }
+  .capa[hidden] { display: none; }
+  .cartel { width: min(480px, 100%); max-height: 100%; overflow: auto; background: var(--crema); color: var(--tinta); border: 4px solid var(--tinta); border-radius: 22px; box-shadow: 0 7px 0 var(--tinta); padding: 16px 20px 18px; text-align: center; }
+  .cartel h1 { font-size: 40px; line-height: .92; font-weight: 800; color: var(--rojo); -webkit-text-stroke: 1.5px var(--tinta); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--tinta); letter-spacing: 1px; }
+  .cartel h1 span { color: var(--amarillo); display: block; }
+  .cartel ul { text-align: left; margin: 12px 4px 14px 20px; font-weight: 600; font-size: 15px; line-height: 1.3; }
+  .cartel li { margin-bottom: 4px; }
+  .btn { display: inline-block; font: 800 22px/1 'Baloo 2', system-ui; color: #fff; background: var(--rojo); border: 4px solid var(--tinta); border-radius: 16px; box-shadow: 0 5px 0 var(--tinta); padding: 12px 26px 8px; cursor: pointer; letter-spacing: 1px; margin: 4px; }
+  .btn.am { background: var(--amarillo); color: var(--tinta); }
+  .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--tinta); }
+  .chico { margin-top: 8px; font-size: 12px; opacity: .7; font-weight: 600; }
+  #error { color: var(--rojo); font-weight: 800; margin-top: 8px; font-size: 14px; }
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 12px 0 14px; }
+  .stats div { background: #fff; border: 3px solid var(--tinta); border-radius: 14px; padding: 4px 6px 2px; }
+  .stats b { display: block; font-size: 28px; line-height: 1; color: var(--rojo); }
+  .stats small { font-weight: 800; font-size: 11px; letter-spacing: 1px; opacity: .7; }
+  .nivel { display: flex; gap: 6px; justify-content: center; margin: 4px 0 12px; }
+  .nivel button { font: 800 14px/1 'Baloo 2', system-ui; border: 3px solid var(--tinta); border-radius: 12px; background: #fff; color: var(--tinta); padding: 8px 12px 5px; cursor: pointer; box-shadow: 0 3px 0 var(--tinta); }
+  .nivel button.sel { background: var(--amarillo); }
+</style>
+</head>
+<body>
+<video id="video" playsinline muted></video>
+<canvas id="lienzo"></canvas>
+
+<div class="hud">
+  <div class="col"><div class="pill grande" id="puntos">0</div><div class="pill"><small>COMBO</small><span id="combo">0</span></div></div>
+  <div class="col der"><div class="pill grande reloj" id="reloj">1:30</div><div class="pill"><small>KCAL</small><span id="kcal">0</span></div></div>
+</div>
+<div id="aviso"></div>
+
+<div class="capa" id="inicio">
+  <div class="cartel">
+    <h1>BOXEO<span>EN CASA</span></h1>
+    <ul>
+      <li>Apoyá el teléfono parado a unos <b>2 metros</b>, con la cámara de adelante. Parate: se te tiene que ver de la cabeza a las rodillas.</li>
+      <li><b>Golpeá</b> las bolsas cuando el aro se cierra: justo a tiempo es <b>PERFECTO</b>.</li>
+      <li>Cuando aparece una barra: <b>agachate</b> o <b>tirate a un costado</b>.</li>
+    </ul>
+    <div class="nivel" id="nivel"><button data-n="0">SUAVE</button><button data-n="1" class="sel">MEDIO</button><button data-n="2">FUERTE</button></div>
+    <div class="btn" id="btnEmpezar">EMPEZAR ROUND</div>
+    <div id="error"></div>
+    <div class="chico">Prototipo · todo se procesa en el teléfono, no se graba ni se manda nada</div>
+  </div>
+</div>
+
+<div class="capa" id="fin" hidden>
+  <div class="cartel">
+    <h1>¡FIN DEL<span>ROUND!</span></h1>
+    <div class="stats">
+      <div><b id="fPuntos">0</b><small>PUNTOS</small></div>
+      <div><b id="fGolpes">0</b><small>GOLPES</small></div>
+      <div><b id="fPrecision">0%</b><small>PRECISIÓN</small></div>
+      <div><b id="fKcal">0</b><small>KCAL (APROX.)</small></div>
+    </div>
+    <div class="btn" id="btnOtra">OTRO ROUND</div>
+  </div>
+</div>
+
+<script type="module">
+import { FilesetResolver, PoseLandmarker } from '../bateria/vision_bundle.mjs';
+const $ = id => document.getElementById(id);
+const video = $('video'), cv = $('lienzo'), ctx = cv.getContext('2d');
+let W = 0, H = 0;
+function medir() { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+addEventListener('resize', medir); medir();
+
+// ───────── NIVELES ─────────
+const NIVELES = [
+  { bpm: 92,  cada: 2, cierre: 1.25, barras: 16 },   // SUAVE: una bolsa cada 2 tiempos
+  { bpm: 108, cada: 1, cierre: 1.05, barras: 12 },   // MEDIO
+  { bpm: 124, cada: 1, cierre: .9,  barras: 8 },     // FUERTE
+];
+let NV = NIVELES[1];
+$('nivel').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$('nivel').children].forEach(x => x.classList.toggle('sel', x === b)); NV = NIVELES[+b.dataset.n]; });
+
+// ───────── SONIDO: base rítmica y golpes, fabricados al empezar ─────────
+let ac = null; const SON = {};
+async function fabricar() {
+  const R = 44100;
+  const hacer = async (dur, f) => { const o = new OfflineAudioContext(1, Math.ceil(dur * R), R); f(o); return o.startRendering(); };
+  const ruido = (o, dur) => { const b = o.createBuffer(1, Math.ceil(dur * R), R), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; const s = o.createBufferSource(); s.buffer = b; return s; };
+  const env = (g, pico, caida, t0 = 0) => { g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(pico, t0 + .003); g.gain.exponentialRampToValueAtTime(.0001, t0 + caida); };
+  const tono = (o, f0, f1, caida, vol, tipo = 'sine', t0 = 0) => { const s = o.createOscillator(), g = o.createGain(); s.type = tipo; s.frequency.setValueAtTime(f0, t0); s.frequency.exponentialRampToValueAtTime(f1, t0 + caida * .6); env(g, vol, caida, t0); s.connect(g).connect(o.destination); s.start(t0); s.stop(t0 + caida + .05); };
+  const filt = (o, tf, f, q, caida, vol, dur, t0 = 0) => { const s = ruido(o, dur), fl = o.createBiquadFilter(), g = o.createGain(); fl.type = tf; fl.frequency.value = f; fl.Q.value = q; env(g, vol, caida, t0); s.connect(fl).connect(g).connect(o.destination); s.start(t0); };
+  SON.bombo = await hacer(.5, o => { tono(o, 150, 45, .4, .9); });
+  SON.caja = await hacer(.3, o => { tono(o, 220, 170, .1, .35, 'triangle'); filt(o, 'bandpass', 2000, .6, .2, .6, .3); });
+  SON.hh = await hacer(.08, o => filt(o, 'highpass', 8000, .8, .05, .3, .08));
+  SON.bajo = await hacer(.4, o => tono(o, 55, 54, .35, .5, 'sawtooth'));
+  SON.pum = await hacer(.35, o => { tono(o, 120, 50, .22, 1); filt(o, 'lowpass', 1200, .8, .12, .9, .2); });
+  SON.perfecto = await hacer(.5, o => { tono(o, 880, 880, .35, .35, 'triangle'); tono(o, 1320, 1320, .35, .25, 'triangle', .07); });
+  SON.falla = await hacer(.3, o => tono(o, 180, 90, .25, .3, 'square'));
+  SON.esquiva = await hacer(.4, o => filt(o, 'bandpass', 900, .8, .3, .6, .4));
+  SON.campana = await hacer(1.6, o => { [740, 1110, 1660, 2490].forEach((f, i) => tono(o, f, f, 1.4, .3 / (i + 1), 'sine')); });
+}
+function sonar(n, vol = 1, cuando = 0) { const b = SON[n]; if (!b || !ac) return; const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = b; g.gain.value = vol; s.connect(g).connect(ac.destination); s.start(cuando || 0); }
+
+// ───────── CUERPO ─────────
+let pose = null, base = null, cabeza = null, cabezaRef = null, manos = { I: null, D: null }, ultLm = null;
+function aPantalla(p) { const vw = video.videoWidth || 640, vh = video.videoHeight || 480, s = Math.max(W / vw, H / vh); return { x: (W - vw * s) / 2 + (1 - p.x) * vw * s, y: (H - vh * s) / 2 + p.y * vh * s }; }
+const aRel = q => ({ x: (q.x - base.ox) / base.u, y: (q.y - base.oy) / base.u });
+const aPx = r => ({ x: base.ox + r.x * base.u, y: base.oy + r.y * base.u });
+function leerCuerpo(lm, t) {
+  ultLm = lm;
+  const q = i => aPantalla(lm[i]);
+  const hm = { x: (q(11).x + q(12).x) / 2, y: (q(11).y + q(12).y) / 2 }, cm = { x: (q(23).x + q(24).x) / 2, y: (q(23).y + q(24).y) / 2 };
+  const u = Math.max(30, Math.hypot(hm.x - cm.x, hm.y - cm.y));
+  // la escala y el origen se mueven despacio (si te agachás, los blancos no se van con vos)
+  base = base ? { ox: base.ox * .97 + cm.x * .03, oy: base.oy * .985 + cm.y * .015, u: base.u * .985 + u * .015 } : { ox: cm.x, oy: cm.y, u };
+  cabeza = aRel(q(0));
+  if (!JUEGO.activo || !cabezaRef) cabezaRef = cabezaRef ? { x: cabezaRef.x * .95 + cabeza.x * .05, y: cabezaRef.y * .95 + cabeza.y * .05 } : { ...cabeza };
+  for (const [k, w, idx] of [['I', 15, 19], ['D', 16, 20]]) {
+    const a = q(w), b = q(idx), p = aRel({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }), m = manos[k];
+    const v = m ? Math.hypot(p.x - m.p.x, p.y - m.p.y) / Math.max(.008, (t - m.t) / 1000) : 0;
+    manos[k] = { p, t, v: m ? m.v * .4 + v * .6 : 0, prev: m ? m.p : p };
+  }
+}
+
+// ───────── JUEGO ─────────
+const DUR = 90;
+const JUEGO = { activo: false, t0: 0, puntos: 0, combo: 0, golpes: 0, blancos: 0, esquivas: 0, barrasT: 0, kcal: 0, sig: 0, beat: 0 };
+let objs = [], textos = [], ritmoHasta = 0;
+const LUGARES = [[-.62, -1.55], [.62, -1.55], [-.85, -1.05], [.85, -1.05], [-.35, -1.85], [.35, -1.85], [0, -1.25]];
+const FRASES = ['¡POW!', '¡PUM!', '¡ZAS!', '¡BAM!', '¡PAF!'];
+const ahoraAud = () => ac.currentTime;
+
+function agendarRitmo() {   // la música va agendada adelantada en el reloj del audio: no se traba aunque la cámara vaya lenta
+  const spb = 60 / NV.bpm, hasta = ahoraAud() + .25;
+  while (JUEGO.sig < hasta) {
+    const b = JUEGO.beat, t = JUEGO.sig;
+    if (t > JUEGO.fin) break;
+    if (b % 4 === 0 || b % 8 === 6) sonar('bombo', .8, t);
+    if (b % 4 === 2) sonar('caja', .55, t);
+    sonar('hh', b % 2 ? .25 : .4, t); sonar('hh', .18, t + spb / 2);
+    if (b % 2 === 0) sonar('bajo', .3, t);
+    // lo que tiene que pasar en ESTE tiempo aparece antes, para que el aro se cierre justo en el golpe
+    if (b >= 4 && b % NV.cada === 0 && !(b % NV.barras >= NV.barras - 3)) nuevoBlanco(t, b);
+    if (b >= 8 && b % NV.barras === NV.barras - 2) nuevaBarra(t + spb * 2);
+    JUEGO.sig += spb; JUEGO.beat++;
+  }
+}
+let ultLugar = -1;
+function nuevoBlanco(tGolpe, b) {
+  let i; do { i = Math.floor(Math.random() * LUGARES.length); } while (i === ultLugar); ultLugar = i;
+  const [x, y] = LUGARES[i]; JUEGO.blancos++;
+  objs.push({ tipo: 'bolsa', x, y, r: .27, tGolpe, tAp: tGolpe - NV.cierre, estado: 'vivo' });
+}
+function nuevaBarra(tLlega) {
+  const tipo = Math.random() < .5 ? 'agachate' : (Math.random() < .5 ? 'izq' : 'der');
+  objs.push({ tipo: 'barra', clase: tipo, tLlega, tAp: tLlega - 2.2, estado: 'vivo' });
+  JUEGO.barrasT++;
+}
+
+function frase(txt, x, y, col = '#ffd23f', tam = 1) { textos.push({ txt, x, y, col, tam, t: performance.now() }); }
+function aviso(html, ms = 900) { $('aviso').innerHTML = html; clearTimeout(aviso.t); aviso.t = setTimeout(() => $('aviso').innerHTML = '', ms); }
+
+function actualizar() {
+  if (!JUEGO.activo) return;
+  agendarRitmo();
+  const ta = ahoraAud(), resto = Math.max(0, JUEGO.fin - ta);
+  $('reloj').textContent = Math.floor(resto / 60) + ':' + String(Math.floor(resto % 60)).padStart(2, '0');
+  // calorías aproximadas: boxeo con bolsa ~ 7,8 MET para 70 kg, más por cada golpe y cada esquive
+  JUEGO.kcal = (ta - JUEGO.t0) / 60 * 7.8 * 70 / 60 * 1.05 + JUEGO.golpes * .12 + JUEGO.esquivas * .3;
+  $('kcal').textContent = Math.round(JUEGO.kcal);
+  for (const o of objs) {
+    if (o.estado !== 'vivo') continue;
+    if (o.tipo === 'bolsa') {
+      const dt = ta - o.tGolpe;
+      if (dt > -.45 && base) {
+        for (const k of ['I', 'D']) {
+          const m = manos[k]; if (!m) continue;
+          const d = Math.hypot(m.p.x - o.x, m.p.y - o.y);
+          if (d < o.r * 1.25 && m.v > 1.6) {   // la mano llega rápido a la bolsa = golpe
+            o.estado = 'golpe'; o.tFin = performance.now(); JUEGO.golpes++; JUEGO.combo++;
+            const perf = Math.abs(dt) < .14, pts = (perf ? 300 : 100) * Math.min(8, 1 + Math.floor(JUEGO.combo / 5));
+            JUEGO.puntos += pts; sonar('pum', Math.min(1, .5 + m.v / 8)); if (perf) sonar('perfecto', .6);
+            const p = aPx(o); frase(perf ? 'PERFECTO' : FRASES[Math.floor(Math.random() * FRASES.length)], p.x, p.y - o.r * base.u, perf ? '#3ec8a0' : '#ffd23f', perf ? 1.15 : 1);
+            break;
+          }
+        }
+      }
+      if (o.estado === 'vivo' && dt > .4) { o.estado = 'falla'; o.tFin = performance.now(); JUEGO.combo = 0; sonar('falla', .4); }
+    } else if (o.tipo === 'barra') {
+      if (ta >= o.tLlega) {
+        const dy = cabeza && cabezaRef ? cabeza.y - cabezaRef.y : 0, dx = cabeza && cabezaRef ? cabeza.x - cabezaRef.x : 0;
+        const ok = o.clase === 'agachate' ? dy > .32 : o.clase === 'izq' ? dx > .3 : dx < -.3;   // barra a la izquierda: hay que irse a la derecha
+        o.estado = ok ? 'golpe' : 'falla'; o.tFin = performance.now();
+        if (ok) { JUEGO.esquivas++; JUEGO.puntos += 250; sonar('esquiva', .8); aviso('¡ESQUIVADO!', 700); }
+        else { JUEGO.combo = 0; sonar('falla', .6); aviso('¡TE DIERON!', 700); }
+      }
+    }
+  }
+  objs = objs.filter(o => o.estado === 'vivo' || performance.now() - o.tFin < 400);
+  $('puntos').textContent = JUEGO.puntos.toLocaleString('es-AR'); $('combo').textContent = JUEGO.combo;
+  if (ta >= JUEGO.fin + .6) terminar();
+}
+
+function terminar() {
+  JUEGO.activo = false; sonar('campana', .8);
+  $('fPuntos').textContent = JUEGO.puntos.toLocaleString('es-AR'); $('fGolpes').textContent = JUEGO.golpes;
+  $('fPrecision').textContent = JUEGO.blancos ? Math.round(JUEGO.golpes / JUEGO.blancos * 100) + '%' : '0%';
+  $('fKcal').textContent = Math.round(JUEGO.kcal);
+  setTimeout(() => $('fin').hidden = false, 900);
+}
+
+function arrancarRound() {
+  $('fin').hidden = true; $('inicio').hidden = true;
+  Object.assign(JUEGO, { activo: false, puntos: 0, combo: 0, golpes: 0, blancos: 0, esquivas: 0, barrasT: 0, kcal: 0, beat: 0 });
+  objs = []; textos = []; cabezaRef = null;
+  let n = 3; aviso('EN GUARDIA<small>quedate quieto un segundo</small>', 1400);
+  const paso = () => {
+    if (n > 0) { aviso(String(n), 800); sonar('hh', .6); n--; setTimeout(paso, 800); return; }
+    aviso('¡A PELEAR!', 800); sonar('campana', .7);
+    JUEGO.t0 = ahoraAud(); JUEGO.sig = JUEGO.t0 + .1; JUEGO.fin = JUEGO.t0 + DUR; JUEGO.activo = true;
+  };
+  setTimeout(paso, 1500);
+}
+
+// ───────── ARRANQUE ─────────
+async function empezar() {
+  $('error').textContent = ''; $('btnEmpezar').textContent = 'CARGANDO…';
+  try {
+    if (!ac) {
+      ac = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' }); await ac.resume(); await fabricar();
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 60 } } });
+      video.srcObject = stream; await video.play();
+      const vision = await FilesetResolver.forVisionTasks('../bateria/wasm');
+      const crear = d => PoseLandmarker.createFromOptions(vision, { baseOptions: { modelAssetPath: '../bateria/pose_landmarker_lite.task', delegate: d }, runningMode: 'VIDEO', numPoses: 1 });
+      try { pose = await crear('GPU'); } catch (e) { pose = await crear('CPU'); }
+      try { await navigator.wakeLock?.request('screen'); } catch (e) {}
+      bucle();
+    }
+    $('btnEmpezar').textContent = 'EMPEZAR ROUND';
+    arrancarRound();
+  } catch (e) {
+    $('btnEmpezar').textContent = 'EMPEZAR ROUND';
+    $('error').textContent = /Permission|NotAllowed/i.test(e && (e.name + e.message)) ? 'Hay que dar permiso a la cámara para jugar.' : 'No se pudo arrancar: ' + (e && e.message || e);
+  }
+}
+$('btnEmpezar').addEventListener('click', empezar);
+$('btnOtra').addEventListener('click', arrancarRound);
+
+let ultT = 0;
+function bucle() {
+  const t = performance.now();
+  if (video.readyState >= 2 && t - ultT > 5) { ultT = t; const r = pose.detectForVideo(video, t), lm = r.landmarks && r.landmarks[0]; if (lm) leerCuerpo(lm, t); }
+  actualizar(); dibujar();
+  requestAnimationFrame(bucle);
+}
+
+// ───────── DIBUJO estilo cómic ─────────
+function estrella(x, y, r, puntas, col) { ctx.beginPath(); for (let i = 0; i < puntas * 2; i++) { const a = i * Math.PI / puntas - Math.PI / 2, rr = i % 2 ? r * .55 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.stroke(); }
+const HUESOS = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[24,26]];
+function dibujar() {
+  ctx.clearRect(0, 0, W, H);
+  const now = performance.now(), ta = ac ? ahoraAud() : 0;
+  if (ultLm) {   // esqueleto suave
+    const q = ultLm.map(aPantalla); ctx.lineCap = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(255,248,236,.55)';
+    for (const [a, b] of HUESOS) { ctx.beginPath(); ctx.moveTo(q[a].x, q[a].y); ctx.lineTo(q[b].x, q[b].y); ctx.stroke(); }
+  }
+  if (base) {
+    for (const o of objs) {
+      if (o.tipo === 'barra') {
+        const prog = Math.min(1, Math.max(0, (ta - o.tAp) / (o.tLlega - o.tAp))), a = o.estado === 'vivo' ? .35 + prog * .6 : Math.max(0, 1 - (now - o.tFin) / 400);
+        ctx.save(); ctx.globalAlpha = a; ctx.lineWidth = 5; ctx.strokeStyle = '#2a2238';
+        const grosor = (.12 + prog * .25) * base.u;
+        if (o.clase === 'agachate') { const y = aPx({ x: 0, y: (cabezaRef ? cabezaRef.y : -1.4) }).y; ctx.fillStyle = o.estado === 'falla' ? '#ff4d6d' : '#ff8a3d'; ctx.fillRect(0, y - grosor / 2, W, grosor); ctx.strokeRect(-5, y - grosor / 2, W + 10, grosor); }
+        else {   // pared que entra por un costado hasta donde está tu cabeza: hay que salir hacia el otro lado
+          const hx = aPx({ x: (cabezaRef ? cabezaRef.x : 0) + (o.clase === 'izq' ? .15 : -.15), y: 0 }).x;
+          const x0 = o.clase === 'izq' ? 0 : hx, x1 = o.clase === 'izq' ? hx : W;
+          ctx.globalAlpha = a * .55; ctx.fillStyle = o.estado === 'falla' ? '#ff4d6d' : '#ff8a3d'; ctx.fillRect(x0, 0, x1 - x0, H);
+          ctx.globalAlpha = a; ctx.fillStyle = '#ff8a3d'; const bx = o.clase === 'izq' ? x1 - grosor : x0; ctx.fillRect(bx, 0, grosor, H); ctx.strokeRect(bx, -5, grosor, H + 10);
+        }
+        ctx.restore();
+        if (o.estado === 'vivo') {
+          const txt = o.clase === 'agachate' ? '¡AGACHATE!' : o.clase === 'izq' ? '¡A LA DERECHA!' : '¡A LA IZQUIERDA!';
+          ctx.save(); ctx.font = `800 ${Math.round(28 + prog * 14)}px "Baloo 2", system-ui`; ctx.textAlign = 'center'; ctx.lineWidth = 6; ctx.strokeStyle = '#2a2238'; ctx.fillStyle = '#ffd23f';
+          ctx.strokeText(txt, W / 2, H * .82); ctx.fillText(txt, W / 2, H * .82); ctx.restore();
+        }
+        continue;
+      }
+      const p = aPx(o), r = o.r * base.u;
+      if (o.estado === 'vivo') {
+        const prog = Math.min(1, Math.max(0, (ta - o.tAp) / (o.tGolpe - o.tAp)));
+        // aro que se cierra hasta el borde de la bolsa justo en el tiempo del golpe
+        ctx.beginPath(); ctx.arc(p.x, p.y, r * (1 + (1 - prog) * 1.6), 0, Math.PI * 2); ctx.lineWidth = 4; ctx.strokeStyle = prog > .86 ? '#3ec8a0' : '#fff8ec'; ctx.stroke();
+        ctx.globalAlpha = .4 + prog * .6;
+        ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI * 2); ctx.fillStyle = '#ff4d6d'; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = '#2a2238'; ctx.stroke();
+        ctx.beginPath(); ctx.arc(p.x, p.y, r * .55, 0, Math.PI * 2); ctx.fillStyle = '#fff8ec'; ctx.fill(); ctx.lineWidth = 3; ctx.stroke();
+        ctx.beginPath(); ctx.arc(p.x, p.y, r * .2, 0, Math.PI * 2); ctx.fillStyle = '#ff4d6d'; ctx.fill(); ctx.stroke();
+        ctx.globalAlpha = 1;
+      } else {
+        const k = (now - o.tFin) / 400; ctx.globalAlpha = Math.max(0, 1 - k);
+        if (o.estado === 'golpe') estrella(p.x, p.y, r * (1.1 + k * .8), 9, '#ffd23f');
+        else { ctx.beginPath(); ctx.arc(p.x, p.y, r * (1 - k * .5), 0, Math.PI * 2); ctx.fillStyle = '#6b5f7a'; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.stroke(); }
+        ctx.globalAlpha = 1;
+      }
+    }
+    // guantes en las manos
+    for (const k of ['I', 'D']) { const m = manos[k]; if (!m) continue; const p = aPx(m.p); ctx.beginPath(); ctx.arc(p.x, p.y, .16 * base.u, 0, Math.PI * 2); ctx.fillStyle = k === 'I' ? '#4f8fff' : '#ff4d6d'; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.stroke(); }
+  }
+  textos = textos.filter(x => now - x.t < 700);
+  for (const x of textos) { const k = (now - x.t) / 700; ctx.save(); ctx.globalAlpha = 1 - k * k; ctx.font = `800 ${Math.round(40 * x.tam * (1 + k * .3))}px "Baloo 2", system-ui`; ctx.textAlign = 'center'; ctx.lineWidth = 7; ctx.strokeStyle = '#2a2238'; ctx.fillStyle = x.col; ctx.strokeText(x.txt, x.x, x.y - k * 40); ctx.fillText(x.txt, x.x, x.y - k * 40); ctx.restore(); }
+}
+window.__t = { JUEGO, NIVELES, get objs() { return objs; }, set manoD(v) { manos.D = v; }, set base(v) { base = v; }, get ta() { return ac ? ac.currentTime : 0; } };
+</script>
+</body>
+</html>
