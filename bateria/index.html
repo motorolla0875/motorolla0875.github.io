@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Batería en el Aire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --tinta: #2a2238; --crema: #fff8ec; --amarillo: #ffd23f; --rojo: #ff4d6d; --verde: #3ec8a0; --violeta: #6b4fd8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: #1b1526; color: var(--crema); font-family: 'Baloo 2', system-ui, sans-serif; overflow: hidden; user-select: none; -webkit-user-select: none; touch-action: none; }
+  #escena { position: fixed; inset: 0; }
+  video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); opacity: .55; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* barra de arriba */
+  .barra { position: fixed; top: max(8px, env(safe-area-inset-top)); left: 10px; right: 10px; display: flex; gap: 8px; align-items: center; justify-content: space-between; pointer-events: none; z-index: 3; }
+  .pill { pointer-events: auto; background: var(--crema); color: var(--tinta); border: 3px solid var(--tinta); border-radius: 14px; box-shadow: 0 3px 0 var(--tinta); padding: 2px 10px; font-weight: 800; font-size: 13px; line-height: 1.5; white-space: nowrap; }
+  .pill b { color: var(--rojo); }
+  .pill.boton { cursor: pointer; background: var(--amarillo); }
+  #estado { max-width: 52vw; overflow: hidden; text-overflow: ellipsis; }
+  /* pantalla de inicio */
+  #inicio { position: fixed; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; padding: 18px;
+    background: radial-gradient(circle, rgba(255,210,63,.18) 1.5px, transparent 2px) 0 0/12px 12px, repeating-conic-gradient(from 0deg at 50% 45%, #33275a 0 7deg, #1f1833 7deg 16deg); }
+  .cartel { width: min(460px, 100%); background: var(--crema); color: var(--tinta); border: 4px solid var(--tinta); border-radius: 22px; box-shadow: 0 7px 0 var(--tinta); padding: 18px 20px 20px; text-align: center; }
+  .cartel h1 { font-size: 38px; line-height: .95; font-weight: 800; color: var(--rojo); -webkit-text-stroke: 1.5px var(--tinta); text-shadow: 3px 3px 0 var(--tinta); letter-spacing: 1px; }
+  .cartel h1 span { color: var(--amarillo); display: block; }
+  .cartel ol { text-align: left; margin: 14px 4px 16px 22px; font-weight: 600; font-size: 15px; line-height: 1.35; }
+  .cartel ol li { margin-bottom: 4px; }
+  .btn { display: inline-block; font: 800 22px/1 'Baloo 2', system-ui; color: #fff; background: var(--rojo); border: 4px solid var(--tinta); border-radius: 16px; box-shadow: 0 5px 0 var(--tinta); padding: 12px 28px 8px; cursor: pointer; letter-spacing: 1px; }
+  .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--tinta); }
+  .chico { margin-top: 10px; font-size: 12px; opacity: .7; font-weight: 600; }
+  #error { color: var(--rojo); font-weight: 800; margin-top: 10px; font-size: 14px; }
+  /* ajustes */
+  #ajustes { position: fixed; right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); z-index: 4; background: var(--crema); color: var(--tinta); border: 3px solid var(--tinta); border-radius: 16px; box-shadow: 0 4px 0 var(--tinta); padding: 10px 12px; width: 230px; font-size: 13px; font-weight: 800; }
+  #ajustes[hidden] { display: none; }
+  #ajustes label { display: block; margin-bottom: 8px; }
+  #ajustes input[type=range] { width: 100%; accent-color: var(--rojo); }
+  #ajustes .fila { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  #ajustes small { font-weight: 600; opacity: .7; display: block; line-height: 1.2; }
+</style>
+</head>
+<body>
+<div id="escena">
+  <video id="video" playsinline muted></video>
+  <canvas id="lienzo"></canvas>
+</div>
+
+<div class="barra">
+  <div class="pill" id="estado">Preparando…</div>
+  <div style="display:flex;gap:8px">
+    <div class="pill" id="medidas">— ms</div>
+    <div class="pill boton" id="btnAjustes">AJUSTES</div>
+  </div>
+</div>
+
+<div id="ajustes" hidden>
+  <label>Adelanto del golpe <span id="vAdel"></span>
+    <input type="range" id="adelanto" min="0" max="100" value="60">
+    <small>Más adelanto = suena antes, pero puede sonar algún golpe de más.</small>
+  </label>
+  <label>Fuerza mínima <span id="vFuerza"></span>
+    <input type="range" id="fuerza" min="10" max="100" value="40">
+  </label>
+  <div class="fila"><span>Ver esqueleto</span><input type="checkbox" id="verEsq" checked></div>
+  <div class="fila"><span>Ver cámara</span><input type="checkbox" id="verCam" checked></div>
+</div>
+
+<div id="inicio">
+  <div class="cartel">
+    <h1>BATERÍA<span>EN EL AIRE</span></h1>
+    <ol>
+      <li>Apoyá el teléfono parado, a unos <b>2 metros</b>, con la cámara de adelante mirándote.</li>
+      <li>Sentate en una silla: se te tiene que ver de la cabeza a los pies.</li>
+      <li>Tocá con las manos en el aire. <b>Pie derecho</b> = bombo, <b>pie izquierdo</b> = hi-hat (levantado suena abierto).</li>
+    </ol>
+    <div class="btn" id="btnEmpezar">EMPEZAR</div>
+    <div id="error"></div>
+    <div class="chico">Prototipo · todo se procesa en el teléfono, no se graba ni se manda nada</div>
+  </div>
+</div>
+
+<script type="module">
+import { FilesetResolver, PoseLandmarker } from './vision_bundle.mjs';
+
+const $ = id => document.getElementById(id);
+const video = $('video'), cv = $('lienzo'), ctx = cv.getContext('2d');
+let W = 0, H = 0, DPR = 1;
+function medir() { DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0); }
+addEventListener('resize', medir); medir();
+
+// ───────── SONIDOS: se fabrican una vez (sin archivos) y quedan listos en memoria para salir al instante ─────────
+let ac = null; const SON = {};
+async function fabricarSonidos() {
+  const R = 44100;
+  async function hacer(dur, armar) { const o = new OfflineAudioContext(1, Math.ceil(dur * R), R); armar(o); return o.startRendering(); }
+  function ruido(o, dur) { const b = o.createBuffer(1, Math.ceil(dur * R), R), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; const s = o.createBufferSource(); s.buffer = b; return s; }
+  function env(o, g, pico, caida, t0 = 0) { g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(pico, t0 + .002); g.gain.exponentialRampToValueAtTime(0.0001, t0 + caida); }
+  function tono(o, f0, f1, caida, vol, tipo = 'sine') { const os = o.createOscillator(), g = o.createGain(); os.type = tipo; os.frequency.setValueAtTime(f0, 0); os.frequency.exponentialRampToValueAtTime(f1, caida * .6); env(o, g, vol, caida); os.connect(g).connect(o.destination); os.start(0); os.stop(caida + .05); }
+  function filtrado(o, tipoF, f, q, caida, vol, dur) { const s = ruido(o, dur), fl = o.createBiquadFilter(), g = o.createGain(); fl.type = tipoF; fl.frequency.value = f; fl.Q.value = q; env(o, g, vol, caida); s.connect(fl).connect(g).connect(o.destination); s.start(0); }
+  SON.bombo = await hacer(.6, o => { tono(o, 160, 42, .5, 1); filtrado(o, 'lowpass', 2500, .7, .02, .35, .05); });
+  SON.redo = await hacer(.35, o => { tono(o, 230, 170, .12, .55, 'triangle'); filtrado(o, 'bandpass', 2200, .6, .22, .9, .35); filtrado(o, 'highpass', 6000, .5, .1, .35, .2); });
+  SON.hhC = await hacer(.12, o => filtrado(o, 'highpass', 7500, .8, .06, .6, .12));
+  SON.hhA = await hacer(.6, o => filtrado(o, 'highpass', 6500, .8, .5, .5, .6));
+  SON.tom1 = await hacer(.55, o => { tono(o, 260, 170, .45, .9); filtrado(o, 'bandpass', 900, 1, .05, .25, .1); });
+  SON.tom2 = await hacer(.6, o => { tono(o, 190, 125, .5, .9); filtrado(o, 'bandpass', 700, 1, .05, .25, .1); });
+  SON.tomP = await hacer(.75, o => { tono(o, 120, 78, .65, 1); filtrado(o, 'bandpass', 500, 1, .06, .25, .1); });
+  SON.crash = await hacer(1.8, o => { filtrado(o, 'highpass', 4200, .5, 1.6, .55, 1.8); filtrado(o, 'bandpass', 3000, .8, .9, .35, 1.8); });
+  SON.ride = await hacer(1.2, o => { filtrado(o, 'highpass', 7000, .6, .9, .3, 1.2); [5200, 6100, 3700].forEach((f, i) => tono(o, f, f * .99, 1.1, .08 / (i + 1))); });
+}
+function sonar(nom, vel = 1) {
+  const b = SON[nom]; if (!b || !ac) return;
+  const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = b; g.gain.value = Math.max(.15, Math.min(1, vel)); s.connect(g).connect(ac.destination); s.start();
+}
+
+// ───────── TAMBORES: ubicados en relación al cuerpo (unidad = largo del torso), así sirven a cualquier distancia ─────────
+// x: + hacia la derecha de la pantalla (vista espejo), y: + hacia abajo; origen = medio de la cadera
+const TAMB = [
+  { id: 'hh',    nom: 'HI-HAT',  x: -.85, y: -.45, r: .30, col: '#ffd23f', son: 'hh' },
+  { id: 'redo',  nom: 'REDO',    x: -.25, y: -.12, r: .30, col: '#fff8ec', son: 'redo' },
+  { id: 'tom1',  nom: 'TOM 1',   x: -.30, y: -.82, r: .26, col: '#ff4d6d', son: 'tom1' },
+  { id: 'tom2',  nom: 'TOM 2',   x:  .30, y: -.82, r: .26, col: '#ff8a3d', son: 'tom2' },
+  { id: 'tomP',  nom: 'TOM PISO',x:  .62, y: -.10, r: .32, col: '#6b4fd8', son: 'tomP' },
+  { id: 'crash', nom: 'CRASH',   x: -1.05, y: -1.30, r: .34, col: '#ffe680', son: 'crash' },
+  { id: 'ride',  nom: 'RIDE',    x:  1.10, y: -1.10, r: .38, col: '#3ec8a0', son: 'ride' },
+];
+const PIE = { bombo: { x: .35, y: 1.55, col: '#ff4d6d' }, hh: { x: -.35, y: 1.55, col: '#ffd23f' } };
+
+// ───────── GOLPES: se detecta cuando la mano viene bajando rápido y empieza a frenar (no hace falta esperar a que pare) ─────────
+const AJ = { adelanto: .6, fuerza: .4 };
+function nuevoMiembro() { return { p: null, vy: 0, pico: 0, armado: false, ult: 0, t: 0 } }
+const M = { manoI: nuevoMiembro(), manoD: nuevoMiembro(), pieI: nuevoMiembro(), pieD: nuevoMiembro() };
+let base = null;       // { ox, oy, u } origen y escala del cuerpo (suavizados)
+let hhAbierto = false, pieIBase = null;
+const flash = {};      // id -> momento del último golpe (para dibujar)
+
+function golpe(m, pos, t, esPie) {
+  // velocidad en torsos por segundo (positivo = bajando)
+  if (m.p) {
+    const dt = Math.max(.008, (t - m.t) / 1000);
+    const vyRaw = (pos.y - m.p.y) / dt;
+    m.vy = m.vy * .35 + vyRaw * .65;
+  }
+  m.p = pos; m.t = t;
+  const vMin = esPie ? 1.1 + AJ.fuerza * 1.4 : 2.2 + AJ.fuerza * 3.2;   // velocidad mínima para que cuente
+  if (m.vy > vMin * .6) { m.armado = true; m.pico = Math.max(m.pico, m.vy); }
+  // dispara cuando la velocidad cae debajo de una fracción del pico: con más "adelanto", dispara antes
+  const frac = .45 + AJ.adelanto * .45;          // 0.45 (espera a frenar) … 0.90 (apenas empieza a frenar)
+  if (m.armado && m.pico > vMin && m.vy < m.pico * frac && t - m.ult > 85) {
+    m.armado = false; m.ult = t; const vel = Math.min(1, .35 + (m.pico - vMin) / (vMin * 2.2)); m.pico = 0;
+    return vel;
+  }
+  if (m.vy < -0.6) { m.armado = false; m.pico = 0; }   // subiendo: se rearma en la próxima bajada
+  return 0;
+}
+
+function tamborMasCerca(pos) {
+  let mejor = null, d0 = 1e9;
+  for (const T of TAMB) { const d = Math.hypot(pos.x - T.x, (pos.y - T.y) * 1.15) / T.r; if (d < d0) { d0 = d; mejor = T; } }
+  return d0 < 2.6 ? mejor : null;
+}
+
+// ───────── CÁMARA + MODELO ─────────
+let pose = null, corriendo = false, ultFrame = 0;
+const stats = { inf: 0, fps: 0, n: 0, t0: performance.now() };
+
+async function empezar() {
+  $('error').textContent = ''; $('btnEmpezar').textContent = 'CARGANDO…';
+  try {
+    ac = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+    await ac.resume();
+    await fabricarSonidos();
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 60 } } });
+    video.srcObject = stream; await video.play();
+    $('estado').textContent = 'Cargando el detector…';
+    const vision = await FilesetResolver.forVisionTasks('./wasm');
+    const crear = delegate => PoseLandmarker.createFromOptions(vision, { baseOptions: { modelAssetPath: './pose_landmarker_lite.task', delegate }, runningMode: 'VIDEO', numPoses: 1, minPoseDetectionConfidence: .5, minPosePresenceConfidence: .5, minTrackingConfidence: .5 });
+    try { pose = await crear('GPU'); stats.del = 'GPU'; } catch (e) { pose = await crear('CPU'); stats.del = 'CPU'; }
+    try { await navigator.wakeLock?.request('screen'); } catch (e) {}
+    $('inicio').hidden = true; $('inicio').style.display = 'none';
+    corriendo = true; esperarCuadro();
+  } catch (e) {
+    $('btnEmpezar').textContent = 'EMPEZAR';
+    $('error').textContent = /Permission|NotAllowed/i.test(e && (e.name + e.message)) ? 'Hay que dar permiso a la cámara para jugar.' : 'No se pudo arrancar: ' + (e && e.message || e);
+  }
+}
+$('btnEmpezar').addEventListener('click', empezar);
+
+// cada cuadro nuevo de la cámara se procesa apenas llega (requestVideoFrameCallback), sin esperar al refresco de pantalla
+function esperarCuadro() { if (video.requestVideoFrameCallback) video.requestVideoFrameCallback(procesar); else requestAnimationFrame(() => procesar(performance.now())); }
+
+const P = (lm, i) => lm[i];
+function procesar(ahora) {
+  if (!corriendo) return;
+  const t = performance.now();
+  if (video.readyState >= 2 && t !== ultFrame) {
+    ultFrame = t;
+    const res = pose.detectForVideo(video, t);
+    stats.inf = stats.inf * .85 + (performance.now() - t) * .15;
+    const lm = res.landmarks && res.landmarks[0];
+    if (lm) analizar(lm, t); else $('estado').textContent = 'No te veo: ponete de frente, entero en la cámara';
+    dibujar(lm);
+    stats.n++; if (t - stats.t0 > 1000) { stats.fps = stats.n * 1000 / (t - stats.t0); stats.n = 0; stats.t0 = t; mostrarMedidas(); }
+  }
+  esperarCuadro();
+}
+
+function mostrarMedidas() {
+  const audio = ac ? ((ac.baseLatency || 0) + (ac.outputLatency || 0)) * 1000 : 0;
+  const cuadro = stats.fps ? 1000 / stats.fps : 33;
+  const total = cuadro / 2 + stats.inf + audio + 8;
+  $('medidas').innerHTML = `<b>${Math.round(total)} ms</b> · ${Math.round(stats.fps)} fps · ${stats.del}`;
+}
+
+// coordenadas en pantalla (espejo, como en el video con object-fit: cover)
+function aPantalla(p) {
+  const vw = video.videoWidth || 640, vh = video.videoHeight || 480, s = Math.max(W / vw, H / vh);
+  const ox = (W - vw * s) / 2, oy = (H - vh * s) / 2;
+  return { x: ox + (1 - p.x) * vw * s, y: oy + p.y * vh * s };
+}
+
+function analizar(lm, t) {
+  const hI = aPantalla(P(lm, 11)), hD = aPantalla(P(lm, 12)), cI = aPantalla(P(lm, 23)), cD = aPantalla(P(lm, 24));
+  const hm = { x: (hI.x + hD.x) / 2, y: (hI.y + hD.y) / 2 }, cm = { x: (cI.x + cD.x) / 2, y: (cI.y + cD.y) / 2 };
+  const u = Math.max(30, Math.hypot(hm.x - cm.x, hm.y - cm.y));
+  base = base ? { ox: base.ox * .9 + cm.x * .1, oy: base.oy * .9 + cm.y * .1, u: base.u * .9 + u * .1 } : { ox: cm.x, oy: cm.y, u };
+  const rel = p => { const q = aPantalla(p); return { x: (q.x - base.ox) / base.u, y: (q.y - base.oy) / base.u, vis: p.visibility }; };
+  // manos: punta de la mano (índice) — 19 izquierda, 20 derecha (del jugador)
+  for (const [k, i] of [['manoI', 19], ['manoD', 20]]) {
+    const pos = rel(P(lm, i)); if ((pos.vis ?? 1) < .3) continue;
+    const vel = golpe(M[k], pos, t, false);
+    if (vel) { const T = tamborMasCerca(pos); if (T) { sonar(T.son === 'hh' ? (hhAbierto ? 'hhA' : 'hhC') : T.son, vel); flash[T.id] = t; } }
+  }
+  // pies: punta del pie — 31 izquierdo (hi-hat), 32 derecho (bombo)
+  const pI = rel(P(lm, 31)), pD = rel(P(lm, 32));
+  if ((pD.vis ?? 1) > .3) { const vel = golpe(M.pieD, pD, t, true); if (vel) { sonar('bombo', vel); flash.bombo = t; } }
+  if ((pI.vis ?? 1) > .3) {
+    pieIBase = pieIBase == null ? pI.y : Math.max(pI.y, pieIBase - .002);   // el punto más bajo reciente = pie apoyado
+    const abierto = pieIBase - pI.y > .14;
+    const vel = golpe(M.pieI, pI, t, true);
+    if (vel && hhAbierto) { sonar('hhC', vel * .8); flash.hhPie = t; }   // cerrar el hi-hat con el pie hace "chick"
+    hhAbierto = abierto;
+  }
+  $('estado').textContent = hhAbierto ? 'Hi-hat ABIERTO' : '¡A tocar!';
+}
+
+// ───────── DIBUJO estilo cómic ─────────
+const verEsq = $('verEsq'), verCam = $('verCam');
+verCam.addEventListener('change', () => video.style.opacity = verCam.checked ? .55 : 0);
+const HUESOS = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,31],[28,32]];
+function dibujar(lm) {
+  ctx.clearRect(0, 0, W, H);
+  const t = performance.now();
+  if (base) {
+    for (const T of TAMB) {
+      const x = base.ox + T.x * base.u, y = base.oy + T.y * base.u, r = T.r * base.u, f = Math.max(0, 1 - (t - (flash[T.id] || 0)) / 160);
+      ctx.save(); ctx.translate(x, y); ctx.scale(1 + f * .15, 1 + f * .15);
+      ctx.beginPath(); ctx.ellipse(0, 0, r, r * .55, 0, 0, Math.PI * 2);
+      ctx.fillStyle = f > 0 ? '#ffffff' : T.col; ctx.globalAlpha = .55 + f * .45; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.stroke();
+      ctx.font = `800 ${Math.max(11, r * .32)}px "Baloo 2", system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.strokeText(T.nom, 0, 2); ctx.fillStyle = '#fff8ec'; ctx.fillText(T.nom, 0, 2);
+      ctx.restore();
+    }
+    for (const [id, P2] of Object.entries(PIE)) {
+      const x = base.ox + P2.x * base.u, y = base.oy + P2.y * base.u, r = .22 * base.u, f = Math.max(0, 1 - (t - (flash[id === 'hh' ? 'hhPie' : 'bombo'] || 0)) / 160);
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - r, y - r * .35, r * 2, r * .7, 8) : ctx.rect(x - r, y - r * .35, r * 2, r * .7);
+      ctx.fillStyle = f > 0 ? '#ffffff' : P2.col; ctx.globalAlpha = .7; ctx.fill(); ctx.globalAlpha = 1; ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.stroke();
+      ctx.font = `800 ${Math.max(10, r * .38)}px "Baloo 2", system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#2a2238';
+      ctx.fillText(id === 'hh' ? (hhAbierto ? 'HH ABIERTO' : 'HH PEDAL') : 'BOMBO', x, y + 1);
+    }
+  }
+  if (lm && verEsq.checked) {
+    const q = lm.map(aPantalla);
+    ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(255,248,236,.85)'; ctx.lineCap = 'round';
+    for (const [a, b] of HUESOS) { ctx.beginPath(); ctx.moveTo(q[a].x, q[a].y); ctx.lineTo(q[b].x, q[b].y); ctx.stroke(); }
+    for (const [i, col] of [[19, '#ffd23f'], [20, '#ffd23f'], [31, '#ff4d6d'], [32, '#ff4d6d']]) { ctx.beginPath(); ctx.arc(q[i].x, q[i].y, 9, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.stroke(); }
+  }
+}
+
+// ───────── AJUSTES ─────────
+$('btnAjustes').addEventListener('click', () => $('ajustes').hidden = !$('ajustes').hidden);
+function leerAj() { AJ.adelanto = $('adelanto').value / 100; AJ.fuerza = $('fuerza').value / 100; $('vAdel').textContent = $('adelanto').value + '%'; $('vFuerza').textContent = $('fuerza').value + '%'; try { localStorage.setItem('bateriaAj', JSON.stringify(AJ)); } catch (e) {} }
+try { const g = JSON.parse(localStorage.getItem('bateriaAj') || 'null'); if (g) { $('adelanto').value = Math.round(g.adelanto * 100); $('fuerza').value = Math.round(g.fuerza * 100); } } catch (e) {}
+$('adelanto').addEventListener('input', leerAj); $('fuerza').addEventListener('input', leerAj); leerAj();
+
+// para probar sin cámara: tocar los tambores en la pantalla
+cv.addEventListener('pointerdown', e => {
+  if (!base) return; const pos = { x: (e.clientX - base.ox) / base.u, y: (e.clientY - base.oy) / base.u };
+  const T = tamborMasCerca(pos); if (T) { sonar(T.son === 'hh' ? 'hhC' : T.son, .9); flash[T.id] = performance.now(); }
+});
+window.__test = { golpe, M, AJ, tamborMasCerca, nuevoMiembro, SON, fabricarSonidos };
+</script>
+</body>
+</html>
