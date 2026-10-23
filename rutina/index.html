@@ -151,7 +151,7 @@ let pose = null, ultLm = null;
 const C = { u: 0, ox: 0, cadY: 0, narY: 0, narX: 0, rodY: 0, hombroAncho: 0, listo: false, muestras: [] };
 const P = {};   // puntos suavizados en pantalla
 function aPantalla(p) { const vw = video.videoWidth || 640, vh = video.videoHeight || 480, s = Math.max(W / vw, H / vh); return { x: (W - vw * s) / 2 + (1 - p.x) * vw * s, y: (H - vh * s) / 2 + p.y * vh * s, v: p.visibility ?? 1 }; }
-const NOMBRES = { nariz: 0, hI: 11, hD: 12, coI: 13, coD: 14, muI: 15, muD: 16, maI: 19, maD: 20, caI: 23, caD: 24, roI: 25, roD: 26, toI: 27, toD: 28 };
+const NOMBRES = { nariz: 0, ojI: 2, ojD: 5, orI: 7, orD: 8, boI: 9, boD: 10, hI: 11, hD: 12, coI: 13, coD: 14, muI: 15, muD: 16, maI: 19, maD: 20, caI: 23, caD: 24, roI: 25, roD: 26, toI: 27, toD: 28 };
 function leerCuerpo(lm) {
   ultLm = lm;
   for (const [k, i] of Object.entries(NOMBRES)) { const q = aPantalla(lm[i]); P[k] = P[k] ? { x: P[k].x * .35 + q.x * .65, y: P[k].y * .35 + q.y * .65, v: q.v } : q; }
@@ -509,6 +509,54 @@ function dibujarRival(rx, piso, e) {   // el rival es una paleta de ping pong fl
   ctx.restore();
   if (dg < 260) { ctx.save(); ctx.globalAlpha = (1 - dg / 260) * .7; ctx.strokeStyle = '#fff8ec'; ctx.lineWidth = e * .15; ctx.beginPath(); ctx.arc(rx, y, e * 1.2, -Math.PI / 2 - .8, -Math.PI / 2 + .8); ctx.stroke(); ctx.restore(); }
 }
+// máscara de tenista (vincha y bigote): aparece solo cuando estás a la distancia justa
+function distanciaOk() {
+  if (!ultLm || !P.hI) return 'nada';
+  if ([0, 2, 5, 9, 10].some(i => (ultLm[i].visibility ?? 1) < .5)) return 'nada';
+  const r = Math.abs(P.hI.x - P.hD.x) / Math.min(W, H);
+  return r > .62 ? 'cerca' : r < .25 ? 'lejos' : 'ok';
+}
+function dibujarMascara() {
+  const d = distanciaOk();
+  if (d !== 'ok') {   // pista chiquita abajo para acomodarte
+    if (d === 'cerca' || d === 'lejos') { ctx.save(); ctx.font = '800 22px "Baloo 2", system-ui'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = '#2a2238'; ctx.fillStyle = '#fff8ec';
+      const t = d === 'cerca' ? 'ALEJATE UN POCO' : 'ACERCATE UN POCO'; ctx.strokeText(t, W / 2, H - 24); ctx.fillText(t, W / 2, H - 24); ctx.restore(); }
+    return;
+  }
+  const oI = P.ojI, oD = P.ojD, n = P.nariz, bI = P.boI, bD = P.boD;
+  const ojos = { x: (oI.x + oD.x) / 2, y: (oI.y + oD.y) / 2 }, boca = { x: (bI.x + bD.x) / 2, y: (bI.y + bD.y) / 2 };
+  const de = Math.hypot(oD.x - oI.x, oD.y - oI.y), fw = Math.max(20, de * 2.5);   // ancho de la cara aprox.
+  const ang = Math.atan2(oD.y - oI.y, oD.x - oI.x) + (oD.x < oI.x ? Math.PI : 0);
+  ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  // vincha en la frente
+  ctx.save(); ctx.translate(ojos.x, ojos.y - fw * .42); ctx.rotate(ang);
+  const vw = fw * 1.2, vh = fw * .24;
+  ctx.fillStyle = '#fff8ec'; ctx.strokeStyle = '#2a2238'; ctx.lineWidth = Math.max(3, fw * .035);
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-vw / 2, -vh / 2, vw, vh, vh * .45) : ctx.rect(-vw / 2, -vh / 2, vw, vh); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#ff4d6d'; ctx.fillRect(-vw / 2 + vh * .2, -vh * .12, vw - vh * .4, vh * .24);
+  ctx.fillStyle = '#4f8fff'; ctx.fillRect(-vw / 2 + vh * .2, -vh * .34, vw - vh * .4, vh * .1); ctx.fillRect(-vw / 2 + vh * .2, vh * .24, vw - vh * .4, vh * .1);
+  ctx.restore();
+  // bigote grande entre la nariz y la boca
+  const by = n.y + (boca.y - n.y) * .55, bx = n.x + (boca.x - n.x) * .55;
+  ctx.save(); ctx.translate(bx, by); ctx.rotate(ang);
+  const m = fw * .5;
+  ctx.fillStyle = '#5a3a22'; ctx.strokeStyle = '#2a2238'; ctx.lineWidth = Math.max(3, fw * .035);
+  ctx.beginPath();
+  ctx.moveTo(0, -m * .12);
+  ctx.bezierCurveTo(m * .25, -m * .38, m * .7, -m * .3, m * .82, -m * .02);
+  ctx.bezierCurveTo(m * .98, m * .14, m * 1.08, -m * .18, m * 1.02, -m * .34);   // punta que se enrula
+  ctx.bezierCurveTo(m * 1.2, -m * .05, m * 1.0, m * .38, m * .62, m * .3);
+  ctx.bezierCurveTo(m * .38, m * .26, m * .16, m * .16, 0, m * .2);
+  ctx.bezierCurveTo(-m * .16, m * .16, -m * .38, m * .26, -m * .62, m * .3);
+  ctx.bezierCurveTo(-m * 1.0, m * .38, -m * 1.2, -m * .05, -m * 1.02, -m * .34);
+  ctx.bezierCurveTo(-m * 1.08, -m * .18, -m * .98, m * .14, -m * .82, -m * .02);
+  ctx.bezierCurveTo(-m * .7, -m * .3, -m * .25, -m * .38, 0, -m * .12);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,248,236,.35)'; ctx.lineWidth = Math.max(1.5, fw * .015);
+  for (const sx of [-1, 1]) { ctx.beginPath(); ctx.moveTo(sx * m * .2, -m * .02); ctx.quadraticCurveTo(sx * m * .5, -m * .12, sx * m * .72, m * .02); ctx.stroke(); }
+  ctx.restore();
+  ctx.restore();
+}
 function tenisDibujar() {
   if (!TN.activo || !TN.listo || !P.hom) return;
   const u = C.u, yH = HOR(), cx = W / 2;
@@ -550,6 +598,7 @@ function tenisDibujar() {
       ctx.save(); ctx.globalAlpha = .5; ctx.strokeStyle = col; ctx.lineWidth = Math.max(2, pos.r / 3); ctx.beginPath(); ctx.arc(pos.x, pos.y, pos.r * 1.5, b.efecto === 'top' ? -2.6 : .5, b.efecto === 'top' ? -.5 : 2.6); ctx.stroke(); ctx.restore();
     }
   }
+  dibujarMascara();
   ctx.restore();
 }
 function arrancarTenis() {
