@@ -83,7 +83,7 @@
     <div class="btn" id="btnEmpezar">EMPEZAR</div>
     <div class="otro">
       <div class="otro-tit">O JUGÁ UN PARTIDO DE <b>TENIS</b></div>
-      <div class="aviso-salud" style="margin-top:2px">Para el tenis podés estar a 1 metro: alcanza con que se vean la cabeza, los hombros y los codos.</div>
+      <div class="aviso-salud" style="margin-top:2px">Para el tenis: apoyá el teléfono parado, de frente, a unos 50 cm, como para una selfie. Le pegás con la mano.</div>
       <div class="opc" id="mano"><button data-m="D" class="sel">DIESTRO</button><button data-m="I">ZURDO</button></div>
       <div class="btn rojo" id="btnTenis">JUGAR TENIS</div>
     </div>
@@ -386,8 +386,8 @@ const cuerpoMedio = () => ultLm && [0, 11, 12, 13, 14].every(i => (ultLm[i].visi
 // ── perspectiva real: la pelota sale chiquita desde el fondo (14 m) y viene hacia vos (1 m).
 // Avanza a velocidad pareja en el mundo, así en la pantalla se ve lenta al principio y rápida al final, como en la realidad.
 const Z0 = 14;
-const aroR = () => Math.max(55, .5 * C.u);   // el aro donde le pegás
-const HOR = () => H * .22;                        // línea del horizonte (fondo de la cancha del rival)
+const aroR = () => Math.max(40, Math.min(W, H) * .12);   // el aro donde le pegás (tamaño de una mano a distancia de selfie)
+const HOR = () => H * .14;                        // línea del horizonte (fondo de la cancha del rival)
 const prof = p => { const z = Z0 + (1 - Z0) * p; return { z, w: (1 / z - 1 / Z0) / (1 - 1 / Z0) }; };   // p: 0 = rival, 1 = vos
 const altoMundo = () => 1.25 * Math.max(40, C.hombroAncho);   // píxeles que mide 1 metro a 1 m de distancia (aprox.)
 function marcador() {
@@ -402,11 +402,11 @@ function raqueta() {   // la cabeza de la raqueta sigue la dirección de la muñ
   dx /= l; dy /= l;
   return { mx: mu.x, my: mu.y, hx: ma.x + dx * .12 * C.u, hy: ma.y + dy * .12 * C.u, dx, dy };   // punto de golpe: la mano
 }
-function zonaGolpe() {   // dónde te llega la pelota: a un costado del cuerpo, entre el hombro y la cintura
-  const ha = Math.max(40, C.hombroAncho), hx = P.hom ? P.hom.x : W / 2, hy = P.hom ? P.hom.y : H * .5;
-  const lado = Math.random() < .6 ? (TN.mano === 'D' ? 1 : -1) : (TN.mano === 'D' ? -1 : 1);   // más seguido de drive que de revés
-  const x = hx + lado * (.85 + Math.random() * .55) * ha, y = hy + (-.2 + Math.random() * 1.1) * ha;
-  return { x: Math.max(W * .1, Math.min(W * .9, x)), y: Math.max(H * .3, Math.min(H * .9, y)) };
+function zonaGolpe() {   // modo selfie: la pelota llega a un costado de tu cara, a la altura donde tu mano la alcanza cómoda
+  let x, y, n = 0;
+  do { const lado = Math.random() < .5 ? -1 : 1; x = W / 2 + lado * (.16 + Math.random() * .2) * W; y = H * (.36 + Math.random() * .38); n++; }
+  while (TN.ultZona && Math.hypot(x - TN.ultZona.x, y - TN.ultZona.y) < Math.min(W, H) * .2 && n < 8);
+  TN.ultZona = { x, y }; return { x, y };
 }
 function bolaNueva(desdeX) {
   const z = zonaGolpe(), dur = Math.max(1.2, 2.4 - TN.dif * .15 - (TN.ultFuerza || 0) * .5) * 1000;   // arranca lenta (2,4 s) y se va acelerando
@@ -425,24 +425,34 @@ function puntoPara(q, txt) {
 }
 function tenisActualizar() {
   if (!TN.activo) return;
-  const ya = performance.now(), dt = Math.min(.1, (ya - (TN.ult || ya)) / 1000); TN.ult = ya;
-  if (!TN.listo || !P.hom) return;
-  TN.seg += dt; TN.kcal += 6 * 70 / 3600 * dt; $('kcal').textContent = Math.round(TN.kcal);
-  const r = raqueta();
-  if (TN.cab) { const v = Math.hypot(r.hx - TN.cab.x, r.hy - TN.cab.y) / C.u / Math.max(dt, .001); TN.cabV = TN.cabV * .4 + v * .6; TN.cabVx = (TN.cabVx || 0) * .4 + (r.hx - TN.cab.x) / C.u / Math.max(dt, .001) * .6; TN.cabVy = (TN.cabVy || 0) * .4 + (r.hy - TN.cab.y) / C.u / Math.max(dt, .001) * .6; }
-  TN.cabAnt = TN.cab; TN.cab = { x: r.hx, y: r.hy };
-  TN.hist = (TN.hist || []).filter(h => ya - h.t < 160); TN.hist.push({ t: ya, v: TN.cabV || 0 }); TN.pico = Math.max(...TN.hist.map(h => h.v));
-  TN.rival.x += Math.max(-1, Math.min(1, (TN.rival.obj - TN.rival.x) * 6)) * dt * (1.1 + TN.dif * .15);   // el rival corre a la pelota
+  const ya = performance.now(), dt = Math.min(.1, Math.max(.001, (ya - (TN.ult || ya)) / 1000)); TN.ult = ya;
+  if (!TN.listo || !ultLm) return;
+  TN.seg += dt; TN.kcal += 5 * 70 / 3600 * dt;
+  // seguimos las dos manos (la punta de la mano): le podés pegar con cualquiera
+  TN.mh = TN.mh || {};
+  for (const k of ['I', 'D']) {
+    const vis = Math.max(ultLm[k === 'I' ? 19 : 20].visibility ?? 1, ultLm[k === 'I' ? 15 : 16].visibility ?? 1), st = TN.mh[k] || (TN.mh[k] = { hist: [] });
+    const p = vis > .3 ? { x: P['ma' + k].x, y: P['ma' + k].y } : null;
+    if (p && st.p) { const vx = (p.x - st.p.x) / C.u / dt, vy = (p.y - st.p.y) / C.u / dt; st.vx = (st.vx || 0) * .4 + vx * .6; st.vy = (st.vy || 0) * .4 + vy * .6; st.v = Math.hypot(st.vx, st.vy); } else st.v = 0;
+    st.ant = st.p; st.p = p;
+    st.hist = st.hist.filter(h => ya - h.t < 160); st.hist.push({ t: ya, v: st.v || 0 }); st.pico = Math.max(...st.hist.map(h => h.v));
+  }
+  TN.rival.x += Math.max(-1, Math.min(1, (TN.rival.obj - TN.rival.x) * 6)) * dt * (1.1 + TN.dif * .15);   // el rival va a la pelota
   const b = TN.bola; if (!b) return;
   const s = (ya - b.t0) / b.dur;
   if (b.fase === 'viene') {
     if (!b.boto && s > .7) { b.boto = true; sonar('bote', .6); }
     if (!b.avisado && s > .86) { b.avisado = true; sonar('tic', .5); }
-    // más margen: ventana de tiempo más larga, zona más grande y cuenta todo el recorrido de la mano en ese cuadro
-    const pos = bolaEn(b, s), radio = Math.max(120, 1.1 * C.u);
-    const A = TN.cabAnt || TN.cab, Bm = TN.cab, dx = Bm.x - A.x, dy = Bm.y - A.y, l2 = dx * dx + dy * dy || 1;
-    const tt = Math.max(0, Math.min(1, ((pos.x - A.x) * dx + (pos.y - A.y) * dy) / l2)), distMano = Math.hypot(A.x + dx * tt - pos.x, A.y + dy * tt - pos.y);
-    if (s > .72 && s < 1.3 && TN.pico > .9 && distMano < radio) {   // ¡golpe!
+    // golpe preciso: la mano tiene que pasar POR la pelota (su radio + un poquito), cerca del momento justo
+    const pos = bolaEn(b, s), margen = pos.r + Math.min(W, H) * .06;
+    let mejor = null;
+    for (const k of ['I', 'D']) { const st = TN.mh[k]; if (!st.p || !st.ant) continue;
+      const A = st.ant, Bm = st.p, dx = Bm.x - A.x, dy = Bm.y - A.y, l2 = dx * dx + dy * dy || 1;
+      const tt = Math.max(0, Math.min(1, ((pos.x - A.x) * dx + (pos.y - A.y) * dy) / l2)), d = Math.hypot(A.x + dx * tt - pos.x, A.y + dy * tt - pos.y);
+      if (!mejor || d < mejor.d) mejor = { d, st }; }
+    const distMano = mejor ? mejor.d : 1e9, mano = mejor && mejor.st;
+    if (mano) { TN.pico = mano.pico; TN.cabVx = mano.vx; TN.cabVy = mano.vy; }
+    if (s > .88 && s < 1.15 && TN.pico > 1 && distMano < margen) {   // ¡golpe!
       TN.golpes++; TN.rally++;
       // cómo moviste la mano decide el golpe:
       //  rápido = fuerte (la pelota va más rápido) · de costado = dirección · de abajo hacia arriba = TOP SPIN (sube y cae picando fuerte)
@@ -450,7 +460,7 @@ function tenisActualizar() {
       const vx = TN.cabVx || 0, vy = TN.cabVy || 0;
       const dir = Math.max(-1, Math.min(1, vx / 5 + (Math.random() - .5) * .2));
       // fuerza continua según qué tan rápido movés la mano: despacio = pelota lenta y alta; rápido = pelota rápida y tensa
-      const fuerza = Math.min(1, Math.max(0, (TN.pico - 1.3) / 9)), perfecto = Math.hypot(pos.x - b.x1, pos.y - b.y1) + pos.r <= aroR() * 1.06;
+      const fuerza = Math.min(1, Math.max(0, (TN.pico - 1) / 10)), perfecto = Math.hypot(pos.x - b.x1, pos.y - b.y1) + pos.r <= aroR() * 1.06;
       if (perfecto) { sonar('punto', .6); TN.flashPerfecto = ya; TN.flashPos = { x: b.x1, y: b.y1 }; }
       sonar('pelota', .35 + fuerza * .65, 0, .85 + fuerza * .45);
       TN.sacudon = { t: ya, f: fuerza };
@@ -463,7 +473,7 @@ function tenisActualizar() {
       // riesgo de que se vaya afuera: el plano fuerte y cruzado es el más riesgoso, el top spin es el más seguro
       const riesgo = efecto === 'plano' ? (fuerza > .7 ? .18 : .04) + (Math.abs(dir) > .8 ? .15 : 0) : efecto === 'top' ? .03 + (Math.abs(dir) > .85 ? .05 : 0) : .06;
       TN.bola.afuera = Math.random() < riesgo;
-    } else if (s > 1.36) puntoPara(1, '¡NO LLEGASTE!');
+    } else if (s > 1.22) puntoPara(1, '¡NO LE PEGASTE!');
   } else {
     if (!b.boto && s > .6) { b.boto = true; sonar('bote', .35); }
     if (s >= 1) {
@@ -563,7 +573,7 @@ function dibujarMascara() {
   ctx.restore();
 }
 function tenisDibujar() {
-  if (!TN.activo || !TN.listo || !P.hom) return;
+  if (!TN.activo || !TN.listo) return;
   const u = C.u, yH = HOR(), cx = W / 2;
   ctx.save();
   // cancha en perspectiva desde el horizonte hasta abajo de la pantalla
@@ -576,7 +586,7 @@ function tenisDibujar() {
   ctx.globalAlpha = .85; ctx.fillStyle = 'rgba(42,34,56,.55)'; ctx.fillRect(cx - ar, yr - hr, ar * 2, hr); ctx.strokeRect(cx - ar, yr - hr, ar * 2, hr);
   ctx.restore();
   // rival (muñeco de cómic): corre a la pelota, se prepara y pega hacia donde la manda
-  dibujarRival(cx + TN.rival.x * W * .3, yH, H * .045);
+  dibujarRival(cx + TN.rival.x * W * .3, yH, H * .035);
   const b = TN.bola;
   if (b) {
     const s = (performance.now() - b.t0) / b.dur, pos = bolaEn(b, s);
@@ -613,9 +623,12 @@ function arrancarTenis() {
   Object.assign(TN, { activo: true, enPausa: false, listo: false, mano: leerMano(), pts: [0, 0], juegos: [0, 0], golpes: 0, rally: 0, rallyMax: 0, ganados: 0, kcal: 0, seg: 0, bola: null, rival: { x: 0, obj: 0 }, dif: 1, cab: null, ult: 0 });
   C.listo = false; C.muestras = [];
   document.body.classList.add('tenis'); video.style.opacity = 1; marcador();
+  TN.mh = {}; TN.ultZona = null;
   const espera = () => { if (!TN.activo) return;
-    if (cuerpoMedio() && calibrar()) { C.listo = TN.listo = true; aviso('¡A JUGAR!<small>Primero a 3 games. Pegale cuando el aro se cierra</small>', 2200); decir('¡a jugar! primero a tres games'); setTimeout(saqueRival, 2400); }
-    else { aviso(cuerpoMedio() ? 'QUEDATE QUIETO<small>midiendo tu cuerpo…</small>' : 'ACOMODATE<small>se te tiene que ver la cabeza, los hombros y los codos</small>', 0); setTimeout(espera, 100); } };
+    if (ultLm && (ultLm[0].visibility ?? 1) > .5) {   // modo selfie: con verte la cara alcanza
+      const S = Math.min(W, H); Object.assign(C, { u: S * .3, hombroAncho: S * .22, ox: W / 2, cadY: H * .8, listo: true }); TN.listo = true;
+      aviso('¡A JUGAR!<small>Primero a 3 games. Pegale con la mano cuando la pelota llena el círculo</small>', 2400); decir('¡a jugar! primero a tres games'); setTimeout(saqueRival, 2600); }
+    else { aviso('PONETE DE FRENTE<small>como para una selfie, que se te vea la cara</small>', 0); setTimeout(espera, 100); } };
   espera();
 }
 function finTenis() {
