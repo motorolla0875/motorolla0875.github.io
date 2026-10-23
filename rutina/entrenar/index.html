@@ -79,32 +79,32 @@
 
 <!-- ───────── BIENVENIDA / PERFIL ───────── -->
 <div class="pant" id="pPerfil" hidden>
-  <h1>RUTINA EN CASA <span>SIN EQUIPO</span></h1>
-  <div class="sub" id="perfilSub">Contanos de vos para armarte tu plan</div>
+  <h1><span data-t="u.titulo1" style="display:inline;color:inherit"></span> <span data-t="u.titulo2"></span></h1>
+  <div class="sub" id="perfilSub"></div>
   <div class="caja">
-    <div class="fila" style="justify-content:space-between"><b>EDAD</b><div class="num" data-k="edad" data-min="13" data-max="90" data-paso="1"><button>−</button><b></b><button>+</button></div></div>
-    <div class="fila" style="justify-content:space-between;margin-top:6px"><b>PESO (KG)</b><div class="num" data-k="peso" data-min="35" data-max="200" data-paso="0.5"><button>−</button><b></b><button>+</button></div></div>
-    <div class="fila" style="justify-content:space-between;margin-top:6px"><b>ALTURA (CM)</b><div class="num" data-k="altura" data-min="120" data-max="220" data-paso="1"><button>−</button><b></b><button>+</button></div></div>
-    <div class="fila" style="justify-content:space-between;margin-top:8px"><b>SEXO</b><div class="segm" id="sexo" style="width:170px"><div data-v="H">HOMBRE</div><div data-v="M">MUJER</div></div></div>
+    <div class="fila" style="justify-content:space-between"><b data-t="p.edad"></b><div class="num" data-k="edad" data-min="13" data-max="90" data-paso="1"><button>−</button><b></b><button>+</button></div></div>
+    <div class="fila" style="justify-content:space-between;margin-top:6px"><b data-t="p.peso"></b><div class="num" data-k="peso" data-min="35" data-max="200" data-paso="0.5"><button>−</button><b></b><button>+</button></div></div>
+    <div class="fila" style="justify-content:space-between;margin-top:6px"><b data-t="p.altura"></b><div class="num" data-k="altura" data-min="120" data-max="220" data-paso="1"><button>−</button><b></b><button>+</button></div></div>
+    <div class="fila" style="justify-content:space-between;margin-top:8px"><b data-t="p.sexo"></b><div class="segm" id="sexo" style="width:170px"><div data-v="H" data-t="p.hombre"></div><div data-v="M" data-t="p.mujer"></div></div></div>
   </div>
-  <div class="lab">TU OBJETIVO</div>
+  <div class="lab" data-t="p.objetivo"></div>
   <div class="opciones" id="objetivos"></div>
-  <div class="lab">DÍAS POR SEMANA</div>
+  <div class="lab" data-t="p.diasSem"></div>
   <div class="segm" id="diasSem"><div data-v="2">2</div><div data-v="3">3</div><div data-v="4">4</div><div data-v="5">5</div><div data-v="6">6</div></div>
-  <div class="lab">TU NIVEL</div>
-  <div class="segm" id="nivel"><div data-v="0">PRINCIPIANTE</div><div data-v="1">INTERMEDIO</div><div data-v="2">AVANZADO</div></div>
-  <div class="caja" style="margin-top:10px;font-weight:700;font-size:14px;line-height:1.3" id="pruebaTxt">¿No sabés tu nivel? Hacé la <b>prueba de 1 minuto</b>: todas las sentadillas que puedas. La cámara las cuenta y te dice qué nivel te conviene.</div>
-  <div class="btn blanco chico" id="btnPrueba">HACER LA PRUEBA CON LA CÁMARA</div>
-  <div class="btn" id="btnGuardarPerfil">ARMAR MI PLAN</div>
-  <div class="aviso-salud">Si tenés alguna condición de salud, consultá a tu médico antes de empezar. Tus datos quedan solo en este teléfono.</div>
+  <div class="lab" data-t="p.nivel"></div>
+  <div class="segm" id="nivel"><div data-v="0" data-t="niv.0"></div><div data-v="1" data-t="niv.1"></div><div data-v="2" data-t="niv.2"></div></div>
+  <div class="caja" style="margin-top:10px;font-weight:700;font-size:14px;line-height:1.3" id="pruebaTxt" data-t="p.pruebaTxt"></div>
+  <div class="btn blanco chico" id="btnPrueba" data-t="p.hacerPrueba"></div>
+  <div class="btn" id="btnGuardarPerfil" data-t="p.armar"></div>
+  <div class="aviso-salud" data-t="p.datosLocal"></div>
 </div>
 
 <!-- ───────── PLAN ───────── -->
 <div class="pant" id="pPlan" hidden>
-  <div class="lab" style="margin-top:0">TU PLAN</div>
+  <div class="lab" style="margin-top:0" data-t="p.tuPlan"></div>
   <h1 id="planTit"></h1>
   <div class="sub" id="planSub"></div>
-  <div class="segm" id="planNivel" style="margin-bottom:10px"><div data-v="0">PRINCIPIANTE</div><div data-v="1">INTERMEDIO</div><div data-v="2">AVANZADO</div></div>
+  <div class="segm" id="planNivel" style="margin-bottom:10px"><div data-v="0" data-t="niv.0"></div><div data-v="1" data-t="niv.1"></div><div data-v="2" data-t="niv.2"></div></div>
   <div class="semanas" id="semanas"></div>
   <div class="fila" style="margin-bottom:8px"><b style="font-size:15px" id="semTit"></b><div class="barra" style="flex:1"><i id="semBar"></i></div><b style="font-size:14px" id="semCnt"></b></div>
   <div id="listaDias"></div>
@@ -113,62 +113,63 @@
 
 <!-- ───────── DETALLE DEL DÍA ───────── -->
 <div class="pant" id="pDia" hidden>
-  <div class="link" style="text-align:left;margin:0 0 6px" id="volverPlan">‹ VOLVER</div>
+  <div class="link" style="text-align:left;margin:0 0 6px" id="volverPlan" data-t="p.volver"></div>
   <div class="lab" style="margin-top:0" id="diaLab"></div>
   <h1 id="diaTit"></h1>
   <div class="sub" id="diaSub"></div>
   <div id="diaLista"></div>
-  <div class="btn" id="btnEmpezarDia">EMPEZAR</div>
+  <div class="btn" id="btnEmpezarDia" data-t="p.empezar"></div>
 </div>
 
 <!-- ───────── INFORME ───────── -->
 <div class="pant" id="pInforme" hidden>
-  <h1>TU <span>INFORME</span></h1>
+  <h1><span data-t="p.informe1" style="display:inline;color:inherit"></span> <span data-t="p.informe2"></span></h1>
   <div class="sub" id="infSemana"></div>
   <div class="caja fila">
-    <div class="dato"><b style="color:var(--naranja)" id="iKcal">0</b><small>KCAL</small></div>
-    <div class="dato"><b style="color:var(--verde)" id="iMin">0</b><small>MINUTOS</small></div>
-    <div class="dato"><b style="color:var(--azul)" id="iSes">0</b><small>SESIONES</small></div>
-    <div class="dato"><b style="color:var(--rojo)" id="iRacha">0</b><small>RACHA</small></div>
+    <div class="dato"><b style="color:var(--naranja)" id="iKcal">0</b><small data-t="p.kcal"></small></div>
+    <div class="dato"><b style="color:var(--verde)" id="iMin">0</b><small data-t="p.minutos"></small></div>
+    <div class="dato"><b style="color:var(--azul)" id="iSes">0</b><small data-t="p.sesiones"></small></div>
+    <div class="dato"><b style="color:var(--rojo)" id="iRacha">0</b><small data-t="p.racha"></small></div>
   </div>
-  <div class="lab">CALORÍAS POR DÍA (ESTA SEMANA)</div>
+  <div class="lab" data-t="p.kcalDia"></div>
   <div class="caja" style="padding:6px 8px"><svg class="graf" id="gKcal" viewBox="0 0 330 150"></svg></div>
-  <div class="lab">META SEMANAL OMS: 150 MINUTOS DE ACTIVIDAD</div>
+  <div class="lab" data-t="p.oms"></div>
   <div class="caja"><div class="fila"><div class="barra" style="flex:1;height:18px"><i id="iOmsB"></i></div><b id="iOms" style="font-size:15px"></b></div></div>
-  <div class="lab">PESO</div>
+  <div class="lab" data-t="p.pesoT"></div>
   <div class="caja" style="padding:8px"><svg class="graf" id="gPeso" viewBox="0 0 330 140"></svg>
-    <div class="fila" style="margin-top:4px"><div style="flex:1;font-weight:800;font-size:14px" id="iImc"></div><div class="btn chico" style="width:auto;padding:8px 14px 5px;margin:0" id="btnPeso">ANOTAR PESO</div></div></div>
-  <div class="lab">ESTE MES</div>
+    <div class="fila" style="margin-top:4px"><div style="flex:1;font-weight:800;font-size:14px" id="iImc"></div><div class="btn chico" style="width:auto;padding:8px 14px 5px;margin:0" id="btnPeso" data-t="p.anotarPeso"></div></div></div>
+  <div class="lab" data-t="p.esteMes"></div>
   <div class="caja"><div class="cal" id="iCal"></div></div>
-  <div class="lab">TU PROGRESO</div>
+  <div class="lab" data-t="p.progreso"></div>
   <div class="caja" style="font-weight:700;font-size:14px;line-height:1.4" id="iProg"></div>
-  <div class="lab">EN TOTAL</div>
+  <div class="lab" data-t="p.total"></div>
   <div class="caja fila">
-    <div class="dato"><b id="tSes">0</b><small>SESIONES</small></div>
-    <div class="dato"><b id="tMin">0</b><small>MINUTOS</small></div>
-    <div class="dato"><b id="tKcal">0</b><small>KCAL</small></div>
+    <div class="dato"><b id="tSes">0</b><small data-t="p.sesiones"></small></div>
+    <div class="dato"><b id="tMin">0</b><small data-t="p.minutos"></small></div>
+    <div class="dato"><b id="tKcal">0</b><small data-t="p.kcal"></small></div>
   </div>
-  <div class="aviso-salud">Las calorías se calculan con tu peso, edad, altura y sexo, el tipo de ejercicio (valores MET del Compendio de Actividad Física) y el tiempo que estuviste activo. Son una estimación: ninguna app puede medirlas exacto sin un reloj que lea el pulso.</div>
+  <div class="aviso-salud" data-t="p.kcalNota"></div>
 </div>
 
 <!-- ───────── PERFIL (ajustes) ───────── -->
 <div class="pant" id="pAjustes" hidden>
-  <h1>MI <span>PERFIL</span></h1>
-  <div class="sub">Cambiá tus datos o tu objetivo cuando quieras</div>
+  <h1><span data-t="p.mi1" style="display:inline;color:inherit"></span> <span data-t="p.mi2"></span></h1>
+  <div class="sub" data-t="p.ajSub"></div>
   <div class="caja" id="ajResumen" style="font-weight:700;font-size:15px;line-height:1.5"></div>
-  <div class="btn" id="btnEditarPerfil">CAMBIAR MIS DATOS Y OBJETIVO</div>
-  <div class="lab">VOZ</div>
-  <div class="segm" id="voz"><div data-v="1">CON VOZ</div><div data-v="0">SIN VOZ</div></div>
-  <div class="lab">DESCANSO ENTRE EJERCICIOS</div>
-  <div class="segm" id="desc"><div data-v="-5">MÁS CORTO</div><div data-v="0">NORMAL</div><div data-v="10">MÁS LARGO</div></div>
-  <div class="btn rojo chico" id="btnBorrar" style="margin-top:22px">BORRAR TODO Y EMPEZAR DE CERO</div>
+  <div class="btn" id="btnEditarPerfil" data-t="p.editar"></div>
+  <div class="lab" data-t="p.voz"></div>
+  <div class="segm" id="voz"><div data-v="1" data-t="p.conVoz"></div><div data-v="0" data-t="p.sinVoz"></div></div>
+  <div class="lab" data-t="p.descEntre"></div>
+  <div class="segm" id="desc"><div data-v="-5" data-t="p.masCorto"></div><div data-v="0" data-t="p.normal"></div><div data-v="10" data-t="p.masLargo"></div></div>
+  <div class="btn rojo chico" id="btnBorrar" style="margin-top:22px" data-t="p.borrar"></div>
+  <div class="btn blanco chico" id="btnEntrenador" data-t="u.cambiarEntrenador"></div>
 </div>
 
 <nav id="nav" hidden>
-  <div data-p="pPlan" class="sel">PLAN</div>
-  <div data-p="pInforme">INFORME</div>
-  <div data-p="juegos">JUEGOS</div>
-  <div data-p="pAjustes">PERFIL</div>
+  <div data-p="pPlan" class="sel" data-t="p.navPlan"></div>
+  <div data-p="pInforme" data-t="p.navInforme"></div>
+  <div data-p="juegos" data-t="p.navJuegos"></div>
+  <div data-p="pAjustes" data-t="p.navPerfil"></div>
 </nav>
 
 <!-- ───────── ENTRENAMIENTO EN CURSO ───────── -->
@@ -179,31 +180,35 @@
   <div id="jFig"><span class="fase" id="jFase"></span></div>
   <div id="jCnt"></div>
   <div id="jComo"></div>
-  <div class="fila"><div class="btn blanco" id="jAtras" style="flex:0 0 58px">‹</div><div class="btn blanco" id="jPausa" style="flex:1">PAUSA</div><div class="btn rojo" id="jSig" style="flex:1.3">LISTO</div></div>
-  <div class="fila"><div class="btn blanco chico" id="jCambiar">CAMBIAR EJERCICIO</div><div class="btn blanco chico" id="jSalir">SALIR</div></div>
+  <div class="fila"><div class="btn blanco" id="jAtras" style="flex:0 0 58px">‹</div><div class="btn blanco" id="jPausa" style="flex:1" data-t="p.pausa"></div><div class="btn rojo" id="jSig" style="flex:1.3">LISTO</div></div>
+  <div class="fila"><div class="btn blanco chico" id="jCambiar" data-t="p.cambiar"></div><div class="btn blanco chico" id="jSalir" data-t="p.salir"></div></div>
 </div>
 
 <div class="modal" id="mFin" hidden><div class="caja" style="text-align:center">
-  <h1 style="font-size:30px">¡DÍA <span>COMPLETO!</span></h1>
+  <h1 style="font-size:30px"><span data-t="p.fin1" style="display:inline;color:inherit"></span> <span data-t="p.fin2"></span></h1>
   <div class="caja fila" style="margin-top:12px;box-shadow:none">
-    <div class="dato"><b style="color:var(--verde)" id="fMin">0</b><small>MINUTOS</small></div>
-    <div class="dato"><b style="color:var(--naranja)" id="fKcal">0</b><small>KCAL</small></div>
-    <div class="dato"><b style="color:var(--azul)" id="fEj">0</b><small>EJERCICIOS</small></div>
+    <div class="dato"><b style="color:var(--verde)" id="fMin">0</b><small data-t="p.minutos"></small></div>
+    <div class="dato"><b style="color:var(--naranja)" id="fKcal">0</b><small data-t="p.kcal"></small></div>
+    <div class="dato"><b style="color:var(--azul)" id="fEj">0</b><small data-t="p.ejercicios"></small></div>
   </div>
-  <div style="font-weight:800;margin-top:10px">¿CÓMO TE RESULTÓ?</div>
-  <div class="segm" id="fSens" style="margin-top:6px"><div data-v="-1">FÁCIL</div><div data-v="0" class="sel">JUSTO</div><div data-v="1">DIFÍCIL</div></div>
-  <div class="btn" id="btnFinOk">VER MI INFORME</div>
+  <div style="font-weight:800;margin-top:10px" data-t="p.como"></div>
+  <div class="segm" id="fSens" style="margin-top:6px"><div data-v="-1" data-t="p.facil"></div><div data-v="0" class="sel" data-t="p.justo"></div><div data-v="1" data-t="p.dificil"></div></div>
+  <div class="btn" id="btnFinOk" data-t="p.verInforme"></div>
 </div></div>
 
 <div class="modal" id="mPeso" hidden><div class="caja" style="text-align:center">
-  <h1 style="font-size:28px">ANOTAR <span>PESO</span></h1>
+  <h1 style="font-size:28px"><span data-t="p.anotar1" style="display:inline;color:inherit"></span> <span data-t="p.anotar2"></span></h1>
   <div class="num" style="justify-content:center;gap:14px;margin-top:14px" id="pesoNum"><button>−</button><b style="font-size:34px"></b><button>+</button></div>
-  <div class="btn" id="btnPesoOk">GUARDAR</div>
-  <div class="link" id="btnPesoNo">CANCELAR</div>
+  <div class="btn" id="btnPesoOk" data-t="p.guardar"></div>
+  <div class="link" id="btnPesoNo" data-t="p.cancelar"></div>
 </div></div>
 
+<script src="../textos.js"></script>
+<script src="../voz.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+const P_ = (k, v) => RC.t('p', k, v);
+RC.aplicar();
 const leer = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch (e) { return d; } };
 const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const hoyStr = (d = new Date()) => d.toLocaleDateString('sv');
@@ -279,6 +284,7 @@ const EJ = {
   nino: { n: 'POSTURA DEL NIÑO', t: 's', met: 2.5, g: 'estirar', como: 'De rodillas, sentate sobre los talones y estirá los brazos adelante en el piso. Respirá.',
     A: { cab: [30, 112], hom: [42, 108], cad: [76, 104], rodI: [64, 122], rodD: [65, 122], pieI: [92, 122], pieD: [93, 122], manI: [12, 120], manD: [14, 121] }, B: { cab: [29, 113], hom: [41, 109], cad: [76, 105], rodI: [64, 122], rodD: [65, 122], pieI: [92, 122], pieD: [93, 122], manI: [10, 120], manD: [12, 121] } },
 };
+for (const id in EJ) { const x = RC.T.ej[id]; if (x) { EJ[id].n = x[0].toUpperCase(); EJ[id].como = x[1]; } }
 // reemplazos para el botón CAMBIAR (si no podés hacer uno)
 const ALT = { flexion: 'flexionRod', flexionRod: 'toqueHombros', burpee: 'sentadillaSalto', sentadillaSalto: 'sentadilla', tijera: 'rodillas', rodillas: 'talones', talones: 'tijera', estocada: 'sumo', sumo: 'sentadilla', sentadilla: 'sumo', escalador: 'plancha', plancha: 'planchaLateral', planchaLateral: 'plancha', abdominal: 'bicicleta', bicicleta: 'abdominal', piernasArriba: 'abdominal', fondos: 'flexionRod', toqueHombros: 'plancha', puente: 'patadaGluteo', patadaGluteo: 'puente', pared: 'sentadilla', superman: 'cobra', boxeo: 'circulos', circulos: 'boxeo', patadaLateral: 'patadaGluteo', talonesArriba: 'sentadilla' };
 
@@ -322,11 +328,14 @@ const TIPOS = {
   cardio: { n: 'CARDIO QUEMA GRASA', l: ['tijera', 'rodillas', 'talones', 'boxeo', 'burpee', 'escalador', 'sentadillaSalto', 'patadaLateral', 'estirarPiernas'] },
   movilidad: { n: 'MOVILIDAD Y ESTIRAMIENTO', l: ['circulos', 'estirarBrazos', 'estirarPiernas', 'puente', 'patadaLateral', 'cobra', 'nino', 'planchaLateral'] },
 };
-const NIV = [
+const NIV_ = [
   { n: 'PRINCIPIANTE', reps: 10, seg: 25, desc: 25, vueltas: 1, cambia: { flexion: 'flexionRod', burpee: 'sentadilla', sentadillaSalto: 'sentadilla', piernasArriba: 'abdominal', toqueHombros: 'flexionRod' } },
   { n: 'INTERMEDIO', reps: 14, seg: 35, desc: 20, vueltas: 1, cambia: { burpee: 'sentadillaSalto' } },
   { n: 'AVANZADO', reps: 18, seg: 45, desc: 15, vueltas: 2, cambia: { flexionRod: 'flexion' } },
 ];
+const NIV = NIV_.map((x, i) => ({ ...x, n: RC.T.niv[i] }));
+for (const o of OBJ) o.n = RC.T.obj[o.id];
+for (const k in TIPOS) TIPOS[k].n = RC.T.tipos[k];
 const DIAS_EN_SEMANA = { 2: [0, 3], 3: [0, 2, 4], 4: [0, 1, 3, 4], 5: [0, 1, 2, 4, 5], 6: [0, 1, 2, 3, 4, 5] };
 const SEMANAS = 4;
 
@@ -390,8 +399,8 @@ function abrirPerfil() {
   for (const nm of document.querySelectorAll('#pPerfil .num')) nm.pinta();
   marcarSegm('sexo', borr.sexo); marcarSegm('diasSem', borr.dias); marcarSegm('nivel', borr.nivel);
   for (const x of $('objetivos').children) x.classList.toggle('sel', x.dataset.v === borr.objetivo);
-  $('pruebaTxt').innerHTML = prueba ? `Tu última prueba: <b>${prueba.reps} sentadillas en 1 minuto</b> → nivel recomendado: <b>${NIV[nivelDePrueba(prueba.reps)].n}</b>.` : $('pruebaTxt').innerHTML;
-  $('perfilSub').textContent = perfil ? 'Cambiá lo que quieras' : 'Contanos de vos para armarte tu plan';
+  $('pruebaTxt').innerHTML = prueba ? P_('pruebaUlt', { n: prueba.reps, nivel: NIV[nivelDePrueba(prueba.reps)].n }) : P_('pruebaTxt');
+  $('perfilSub').textContent = P_(perfil ? 'subEdit' : 'sub');
   ir('pPerfil');
 }
 const nivelDePrueba = r => r >= 35 ? 2 : r >= 20 ? 1 : 0;
@@ -408,21 +417,21 @@ function proxima() { const h = hechas(); return sesiones().find(s => !h[`${s.sem
 function pintarPlan() {
   const o = OBJ.find(x => x.id === perfil.objetivo), h = hechas(), ses = sesiones(), sig = proxima();
   $('planTit').innerHTML = `${o.n} <span>${NIV[perfil.nivel].n}</span>`;
-  $('planSub').textContent = `${SEMANAS} semanas · ${perfil.dias} días por semana · ${Object.keys(h).length} de ${ses.length} hechos`;
+  $('planSub').textContent = P_('planSub', { s: SEMANAS, d: perfil.dias, h: Object.keys(h).length, t: ses.length });
   marcarSegm('planNivel', perfil.nivel);
   if (sig && !pintarPlan.fijada) semVista = sig.semana; pintarPlan.fijada = false;
-  $('semanas').innerHTML = Array.from({ length: SEMANAS }, (_, i) => { const w = i + 1, todas = ses.filter(s => s.semana === w).every(s => h[`${s.semana}-${s.n}`]); return `<div data-w="${w}" class="${w === semVista ? 'sel' : todas ? 'hecha' : ''}">SEMANA ${w}</div>`; }).join('');
+  $('semanas').innerHTML = Array.from({ length: SEMANAS }, (_, i) => { const w = i + 1, todas = ses.filter(s => s.semana === w).every(s => h[`${s.semana}-${s.n}`]); return `<div data-w="${w}" class="${w === semVista ? 'sel' : todas ? 'hecha' : ''}">${P_('semana')} ${w}</div>`; }).join('');
   const deSem = ses.filter(s => s.semana === semVista), hechasSem = deSem.filter(s => h[`${s.semana}-${s.n}`]).length;
-  $('semTit').textContent = `SEMANA ${semVista}`; $('semBar').style.width = hechasSem / deSem.length * 100 + '%'; $('semCnt').textContent = `${hechasSem} / ${deSem.length}`;
+  $('semTit').textContent = `${P_('semana')} ${semVista}`; $('semBar').style.width = hechasSem / deSem.length * 100 + '%'; $('semCnt').textContent = `${hechasSem} / ${deSem.length}`;
   const slots = DIAS_EN_SEMANA[perfil.dias]; let html = '', n = 0;
   for (let d = 0; d < 7; d++) {
     if (slots.includes(d)) { const s = deSem[n++], k = `${s.semana}-${s.n}`, lista = armarDia(s.tipo, perfil.nivel, s.semana), min = Math.round((lista.reduce((a, x) => a + segDe(x), 0) + lista.length * (NIV[perfil.nivel].desc + ajustes().desc + 10)) / 60), kc = Math.round(kcalDia(lista, perfil, NIV[perfil.nivel].desc));
       const esHoy = sig && sig.semana === s.semana && sig.n === s.n;
-      html += `<div class="dia${h[k] ? ' hecho' : ''}${esHoy ? ' hoy' : ''}" data-k="${k}"><div class="n">${d + 1}</div><div class="t"><b>${TIPOS[s.tipo].n}</b><small>${lista.length} ejercicios · ${min} min · ~${kc} kcal</small></div>${h[k] ? '<span class="ok">HECHO</span>' : esHoy ? '<b>HOY</b>' : ''}</div>`; }
-    else html += `<div class="dia desc"><div class="n">${d + 1}</div><div class="t"><b>DESCANSO</b><small>${d === 6 ? 'o un juego de la parte divertida' : 'estirá un poco o caminá'}</small></div></div>`;
+      html += `<div class="dia${h[k] ? ' hecho' : ''}${esHoy ? ' hoy' : ''}" data-k="${k}"><div class="n">${d + 1}</div><div class="t"><b>${TIPOS[s.tipo].n}</b><small>${lista.length} ${P_('ejercicios')} · ${min} min · ~${kc} kcal</small></div>${h[k] ? `<span class="ok">${P_('hecho')}</span>` : esHoy ? `<b>${P_('hoy')}</b>` : ''}</div>`; }
+    else html += `<div class="dia desc"><div class="n">${d + 1}</div><div class="t"><b>${P_('descanso')}</b><small>${P_(d === 6 ? 'descansoJ' : 'descansoD')}</small></div></div>`;
   }
   $('listaDias').innerHTML = html;
-  $('btnHoy').textContent = sig ? `EMPEZAR: ${TIPOS[sig.tipo].n}` : '¡PLAN TERMINADO! SUBÍ DE NIVEL';
+  $('btnHoy').textContent = sig ? P_('empezarTipo', { t: TIPOS[sig.tipo].n }) : P_('planTerminado');
 }
 $('semanas').addEventListener('click', e => { const d = e.target.closest('div[data-w]'); if (!d) return; semVista = +d.dataset.w; pintarPlan.fijada = true; pintarPlan(); });
 $('planNivel').addEventListener('click', e => { const d = e.target.closest('div[data-v]'); if (!d) return; perfil.nivel = +d.dataset.v; guardar('rcPerfil', perfil); pintarPlan(); });
@@ -434,10 +443,10 @@ let diaAct = null;
 function abrirDia(s) {
   diaAct = { ...s, lista: armarDia(s.tipo, perfil.nivel, s.semana) };
   const L = diaAct.lista, desc = NIV[perfil.nivel].desc + ajustes().desc;
-  $('diaLab').textContent = `SEMANA ${s.semana} · ENTRENAMIENTO ${s.n} DE ${perfil.dias} · ${NIV[perfil.nivel].n}`;
+  $('diaLab').textContent = P_('diaLab', { s: s.semana, n: s.n, d: perfil.dias, nivel: NIV[perfil.nivel].n });
   const [a, ...b] = TIPOS[s.tipo].n.split(' '); $('diaTit').innerHTML = `${a} <span>${b.join(' ')}</span>`;
-  $('diaSub').textContent = `${Math.round((L.reduce((x, y) => x + segDe(y), 0) + L.length * (desc + 10)) / 60)} min · ~${Math.round(kcalDia(L, perfil, desc))} kcal · sin equipo`;
-  $('diaLista').innerHTML = L.map(x => `<div class="ej"><div class="fig">${icono(x.id)}</div><div><b>${EJ[x.id].n}${EJ[x.id].cam ? '<span class="tag">CÁMARA</span>' : ''}</b><small>${x.reps ? x.reps + ' repeticiones' : x.seg + ' segundos'}${EJ[x.id].prop === 'silla' ? ' · necesitás una silla' : EJ[x.id].prop === 'pared' ? ' · contra una pared' : ''}</small></div></div>`).join('');
+  $('diaSub').textContent = P_('diaSub', { m: Math.round((L.reduce((x, y) => x + segDe(y), 0) + L.length * (desc + 10)) / 60), k: Math.round(kcalDia(L, perfil, desc)) });
+  $('diaLista').innerHTML = L.map(x => `<div class="ej"><div class="fig">${icono(x.id)}</div><div><b>${EJ[x.id].n}${EJ[x.id].cam ? `<span class="tag">${P_('camara')}</span>` : ''}</b><small>${x.reps ? x.reps + ' ' + P_('repsL') : x.seg + ' ' + P_('segL')}${EJ[x.id].prop === 'silla' ? P_('silla') : EJ[x.id].prop === 'pared' ? P_('pared') : ''}</small></div></div>`).join('');
   ir('pDia');
 }
 $('volverPlan').addEventListener('click', () => ir('pPlan'));
@@ -446,15 +455,13 @@ $('btnEmpezarDia').addEventListener('click', () => empezarEntreno());
 // ───────── SONIDO Y VOZ ─────────
 let ac = null;
 function bip(f = 880, d = .09, v = .25) { try { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = f; o.type = 'triangle'; g.gain.setValueAtTime(v, ac.currentTime); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + d); o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + d + .02); } catch (e) {} }
-let vozES = null; function elegirVoz() { try { const v = speechSynthesis.getVoices(); vozES = v.find(x => /es[-_](AR|419|US|MX)/i.test(x.lang)) || v.find(x => /^es/i.test(x.lang)) || null; } catch (e) {} }
-try { elegirVoz(); speechSynthesis.onvoiceschanged = elegirVoz; } catch (e) {}
-function decir(t) { if (!ajustes().voz) return; try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = vozES ? vozES.lang : 'es-AR'; if (vozES) u.voice = vozES; u.rate = 1.08; speechSynthesis.speak(u); } catch (e) {} }
+const decir = claves => { RC.mudo = !ajustes().voz; RC.habla(claves); };
 
 // ───────── ENTRENAMIENTO EN CURSO ─────────
 // fases: 'prep' (10 s para acomodarte), 'ej' (el ejercicio), 'desc' (descanso con el siguiente)
 const J = { i: 0, fase: 'prep', t0: 0, dur: 0, pausa: false, pausaT: 0, activoSeg: 0, kcal: 0, inicio: 0, ult: 0, raf: 0, hechos: 0 };
 function empezarEntreno() {
-  try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) {} bip(1, .01, .001);
+  RC.desbloquear(); bip(1, .01, .001); RC.precargar(RC.todas());
   Object.assign(J, { i: 0, pausa: false, activoSeg: 0, kcal: 0, inicio: performance.now(), ult: performance.now(), hechos: 0 });
   try { navigator.wakeLock?.request('screen').catch(() => {}); } catch (e) {}
   $('juego').hidden = false; fase('prep'); cancelAnimationFrame(J.raf); J.raf = requestAnimationFrame(cuadro);
@@ -463,18 +470,18 @@ function fase(f) {
   const x = diaAct.lista[J.i], e = EJ[x.id], N = NIV[perfil.nivel];
   J.fase = f; J.t0 = performance.now(); J.dicho = {};
   $('juego').classList.toggle('descanso', f === 'desc');
-  if (f === 'prep') { J.dur = J.i === 0 ? 10 : 0; if (!J.dur) return fase('ej'); decir(`preparate. ${e.n.toLowerCase()}`); }
-  if (f === 'ej') { J.dur = x.seg || 0; decir(x.reps ? `${e.n.toLowerCase()}, ${x.reps} repeticiones` : `${e.n.toLowerCase()}, ${x.seg} segundos. ¡ya!`); bip(1100, .15); }
-  if (f === 'desc') { J.dur = Math.max(5, N.desc + ajustes().desc); const s = diaAct.lista[J.i + 1]; decir(`descanso. después: ${EJ[s.id].n.toLowerCase()}`); }
+  if (f === 'prep') { J.dur = J.i === 0 ? 10 : 0; if (!J.dur) return fase('ej'); decir(['v:preparate', 'ej:' + x.id]); }
+  if (f === 'ej') { J.dur = x.seg || 0; decir(x.reps ? ['ej:' + x.id, RC.numero(x.reps), 'v:reps'] : ['ej:' + x.id, RC.numero(x.seg), 'v:segundos', 'v:ya']); bip(1100, .15); }
+  if (f === 'desc') { J.dur = Math.max(5, N.desc + ajustes().desc); const s = diaAct.lista[J.i + 1]; decir(['v:descanso', 'v:despues', 'ej:' + s.id]); }
   pintarJuego();
 }
 function pintarJuego() {
   const L = diaAct.lista, x = J.fase === 'desc' ? L[J.i + 1] : L[J.i], e = EJ[x.id];
-  $('jPaso').textContent = J.fase === 'desc' ? 'DESCANSO' : `EJERCICIO ${J.i + 1} DE ${L.length}`;
+  $('jPaso').textContent = J.fase === 'desc' ? P_('descansoT') : P_('ejDe', { a: J.i + 1, b: L.length });
   $('jNom').textContent = e.n; $('jComo').textContent = e.como;
-  $('jFase').textContent = J.fase === 'prep' ? 'PREPARATE' : J.fase === 'desc' ? 'SIGUIENTE' : e.cam ? 'SE PUEDE CON CÁMARA EN LOS JUEGOS' : '';
+  $('jFase').textContent = J.fase === 'prep' ? P_('preparate') : J.fase === 'desc' ? P_('siguiente') : e.cam ? P_('conCamara') : '';
   $('jFase').style.display = $('jFase').textContent ? '' : 'none';
-  $('jSig').textContent = J.fase === 'ej' ? (x.reps ? 'LISTO' : 'SALTAR') : J.fase === 'desc' ? 'YA ESTOY' : 'EMPEZAR YA';
+  $('jSig').textContent = J.fase === 'ej' ? P_(x.reps ? 'listoB' : 'saltar') : P_(J.fase === 'desc' ? 'yaEstoy' : 'empezarYa');
   $('jCambiar').style.visibility = J.fase === 'desc' || !ALT[x.id] ? 'hidden' : '';
 }
 function cuadro(now) {
@@ -500,7 +507,7 @@ function cuadro(now) {
   const tot = (now - J.inicio) / 1000; $('jReloj').textContent = Math.floor(tot / 60) + ':' + String(Math.floor(tot % 60)).padStart(2, '0');
   $('jBar').style.width = (J.i + (J.fase === 'desc' ? 1 : 0)) / L.length * 100 + '%';
 }
-function cuentaAtras(r) { for (const s of [3, 2, 1]) if (r <= s && r > s - 1 && !J.dicho[s]) { J.dicho[s] = 1; bip(660, .08); if (J.fase !== 'ej') decir(String(s)); } }
+function cuentaAtras(r) { for (const s of [3, 2, 1]) if (r <= s && r > s - 1 && !J.dicho[s]) { J.dicho[s] = 1; bip(660, .08); if (J.fase !== 'ej') decir([RC.numero(s)]); } }
 function terminarEj() {
   J.hechos++; bip(1320, .2);
   const L = diaAct.lista;
@@ -509,9 +516,9 @@ function terminarEj() {
 }
 $('jSig').addEventListener('click', () => { if (J.fase === 'ej') terminarEj(); else { if (J.fase === 'desc') J.i++; fase('ej'); } });
 $('jAtras').addEventListener('click', () => { if (J.fase === 'desc') fase('ej'); else if (J.i > 0) { J.i--; fase('ej'); } });
-$('jPausa').addEventListener('click', () => { J.pausa = !J.pausa; if (J.pausa) { J.pausaT = performance.now(); speechSynthesis.cancel(); } else { const d = performance.now() - J.pausaT; J.t0 += d; J.inicio += d; J.ult = performance.now(); } $('jPausa').textContent = J.pausa ? 'SEGUIR' : 'PAUSA'; });
+$('jPausa').addEventListener('click', () => { J.pausa = !J.pausa; if (J.pausa) { J.pausaT = performance.now(); RC.callar(); } else { const d = performance.now() - J.pausaT; J.t0 += d; J.inicio += d; J.ult = performance.now(); } $('jPausa').textContent = P_(J.pausa ? 'seguir' : 'pausa'); });
 $('jCambiar').addEventListener('click', () => { const x = diaAct.lista[J.i], a = ALT[x.id]; if (!a) return; const nuevo = { id: a, reps: EJ[a].t === 'r' ? (x.reps || 12) : 0, seg: EJ[a].t === 's' ? (x.seg || 30) : 0 }; diaAct.lista[J.i] = nuevo; fase('ej'); });
-$('jSalir').addEventListener('click', () => { cancelAnimationFrame(J.raf); speechSynthesis.cancel(); if (J.activoSeg > 60) registrar(false); $('juego').hidden = true; ir('pPlan'); });
+$('jSalir').addEventListener('click', () => { cancelAnimationFrame(J.raf); RC.callar(); if (J.activoSeg > 60) registrar(false); $('juego').hidden = true; ir('pPlan'); });
 function registrar(completo) {
   const h = leer('rcHistorial', []);
   h.push({ t: new Date().toISOString(), fecha: hoyStr(), tipo: 'plan', nombre: TIPOS[diaAct.tipo].n, seg: Math.round(J.activoSeg), kcal: Math.round(J.kcal), completo, ej: diaAct.lista.slice(0, J.hechos).map(x => ({ id: x.id, reps: x.reps, seg: x.seg })) });
@@ -520,7 +527,7 @@ function registrar(completo) {
 function finEntreno() {
   cancelAnimationFrame(J.raf); registrar(true);
   const p = prog(), k = claveP(); p[k] = p[k] || {}; p[k][`${diaAct.semana}-${diaAct.n}`] = hoyStr(); guardar('rcProgreso', p);
-  decir('¡muy bien! día completo'); bip(880, .15); setTimeout(() => bip(1320, .3), 160);
+  decir(['v:diaCompleto']); bip(880, .15); setTimeout(() => bip(1320, .3), 160);
   $('fMin').textContent = Math.max(1, Math.round(J.activoSeg / 60)); $('fKcal').textContent = Math.round(J.kcal); $('fEj').textContent = J.hechos;
   $('juego').hidden = true; $('mFin').hidden = false;
 }
@@ -529,20 +536,20 @@ $('btnFinOk').addEventListener('click', () => {
   // si fue muy fácil o muy difícil varias veces, el plan se ajusta solo
   const s = +($('fSens').querySelector('.sel')?.dataset.v || 0), a = leer('rcSensacion', []); a.push(s); guardar('rcSensacion', a.slice(-3));
   const ult = a.slice(-3); let msj = '';
-  if (ult.length === 3 && ult.every(x => x === -1) && perfil.nivel < 2) { perfil.nivel++; guardar('rcPerfil', perfil); guardar('rcSensacion', []); msj = 'Te resultó fácil 3 veces seguidas: te subimos a ' + NIV[perfil.nivel].n + '.'; }
-  if (ult.length === 3 && ult.every(x => x === 1) && perfil.nivel > 0) { perfil.nivel--; guardar('rcPerfil', perfil); guardar('rcSensacion', []); msj = 'Te costó 3 veces seguidas: bajamos a ' + NIV[perfil.nivel].n + ' un tiempo.'; }
+  if (ult.length === 3 && ult.every(x => x === -1) && perfil.nivel < 2) { perfil.nivel++; guardar('rcPerfil', perfil); guardar('rcSensacion', []); msj = P_('subimos', { n: NIV[perfil.nivel].n }); }
+  if (ult.length === 3 && ult.every(x => x === 1) && perfil.nivel > 0) { perfil.nivel--; guardar('rcPerfil', perfil); guardar('rcSensacion', []); msj = P_('bajamos', { n: NIV[perfil.nivel].n }); }
   $('mFin').hidden = true; ir('pInforme'); if (msj) setTimeout(() => alertaSuave(msj), 300);
 });
 function alertaSuave(t) { const d = document.createElement('div'); d.className = 'caja'; d.style.cssText = 'position:fixed;left:16px;right:16px;top:16px;z-index:30;font-weight:800;text-align:center'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 4000); }
 
 // ───────── INFORME ─────────
-const DSEM = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
+const DSEM = RC.T.p.dsem;
 function lunes(d = new Date()) { const x = new Date(d); x.setHours(12, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
 function racha(h) { const f = new Set(h.map(x => x.fecha)); let n = 0; const x = new Date(); if (!f.has(hoyStr(x))) x.setDate(x.getDate() - 1); while (f.has(hoyStr(x))) { n++; x.setDate(x.getDate() - 1); } return n; }
 function pintarInforme() {
   const h = leer('rcHistorial', []), L = lunes(), dias = Array.from({ length: 7 }, (_, i) => { const d = new Date(L); d.setDate(L.getDate() + i); return hoyStr(d); });
   const fin = new Date(L); fin.setDate(L.getDate() + 6);
-  $('infSemana').textContent = `Semana del ${L.getDate()}/${L.getMonth() + 1} al ${fin.getDate()}/${fin.getMonth() + 1}`;
+  $('infSemana').textContent = P_('semanaDel', { a: `${L.getDate()}/${L.getMonth() + 1}`, b: `${fin.getDate()}/${fin.getMonth() + 1}` });
   const sem = h.filter(x => dias.includes(x.fecha)), kc = dias.map(d => sem.filter(x => x.fecha === d).reduce((a, x) => a + x.kcal, 0));
   const minSem = sem.reduce((a, x) => a + x.seg, 0) / 60;
   $('iKcal').textContent = Math.round(kc.reduce((a, b) => a + b, 0)); $('iMin').textContent = Math.round(minSem); $('iSes').textContent = sem.length; $('iRacha').textContent = racha(h);
@@ -554,7 +561,7 @@ function pintarInforme() {
     s += `<text x="${x + 18}" y="140" text-anchor="middle" font-weight="800" font-size="12" fill="#2a2238" opacity=".6">${DSEM[i]}</text>`; });
   s += '<line x1="4" y1="121" x2="326" y2="121" stroke="#2a2238" stroke-width="3" stroke-linecap="round"/>';
   $('gKcal').innerHTML = s;
-  $('iOms').textContent = `${Math.round(minSem)} de 150`; $('iOmsB').style.width = Math.min(100, minSem / 150 * 100) + '%';
+  $('iOms').textContent = P_('omsN', { n: Math.round(minSem) }); $('iOmsB').style.width = Math.min(100, minSem / 150 * 100) + '%';
   // peso
   const pesos = leer('rcPeso', []).slice(-12); let g = '';
   if (pesos.length) {
@@ -565,10 +572,10 @@ function pintarInforme() {
     const f = p => `${p.kg.toString().replace('.', ',')} kg`, fd = p => p.fecha.slice(8, 10) + '/' + p.fecha.slice(5, 7);
     g += `<text x="10" y="124" font-weight="800" font-size="13" fill="#2a2238">${f(pesos[0])} · ${fd(pesos[0])}</text>`;
     if (pesos.length > 1) g += `<text x="320" y="124" text-anchor="end" font-weight="800" font-size="13" fill="#2a2238">${f(pesos[pesos.length - 1])} · ${fd(pesos[pesos.length - 1])}</text>`;
-  } else g = '<text x="165" y="70" text-anchor="middle" font-weight="800" font-size="14" fill="#2a2238" opacity=".5">Anotá tu peso para ver el gráfico</text>';
+  } else g = `<text x="165" y="70" text-anchor="middle" font-weight="800" font-size="14" fill="#2a2238" opacity=".5">${P_('sinPeso')}</text>`;
   $('gPeso').innerHTML = g;
-  const imc = perfil.peso / Math.pow(perfil.altura / 100, 2), cat = imc < 18.5 ? 'BAJO' : imc < 25 ? 'NORMAL' : imc < 30 ? 'SOBREPESO' : 'OBESIDAD';
-  $('iImc').innerHTML = `IMC: ${imc.toFixed(1).replace('.', ',')} <span style="opacity:.6">(${cat})</span>`;
+  const imc = perfil.peso / Math.pow(perfil.altura / 100, 2), cat = P_('imcCat')[imc < 18.5 ? 0 : imc < 25 ? 1 : imc < 30 ? 2 : 3];
+  $('iImc').innerHTML = `${P_('imc')}: ${imc.toFixed(1).replace('.', ',')} <span style="opacity:.6">(${cat})</span>`;
   // calendario del mes
   const hoyD = new Date(), pri = new Date(hoyD.getFullYear(), hoyD.getMonth(), 1), nd = new Date(hoyD.getFullYear(), hoyD.getMonth() + 1, 0).getDate(), fechas = new Set(h.map(x => x.fecha));
   let c = DSEM.map(d => `<span class="cab">${d}</span>`).join('') + '<span></span>'.repeat((pri.getDay() + 6) % 7);
@@ -576,13 +583,13 @@ function pintarInforme() {
   $('iCal').innerHTML = c;
   // progreso
   const pr = leer('rcPrueba', []), lin = [];
-  if (pr.length) lin.push(`Prueba de sentadillas (1 min): <b>${pr[0].reps}${pr.length > 1 ? ' → ' + pr[pr.length - 1].reps : ''}</b>${pr.length > 1 && pr[0].reps ? ` (${pr[pr.length - 1].reps >= pr[0].reps ? '+' : ''}${Math.round((pr[pr.length - 1].reps / pr[0].reps - 1) * 100)}%)` : ''}`);
+  if (pr.length) lin.push(P_('pruebaProg', { a: pr[0].reps + (pr.length > 1 ? ' → ' + pr[pr.length - 1].reps : '') }) + `${pr.length > 1 && pr[0].reps ? ` (${pr[pr.length - 1].reps >= pr[0].reps ? '+' : ''}${Math.round((pr[pr.length - 1].reps / pr[0].reps - 1) * 100)}%)` : ''}`);
   const tot = {}; for (const x of h) for (const e of x.ej || []) if (e.reps) tot[e.id] = (tot[e.id] || 0) + e.reps;
-  Object.entries(tot).sort((a, b) => b[1] - a[1]).slice(0, 4).forEach(([id, n]) => lin.push(`${EJ[id] ? EJ[id].n.charAt(0) + EJ[id].n.slice(1).toLowerCase() : id}: <b>${n}</b> en total`));
-  const juegos = h.filter(x => x.tipo === 'juego'); if (juegos.length) lin.push(`Juegos y rutina con cámara: <b>${juegos.length}</b> sesiones`);
-  const pesos2 = leer('rcPeso', []); if (pesos2.length > 1) { const d = pesos2[pesos2.length - 1].kg - pesos2[0].kg; lin.push(`Peso: <b>${d > 0 ? '+' : ''}${d.toFixed(1).replace('.', ',')} kg</b> desde que empezaste`); }
-  $('iProg').innerHTML = lin.length ? lin.join('<br>') : 'Todavía no hay datos. ¡Hacé tu primer día!';
-  $('tSes').textContent = h.length; $('tMin').textContent = Math.round(h.reduce((a, x) => a + x.seg, 0) / 60); $('tKcal').textContent = Math.round(h.reduce((a, x) => a + x.kcal, 0)).toLocaleString('es-AR');
+  Object.entries(tot).sort((a, b) => b[1] - a[1]).slice(0, 4).forEach(([id, n]) => lin.push(`${EJ[id] ? RC.T.ej[id][0] : id}: <b>${n}</b> ${P_('enTotal')}`));
+  const juegos = h.filter(x => x.tipo === 'juego'); if (juegos.length) lin.push(P_('juegosProg', { n: juegos.length }));
+  const pesos2 = leer('rcPeso', []); if (pesos2.length > 1) { const d = pesos2[pesos2.length - 1].kg - pesos2[0].kg; lin.push(P_('pesoProg', { n: (d > 0 ? '+' : '') + d.toFixed(1).replace('.', RC.lang === 'en' ? '.' : ',') })); }
+  $('iProg').innerHTML = lin.length ? lin.join('<br>') : P_('sinDatos');
+  $('tSes').textContent = h.length; $('tMin').textContent = Math.round(h.reduce((a, x) => a + x.seg, 0) / 60); $('tKcal').textContent = Math.round(h.reduce((a, x) => a + x.kcal, 0)).toLocaleString(RC.lang);
 }
 let pesoTmp = 70;
 $('btnPeso').addEventListener('click', () => { const p = leer('rcPeso', []); pesoTmp = p.length ? p[p.length - 1].kg : perfil.peso; $('pesoNum').querySelector('b').textContent = String(pesoTmp).replace('.', ','); $('mPeso').hidden = false; });
@@ -593,15 +600,17 @@ $('btnPesoNo').addEventListener('click', () => $('mPeso').hidden = true);
 // ───────── AJUSTES ─────────
 function pintarAjustes() {
   const o = OBJ.find(x => x.id === perfil.objetivo);
-  $('ajResumen').innerHTML = `${perfil.edad} años · ${String(perfil.peso).replace('.', ',')} kg · ${perfil.altura} cm · ${perfil.sexo === 'M' ? 'mujer' : 'hombre'}<br>Objetivo: <b>${o.n}</b><br>Nivel: <b>${NIV[perfil.nivel].n}</b> · ${perfil.dias} días por semana<br>Metabolismo basal estimado: <b>${Math.round(bmr(perfil))} kcal/día</b>`;
+  $('ajResumen').innerHTML = `${perfil.edad} ${P_('anios')} · ${String(perfil.peso).replace('.', ',')} kg · ${perfil.altura} cm · ${P_(perfil.sexo === 'M' ? 'm' : 'h')}<br>${P_('objetivoL')}: <b>${o.n}</b><br>${P_('nivelL')}: <b>${NIV[perfil.nivel].n}</b> · ${perfil.dias} ${P_('diasL')}<br>${P_('bmr')}: <b>${Math.round(bmr(perfil))} kcal</b>`;
   marcarSegm('voz', ajustes().voz); marcarSegm('desc', ajustes().desc);
 }
 $('voz').addEventListener('click', e => { const d = e.target.closest('div[data-v]'); if (!d) return; guardar('rcAjustes', { ...ajustes(), voz: +d.dataset.v }); marcarSegm('voz', d.dataset.v); });
 $('desc').addEventListener('click', e => { const d = e.target.closest('div[data-v]'); if (!d) return; guardar('rcAjustes', { ...ajustes(), desc: +d.dataset.v }); marcarSegm('desc', d.dataset.v); });
 $('btnEditarPerfil').addEventListener('click', abrirPerfil);
-$('btnBorrar').addEventListener('click', () => { if (!confirm('¿Borrar tu perfil, tu progreso y tu historial?')) return; for (const k of ['rcPerfil', 'rcProgreso', 'rcHistorial', 'rcPeso', 'rcPrueba', 'rcSensacion', 'rcAjustes']) localStorage.removeItem(k); location.reload(); });
+$('btnEntrenador').addEventListener('click', () => RC.elegir(() => location.reload()));
+$('btnBorrar').addEventListener('click', () => { if (!confirm(P_('borrarQ'))) return; for (const k of ['rcPerfil', 'rcProgreso', 'rcHistorial', 'rcPeso', 'rcPrueba', 'rcSensacion', 'rcAjustes']) localStorage.removeItem(k); location.reload(); });
 
 // ───────── ARRANQUE ─────────
+if (!RC.elegido) RC.elegir(() => location.reload());
 const bor = leer('rcBorrador', null);
 if (!perfil || bor) { abrirPerfil(); if (bor) { borr = { ...borr, ...bor }; const pr = leer('rcPrueba', []).slice(-1)[0]; if (pr) borr.nivel = nivelDePrueba(pr.reps); for (const nm of document.querySelectorAll('#pPerfil .num')) nm.pinta(); marcarSegm('sexo', borr.sexo); marcarSegm('diasSem', borr.dias); marcarSegm('nivel', borr.nivel); for (const x of $('objetivos').children) x.classList.toggle('sel', x.dataset.v === borr.objetivo); } }
 else if (location.hash === '#informe') ir('pInforme');

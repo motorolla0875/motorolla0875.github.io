@@ -64,7 +64,7 @@
   .dia b { display: block; font-size: 17px; } .dia i { display: block; font-style: normal; font-weight: 800; font-size: 10.5px; letter-spacing: .3px; } .dia small { display: block; font-size: 10px; font-weight: 700; opacity: .65; }
   .dia.sel { background: var(--amarillo); }
   .dia.hecho { background: #c9f2e4; }
-  .dia.hecho::after { content: 'HECHO'; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-18deg); font-weight: 800; font-size: 15px; color: var(--rojo); border: 3px solid var(--rojo); border-radius: 6px; padding: 0 4px; background: rgba(255,255,255,.75); }
+  .dia.hecho::after { content: var(--hecho, 'HECHO'); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-18deg); font-weight: 800; font-size: 15px; color: var(--rojo); border: 3px solid var(--rojo); border-radius: 6px; padding: 0 4px; background: rgba(255,255,255,.75); }
   .dia.bloq { opacity: .45; cursor: default; }
   .dia.bloq small { opacity: 1; color: var(--rojo); }
   .nota-dia { font-size: 12.5px; font-weight: 700; opacity: .8; }
@@ -90,77 +90,83 @@
 <canvas id="lienzo"></canvas>
 
 <div class="hud">
-  <div class="col"><div class="pill grande am" id="tramo">RUTINA</div><div class="pill" id="cuenta"><small>LISTO</small></div></div>
-  <div class="col der"><div class="pill grande" id="reloj">0:00</div><div class="pill"><small>KCAL</small><span id="kcal">0</span></div><div class="pill" id="pausa">PAUSA</div><div class="pill" id="salir">SALIR</div></div>
+  <div class="col"><div class="pill grande am" id="tramo">RUTINA</div><div class="pill" id="cuenta"><small></small></div></div>
+  <div class="col der"><div class="pill grande" id="reloj">0:00</div><div class="pill"><small>KCAL</small><span id="kcal">0</span></div><div class="pill" id="pausa" data-t="u.pausa"></div><div class="pill" id="salir" data-t="u.salir"></div></div>
 </div>
 <div id="barraTot"><i></i></div>
-<div id="ppHud"><div class="pill" id="ppSalir">SALIR</div><div class="pill" id="ppMarca">VOS 0 · 0 RIVAL</div></div>
+<div id="ppHud"><div class="pill" id="ppSalir" data-t="u.salir"></div><div class="pill" id="ppMarca"></div></div>
 <div id="aviso"></div>
 
 <div class="capa" id="inicio">
   <div class="cartel">
-    <h1>RUTINA EN CASA<span>SIN EQUIPO</span></h1>
-    <div class="seccion"><div class="otro-tit">1 · ENTRENAMIENTO CON PLAN</div>
-    <div class="aviso-salud" style="margin-top:0">Modo clásico: plan por objetivo y nivel, ejercicios guiados con dibujos e informe con gráficos</div>
-    <a class="btn azul" href="./entrenar/" style="display:block;text-decoration:none;margin:8px 0 2px">ENTRAR A MI PLAN</a></div>
+    <h1><span data-t="u.titulo1" style="display:inline;color:inherit"></span><span data-t="u.titulo2"></span></h1>
+    <div class="seccion"><div class="otro-tit" data-t="u.s1"></div>
+    <div class="aviso-salud" style="margin-top:0" data-t="u.s1d"></div>
+    <a class="btn azul" href="./entrenar/" style="display:block;text-decoration:none;margin:8px 0 2px" data-t="u.entrarPlan"></a></div>
     <div class="otro" id="pruebaNivel" hidden style="border:0;margin-top:4px">
-      <div class="otro-tit">PRUEBA DE NIVEL</div>
-      <div class="aviso-salud" style="margin-top:2px;font-size:14px;opacity:1">Hacé todas las <b>sentadillas</b> que puedas en <b>1 minuto</b>. Teléfono parado a 2,5 metros, que se te vea entero.</div>
-      <div class="btn" id="btnPruebaNivel">EMPEZAR LA PRUEBA</div>
-      <a class="link-volver" href="./entrenar/" style="display:block;font-weight:800;color:var(--tinta);margin-top:8px">Volver a mi plan</a>
+      <div class="otro-tit" data-t="u.pruebaNivel"></div>
+      <div class="aviso-salud" style="margin-top:2px;font-size:14px;opacity:1" data-t="u.pruebaD"></div>
+      <div class="btn" id="btnPruebaNivel" data-t="u.empezarPrueba"></div>
+      <a class="link-volver" href="./entrenar/" style="display:block;font-weight:800;color:var(--tinta);margin-top:8px" data-t="u.volverPlan"></a>
     </div>
-    <div class="seccion"><div class="otro-tit">2 · RUTINA CON CÁMARA</div><div class="aviso-salud" style="margin-top:0">La cámara te sigue y cuenta tus movimientos. Semana 1, un día por vez</div>
+    <div class="seccion"><div class="otro-tit" data-t="u.s2"></div><div class="aviso-salud" style="margin-top:0" data-t="u.s2d"></div>
     <div class="racha" id="racha"></div>
     <div class="dias" id="dias"></div>
     <div class="nota-dia" id="notaDia"></div>
-    <div class="opc" id="imp"><button data-i="1" class="sel">CON SALTOS</button><button data-i="0">SIN SALTOS</button></div>
+    <div class="opc" id="imp"><button data-i="1" class="sel" data-t="u.conSaltos"></button><button data-i="0" data-t="u.sinSaltos"></button></div>
     <div class="btn" id="btnEmpezar">EMPEZAR</div>
-    <div class="aviso-salud" style="margin-top:2px">Apoyá el teléfono parado a unos <b>2,5 metros</b>: se te tiene que ver de la cabeza a los pies.</div></div>
+    <div class="aviso-salud" style="margin-top:2px" data-t="u.lejos"></div></div>
     <div class="seccion">
-      <div class="otro-tit">3 · JUEGOS</div>
+      <div class="otro-tit" data-t="u.s3"></div>
       <div class="juegos">
-        <div class="btn rojo chico" data-jugar="tenis">TENIS</div>
-        <div class="btn naranja chico" data-jugar="frutas">CORTAR FRUTAS</div>
-        <div class="btn azul chico" data-jugar="baile">BAILE</div>
-        <div class="btn chico" data-jugar="luces">LUCES EN EL PISO</div>
-        <div class="btn rojo chico" data-jugar="pingpong">PING PONG</div>
+        <div class="btn rojo chico" data-jugar="tenis" data-t="u.tenis"></div>
+        <div class="btn naranja chico" data-jugar="frutas" data-t="u.frutas"></div>
+        <div class="btn azul chico" data-jugar="baile" data-t="u.baile"></div>
+        <div class="btn chico" data-jugar="luces" data-t="u.luces"></div>
+        <div class="btn rojo chico" data-jugar="pingpong" data-t="u.pingpong"></div>
       </div>
-      <div class="opc" id="mano" style="margin:6px 0 0"><button data-m="D" class="sel">PALETA: MANO DERECHA</button><button data-m="I">IZQUIERDA</button></div>
-      <div class="aviso-salud" style="margin-top:6px">Tenis y frutas: teléfono a unos 50 cm, como una selfie. Baile: a 1 metro. Luces: a 2,5 metros, que se te vean los pies. Ping pong: a unos 2 metros, que se te vea hasta la cintura.</div>
+      <div class="opc" id="mano" style="margin:6px 0 0"><button data-m="D" class="sel" data-t="u.paletaDer"></button><button data-m="I" data-t="u.paletaIzq"></button></div>
+      <div class="aviso-salud" style="margin-top:6px" data-t="u.distJuegos"></div>
     </div>
     <div class="seccion">
-      <div class="otro-tit">4 · EJERCICIOS CON CÁMARA</div>
-      <div class="aviso-salud" style="margin-top:0">Elegí uno y hacelo suelto. La cámara cuenta tus repeticiones</div>
+      <div class="otro-tit" data-t="u.s4"></div>
+      <div class="aviso-salud" style="margin-top:0" data-t="u.s4d"></div>
       <div class="lista-pr" id="pruebas"></div>
     </div>
     <div id="error"></div>
-    <div class="aviso-salud">Prototipo. Si tenés alguna condición de salud, consultá a tu médico antes de hacer ejercicio. Pará si sentís dolor o mareo. Las calorías son aproximadas. Todo se procesa en el teléfono: no se graba ni se manda nada.</div>
+    <div class="aviso-salud" data-t="u.salud"></div>
+    <div class="aviso-salud" style="text-decoration:underline;cursor:pointer;font-weight:800;font-size:13px" id="btnCambiarEnt" data-t="u.cambiarEntrenador"></div>
   </div>
 </div>
 
 <div class="capa" id="fin" hidden>
   <div class="cartel">
-    <h1>¡RUTINA<span>COMPLETA!</span></h1>
+    <h1><span data-t="u.rutinaCompleta1" style="display:inline;color:inherit"></span><span data-t="u.rutinaCompleta2"></span></h1>
     <div class="stats">
-      <div><b id="fMin">0</b><small>MINUTOS ACTIVOS</small></div>
-      <div><b id="fKcal">0</b><small>KCAL (APROX.)</small></div>
-      <div><b id="fReps">0</b><small>REPETICIONES</small></div>
-      <div><b id="fPuntos">0</b><small>PUNTOS</small></div>
+      <div><b id="fMin">0</b><small data-t="u.minActivos"></small></div>
+      <div><b id="fKcal">0</b><small data-t="u.kcalAprox"></small></div>
+      <div><b id="fReps">0</b><small data-t="u.repeticiones"></small></div>
+      <div><b id="fPuntos">0</b><small data-t="u.puntos"></small></div>
     </div>
-    <div class="meta">META SEMANAL OMS: <span id="fSem">0</span> de 150 minutos<div class="b"><i id="fSemB"></i></div></div>
-    <div class="btn" id="btnOtra">OTRA VEZ</div><div class="btn rojo" id="btnMenu">MENÚ</div>
+    <div class="meta"><span id="fSem"></span><div class="b"><i id="fSemB"></i></div></div>
+    <div class="btn" id="btnOtra" data-t="u.otraVez"></div><div class="btn rojo" id="btnMenu" data-t="u.menu"></div>
   </div>
 </div>
 
+<script src="textos.js"></script>
+<script src="voz.js"></script>
 <script>
   // si algo falla al cargar (por ejemplo en un celular), se muestra en pantalla para saber qué pasó
   window.addEventListener('error', e => { const el = document.getElementById('error'); if (el) el.textContent = 'Error: ' + (e.message || e.type) + (e.filename ? ' (' + e.filename.split('/').pop() + ')' : ''); });
   window.addEventListener('unhandledrejection', e => { const el = document.getElementById('error'); if (el) el.textContent = 'Error: ' + (e.reason && (e.reason.message || e.reason)); });
-  setTimeout(() => { if (!window.__t) { const el = document.getElementById('error'); if (el && !el.textContent) el.textContent = 'El juego no terminó de cargar. Recargá la página.'; } }, 12000);
+  setTimeout(() => { if (!window.__t) { const el = document.getElementById('error'); if (el && !el.textContent) el.textContent = RC.t('u', 'noCargo'); } }, 12000);
 </script>
 <script type="module">
 import { FilesetResolver, PoseLandmarker } from '../bateria/vision_bundle.mjs';
 const $ = id => document.getElementById(id);
+RC.aplicar(); document.documentElement.style.setProperty('--hecho', JSON.stringify(RC.t('u', 'hecho')));
+if (!RC.elegido) RC.elegir(() => location.reload());
+document.getElementById('btnCambiarEnt').addEventListener('click', () => RC.elegir(() => location.reload()));
 const PESO = (() => { try { return JSON.parse(localStorage.getItem('rcPerfil')).peso || 70; } catch (e) { return 70; } })();
 function anotar(nombre, seg, kcal) {   // lo que hacés acá también aparece en el informe del plan
   if (seg < 20) return;
@@ -261,6 +267,7 @@ const TRAMOS = [
   { id: 'baile', nom: 'BAILE', ins: 'Tocá los círculos al ritmo de la música', seg: 90, met: 6, vista: 'medio' },
   { id: 'luces', nom: 'LUCES EN EL PISO', ins: 'Pisá al costado o en el centro cuando llega la luz', seg: 75, met: 7, sinSalto: { nom: 'LUCES EN EL PISO', ins: 'Pisá al costado o en el centro cuando llega la luz' } },
 ];
+for (const T of TRAMOS) { const x = RC.T.tr[T.id], xs = RC.T.tr[T.id + '_s']; if (x) { T.nom = x[0].toUpperCase(); T.ins = x[1]; } if (T.sinSalto) T.sinSalto = xs ? { nom: xs[0].toUpperCase(), ins: xs[1], voz: 'tr:' + T.id + '_s' } : { nom: T.nom, ins: T.ins }; }
 const TR = Object.fromEntries(TRAMOS.map(T => [T.id, T]));
 // ───────── PLAN DE LA SEMANA 1: un día por vez ─────────
 const DIAS = [
@@ -272,6 +279,7 @@ const DIAS = [
   { tema: 'BAILE', l: [['calor', 40], ['baile', 90], ['luces', 60], ['estirar', 40]] },
   { tema: 'DESCANSO', l: [['calor', 40], ['estirar', 100]] },
 ];
+DIAS.forEach((d, i) => d.tema = RC.T.dias[i]);
 const minutosDia = d => Math.max(1, Math.round(d.l.reduce((a, x) => a + x[1], 0) / 60 + d.l.length * 5 / 60));
 const R = { dia: 0, solo: false, vista: 'entero', plan: null, activo: false, pausa: false, i: -1, t0: 0, tTramo: 0, lista: [], puntos: 0, reps: 0, kcal: 0, activoSeg: 0, sinSaltos: false, dur: 1 };
 let est = {}, objs = [], textos = [], ritmo = { sig: 0, beat: 0, bpm: 120 };
@@ -279,11 +287,10 @@ const ahora = () => ac.currentTime;
 function frase(txt, x, y, col = '#ffd23f', tam = 1) { textos.push({ txt, x, y, col, tam, t: performance.now() }); }
 function aviso(html, ms = 1000) { $('aviso').innerHTML = html; clearTimeout(aviso.t); if (ms) aviso.t = setTimeout(() => $('aviso').innerHTML = '', ms); }
 // voz: para no tener que mirar la pantalla de lejos
-let vozES = null;
-function elegirVoz() { try { const v = speechSynthesis.getVoices(); vozES = v.find(x => /es[-_](AR|419|US|MX)/i.test(x.lang)) || v.find(x => /^es/i.test(x.lang)) || null; } catch (e) {} }
-try { elegirVoz(); speechSynthesis.onvoiceschanged = elegirVoz; } catch (e) {}
-function decir(txt, cortar = true) { try { if (!window.speechSynthesis) return; if (cortar) speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = vozES ? vozES.lang : 'es-AR'; if (vozES) u.voice = vozES; u.rate = 1.12; u.volume = 1; speechSynthesis.speak(u); } catch (e) {} }
-let ultVoz = 0; const decirCada = (txt, ms = 4000) => { const t = performance.now(); if (t - ultVoz > ms) { ultVoz = t; decir(txt); } };
+// voz: frases grabadas por el entrenador elegido (Dora o Alex), en el idioma de la app
+const decir = (claves, cortar = true) => RC.habla(claves, { cortar });
+const decirNum = n => { if (n >= 1 && n <= 60) decir([RC.numero(n)]); };
+let ultVoz = 0; const decirCada = (claves, ms = 4000) => { const t = performance.now(); if (t - ultVoz > ms) { ultVoz = t; decir(claves); } };
 const centro = () => ({ x: C.ox, y: C.cadY });
 const sumar = (pts, txt, x, y, col) => { R.puntos += pts; if (txt) frase(txt, x ?? W / 2, y ?? H * .3, col); };
 
@@ -292,9 +299,9 @@ function empezarTramo(i) {
   objs = []; est = { cont: 0, fase: 'arriba', ult: 0, sig: 0, pose: 0, poseT: 0, pasos: 0, dist: 0, vel: 0 };
   const nom = R.sinSaltos && T.sinSalto ? T.sinSalto.nom : T.nom, ins = R.sinSaltos && T.sinSalto ? T.sinSalto.ins : T.ins;
   $('tramo').textContent = nom; R.pausa = true; ritmo.melodia = T.id === 'baile' || T.id === 'luces'; ritmo.bpm = ritmo.melodia ? 112 : 120;
-  aviso(`${nom}<small>${ins}</small>`, 0); sonar('campana', .5); decir(`${nom.toLowerCase()}. ${ins}`);
+  aviso(`${nom}<small>${ins}</small>`, 0); sonar('campana', .5); decir([R.sinSaltos && T.sinSalto && T.sinSalto.voz ? T.sinSalto.voz : 'tr:' + (R.prueba ? 'prueba' : T.id)]);
   let n = 3; const paso = () => { if (!R.activo) return; if (n > 0) { aviso(`${n}<small>${ins}</small>`, 0); sonar('tic', .5); n--; setTimeout(paso, 900); return; }
-    aviso('¡YA!', 600); decir('¡Ya!'); R.pausa = false; R.tTramo = ahora(); };
+    aviso(RC.t('u', 'ya'), 600); decir(['v:ya']); R.pausa = false; R.tTramo = ahora(); };
   setTimeout(paso, 2200);
 }
 
@@ -302,16 +309,16 @@ function empezarTramo(i) {
 const LOGICA = {
   calor(T, t) {   // poses a copiar, cada una se mantiene 1,5 s
     const POSES = [
-      ['BRAZOS ARRIBA', () => rel.manoArriba('I') > .25 && rel.manoArriba('D') > .25],
-      ['BRAZOS EN CRUZ', () => rel.manosAbiertas() > 2.2 && Math.abs(P.muI.y - P.hom.y) < .45 * C.u && Math.abs(P.muD.y - P.hom.y) < .45 * C.u],
-      ['RODILLA DERECHA ARRIBA', () => rel.rodilla('D') > .35],
-      ['RODILLA IZQUIERDA ARRIBA', () => rel.rodilla('I') > .35],
-      ['MANO DERECHA AL CIELO', () => rel.manoArriba('D') > .35 && rel.manoArriba('I') < 0],
-      ['MANO IZQUIERDA AL CIELO', () => rel.manoArriba('I') > .35 && rel.manoArriba('D') < 0],
+      ['brazosArriba', () => rel.manoArriba('I') > .25 && rel.manoArriba('D') > .25],
+      ['brazosCruz', () => rel.manosAbiertas() > 2.2 && Math.abs(P.muI.y - P.hom.y) < .45 * C.u && Math.abs(P.muD.y - P.hom.y) < .45 * C.u],
+      ['rodDer', () => rel.rodilla('D') > .35],
+      ['rodIzq', () => rel.rodilla('I') > .35],
+      ['manoDer', () => rel.manoArriba('D') > .35 && rel.manoArriba('I') < 0],
+      ['manoIzq', () => rel.manoArriba('I') > .35 && rel.manoArriba('D') < 0],
     ];
-    const p = POSES[est.pose % POSES.length]; if (est.nomPose !== p[0]) decir(p[0].toLowerCase()); est.nomPose = p[0];
-    if (p[1]()) { est.poseT += DT; if (est.poseT > 1.2) { sonar('punto', .6); sumar(100, '¡BIEN!', W / 2, H * .25, '#3ec8a0'); est.pose++; est.poseT = 0; R.reps++; } } else est.poseT = Math.max(0, est.poseT - DT / 2);
-    $('cuenta').innerHTML = `<small>POSES</small>${est.pose}`;
+    const p = POSES[est.pose % POSES.length]; if (est.pkey !== p[0]) decir(['po:' + p[0]]); est.pkey = p[0]; est.nomPose = RC.t('po', p[0]).toUpperCase();
+    if (p[1]()) { est.poseT += DT; if (est.poseT > 1.2) { sonar('punto', .6); sumar(100, RC.t('u', 'bien'), W / 2, H * .25, '#3ec8a0'); est.pose++; est.poseT = 0; R.reps++; } } else est.poseT = Math.max(0, est.poseT - DT / 2);
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cPoses')}</small>${est.pose}`;
   },
   carrera(T, t) {   // cada rodilla que sube (alternando) es un paso
     for (const k of ['I', 'D']) {
@@ -321,29 +328,29 @@ const LOGICA = {
     }
     est.vel = est.vel * .9 + ((est.tPasos || []).filter(x => t - x < 2).length / 2) * .1;   // pasos por segundo
     est.dist += est.vel * .9 * DT;
-    if (est.pasos && est.pasos % 20 === 0 && est.pasos !== est.ultAviso) { est.ultAviso = est.pasos; sonar('punto', .5); sumar(200, est.vel > 2.6 ? '¡VOLÁS!' : '¡BIEN!'); }
-    $('cuenta').innerHTML = `<small>PASOS</small>${est.pasos}`;
-    if (t > 6 && est.vel < 1.2 && (!est.avisoLento || t - est.avisoLento > 6)) { est.avisoLento = t; aviso('¡MÁS RÁPIDO!', 900); decir('¡más rápido!'); }
+    if (est.pasos && est.pasos % 20 === 0 && est.pasos !== est.ultAviso) { est.ultAviso = est.pasos; sonar('punto', .5); sumar(200, est.vel > 2.6 ? RC.t('u', 'volas') : RC.t('u', 'bien')); }
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cPasos')}</small>${est.pasos}`;
+    if (t > 6 && est.vel < 1.2 && (!est.avisoLento || t - est.avisoLento > 6)) { est.avisoLento = t; aviso(RC.t('u', 'masRapido'), 900); decir(['v:masRapido']); }
   },
   vallas(T, t) {   // las vallas llegan a ritmo; al llegar hay que estar en el aire (o con la rodilla arriba)
     if (t > est.sig) { objs.push({ tipo: 'valla', tLlega: ahora() + 2, tAp: ahora(), estado: 'vivo' }); est.sig = t + (R.sinSaltos ? 2.2 : 2.6); }
-    for (const o of objs) if (o.estado === 'vivo' && !o.dicho && ahora() > o.tLlega - .75) { o.dicho = true; decir(R.sinSaltos ? '¡rodilla!' : '¡saltá!'); }
+    for (const o of objs) if (o.estado === 'vivo' && !o.dicho && ahora() > o.tLlega - .75) { o.dicho = true; decir([R.sinSaltos ? 'v:rodilla' : 'v:salta']); }
     const enAire = R.sinSaltos ? Math.max(rel.rodilla('I'), rel.rodilla('D')) > .3 : rel.cad() < -.1;
     for (const o of objs) if (o.estado === 'vivo') {
-      if (ahora() > o.tLlega - .25 && enAire) { o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; sonar('punto', .6); sumar(150, '¡SALTO!', W / 2, H * .55, '#3ec8a0'); }
+      if (ahora() > o.tLlega - .25 && enAire) { o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; sonar('punto', .6); sumar(150, RC.t('u', 'salto'), W / 2, H * .55, '#3ec8a0'); }
       else if (ahora() > o.tLlega + .3) { o.estado = 'falla'; o.tFin = performance.now(); sonar('falla', .4); }
     }
-    $('cuenta').innerHTML = `<small>VALLAS</small>${est.cont}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cVallas')}</small>${est.cont}`;
   },
   esquivar(T, t) {
     if (t > est.sig) { const clase = ['agachate', 'izq', 'der'][Math.floor(Math.random() * 3)]; objs.push({ tipo: 'barra', clase, tLlega: ahora() + 2.2, tAp: ahora(), estado: 'vivo' }); est.sig = t + 3.2; }
-    for (const o of objs) if (o.estado === 'vivo' && !o.dicho && ahora() > o.tLlega - 1.3) { o.dicho = true; decir(o.clase === 'agachate' ? '¡agachate!' : o.clase === 'izq' ? '¡a la derecha!' : '¡a la izquierda!'); }
+    for (const o of objs) if (o.estado === 'vivo' && !o.dicho && ahora() > o.tLlega - 1.3) { o.dicho = true; decir([o.clase === 'agachate' ? 'v:agachate' : o.clase === 'izq' ? 'v:aLaDer' : 'v:aLaIzq']); }
     for (const o of objs) if (o.estado === 'vivo' && ahora() >= o.tLlega) {
       const ok = o.clase === 'agachate' ? rel.narY() > .3 : o.clase === 'izq' ? rel.narX() > .3 : rel.narX() < -.3;
       o.estado = ok ? 'ok' : 'falla'; o.tFin = performance.now();
-      if (ok) { est.cont++; R.reps++; sonar('punto', .6); sumar(200, '¡ESQUIVADO!', W / 2, H * .3, '#3ec8a0'); } else { sonar('falla', .5); aviso('¡TE DIERON!', 600); }
+      if (ok) { est.cont++; R.reps++; sonar('punto', .6); sumar(200, RC.t('u', 'esquivado'), W / 2, H * .3, '#3ec8a0'); } else { sonar('falla', .5); aviso(RC.t('u', 'teDieron'), 600); }
     }
-    $('cuenta').innerHTML = `<small>ESQUIVES</small>${est.cont}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cEsquives')}</small>${est.cont}`;
   },
   boxeo(T, t) {
     const LUG = [[-.62, -1.55], [.62, -1.55], [-.85, -1.05], [.85, -1.05], [-.35, -1.85], [.35, -1.85], [0, -1.25]];
@@ -353,22 +360,22 @@ const LOGICA = {
       if (dt > -.45) for (const k of ['I', 'D']) {
         const m = P['ma' + k], mv = est['mv' + k] || 0; if (Math.hypot(m.x - px, m.y - py) < o.r * C.u * 1.3 && mv > 1.4) {
           o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; const perf = Math.abs(dt) < .15; sonar('pum', .9); if (perf) sonar('punto', .5);
-          sumar(perf ? 300 : 100, perf ? 'PERFECTO' : ['¡POW!', '¡PUM!', '¡ZAS!', '¡BAM!'][Math.floor(Math.random() * 4)], px, py - o.r * C.u, perf ? '#3ec8a0' : '#ffd23f'); break; }
+          sumar(perf ? 300 : 100, perf ? RC.t('u', 'perfecto') : RC.t('u', 'pow')[Math.floor(Math.random() * 4)], px, py - o.r * C.u, perf ? '#3ec8a0' : '#ffd23f'); break; }
       }
       if (o.estado === 'vivo' && dt > .4) { o.estado = 'falla'; o.tFin = performance.now(); sonar('falla', .3); }
     }
-    $('cuenta').innerHTML = `<small>GOLPES</small>${est.cont}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cGolpes')}</small>${est.cont}`;
   },
   sentadillas(T, t) {   // abajo: la cadera baja casi medio torso; arriba: vuelve cerca de la posición de pie
     const c = rel.cad();
     if (est.fase === 'arriba' && c > .42) est.fase = 'abajo';
-    else if (est.fase === 'abajo' && c < .15) { est.fase = 'arriba'; est.cont++; R.reps++; sonar('punto', .6); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
-    est.prof = c; $('cuenta').innerHTML = `<small>SENTADILLAS</small>${est.cont}${T.meta < 999 ? '/' + T.meta : ''}`;
+    else if (est.fase === 'abajo' && c < .15) { est.fase = 'arriba'; est.cont++; R.reps++; sonar('punto', .6); decirNum(est.cont); sumar(120, est.cont >= T.meta ? RC.t('u', 'meta') : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
+    est.prof = c; $('cuenta').innerHTML = `<small>${RC.t('u', 'cSentadillas')}</small>${est.cont}${T.meta < 999 ? '/' + T.meta : ''}`;
   },
   tijera(T, t) {   // 4 bolitas: arriba a los costados para las manos y abajo a los costados para los pies; explotan al tocarlas
     const u = C.u, ha = C.hombroAncho;
     if (!est.bolas) {
-      if (est.esperaCerrar) { if (rel.manoArriba('I') < -.4 && rel.manoArriba('D') < -.4) est.esperaCerrar = false; else { $('cuenta').innerHTML = `<small>TIJERAS</small>${est.cont}/${T.meta}`; return; } }
+      if (est.esperaCerrar) { if (rel.manoArriba('I') < -.4 && rel.manoArriba('D') < -.4) est.esperaCerrar = false; else { $('cuenta').innerHTML = `<small>${RC.t('u', 'cTijeras')}</small>${est.cont}/${T.meta}`; return; } }
       est.lado = -(est.lado || 1);
       est.bolas = [
         { p: 'mano', x: -.8 * u, y: () => Math.max(H * .22, C.narY - .25 * u), col: '#4f8fff' },
@@ -384,32 +391,32 @@ const LOGICA = {
                                   : ['I', 'D'].some(k => Math.abs(P['to' + k].x - bx) < r * 1.5 && Math.abs(P['to' + k].y - by) < r * 2.5);
       if (toca) { b.vivo = false; explotar(bx, by, b.col, r); sonar('pum', .5); sumar(30); }
     }
-    if (est.bolas.every(b => !b.vivo)) { est.bolas = null; est.esperaCerrar = true; est.cont++; R.reps++; sonar('punto', .55); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
-    $('cuenta').innerHTML = `<small>TIJERAS</small>${est.cont}/${T.meta}`;
+    if (est.bolas.every(b => !b.vivo)) { est.bolas = null; est.esperaCerrar = true; est.cont++; R.reps++; sonar('punto', .55); decirNum(est.cont); sumar(120, est.cont >= T.meta ? RC.t('u', 'meta') : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cTijeras')}</small>${est.cont}/${T.meta}`;
   },
   estirar(T, t) {
     const POSES = [
-      ['ESTIRATE: BRAZOS AL CIELO', () => rel.manoArriba('I') > .35 && rel.manoArriba('D') > .35],
-      ['INCLINATE A LA DERECHA', () => P.hD.y - P.hI.y > .18 * C.u && rel.manoArriba('I') > 0],
-      ['INCLINATE A LA IZQUIERDA', () => P.hI.y - P.hD.y > .18 * C.u && rel.manoArriba('D') > 0],
-      ['RESPIRÁ: MANOS AL PECHO', () => Math.abs(P.muI.x - P.muD.x) < .45 * C.u && Math.abs(P.muI.y - P.hom.y) < .5 * C.u],
+      ['cielo', () => rel.manoArriba('I') > .35 && rel.manoArriba('D') > .35],
+      ['inclDer', () => P.hD.y - P.hI.y > .18 * C.u && rel.manoArriba('I') > 0],
+      ['inclIzq', () => P.hI.y - P.hD.y > .18 * C.u && rel.manoArriba('D') > 0],
+      ['respira', () => Math.abs(P.muI.x - P.muD.x) < .45 * C.u && Math.abs(P.muI.y - P.hom.y) < .5 * C.u],
     ];
-    const p = POSES[est.pose % POSES.length]; if (est.nomPose !== p[0]) decir(p[0].toLowerCase().replace('estirate: ', 'estirate, ').replace('respirá: ', 'respirá, ')); est.nomPose = p[0];
-    if (p[1]()) { est.poseT += DT; if (est.poseT > 8) { sonar('punto', .5); sumar(150, '¡MUY BIEN!', W / 2, H * .25, '#3ec8a0'); est.pose++; est.poseT = 0; } }
-    $('cuenta').innerHTML = `<small>MANTENÉ</small>${Math.max(0, 8 - est.poseT).toFixed(0)} s`;
+    const p = POSES[est.pose % POSES.length]; if (est.pkey !== p[0]) decir(['po:' + p[0]]); est.pkey = p[0]; est.nomPose = RC.t('po', p[0]).toUpperCase();
+    if (p[1]()) { est.poseT += DT; if (est.poseT > 8) { sonar('punto', .5); sumar(150, RC.t('u', 'muyBien'), W / 2, H * .25, '#3ec8a0'); est.pose++; est.poseT = 0; } }
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cMantene')}</small>${Math.max(0, 8 - est.poseT).toFixed(0)} s`;
   },
   rodillazos(T, t) {   // cajas a la altura de la cadera, a un costado: se rompen subiendo la rodilla de ese lado
     if (t > est.sig) { let lado = Math.random() < .5 ? -1 : 1; if (lado === est.ultLado && (est.rep = (est.rep || 0) + 1) > 1) { lado = -lado; est.rep = 0; } est.ultLado = lado;
       objs.push({ tipo: 'caja', lado, x: lado * .32, y: .05, r: .2, tGolpe: ahora() + 1.3, tAp: ahora(), estado: 'vivo' }); est.sig = t + 1.7; }
     for (const o of objs) if (o.estado === 'vivo') {
       const dt = ahora() - o.tGolpe;
-      if (!o.dicho && dt > -.8) { o.dicho = true; decir(o.lado < 0 ? 'izquierda' : 'derecha'); }
+      if (!o.dicho && dt > -.8) { o.dicho = true; decir([o.lado < 0 ? 'v:izquierda' : 'v:derecha']); }
       if (dt > -.45) for (const k of ['I', 'D']) if (Math.sign(P['ro' + k].x - C.ox) === o.lado && rel.rodilla(k) > .3) {
         o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; sonar('pum', .9); const perf = Math.abs(dt) < .2; if (perf) sonar('punto', .5);
-        sumar(perf ? 250 : 100, perf ? 'PERFECTO' : ['¡POW!', '¡CRAC!', '¡PUM!'][Math.floor(Math.random() * 3)], C.ox + o.x * C.u, C.cadY - .4 * C.u, perf ? '#3ec8a0' : '#ffd23f'); break; }
+        sumar(perf ? 250 : 100, perf ? RC.t('u', 'perfecto') : RC.t('u', 'crac')[Math.floor(Math.random() * 3)], C.ox + o.x * C.u, C.cadY - .4 * C.u, perf ? '#3ec8a0' : '#ffd23f'); break; }
       if (o.estado === 'vivo' && dt > .45) { o.estado = 'falla'; o.tFin = performance.now(); sonar('falla', .3); }
     }
-    $('cuenta').innerHTML = `<small>CAJAS</small>${est.cont}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cCajas')}</small>${est.cont}`;
   },
   patadas(T, t) {   // círculos a la altura de la patada, de un lado o del otro y a distintas alturas: pegales con el pie
     if (t > est.sig) {
@@ -420,21 +427,21 @@ const LOGICA = {
     }
     for (const o of objs) if (o.estado === 'vivo') {
       const dt = ahora() - o.tGolpe, px = C.ox + o.dx * C.u, py = C.toY - o.alto * C.u, rr = o.r * C.u;
-      if (!o.dicho && dt > -.9) { o.dicho = true; decir(o.lado < 0 ? 'patada izquierda' : 'patada derecha'); }
+      if (!o.dicho && dt > -.9) { o.dicho = true; decir([o.lado < 0 ? 'v:patIzq' : 'v:patDer']); }
       if (dt > -.5) for (const k of ['I', 'D']) { const pie = P['to' + k]; if ((C.toY - pie.y) / C.u > .3 && Math.hypot(pie.x - px, pie.y - py) < rr * 1.7) {
         o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; explotar(px, py, o.col, rr); sonar('pum', .9); const perf = Math.abs(dt) < .2; if (perf) sonar('punto', .5);
-        sumar(perf ? 200 : 100, perf ? 'PERFECTO' : String(est.cont), px, py - rr * 1.6, perf ? '#3ec8a0' : '#ffd23f'); break; } }
+        sumar(perf ? 200 : 100, perf ? RC.t('u', 'perfecto') : String(est.cont), px, py - rr * 1.6, perf ? '#3ec8a0' : '#ffd23f'); break; } }
       if (o.estado === 'vivo' && dt > .5) { o.estado = 'falla'; o.tFin = performance.now(); sonar('falla', .3); }
     }
-    $('cuenta').innerHTML = `<small>PATADAS</small>${est.cont}/${T.meta}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cPatadas')}</small>${est.cont}/${T.meta}`;
   },
   cruzadas(T, t) {   // rodilla arriba y la mano del otro lado la toca
     for (const [k, o] of [['I', 'D'], ['D', 'I']]) {
       const toca = rel.rodilla(k) > .22 && Math.hypot(P['mu' + o].x - P['ro' + k].x, P['mu' + o].y - P['ro' + k].y) < .5 * C.u;
-      if (!est['arr' + k] && toca && est.ultPie !== k) { est['arr' + k] = true; est.ultPie = k; est.cont++; R.reps++; sonar('punto', .55); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
+      if (!est['arr' + k] && toca && est.ultPie !== k) { est['arr' + k] = true; est.ultPie = k; est.cont++; R.reps++; sonar('punto', .55); decirNum(est.cont); sumar(120, est.cont >= T.meta ? RC.t('u', 'meta') : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
       if (est['arr' + k] && rel.rodilla(k) < .08) est['arr' + k] = false;
     }
-    $('cuenta').innerHTML = `<small>CRUZADAS</small>${est.cont}/${T.meta}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cCruzadas')}</small>${est.cont}/${T.meta}`;
   },
   circulos(T, t) {   // se suma el ángulo que da la muñeca alrededor del hombro: una vuelta entera = un círculo
     for (const k of ['I', 'D']) {
@@ -442,22 +449,22 @@ const LOGICA = {
       if (d > .45 && est['ang' + k] != null) { let da = a - est['ang' + k]; if (da > Math.PI) da -= 2 * Math.PI; if (da < -Math.PI) da += 2 * Math.PI; est['acc' + k] = (est['acc' + k] || 0) + da; }
       else if (d <= .45) est['acc' + k] = 0;
       est['ang' + k] = a;
-      if (Math.abs(est['acc' + k] || 0) >= 2 * Math.PI) { est['acc' + k] -= Math.sign(est['acc' + k]) * 2 * Math.PI; est.cont++; R.reps++; sonar('punto', .45); if (est.cont % 2 === 0) decir(String(est.cont)); sumar(80, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.2); }
+      if (Math.abs(est['acc' + k] || 0) >= 2 * Math.PI) { est['acc' + k] -= Math.sign(est['acc' + k]) * 2 * Math.PI; est.cont++; R.reps++; sonar('punto', .45); if (est.cont % 2 === 0) decirNum(est.cont); sumar(80, est.cont >= T.meta ? RC.t('u', 'meta') : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.2); }
     }
-    $('cuenta').innerHTML = `<small>CÍRCULOS</small>${est.cont}/${T.meta}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cCirculos')}</small>${est.cont}/${T.meta}`;
   },
   agarrar(T, t) {   // estrellas arriba de la cabeza: hay que saltar (o estirarse) y tocarlas con la mano
     if (rel.cad() < -.08) est.tAire = ahora();
     if (t > est.sig) { objs.push({ tipo: 'estrella', x: (Math.random() - .5) * 1.1, alto: R.sinSaltos ? .55 : .85, r: .2, tGolpe: ahora() + 1.6, tAp: ahora(), estado: 'vivo' }); est.sig = t + 2.4; }
     for (const o of objs) if (o.estado === 'vivo') {
       const dt = ahora() - o.tGolpe, px = C.ox + o.x * C.u, py = Math.max(H * .2, C.narY - o.alto * C.u);
-      if (!o.dicho && dt > -.9) { o.dicho = true; decir(R.sinSaltos ? '¡estirate!' : '¡saltá!'); }
+      if (!o.dicho && dt > -.9) { o.dicho = true; decir([R.sinSaltos ? 'v:estirate' : 'v:salta']); }
       const salto = R.sinSaltos || (est.tAire && ahora() - est.tAire < .45);
       if (dt > -.5 && salto) for (const k of ['I', 'D']) { const m = P['ma' + k]; if (Math.hypot(m.x - px, m.y - py) < o.r * C.u * 1.5) {
-        o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; sonar('campana', .35); sonar('punto', .5); sumar(200, '¡LA TENÉS!', px, py - .3 * C.u, '#3ec8a0'); break; } }
+        o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; sonar('campana', .35); sonar('punto', .5); sumar(200, RC.t('u', 'laTenes'), px, py - .3 * C.u, '#3ec8a0'); break; } }
       if (o.estado === 'vivo' && dt > .5) { o.estado = 'falla'; o.tFin = performance.now(); sonar('falla', .3); }
     }
-    $('cuenta').innerHTML = `<small>ESTRELLAS</small>${est.cont}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cEstrellas')}</small>${est.cont}`;
   },
   frutas(T, t) {   // frutas que saltan desde abajo: se cortan pasando la mano rápido por encima
     const S = Math.min(W, H), g = H * 1.5; est.frutas = est.frutas || []; est.trozos = est.trozos || []; est.gotas = est.gotas || [];
@@ -484,19 +491,19 @@ const LOGICA = {
         const tt = Math.max(0, Math.min(1, ((f.x - a.x) * dx + (f.y - a.y) * dy) / l2)), d = Math.hypot(a.x + dx * tt - f.x, a.y + dy * tt - f.y);
         if (d > f.r * 1.05) continue;
         f.cortada = true;
-        if (f.tipo === 'bomba') { sonar('boom', 1); est.boom = ya; est.combo = 0; R.puntos = Math.max(0, R.puntos - 300); frase('¡BOOM!', f.x, f.y - f.r, '#ff4d6d', 1.4); decir('¡bum!'); continue; }
+        if (f.tipo === 'bomba') { sonar('boom', 1); est.boom = ya; est.combo = 0; R.puntos = Math.max(0, R.puntos - 300); frase(RC.t('u', 'boom'), f.x, f.y - f.r, '#ff4d6d', 1.4); decir(['v:bum']); continue; }
         sonar('corte', .9); est.cont++; R.reps++;
         const ang = Math.atan2(dy, dx), nx = -Math.sin(ang), ny = Math.cos(ang), v = S * .9;
         for (const sg of [-1, 1]) est.trozos.push({ x: f.x + nx * sg * f.r * .2, y: f.y + ny * sg * f.r * .2, vx: f.vx * .5 + nx * sg * v * .5 + dx * 2, vy: Math.min(f.vy, 0) * .3 + ny * sg * v * .5, r: f.r, tipo: f.tipo, giro: ang, vg: sg * 5, lado: sg, ang });
         for (let q = 0; q < 12; q++) { const a2 = Math.random() * Math.PI * 2, sp = S * (.3 + Math.random() * .9); est.gotas.push({ x: f.x, y: f.y, vx: Math.cos(a2) * sp, vy: Math.sin(a2) * sp - S * .3, r: S * (.006 + Math.random() * .012), col: JUGO[f.tipo] }); }
         est.cortes = (est.cortes || []).filter(x => ya - x < 350); est.cortes.push(ya);
-        const n = est.cortes.length; sumar(n > 1 ? 50 * n : 50, n > 1 ? `¡COMBO x${n}!` : '', f.x, f.y - f.r, '#ffd23f');
+        const n = est.cortes.length; sumar(n > 1 ? 50 * n : 50, n > 1 ? RC.t('u', 'comboX', { n }) : '', f.x, f.y - f.r, '#ffd23f');
         if (n > 1) sonar('punto', .5);
       }
     }
     est.frutas = est.frutas.filter(f => !f.cortada && !(f.vy > 0 && f.y > H + f.r * 2));
     est.trozos = est.trozos.filter(z => z.y < H + z.r * 3); est.gotas = est.gotas.filter(z => z.y < H + 20);
-    $('cuenta').innerHTML = `<small>FRUTAS</small>${est.cont}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cFrutas')}</small>${est.cont}`;
   },
   baile(T, t) {   // círculos que hay que tocar con la mano justo en el golpe de la música
     const spb = 60 / ritmo.bpm, paso = t < 25 ? 2 : (est.cont % 7 === 6 ? 1 : 2);
@@ -510,11 +517,11 @@ const LOGICA = {
       const dt = ahora() - o.tGolpe, px = Math.max(30, Math.min(W - 30, C.ox + o.x * C.u)), py = Math.max(H * .2, C.cadY + o.y * C.u);
       if (dt > -.3) for (const k of ['I', 'D']) { const m = P['ma' + k]; if (Math.hypot(m.x - px, m.y - py) < o.r * C.u * 1.4) {
         o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; est.combo = (est.combo || 0) + 1; const perf = Math.abs(dt) < .13;
-        sonar('pluck', .45, 0, perf ? 2 : 1.5); sumar(perf ? 200 : 100, perf ? 'PERFECTO' : '¡BIEN!', px, py - o.r * C.u, perf ? '#3ec8a0' : '#ffd23f');
-        if (est.combo % 10 === 0) { frase(`¡COMBO ${est.combo}!`, W / 2, H * .22, '#ff8a3d', 1.3); decir(`¡combo ${est.combo}!`); } break; } }
+        sonar('pluck', .45, 0, perf ? 2 : 1.5); sumar(perf ? 200 : 100, perf ? RC.t('u', 'perfecto') : RC.t('u', 'bien'), px, py - o.r * C.u, perf ? '#3ec8a0' : '#ffd23f');
+        if (est.combo % 10 === 0) { frase(RC.t('u', 'combo', { n: est.combo }), W / 2, H * .22, '#ff8a3d', 1.3); decir(['v:combo', RC.numero(est.combo)]); } break; } }
       if (o.estado === 'vivo' && dt > .3) { o.estado = 'falla'; o.tFin = performance.now(); est.combo = 0; }
     }
-    $('cuenta').innerHTML = `<small>COMBO</small>${est.combo || 0}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cCombo')}</small>${est.combo || 0}`;
   },
   luces(T, t) {   // 3 carriles en el piso: pisás a la izquierda, al centro (rodilla arriba) o a la derecha; la luz ancha es saltar
     const spb = 60 / ritmo.bpm;
@@ -528,11 +535,11 @@ const LOGICA = {
     est.pisa = mn < C.ox - 1.05 * ha ? 0 : mx > C.ox + 1.05 * ha ? 2 : rel.cad() < -.1 ? 3 : rod > .18 ? 1 : -1;
     for (const o of objs) if (o.estado === 'vivo') {
       const dt = ahora() - o.tLlega;
-      if (!o.dicho && dt > -.85) { o.dicho = true; decir(['izquierda', 'centro', 'derecha', '¡saltá!'][o.car]); }
-      if (dt > -.28 && est.pisa === o.car) { o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; est.combo = (est.combo || 0) + 1; sonar('pluck', .5, 0, [1.5, 2, 2.25, 3][o.car]); sumar(150, Math.abs(dt) < .14 ? 'PERFECTO' : '¡BIEN!', W * [.22, .5, .78, .5][o.car], H * .6, '#3ec8a0'); }
+      if (!o.dicho && dt > -.85) { o.dicho = true; decir([['v:izquierda', 'v:centro', 'v:derecha', 'v:salta'][o.car]]); }
+      if (dt > -.28 && est.pisa === o.car) { o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; est.combo = (est.combo || 0) + 1; sonar('pluck', .5, 0, [1.5, 2, 2.25, 3][o.car]); sumar(150, Math.abs(dt) < .14 ? RC.t('u', 'perfecto') : RC.t('u', 'bien'), W * [.22, .5, .78, .5][o.car], H * .6, '#3ec8a0'); }
       else if (dt > .32) { o.estado = 'falla'; o.tFin = performance.now(); est.combo = 0; sonar('falla', .3); }
     }
-    $('cuenta').innerHTML = `<small>LUCES</small>${est.cont}`;
+    $('cuenta').innerHTML = `<small>${RC.t('u', 'cLuces')}</small>${est.cont}`;
   },
 };
 let chispas = [];
@@ -565,14 +572,14 @@ function actualizar() {
     if (C.listo && P.cad) {
       for (const k of ['I', 'D']) { const m = P['ma' + k], u = ultMano[k]; est['mv' + k] = u ? (est['mv' + k] || 0) * .4 + Math.hypot(m.x - u.x, m.y - u.y) / C.u / DT * .6 : 0; manoAnt[k] = u; ultMano[k] = { x: m.x, y: m.y }; }
       const v = T.vista === 'cara' || T.vista === 'medio' ? T.vista : R.vista;
-      if (vistaOk(v)) LOGICA[T.id](T, t); else if (!est.avisoCuerpo || t - est.avisoCuerpo > 4) { est.avisoCuerpo = t; aviso(v === 'cara' ? 'MIRÁ AL TELÉFONO<small>que se te vea la cara</small>' : v === 'medio' ? 'ALEJATE UN POCO<small>que se te vean la cabeza, los hombros y los brazos</small>' : 'ALEJATE UN POCO<small>se te tiene que ver entero</small>', 1400); }
+      if (vistaOk(v)) LOGICA[T.id](T, t); else if (!est.avisoCuerpo || t - est.avisoCuerpo > 4) { est.avisoCuerpo = t; aviso(RC.t('u', v === 'cara' ? 'selfie' : v === 'medio' ? 'acomodate' : 'alejateEntero'), 1400); }
     }
     R.kcal += T.met * PESO / 3600 * DT;   // MET x kg x horas
     R.activoSeg += DT;
     $('kcal').textContent = Math.round(R.kcal);
     const hecho = R.lista.slice(0, R.i).reduce((a, x) => a + x.seg, 0) + Math.min(t, T.seg);
     $('barraTot').firstElementChild.style.width = Math.min(100, hecho / tot * 100) + '%';
-    if (t >= T.seg) { R.pausa = true; ritmo.melodia = false; sonar('campana', .6); aviso('¡BIEN!', 900); setTimeout(() => empezarTramo(R.i + 1), 1000); }
+    if (t >= T.seg) { R.pausa = true; ritmo.melodia = false; sonar('campana', .6); aviso(RC.t('u', 'bien'), 900); setTimeout(() => empezarTramo(R.i + 1), 1000); }
   }
   objs = objs.filter(o => o.estado === 'vivo' || performance.now() - o.tFin < 450);
 }
@@ -589,7 +596,7 @@ function terminar(cortado = false) {
   anotar(R.dia ? `Rutina día ${R.dia}` : R.lista[0].nom, R.activoSeg, R.kcal);
   if (R.prueba) { const reps = R.lista[0] ? (est.cont || 0) : 0; if (!cortado) { try { const a = JSON.parse(localStorage.getItem('rcPrueba') || '[]'); a.push({ fecha: new Date().toLocaleDateString('sv'), reps }); localStorage.setItem('rcPrueba', JSON.stringify(a)); } catch (e) {} } }
   if (R.dia && !cortado) { const d = leerDias(); if (!d.hechos[R.dia]) d.hechos[R.dia] = hoyStr(); if (!d.fechas.includes(hoyStr())) d.fechas.push(hoyStr()); guardarDias(d); }
-  document.querySelector('#fin h1').innerHTML = R.dia ? (cortado ? `DÍA ${R.dia}<span>A MEDIAS</span>` : `¡DÍA ${R.dia}<span>COMPLETO!</span>`) : R.solo ? `${R.lista[0].nom}<span>${cortado ? 'TERMINADO' : '¡BIEN HECHO!'}</span>` : H1_RUTINA;
+  document.querySelector('#fin h1').innerHTML = R.dia ? RC.t('u', cortado ? 'diaMedias' : 'diaCompleto', { n: R.dia }) : R.solo ? `${R.lista[0].nom}<span>${RC.t('u', cortado ? 'terminado' : 'bienHecho')}</span>` : H1_RUTINA;
   R.activo = false; $('barraTot').style.display = 'none'; aviso('', 0);
   const min = Math.round(R.activoSeg / 60);
   // minutos de la semana (en este teléfono)
@@ -597,10 +604,10 @@ function terminar(cortado = false) {
   try { sem = JSON.parse(localStorage.getItem('rutinaSemana') || '{}'); } catch (e) {}
   if (sem.semana !== clave) sem = { semana: clave, min: 0 };
   sem.min += R.activoSeg / 60; try { localStorage.setItem('rutinaSemana', JSON.stringify(sem)); } catch (e) {}
-  $('fMin').textContent = min; $('fKcal').textContent = Math.round(R.kcal); $('fReps').textContent = R.reps; $('fPuntos').textContent = R.puntos.toLocaleString('es-AR');
-  $('fSem').textContent = Math.round(sem.min); $('fSemB').style.width = Math.min(100, sem.min / 150 * 100) + '%';
-  if (R.prueba && !cortado) { document.querySelector('#fin h1').innerHTML = `${est.cont || 0} SENTADILLAS<span>EN 1 MINUTO</span>`; $('btnOtra').textContent = 'VOLVER A MI PLAN'; }
-  else $('btnOtra').textContent = 'OTRA VEZ';
+  $('fMin').textContent = min; $('fKcal').textContent = Math.round(R.kcal); $('fReps').textContent = R.reps; $('fPuntos').textContent = R.puntos.toLocaleString(RC.lang);
+  $('fSem').textContent = RC.t('u', 'metaOms', { n: Math.round(sem.min) }); $('fSemB').style.width = Math.min(100, sem.min / 150 * 100) + '%';
+  if (R.prueba && !cortado) { document.querySelector('#fin h1').innerHTML = RC.t('u', 'pruebaRes', { n: est.cont || 0 }); $('btnOtra').textContent = RC.t('u', 'volverPlan').toUpperCase(); $('btnOtra').dataset.volver = '1'; }
+  else { $('btnOtra').textContent = RC.t('u', 'otraVez'); delete $('btnOtra').dataset.volver; }
   sonar('campana', .8); setTimeout(() => $('fin').hidden = false, 700);
 }
 // pantalla de inicio: plan, rutina con cámara (semana 1), juegos y ejercicios sueltos
@@ -611,33 +618,33 @@ function pintarDias() {
   let sig = DIAS.findIndex((x, i) => !d.hechos[i + 1]) + 1;
   if (!diaSel || !abierto(diaSel)) diaSel = sig && abierto(sig) ? sig : (sig ? sig - 1 : 7);
   $('dias').innerHTML = DIAS.map((x, i) => { const n = i + 1, ab = abierto(n);
-    return `<div class="dia${d.hechos[n] ? ' hecho' : ''}${n === diaSel ? ' sel' : ''}${ab ? '' : ' bloq'}" data-dia="${n}"><b>DÍA ${n}</b><i>${x.tema}</i><small>${ab ? minutosDia(x) + ' MIN' : (d.hechos[n - 1] ? 'MAÑANA' : 'BLOQUEADO')}</small></div>`; }).join('');
-  const r = racha(d); $('racha').textContent = r ? `RACHA: ${r} ${r === 1 ? 'DÍA' : 'DÍAS'} SEGUIDOS` : '';
-  $('btnEmpezar').textContent = (d.hechos[diaSel] ? 'REPETIR DÍA ' : 'EMPEZAR DÍA ') + diaSel;
-  $('notaDia').textContent = sig && !abierto(sig) ? `El día ${sig} se abre mañana. ¡Hoy ya entrenaste!` : !sig ? '¡Terminaste la semana 1!' : '';
+    return `<div class="dia${d.hechos[n] ? ' hecho' : ''}${n === diaSel ? ' sel' : ''}${ab ? '' : ' bloq'}" data-dia="${n}"><b>${RC.t('u', 'dia')} ${n}</b><i>${x.tema}</i><small>${ab ? minutosDia(x) + ' ' + RC.t('u', 'min') : RC.t('u', d.hechos[n - 1] ? 'manana' : 'bloqueado')}</small></div>`; }).join('');
+  const r = racha(d); $('racha').textContent = r ? (r === 1 ? RC.t('u', 'racha1') : RC.t('u', 'racha', { n: r })) : '';
+  $('btnEmpezar').textContent = RC.t('u', d.hechos[diaSel] ? 'repetirDia' : 'empezarDia', { n: diaSel });
+  $('notaDia').textContent = sig && !abierto(sig) ? RC.t('u', 'seAbre', { n: sig }) : !sig ? RC.t('u', 'semanaLista') : '';
 }
 $('dias').addEventListener('click', e => { const c = e.target.closest('.dia'); if (!c || c.classList.contains('bloq')) return; diaSel = +c.dataset.dia; pintarDias(); });
 const PRUEBAS = [['sentadillas', 'SENTADILLAS'], ['tijera', 'SALTOS DE TIJERA'], ['carrera', 'CORRER EN EL LUGAR'], ['circulos', 'CÍRCULOS DE BRAZOS'], ['patadas', 'PATADAS AL FRENTE'], ['cruzadas', 'RODILLA CRUZADA'], ['rodillazos', 'RODILLAZOS'], ['vallas', 'SALTAR OBSTÁCULOS'], ['agarrar', 'SALTÁ Y AGARRÁ'], ['boxeo', 'BOXEO'], ['esquivar', 'ESQUIVAR'], ['calor', 'POSES'], ['estirar', 'ESTIRAMIENTO']];
-$('pruebas').innerHTML = PRUEBAS.map(([id, n]) => `<div class="btn chico" data-jugar="${id}">${n}</div>`).join('');
+$('pruebas').innerHTML = PRUEBAS.map(([id, n]) => `<div class="btn chico" data-jugar="${id}">${(id === 'calor' ? RC.t('u', 'cPoses') : TR[id].nom)}</div>`).join('');
 pintarDias();
 
 function arrancarRutina(plan) {   // plan: { dia } para un día de la semana, o { solo: id } para un juego o una prueba
   R.plan = plan; document.body.classList.remove('tenis', 'pp'); video.style.opacity = ''; $('reloj').textContent = '0:00';
   $('fin').hidden = true; $('inicio').hidden = true; $('barraTot').style.display = 'block';
   R.sinSaltos = leerImp() === '0'; R.dia = plan.dia || 0; R.solo = !!plan.solo; R.prueba = !!plan.prueba;
-  R.lista = plan.dia ? DIAS[plan.dia - 1].l.map(([id, seg, meta]) => ({ ...TR[id], seg, meta: meta || TR[id].meta || 0 })) : plan.prueba ? [{ ...TR.sentadillas, nom: 'PRUEBA', ins: 'Todas las sentadillas que puedas en 1 minuto', seg: 60, meta: 999 }] : [{ ...TR[plan.solo] }];
+  R.lista = plan.dia ? DIAS[plan.dia - 1].l.map(([id, seg, meta]) => ({ ...TR[id], seg, meta: meta || TR[id].meta || 0 })) : plan.prueba ? [{ ...TR.sentadillas, nom: RC.T.tr.prueba[0].toUpperCase(), ins: RC.T.tr.prueba[1], seg: 60, meta: 999 }] : [{ ...TR[plan.solo] }];
   R.vista = R.solo ? (R.lista[0].vista || 'entero') : 'entero';
   Object.assign(R, { activo: true, pausa: true, i: -1, puntos: 0, reps: 0, kcal: 0, activoSeg: 0 });
   C.listo = false; C.muestras = []; objs = []; textos = [];
   ritmo.sig = ahora() + .1; ritmo.beat = 0; ritmo.melodia = false;
-  $('tramo').textContent = 'CALIBRANDO'; $('cuenta').innerHTML = '<small>QUIETO</small>';
+  $('tramo').textContent = RC.t('u', 'calibrando'); $('cuenta').innerHTML = `<small>${RC.t('u', 'quieto')}</small>`;
   const v = R.vista;
-  aviso(v === 'cara' ? 'MIRÁ AL TELÉFONO<small>como para una selfie</small>' : 'PARATE DERECHO<small>de frente, con los brazos al costado</small>', 0);
+  aviso(RC.t('u', v === 'cara' ? 'selfie' : 'pararse'), 0);
   const espera = () => { if (!R.activo) return;
-    if (v === 'cara' && caraVisible()) { const S = Math.min(W, H); Object.assign(C, { u: S * .3, hombroAncho: S * .22, ox: W / 2, cadY: H * .8, narY: P.nariz.y, narX: P.nariz.x, listo: true }); aviso('¡LISTO!', 800); decir('¡listo!'); setTimeout(() => empezarTramo(0), 900); return; }
-    if (v !== 'cara' && vistaOk(v) && calibrar()) { C.listo = true; aviso('¡LISTO!', 800); decir('¡listo!'); setTimeout(() => empezarTramo(0), 900); return; }
-    if (!vistaOk(v)) { const msj = v === 'medio' ? ['ACOMODATE<small>que se te vean la cabeza, los hombros y los brazos</small>', 'acomodate, que se te vean la cabeza y los brazos'] : v === 'cara' ? ['MIRÁ AL TELÉFONO<small>como para una selfie</small>', 'mirá al teléfono'] : ['ALEJATE UN POCO<small>se te tiene que ver de la cabeza a los pies</small>', 'alejate un poco, que se te vea de la cabeza a los pies']; aviso(msj[0], 0); decirCada(msj[1], 6000); }
-    else aviso('QUEDATE QUIETO<small>midiendo tu cuerpo…</small>', 0);
+    if (v === 'cara' && caraVisible()) { const S = Math.min(W, H); Object.assign(C, { u: S * .3, hombroAncho: S * .22, ox: W / 2, cadY: H * .8, narY: P.nariz.y, narX: P.nariz.x, listo: true }); aviso(RC.t('u', 'listo'), 800); decir(['v:listo']); setTimeout(() => empezarTramo(0), 900); return; }
+    if (v !== 'cara' && vistaOk(v) && calibrar()) { C.listo = true; aviso(RC.t('u', 'listo'), 800); decir(['v:listo']); setTimeout(() => empezarTramo(0), 900); return; }
+    if (!vistaOk(v)) { const msj = v === 'medio' ? ['acomodate', 'v:alejateMedio'] : v === 'cara' ? ['selfie', 'v:miraTel'] : ['alejate', 'v:alejate']; aviso(RC.t('u', msj[0]), 0); decirCada([msj[1]], 6000); }
+    else aviso(RC.t('u', 'quedateQuieto'), 0);
     setTimeout(espera, 100); };
   espera();
 }
@@ -647,9 +654,9 @@ $('salir').addEventListener('click', () => {
   if (R.activo) { if (R.enPausa) { R.enPausa = false; ac.resume(); } terminar(true); }
 });
 $('pausa').addEventListener('click', () => {
-  if (MODO === 'tenis') { if (!TN.activo) return; TN.enPausa = !TN.enPausa; if (TN.enPausa) { ac.suspend(); aviso('PAUSA<small>tocá PAUSA para seguir</small>', 0); } else ac.resume().then(() => aviso('', 0)); return; }
+  if (MODO === 'tenis') { if (!TN.activo) return; TN.enPausa = !TN.enPausa; if (TN.enPausa) { ac.suspend(); aviso(`${RC.t('u', 'pausa')}<small>${RC.t('u', 'seguir')}</small>`, 0); } else ac.resume().then(() => aviso('', 0)); return; }
   if (!R.activo) return;
-  if (!R.enPausa) { R.enPausa = true; R.pausaDesde = ahora(); R.pausaPrev = R.pausa; R.pausa = true; ac.suspend(); aviso('PAUSA<small>tocá PAUSA para seguir</small>', 0); }
+  if (!R.enPausa) { R.enPausa = true; R.pausaDesde = ahora(); R.pausaPrev = R.pausa; R.pausa = true; ac.suspend(); aviso(`${RC.t('u', 'pausa')}<small>${RC.t('u', 'seguir')}</small>`, 0); }
   else { R.enPausa = false; ac.resume().then(() => { R.tTramo += ahora() - R.pausaDesde; R.pausa = R.pausaPrev; aviso('', 0); }); }
 });
 
@@ -667,7 +674,7 @@ const prof = p => { const z = Z0 + (1 - Z0) * p; return { z, w: (1 / z - 1 / Z0)
 const altoMundo = () => 1.25 * Math.max(40, C.hombroAncho);   // píxeles que mide 1 metro a 1 m de distancia (aprox.)
 function marcador() {
   const [a, b] = TN.pts; let t;
-  if (a >= 3 && b >= 3) t = a === b ? 'IGUALES' : a > b ? 'VENTAJA VOS' : 'VENTAJA RIVAL'; else t = `${NUM[a]} - ${NUM[b]}`;
+  if (a >= 3 && b >= 3) t = RC.t('u', a === b ? 'iguales' : a > b ? 'ventajaVos' : 'ventajaRival'); else t = `${NUM[a]} - ${NUM[b]}`;
   $('reloj').innerHTML = `${TN.juegos[0]} - ${TN.juegos[1]}<small class="pts">${t}</small>`;
 }
 function raqueta() {   // la cabeza de la raqueta sigue la dirección de la muñeca hacia la mano
@@ -693,10 +700,10 @@ function puntoPara(q, txt) {
   if (q === 0) { TN.ganados++; sonar('aplauso', .6); }
   else sonar('falla', .4);
   if (TN.pts[q] >= 4 && TN.pts[q] - TN.pts[1 - q] >= 2) {
-    TN.juegos[q]++; TN.pts = [0, 0]; decir(q === 0 ? '¡game para vos!' : 'game del rival'); aviso(q === 0 ? `¡GAME PARA VOS!<small>${txt || ''}</small>` : `GAME DEL RIVAL<small>${txt || ''}</small>`, 1500);
+    TN.juegos[q]++; TN.pts = [0, 0]; decir([q === 0 ? 'v:gameVos' : 'v:gameRival']); aviso(`${RC.t('u', q === 0 ? 'gameVos' : 'gameRival')}<small>${txt || ''}</small>`, 1500);
     if (TN.juegos[q] >= 3) { marcador(); setTimeout(finTenis, 1600); return; }
-  } else aviso(q === 0 ? `¡PUNTO!<small>${txt || ''}</small>` : `PUNTO DEL RIVAL<small>${txt || ''}</small>`, 1100);
-  marcador(); const [a2, b2] = TN.pts, NV = ['cero', 'quince', 'treinta', 'cuarenta']; decir(a2 >= 3 && b2 >= 3 ? (a2 === b2 ? 'iguales' : a2 > b2 ? 'ventaja para vos' : 'ventaja rival') : `${NV[a2]}, ${NV[b2]}`, false); setTimeout(saqueRival, 1800);
+  } else aviso(`${RC.t('u', q === 0 ? 'punto' : 'puntoRival')}<small>${txt || ''}</small>`, 1100);
+  marcador(); const [a2, b2] = TN.pts, NV = ['v:tn0', 'v:tn15', 'v:tn30', 'v:tn40']; decir(a2 >= 3 && b2 >= 3 ? [a2 === b2 ? 'v:iguales' : a2 > b2 ? 'v:ventajaVos' : 'v:ventajaRival'] : [NV[a2], NV[b2]], false); setTimeout(saqueRival, 1800);
 }
 function tenisActualizar() {
   if (!TN.activo) return;
@@ -748,16 +755,16 @@ function tenisActualizar() {
       // riesgo de que se vaya afuera: el plano fuerte y cruzado es el más riesgoso, el top spin es el más seguro
       const riesgo = efecto === 'plano' ? (fuerza > .7 ? .18 : .04) + (Math.abs(dir) > .8 ? .15 : 0) : efecto === 'top' ? .03 + (Math.abs(dir) > .85 ? .05 : 0) : .06;
       TN.bola.afuera = Math.random() < riesgo;
-    } else if (s > 1.22) puntoPara(1, '¡NO LE PEGASTE!');
+    } else if (s > 1.22) puntoPara(1, RC.t('u', 'noLePegaste'));
   } else {
     if (!b.boto && s > .6) { b.boto = true; sonar('bote', .35); }
     if (s >= 1) {
-      if (b.afuera) return puntoPara(1, '¡SE FUE AFUERA!');
+      if (b.afuera) return puntoPara(1, RC.t('u', 'afuera'));
       const alcance = .34 - TN.dif * .015 - (b.perfecto ? .06 : 0) - b.fuerza * .12 - Math.abs(b.x1) * .05 + (b.efecto === 'slice' ? .08 : b.efecto === 'top' ? -.03 : 0);
       if (Math.abs(TN.rival.x - b.x1) < Math.max(.14, alcance) && Math.random() > .06) {   // el rival devuelve
         sonar('pelota', .55); TN.dif = Math.min(6, TN.dif + .15); bolaNueva(TN.rival.x);
         TN.rival.golpeT = performance.now(); TN.rival.lado = b.x1 >= TN.rival.x ? 1 : -1; TN.rival.tiro = TN.bola.x1 < W / 2 + TN.rival.x * W * .3 ? -1 : 1;
-      } else puntoPara(0, b.perfecto ? '¡WINNER!' : '¡EL RIVAL NO LLEGÓ!');
+      } else puntoPara(0, b.perfecto ? RC.t('u', 'winner') : RC.t('u', 'rivalNoLlego'));
     }
   }
 }
@@ -902,14 +909,14 @@ function arrancarTenis() {
   const espera = () => { if (!TN.activo) return;
     if (ultLm && (ultLm[0].visibility ?? 1) > .5) {   // modo selfie: con verte la cara alcanza
       const S = Math.min(W, H); Object.assign(C, { u: S * .3, hombroAncho: S * .22, ox: W / 2, cadY: H * .8, listo: true }); TN.listo = true;
-      aviso('¡A JUGAR!<small>Primero a 3 games. Pegale con la mano cuando la pelota llena el círculo</small>', 2400); decir('¡a jugar! primero a tres games'); setTimeout(saqueRival, 2600); }
-    else { aviso('PONETE DE FRENTE<small>como para una selfie, que se te vea la cara</small>', 0); setTimeout(espera, 100); } };
+      aviso(RC.t('u', 'aJugarTenis'), 2400); decir(['v:aJugarTenis']); setTimeout(saqueRival, 2600); }
+    else { aviso(RC.t('u', 'frenteSelfie'), 0); setTimeout(espera, 100); } };
   espera();
 }
 function finTenis() {
   TN.activo = false; anotar('Tenis', TN.seg, TN.kcal); aviso('', 0); sonar('campana', .8); if (TN.juegos[0] > TN.juegos[1]) sonar('aplauso', .8);
-  document.querySelector('#fin h1').innerHTML = TN.juegos[0] > TN.juegos[1] ? '¡GANASTE<span>EL PARTIDO!</span>' : 'PERDISTE<span>¡LA REVANCHA!</span>';
-  document.querySelector('#fin .stats').innerHTML = `<div><b>${TN.juegos[0]} - ${TN.juegos[1]}</b><small>GAMES</small></div><div><b>${TN.golpes}</b><small>GOLPES</small></div><div><b>${Math.max(TN.rallyMax, TN.rally)}</b><small>RALLY MÁS LARGO</small></div><div><b>${Math.round(TN.kcal)}</b><small>KCAL (APROX.)</small></div>`;
+  document.querySelector('#fin h1').innerHTML = TN.juegos[0] > TN.juegos[1] ? RC.t('u', 'ganaste') : RC.t('u', 'perdiste');
+  document.querySelector('#fin .stats').innerHTML = `<div><b>${TN.juegos[0]} - ${TN.juegos[1]}</b><small>${RC.t('u', 'games')}</small></div><div><b>${TN.golpes}</b><small>${RC.t('u', 'golpes')}</small></div><div><b>${Math.max(TN.rallyMax, TN.rally)}</b><small>${RC.t('u', 'rally')}</small></div><div><b>${Math.round(TN.kcal)}</b><small>${RC.t('u', 'kcalAprox')}</small></div>`;
   $('fSem').parentElement.style.display = 'none';
   setTimeout(() => $('fin').hidden = false, 700);
 }
@@ -919,7 +926,7 @@ const PP = { activo: false, listo: false, mano: 'D', pts: [0, 0], golpes: 0, ral
 const cintura = () => ultLm && [0, 11, 12, 23, 24].every(i => (ultLm[i].visibility ?? 1) > .45);
 const MESA = () => { const yF = H * .3, yN = Math.min(H * .97, C.cadY + .4 * C.u); return { yF, yN, aF: W * .17, aN: W * .5, cx: W / 2 }; };
 const mesaEn = (s, xr) => { const k = MESA(), y = k.yF + (k.yN - k.yF) * s, a = k.aF + (k.aN - k.aF) * s; return { x: k.cx + xr * a, y, esc: .3 + .7 * s }; };
-function ppMarca() { $('ppMarca').textContent = `VOS ${PP.pts[0]} · ${PP.pts[1]} RIVAL`; }
+function ppMarca() { $('ppMarca').textContent = RC.t('u', 'vosRival', { a: PP.pts[0], b: PP.pts[1] }); }
 function paleta() {   // la paleta sigue la dirección del antebrazo, apenas más allá de la mano
   const k = PP.mano, mu = P['mu' + k], ma = P['ma' + k], co = P['co' + k];
   let dx = ma.x - mu.x, dy = ma.y - mu.y, l = Math.hypot(dx, dy);
@@ -937,8 +944,8 @@ function ppPunto(q, txt) {
   PP.pts[q]++; PP.rallyMax = Math.max(PP.rallyMax, PP.rally); PP.rally = 0; PP.bola = null; ppMarca();
   if (q === 0) sonar('aplauso', .5); else sonar('falla', .4);
   const [a, b] = PP.pts;
-  if ((a >= 11 || b >= 11) && Math.abs(a - b) >= 2) { setTimeout(ppFin, 1200); aviso(a > b ? '¡GANASTE!' : 'GANÓ EL RIVAL', 1200); return; }
-  aviso(q === 0 ? `¡PUNTO!<small>${txt || ''}</small>` : `PUNTO DEL RIVAL<small>${txt || ''}</small>`, 1000);
+  if ((a >= 11 || b >= 11) && Math.abs(a - b) >= 2) { setTimeout(ppFin, 1200); aviso(RC.t('u', a > b ? 'ganasteCorto' : 'ganoRival'), 1200); return; }
+  aviso(`${RC.t('u', q === 0 ? 'punto' : 'puntoRival')}<small>${txt || ''}</small>`, 1000);
   setTimeout(ppSaque, 1600);
 }
 function ppActualizar() {
@@ -960,16 +967,16 @@ function ppActualizar() {
       const dir = Math.max(-1, Math.min(1, (PP.cabVx || 0) / 5 + (Math.random() - .5) * .3)), fuerza = Math.min(1, (PP.cabV - 2) / 6);
       PP.bola = { fase: 'va', t0: ya, dur: (1.3 - fuerza * .5) * 1000, hx: pos.x, hy: pos.y, x1: Math.max(-.95, Math.min(.95, dir * .9)), alto: .35 + fuerza * .2, boto: false, fuerza, perfecto: Math.abs(s - 1) < .07 };
       PP.rival.obj = PP.bola.x1; PP.bola.afuera = Math.abs(dir) > .92 && Math.random() < .2;
-    } else if (s > 1.25) ppPunto(1, '¡NO LLEGASTE!');
+    } else if (s > 1.25) ppPunto(1, RC.t('u', 'noLlegaste'));
   } else {
     if (!b.boto && s > .55) { b.boto = true; sonar('bote', .35, 0, 1.4); }
     if (s >= 1) {
-      if (b.afuera) return ppPunto(1, '¡AFUERA!');
+      if (b.afuera) return ppPunto(1, RC.t('u', 'afuera'));
       const alcance = .32 - PP.dif * .015 - (b.perfecto ? .08 : 0) - b.fuerza * .06;
       if (Math.abs(PP.rival.x - b.x1) < Math.max(.14, alcance) && Math.random() > .06) {
         sonar('pelota', .55, 0, 1.3); PP.dif = Math.min(6, PP.dif + .15); PP.rival.golpeT = ya;
         PP.bola = { fase: 'viene', t0: ya, dur: Math.max(.85, 1.5 - PP.dif * .1) * 1000, x0: PP.rival.x, x1: ppDestino(), alto: .3 + Math.random() * .8, boto: false };
-      } else ppPunto(0, b.perfecto ? '¡IMPARABLE!' : '¡EL RIVAL NO LLEGÓ!');
+      } else ppPunto(0, b.perfecto ? RC.t('u', 'imparable') : RC.t('u', 'rivalNoLlego'));
     }
   }
 }
@@ -1023,14 +1030,14 @@ function arrancarPP() {
   Object.assign(PP, { activo: true, listo: false, mano: leerMano(), pts: [0, 0], golpes: 0, rally: 0, rallyMax: 0, kcal: 0, bola: null, rival: { x: 0, obj: 0, golpeT: 0 }, dif: 1, cab: null, ult: 0 });
   C.listo = false; C.muestras = []; ppMarca();
   const espera = () => { if (!PP.activo) return;
-    if (cintura() && calibrar()) { C.listo = PP.listo = true; aviso('¡A JUGAR!<small>a 11 puntos</small>', 1800); decir('¡a jugar! a once puntos'); setTimeout(ppSaque, 2000); }
-    else { aviso(cintura() ? 'QUEDATE QUIETO<small>midiendo tu cuerpo…</small>' : 'ALEJATE UN POCO<small>que se te vea hasta la cintura</small>', 0); if (!cintura()) decirCada('alejate un poco, que se te vea hasta la cintura', 6000); setTimeout(espera, 100); } };
+    if (cintura() && calibrar()) { C.listo = PP.listo = true; aviso(RC.t('u', 'aJugarPP'), 1800); decir(['v:aJugarPP']); setTimeout(ppSaque, 2000); }
+    else { aviso(RC.t('u', cintura() ? 'quedateQuieto' : 'cintura'), 0); if (!cintura()) decirCada(['v:alejateCintura'], 6000); setTimeout(espera, 100); } };
   espera();
 }
 function ppFin() {
   PP.activo = false; anotar('Ping pong', PP.kcal / (5 * PESO / 3600), PP.kcal); aviso('', 0); sonar('campana', .8); const gane = PP.pts[0] > PP.pts[1]; if (gane) sonar('aplauso', .8);
-  document.querySelector('#fin h1').innerHTML = gane ? '¡GANASTE<span>EL PARTIDO!</span>' : 'PERDISTE<span>¡LA REVANCHA!</span>';
-  document.querySelector('#fin .stats').innerHTML = `<div><b>${PP.pts[0]} - ${PP.pts[1]}</b><small>PUNTOS</small></div><div><b>${PP.golpes}</b><small>GOLPES</small></div><div><b>${Math.max(PP.rallyMax, PP.rally)}</b><small>RALLY MÁS LARGO</small></div><div><b>${Math.round(PP.kcal)}</b><small>KCAL (APROX.)</small></div>`;
+  document.querySelector('#fin h1').innerHTML = gane ? RC.t('u', 'ganaste') : RC.t('u', 'perdiste');
+  document.querySelector('#fin .stats').innerHTML = `<div><b>${PP.pts[0]} - ${PP.pts[1]}</b><small>${RC.t('u', 'puntos')}</small></div><div><b>${PP.golpes}</b><small>${RC.t('u', 'golpes')}</small></div><div><b>${Math.max(PP.rallyMax, PP.rally)}</b><small>${RC.t('u', 'rally')}</small></div><div><b>${Math.round(PP.kcal)}</b><small>${RC.t('u', 'kcalAprox')}</small></div>`;
   $('fSem').parentElement.style.display = 'none';
   setTimeout(() => { $('fin').hidden = false; document.body.classList.remove('pp'); }, 700);
 }
@@ -1039,10 +1046,10 @@ $('ppSalir').addEventListener('click', () => { if (PP.activo) ppFin(); });
 // ───────── ARRANQUE ─────────
 async function empezar(modo, plan, btn) {
   try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) {}   // habilita la voz (en iPhone necesita un toque)
-  $('error').textContent = ''; const txt = btn.textContent; btn.textContent = 'CARGANDO…';
+  $('error').textContent = ''; const txt = btn.textContent; btn.textContent = RC.t('u', 'cargando'); RC.desbloquear();
   try {
     if (!ac) {
-      ac = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' }); await ac.resume(); await fabricar();
+      ac = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' }); await ac.resume(); RC.contexto(ac); RC.precargar(RC.todas()); await fabricar();
       const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 }, frameRate: { ideal: 30 } } });
       video.srcObject = stream; await video.play();
       const vision = await FilesetResolver.forVisionTasks('../bateria/wasm');
@@ -1055,14 +1062,14 @@ async function empezar(modo, plan, btn) {
     MODO = modo; if (modo === 'tenis') arrancarTenis(); else if (modo === 'pingpong') arrancarPP(); else arrancarRutina(plan);
   } catch (e) {
     btn.textContent = txt;
-    $('error').textContent = /Permission|NotAllowed/i.test(e && (e.name + e.message)) ? 'Hay que dar permiso a la cámara.' : 'No se pudo arrancar: ' + (e && e.message || e);
+    $('error').textContent = /Permission|NotAllowed/i.test(e && (e.name + e.message)) ? RC.t('u', 'permiso') : RC.t('u', 'noArranca') + (e && e.message || e);
   }
 }
 $('btnEmpezar').addEventListener('click', e => empezar('rutina', { dia: diaSel }, e.currentTarget));
 $('btnPruebaNivel').addEventListener('click', e => empezar('rutina', { prueba: true }, e.currentTarget));
 if (PRUEBA) { $('pruebaNivel').hidden = false; for (const el of [...document.querySelectorAll('#inicio .cartel > *')]) if (!['H1', 'pruebaNivel', 'error'].includes(el.id || el.tagName)) el.style.display = 'none'; }
 document.addEventListener('click', e => { const b = e.target.closest('[data-jugar]'); if (!b) return; const id = b.dataset.jugar; empezar(id === 'tenis' || id === 'pingpong' ? id : 'rutina', { solo: id }, b); });
-$('btnOtra').addEventListener('click', () => R.prueba && $('btnOtra').textContent === 'VOLVER A MI PLAN' ? location.href = './entrenar/' : MODO === 'tenis' ? arrancarTenis() : MODO === 'pingpong' ? arrancarPP() : arrancarRutina(R.plan));
+$('btnOtra').addEventListener('click', () => $('btnOtra').dataset.volver ? location.href = './entrenar/' : MODO === 'tenis' ? arrancarTenis() : MODO === 'pingpong' ? arrancarPP() : arrancarRutina(R.plan));
 $('btnMenu').addEventListener('click', () => { $('fin').hidden = true; $('inicio').hidden = false; document.body.classList.remove('tenis', 'pp'); pintarDias(); });
 
 let ultT = 0;
@@ -1102,18 +1109,18 @@ function dibujar() {
       ctx.fillStyle = '#ffd23f'; for (let x = -off; x < W; x += 80) ctx.fillRect(x, y0 - 4, 44, 8);
       texto(`${Math.round(est.dist)} m`, W / 2, y0 - 36, 30);
       const vel = Math.min(1, est.vel / 3); ctx.fillStyle = '#fff8ec'; ctx.fillRect(W * .1, H * .17, W * .8, 14); ctx.fillStyle = vel > .75 ? '#3ec8a0' : vel > .4 ? '#ffd23f' : '#ff4d6d'; ctx.fillRect(W * .1, H * .17, W * .8 * vel, 14); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.strokeRect(W * .1, H * .17, W * .8, 14);
-      texto('VELOCIDAD', W / 2, H * .16, 18, '#fff8ec');
+      texto(RC.t('u', 'velocidad'), W / 2, H * .16, 18, '#fff8ec');
     }
     if (T.id === 'sentadillas') {   // barra de profundidad
       const k = Math.max(0, Math.min(1, (est.prof || 0) / .42)), x = W * .08, h = H * .45, y = H * .3;
       ctx.fillStyle = '#fff8ec'; ctx.fillRect(x, y, 22, h); ctx.fillStyle = k >= 1 ? '#3ec8a0' : '#ffd23f'; ctx.fillRect(x, y, 22, h * k); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.strokeRect(x, y, 22, h);
-      texto(est.fase === 'abajo' ? '¡ARRIBA!' : 'BAJÁ', x + 11, y - 10, 20);
+      texto(est.fase === 'abajo' ? RC.t('u', 'arriba') : RC.t('u', 'baja'), x + 11, y - 10, 20);
     }
     if (T.id === 'frutas') dibujarFrutas(now);
     if (T.id === 'tijera' && est.bolas) for (const b of est.bolas) if (b.vivo) { const bx = C.ox + b.x, by = b.y(), r = .2 * u * (1 + Math.sin(now / 160 + b.x) * .06), ap = Math.min(1, (now - b.t0) / 250);
       ctx.save(); ctx.globalAlpha = ap; ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI * 2); ctx.fillStyle = b.col; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = '#2a2238'; ctx.stroke();
       ctx.beginPath(); ctx.arc(bx - r * .3, by - r * .3, r * .25, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fill(); ctx.restore(); }
-    if (T.id === 'tijera' && !est.bolas && est.esperaCerrar) texto('¡CERRÁ!', W / 2, H * .5, 40);
+    if (T.id === 'tijera' && !est.bolas && est.esperaCerrar) texto(RC.t('u', 'cerra'), W / 2, H * .5, 40);
     if (T.id === 'luces') dibujarPiso(ta);
     if (T.id === 'cruzadas') for (const k of ['I', 'D']) { const r = P['ro' + k]; ctx.beginPath(); ctx.arc(r.x, r.y, .16 * u, 0, Math.PI * 2); ctx.lineWidth = 5; ctx.strokeStyle = est['arr' + k] ? '#3ec8a0' : '#ffd23f'; ctx.stroke(); }
     if (T.id === 'circulos') for (const k of ['I', 'D']) { const h = P['h' + k], a = est['acc' + k] || 0; ctx.beginPath(); ctx.arc(h.x, h.y, .75 * u, -Math.PI / 2, -Math.PI / 2 + Math.max(-6.28, Math.min(6.28, a)), a < 0); ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.strokeStyle = '#ffd23f'; ctx.stroke(); }
@@ -1125,14 +1132,14 @@ function dibujar() {
         ctx.fillStyle = o.estado === 'falla' ? '#ff4d6d' : o.estado === 'ok' ? '#3ec8a0' : '#ff8a3d';
         ctx.fillRect(C.ox - ancho / 2, y - 10, ancho, 20); ctx.fillRect(C.ox - ancho / 2, y - 10, 10, 45); ctx.fillRect(C.ox + ancho / 2 - 10, y - 10, 10, 45);
         ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.strokeRect(C.ox - ancho / 2, y - 10, ancho, 20);
-        if (o.estado === 'vivo' && prog > .7) texto(R.sinSaltos ? '¡RODILLA!' : '¡SALTÁ!', W / 2, H * .45, 44);
+        if (o.estado === 'vivo' && prog > .7) texto(R.sinSaltos ? RC.t('u', 'rodilla') : RC.t('u', 'salta'), W / 2, H * .45, 44);
       } else if (o.tipo === 'barra') {
         const prog = Math.min(1, (ta - o.tAp) / (o.tLlega - o.tAp)), g = (.12 + prog * .25) * u;
         ctx.globalAlpha *= .35 + prog * .6; ctx.fillStyle = o.estado === 'falla' ? '#ff4d6d' : '#ff8a3d'; ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238';
         if (o.clase === 'agachate') { const y = C.narY; ctx.fillRect(0, y - g / 2, W, g); ctx.strokeRect(-5, y - g / 2, W + 10, g); }
         else { const hx = C.narX + (o.clase === 'izq' ? .15 : -.15) * u, x0 = o.clase === 'izq' ? 0 : hx, x1 = o.clase === 'izq' ? hx : W; ctx.globalAlpha *= .6; ctx.fillRect(x0, 0, x1 - x0, H); }
         ctx.restore(); ctx.save();
-        if (o.estado === 'vivo') texto(o.clase === 'agachate' ? '¡AGACHATE!' : o.clase === 'izq' ? '¡A LA DERECHA!' : '¡A LA IZQUIERDA!', W / 2, H * .8, 30 + prog * 12);
+        if (o.estado === 'vivo') texto(o.clase === 'agachate' ? RC.t('u', 'agachate') : o.clase === 'izq' ? RC.t('u', 'aLaDer') : RC.t('u', 'aLaIzq'), W / 2, H * .8, 30 + prog * 12);
       } else if (o.tipo === 'bolsa') {
         const px = C.ox + o.x * u, py = C.cadY + o.y * u, r = o.r * u;
         if (o.estado === 'vivo') { const prog = Math.min(1, Math.max(0, (ta - o.tAp) / (o.tGolpe - o.tAp)));
@@ -1156,7 +1163,7 @@ function dibujar() {
         const px = C.ox + o.x * u, py = Math.max(H * .2, C.narY - o.alto * u), r = o.r * u;
         if (o.estado === 'vivo') { const prog = Math.min(1, Math.max(0, (ta - o.tAp) / (o.tGolpe - o.tAp)));
           ctx.beginPath(); ctx.arc(px, py, r * (1.3 + (1 - prog) * 1.6), 0, Math.PI * 2); ctx.lineWidth = 4; ctx.strokeStyle = prog > .8 ? '#3ec8a0' : '#fff8ec'; ctx.stroke();
-          estrella(px, py + Math.sin(now / 180) * 4, r, '#ffd23f'); if (prog > .6) texto(R.sinSaltos ? '¡ESTIRATE!' : '¡SALTÁ!', W / 2, H * .82, 40); }
+          estrella(px, py + Math.sin(now / 180) * 4, r, '#ffd23f'); if (prog > .6) texto(R.sinSaltos ? RC.t('u', 'estirate') : RC.t('u', 'salta'), W / 2, H * .82, 40); }
         else if (o.estado === 'ok') estrella(px, py - k * 40, r * (1 + k), '#3ec8a0');
       } else if (o.tipo === 'nota') {   // círculo de baile
         const px = Math.max(30, Math.min(W - 30, C.ox + o.x * u)), py = Math.max(H * .2, C.cadY + o.y * u), r = o.r * u, col = o.x < -.2 ? '#4f8fff' : o.x > .2 ? '#ff4d6d' : '#ffd23f';
@@ -1216,9 +1223,9 @@ function dibujarPiso(ta) {   // piso con 3 carriles en perspectiva; las luces vi
     ctx.fillStyle = o.estado === 'falla' ? '#7a6f8a' : o.estado === 'ok' ? '#fff8ec' : o.car === 3 ? '#3ec8a0' : COL[o.car];
     ctx.beginPath(); ctx.moveTo(xEn(y - h / 2, f0 + pad), y - h / 2); ctx.lineTo(xEn(y - h / 2, f1 - pad), y - h / 2); ctx.lineTo(xEn(y + h / 2, f1 - pad), y + h / 2); ctx.lineTo(xEn(y + h / 2, f0 + pad), y + h / 2); ctx.closePath(); ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.stroke();
     ctx.restore();
-    if (o.estado === 'vivo' && prog > .55) texto(['IZQUIERDA', 'CENTRO', 'DERECHA', '¡SALTÁ!'][o.car], W * [.3, .5, .7, .5][o.car], y0 - 14, Math.min(W / 13, 22 + prog * 6), '#fff8ec');
+    if (o.estado === 'vivo' && prog > .55) texto([RC.t('u', 'izquierda'), RC.t('u', 'centro'), RC.t('u', 'derecha'), RC.t('u', 'salta')][o.car], W * [.3, .5, .7, .5][o.car], y0 - 14, Math.min(W / 13, 22 + prog * 6), '#fff8ec');
   }
-  texto(`COMBO ${est.combo || 0}`, W / 2, H * .44, 22, '#ffd23f');
+  texto(`${RC.t('u', 'cCombo')} ${est.combo || 0}`, W / 2, H * .44, 22, '#ffd23f');
 }
 window.__t = { PP, ppBolaEn, paleta, DIAS, leerDias, pintarDias, ritmo, TN, bolaEn, raqueta, R, C, P, est: () => est, objs: () => objs, ta: () => ac.currentTime, LOGICA, TRAMOS, lm: l => leerCuerpo(l), parar: () => { video.pause(); video.srcObject = null; } };
 </script>
