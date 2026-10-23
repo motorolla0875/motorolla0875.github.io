@@ -39,6 +39,9 @@
   .btn { display: inline-block; font: 800 22px/1 'Baloo 2', system-ui; color: #fff; background: var(--verde); border: 4px solid var(--tinta); border-radius: 16px; box-shadow: 0 5px 0 var(--tinta); padding: 12px 26px 8px; cursor: pointer; letter-spacing: 1px; margin: 4px; }
   .btn.rojo { background: var(--rojo); }
   .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--tinta); }
+  .otro { margin-top: 12px; padding-top: 10px; border-top: 3px dashed rgba(42,34,56,.25); }
+  .otro-tit { font-weight: 800; font-size: 16px; letter-spacing: .5px; }
+  .otro-tit b { color: var(--rojo); }
   .aviso-salud { font-size: 11.5px; font-weight: 600; opacity: .75; margin-top: 8px; line-height: 1.25; }
   #error { color: var(--rojo); font-weight: 800; margin-top: 8px; font-size: 14px; }
   .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0 8px; }
@@ -72,6 +75,11 @@
     <div class="opc" id="dur"><button data-d="corta">PRUEBA 3 MIN</button><button data-d="normal" class="sel">RUTINA 10 MIN</button></div>
     <div class="opc" id="imp"><button data-i="1" class="sel">CON SALTOS</button><button data-i="0">SIN SALTOS</button></div>
     <div class="btn" id="btnEmpezar">EMPEZAR</div>
+    <div class="otro">
+      <div class="otro-tit">O JUGÁ UN PARTIDO DE <b>TENIS</b></div>
+      <div class="opc" id="mano"><button data-m="D" class="sel">DIESTRO</button><button data-m="I">ZURDO</button></div>
+      <div class="btn rojo" id="btnTenis">JUGAR TENIS</div>
+    </div>
     <div id="error"></div>
     <div class="aviso-salud">Prototipo. Si tenés alguna condición de salud, consultá a tu médico antes de hacer ejercicio. Pará si sentís dolor o mareo. Las calorías son aproximadas. Todo se procesa en el teléfono: no se graba ni se manda nada.</div>
   </div>
@@ -99,7 +107,7 @@ let W = 0, H = 0;
 function medir() { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
 addEventListener('resize', medir); medir();
 const opcion = (id, attr) => { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.toggle('sel', x === b)); }); return () => $(id).querySelector('.sel').dataset[attr]; };
-const leerDur = opcion('dur', 'd'), leerImp = opcion('imp', 'i');
+const leerDur = opcion('dur', 'd'), leerImp = opcion('imp', 'i'), leerMano = opcion('mano', 'm');
 
 // ───────── SONIDO ─────────
 let ac = null; const SON = {};
@@ -119,6 +127,9 @@ async function fabricar() {
   SON.falla = await hacer(.3, o => tono(o, 180, 90, .25, .3, 'square'));
   SON.campana = await hacer(1.6, o => [740, 1110, 1660, 2490].forEach((f, i) => tono(o, f, f, 1.4, .3 / (i + 1))));
   SON.tic = await hacer(.1, o => tono(o, 1200, 1200, .06, .3, 'square'));
+  SON.pelota = await hacer(.2, o => { tono(o, 900, 500, .06, .7, 'triangle'); filt(o, 'bandpass', 2500, 1.2, .05, .8, .1); });
+  SON.bote = await hacer(.15, o => { tono(o, 300, 160, .07, .45); filt(o, 'lowpass', 900, .7, .05, .35, .1); });
+  SON.aplauso = await hacer(1.6, o => { for (let i = 0; i < 26; i++) filt(o, 'bandpass', 1500 + Math.random() * 2500, 1.5, .05, .25 + Math.random() * .2, .1, Math.random() * 1.3); });
 }
 function sonar(n, v = 1, cuando = 0) { const b = SON[n]; if (!b || !ac) return; const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = b; g.gain.value = v; s.connect(g).connect(ac.destination); s.start(cuando || 0); }
 
@@ -303,7 +314,10 @@ function actualizar() {
   objs = objs.filter(o => o.estado === 'vivo' || performance.now() - o.tFin < 450);
 }
 
+const STATS_RUTINA = document.querySelector('#fin .stats').innerHTML, H1_RUTINA = document.querySelector('#fin h1').innerHTML;
+let MODO = 'rutina';
 function terminar() {
+  document.querySelector('#fin .stats').innerHTML = STATS_RUTINA; document.querySelector('#fin h1').innerHTML = H1_RUTINA; $('fSem').parentElement.style.display = '';
   R.activo = false; $('barraTot').style.display = 'none'; aviso('', 0);
   const min = Math.round(R.activoSeg / 60);
   // minutos de la semana (en este teléfono)
@@ -332,14 +346,160 @@ function arrancarRutina() {
 }
 
 $('pausa').addEventListener('click', () => {
+  if (MODO === 'tenis') { if (!TN.activo) return; TN.enPausa = !TN.enPausa; if (TN.enPausa) { ac.suspend(); aviso('PAUSA<small>tocá PAUSA para seguir</small>', 0); } else ac.resume().then(() => aviso('', 0)); return; }
   if (!R.activo) return;
   if (!R.enPausa) { R.enPausa = true; R.pausaDesde = ahora(); R.pausaPrev = R.pausa; R.pausa = true; ac.suspend(); aviso('PAUSA<small>tocá PAUSA para seguir</small>', 0); }
   else { R.enPausa = false; ac.resume().then(() => { R.tTramo += ahora() - R.pausaDesde; R.pausa = R.pausaPrev; aviso('', 0); }); }
 });
 
+
+// ───────── TENIS: raqueta en tu mano, el rival del otro lado de la cancha ─────────
+const TN = { activo: false, enPausa: false, listo: false, mano: 'D', pts: [0, 0], juegos: [0, 0], golpes: 0, rally: 0, rallyMax: 0, ganados: 0, kcal: 0, seg: 0, bola: null, rival: { x: 0, obj: 0 }, dif: 1, cab: null, cabV: 0, ult: 0 };
+const NUM = ['0', '15', '30', '40'];
+const cuerpoMedio = () => ultLm && [0, 11, 12, 23, 24].every(i => (ultLm[i].visibility ?? 1) > .45);
+// geometría de la cancha en la pantalla (s: 0 = lado del rival, 1 = tu lado)
+const CAN = () => { const yF = H * .2, yN = Math.min(H * .97, C.cadY + 1.3 * C.u); return { yF, yN, aF: W * .2, aN: W * .62, cx: W / 2 }; };
+const pisoEn = (s, xr) => { const k = CAN(), y = k.yF + (k.yN - k.yF) * s, a = k.aF + (k.aN - k.aF) * s; return { x: k.cx + xr * a, y, esc: .3 + .7 * s }; };
+function marcador() {
+  const [a, b] = TN.pts; let t;
+  if (a >= 3 && b >= 3) t = a === b ? 'IGUALES' : a > b ? 'VENTAJA VOS' : 'VENTAJA RIVAL'; else t = `${NUM[a]} - ${NUM[b]}`;
+  $('cuenta').innerHTML = `<small>VOS · RIVAL</small>${t}`; $('reloj').textContent = `${TN.juegos[0]} - ${TN.juegos[1]}`;
+}
+function raqueta() {   // la cabeza de la raqueta sigue la dirección de la muñeca hacia la mano
+  const k = TN.mano, mu = P['mu' + k], ma = P['ma' + k], co = P['co' + k];
+  let dx = ma.x - mu.x, dy = ma.y - mu.y, l = Math.hypot(dx, dy);
+  if (l < .05 * C.u) { dx = mu.x - co.x; dy = mu.y - co.y; l = Math.hypot(dx, dy) || 1; }
+  dx /= l; dy /= l;
+  return { mx: mu.x, my: mu.y, hx: mu.x + dx * .55 * C.u, hy: mu.y + dy * .55 * C.u, dx, dy };
+}
+function saqueRival() {
+  if (!TN.activo) return;
+  const lado = Math.random() < .5 ? -1 : 1, off = (.45 + Math.random() * .55) * lado;
+  // destino: al costado del cuerpo, entre la cadera y el hombro
+  const xr = (C.ox + off * C.u - W / 2) / CAN().aN, alto = (.6 + Math.random() * .8);
+  TN.bola = { fase: 'viene', t0: performance.now(), dur: Math.max(.95, 1.7 - TN.dif * .12) * 1000, x0: TN.rival.x, x1: xr, alto, golpeada: false, boto: false };
+  sonar('pelota', .5);
+}
+function puntoPara(q, txt) {
+  TN.pts[q]++; TN.rallyMax = Math.max(TN.rallyMax, TN.rally); TN.rally = 0; TN.bola = null;
+  if (q === 0) { TN.ganados++; sonar('aplauso', .6); }
+  else sonar('falla', .4);
+  if (TN.pts[q] >= 4 && TN.pts[q] - TN.pts[1 - q] >= 2) {
+    TN.juegos[q]++; TN.pts = [0, 0]; aviso(q === 0 ? `¡GAME PARA VOS!<small>${txt || ''}</small>` : `GAME DEL RIVAL<small>${txt || ''}</small>`, 1500);
+    if (TN.juegos[q] >= 3) { marcador(); setTimeout(finTenis, 1600); return; }
+  } else aviso(q === 0 ? `¡PUNTO!<small>${txt || ''}</small>` : `PUNTO DEL RIVAL<small>${txt || ''}</small>`, 1100);
+  marcador(); setTimeout(saqueRival, 1800);
+}
+function tenisActualizar() {
+  if (!TN.activo) return;
+  const ya = performance.now(), dt = Math.min(.1, (ya - (TN.ult || ya)) / 1000); TN.ult = ya;
+  if (!TN.listo || !P.cad) return;
+  TN.seg += dt; TN.kcal += 6 * 70 / 3600 * dt; $('kcal').textContent = Math.round(TN.kcal);
+  const r = raqueta();
+  if (TN.cab) { const v = Math.hypot(r.hx - TN.cab.x, r.hy - TN.cab.y) / C.u / Math.max(dt, .001); TN.cabV = TN.cabV * .4 + v * .6; TN.cabVx = (TN.cabVx || 0) * .4 + (r.hx - TN.cab.x) / C.u / Math.max(dt, .001) * .6; }
+  TN.cab = { x: r.hx, y: r.hy };
+  // el rival corre hacia donde va la pelota
+  TN.rival.x += Math.max(-1, Math.min(1, (TN.rival.obj - TN.rival.x) * 6)) * dt * (1.1 + TN.dif * .15);
+  const b = TN.bola; if (!b) return;
+  const s = (ya - b.t0) / b.dur;
+  if (b.fase === 'viene') {
+    if (!b.boto && s > .72) { b.boto = true; sonar('bote', .5); }
+    const pos = bolaEn(b, s);
+    if (s > .85 && s < 1.18 && TN.cabV > 2.2 && Math.hypot(r.hx - pos.x, r.hy - pos.y) < .5 * C.u) {   // ¡golpe!
+      TN.golpes++; TN.rally++; sonar('pelota', 1);
+      const dir = Math.max(-1, Math.min(1, (TN.cabVx || 0) / 5 + (Math.random() - .5) * .3)) * (TN.mano === 'D' ? 1 : 1);
+      const fuerza = Math.min(1, (TN.cabV - 2.2) / 6);
+      const perfecto = Math.abs(s - 1) < .07;
+      frase(perfecto ? '¡PERFECTO!' : fuerza > .6 ? '¡ZAS!' : '¡TOC!', pos.x, pos.y - .4 * C.u, perfecto ? '#3ec8a0' : '#ffd23f');
+      TN.bola = { fase: 'va', t0: ya, dur: (1.45 - fuerza * .5) * 1000, hx: pos.x, hy: pos.y, x1: Math.max(-.95, Math.min(.95, dir * .9)), alto: .5 + fuerza * .3, boto: false, perfecto, fuerza };
+      TN.rival.obj = TN.bola.x1;
+      // si la pegaste muy de costado y muy fuerte, puede irse afuera
+      TN.bola.afuera = Math.abs(dir) > .92 && Math.random() < .2;
+    } else if (s > 1.25) puntoPara(1, '¡NO LLEGASTE!');
+  } else {   // la pelota va hacia el rival
+    if (!b.boto && s > .55) { b.boto = true; sonar('bote', .35); }
+    if (s >= 1) {
+      if (b.afuera) return puntoPara(1, '¡SE FUE AFUERA!');
+      const alcance = .32 - TN.dif * .015 - (b.perfecto ? .08 : 0) - b.fuerza * .06;
+      if (Math.abs(TN.rival.x - b.x1) < Math.max(.14, alcance) && Math.random() > .06) {   // el rival devuelve
+        sonar('pelota', .55); TN.dif = Math.min(6, TN.dif + .15);
+        const lado = Math.random() < .5 ? -1 : 1, off = (.4 + Math.random() * (.5 + TN.dif * .06)) * lado;
+        TN.bola = { fase: 'viene', t0: ya, dur: Math.max(.85, 1.6 - TN.dif * .12) * 1000, x0: TN.rival.x, x1: (C.ox + off * C.u - W / 2) / CAN().aN, alto: .5 + Math.random() * .9, boto: false };
+      } else puntoPara(0, b.perfecto ? '¡WINNER!' : '¡EL RIVAL NO LLEGÓ!');
+    }
+  }
+}
+// posición de la pelota en la pantalla: viene en arco, pica en tu lado y sube hasta la altura del golpe
+function bolaEn(b, s) {
+  if (b.fase === 'viene') {
+    const sp = Math.min(1.25, s), g = pisoEn(Math.min(1, sp), b.x0 + (b.x1 - b.x0) * Math.min(1, sp));
+    const hFin = 1.3 + b.alto;   // en torsos sobre el piso: termina a la altura del golpe
+    let h; if (sp < .72) { const k = sp / .72; h = 1.6 * (1 - k) + 1.3 * Math.sin(Math.PI * k); }
+    else { const k = Math.min(1, (sp - .72) / .28); h = hFin * Math.sin(k * Math.PI / 2); }
+    const py = sp <= 1 ? g.y - h * C.u * g.esc : g.y - hFin * C.u + (sp - 1) * 3 * C.u;
+    return { x: g.x + (sp > 1 ? (sp - 1) * (b.x1 > 0 ? 1 : -1) * C.u : 0), y: py, r: (.05 + .1 * Math.min(1, sp)) * C.u };
+  }
+  // va: desde tu raqueta hacia el lado del rival
+  const k = Math.min(1, s), g = pisoEn(1 - k, b.x1 * k), x = b.hx + (g.x - b.hx) * k, base = b.hy + (g.y - b.hy) * k;
+  return { x, y: base - Math.sin(Math.PI * k) * (b.alto + .6) * C.u * (1 - k * .5), r: (.15 - .1 * k) * C.u };
+}
+function tenisDibujar() {
+  if (!TN.activo || !TN.listo || !P.cad) return;
+  const k = CAN(), u = C.u;
+  // cancha
+  ctx.save(); ctx.globalAlpha = .55; ctx.strokeStyle = '#fff8ec'; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(k.cx - k.aF, k.yF); ctx.lineTo(k.cx + k.aF, k.yF); ctx.lineTo(k.cx + k.aN, k.yN); ctx.lineTo(k.cx - k.aN, k.yN); ctx.closePath();
+  ctx.fillStyle = 'rgba(62,200,160,.14)'; ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(k.cx, k.yF); ctx.lineTo(k.cx, k.yN); ctx.stroke();
+  const red = pisoEn(.5, 0), an = k.aF + (k.aN - k.aF) * .5;   // red
+  ctx.globalAlpha = .8; ctx.fillStyle = 'rgba(42,34,56,.55)'; ctx.fillRect(k.cx - an, red.y - .35 * u * red.esc, an * 2, .35 * u * red.esc); ctx.strokeRect(k.cx - an, red.y - .35 * u * red.esc, an * 2, .35 * u * red.esc);
+  ctx.restore();
+  // rival (muñeco de cómic)
+  const rv = pisoEn(0, TN.rival.x), e = Math.min(.2 * u, H * .05);
+  ctx.save(); ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238';
+  ctx.fillStyle = '#4f8fff'; ctx.fillRect(rv.x - e * .45, rv.y - e * 2.2, e * .9, e * 1.3); ctx.strokeRect(rv.x - e * .45, rv.y - e * 2.2, e * .9, e * 1.3);
+  ctx.beginPath(); ctx.arc(rv.x, rv.y - e * 2.55, e * .38, 0, Math.PI * 2); ctx.fillStyle = '#f2c9a0'; ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(rv.x - e * .3, rv.y - e * .9); ctx.lineTo(rv.x - e * .35, rv.y); ctx.moveTo(rv.x + e * .3, rv.y - e * .9); ctx.lineTo(rv.x + e * .35, rv.y); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(rv.x + e * .9, rv.y - e * 2, e * .28, e * .4, .4, 0, Math.PI * 2); ctx.fillStyle = '#ffd23f'; ctx.fill(); ctx.stroke();
+  ctx.restore();
+  // pelota, su sombra y la zona donde va a llegar
+  const b = TN.bola;
+  if (b) {
+    const s = (performance.now() - b.t0) / b.dur, pos = bolaEn(b, s);
+    if (b.fase === 'viene' && s > .45 && s < 1.05) { const fin = bolaEn(b, 1); ctx.save(); ctx.globalAlpha = Math.min(1, (s - .45) * 3) * .9; ctx.setLineDash([8, 7]); ctx.lineWidth = 4; ctx.strokeStyle = '#ffd23f'; ctx.beginPath(); ctx.arc(fin.x, fin.y, .42 * u, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+    const sombra = b.fase === 'viene' ? pisoEn(Math.min(1, s), b.x0 + (b.x1 - b.x0) * Math.min(1, s)) : pisoEn(1 - Math.min(1, s), b.x1 * Math.min(1, s));
+    ctx.save(); ctx.globalAlpha = .35; ctx.fillStyle = '#2a2238'; ctx.beginPath(); ctx.ellipse(sombra.x, sombra.y, pos.r * 1.2, pos.r * .45, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, Math.max(4, pos.r), 0, Math.PI * 2); ctx.fillStyle = '#d7ff3a'; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.stroke();
+  }
+  // tu raqueta
+  const r = raqueta();
+  ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = '#2a2238'; ctx.lineWidth = 10; ctx.beginPath(); ctx.moveTo(r.mx, r.my); ctx.lineTo(r.mx + r.dx * .3 * u, r.my + r.dy * .3 * u); ctx.stroke();
+  ctx.strokeStyle = '#ff4d6d'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(r.mx, r.my); ctx.lineTo(r.mx + r.dx * .3 * u, r.my + r.dy * .3 * u); ctx.stroke();
+  const ang = Math.atan2(r.dy, r.dx);
+  ctx.beginPath(); ctx.ellipse(r.hx, r.hy, .28 * u, .2 * u, ang, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,248,236,.35)'; ctx.fill(); ctx.lineWidth = 6; ctx.strokeStyle = '#2a2238'; ctx.stroke(); ctx.lineWidth = 3; ctx.strokeStyle = '#ff4d6d'; ctx.stroke();
+  ctx.restore();
+}
+function arrancarTenis() {
+  $('fin').hidden = true; $('inicio').hidden = true; $('barraTot').style.display = 'none'; objs = []; textos = [];
+  Object.assign(TN, { activo: true, enPausa: false, listo: false, mano: leerMano(), pts: [0, 0], juegos: [0, 0], golpes: 0, rally: 0, rallyMax: 0, ganados: 0, kcal: 0, seg: 0, bola: null, rival: { x: 0, obj: 0 }, dif: 1, cab: null, ult: 0 });
+  C.listo = false; C.muestras = [];
+  $('tramo').textContent = 'TENIS'; marcador();
+  const espera = () => { if (!TN.activo) return;
+    if (cuerpoMedio() && calibrar()) { C.listo = TN.listo = true; aviso('¡A JUGAR!<small>Primero a 3 games. Pegale cuando la pelota llega al círculo amarillo</small>', 2200); setTimeout(saqueRival, 2400); }
+    else { aviso(cuerpoMedio() ? 'QUEDATE QUIETO<small>midiendo tu cuerpo…</small>' : 'ALEJATE UN POCO<small>se te tiene que ver al menos hasta la cintura</small>', 0); setTimeout(espera, 100); } };
+  espera();
+}
+function finTenis() {
+  TN.activo = false; aviso('', 0); sonar('campana', .8); if (TN.juegos[0] > TN.juegos[1]) sonar('aplauso', .8);
+  document.querySelector('#fin h1').innerHTML = TN.juegos[0] > TN.juegos[1] ? '¡GANASTE<span>EL PARTIDO!</span>' : 'PERDISTE<span>¡LA REVANCHA!</span>';
+  document.querySelector('#fin .stats').innerHTML = `<div><b>${TN.juegos[0]} - ${TN.juegos[1]}</b><small>GAMES</small></div><div><b>${TN.golpes}</b><small>GOLPES</small></div><div><b>${Math.max(TN.rallyMax, TN.rally)}</b><small>RALLY MÁS LARGO</small></div><div><b>${Math.round(TN.kcal)}</b><small>KCAL (APROX.)</small></div>`;
+  $('fSem').parentElement.style.display = 'none';
+  setTimeout(() => $('fin').hidden = false, 700);
+}
+
 // ───────── ARRANQUE ─────────
-async function empezar() {
-  $('error').textContent = ''; $('btnEmpezar').textContent = 'CARGANDO…';
+async function empezar(modo = 'rutina') {
+  $('error').textContent = ''; $(modo === 'tenis' ? 'btnTenis' : 'btnEmpezar').textContent = 'CARGANDO…';
   try {
     if (!ac) {
       ac = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' }); await ac.resume(); await fabricar();
@@ -351,20 +511,23 @@ async function empezar() {
       try { await navigator.wakeLock?.request('screen'); } catch (e) {}
       bucle();
     }
-    $('btnEmpezar').textContent = 'EMPEZAR'; arrancarRutina();
+    $('btnEmpezar').textContent = 'EMPEZAR'; $('btnTenis').textContent = 'JUGAR TENIS';
+    MODO = modo; if (modo === 'tenis') arrancarTenis(); else arrancarRutina();
   } catch (e) {
-    $('btnEmpezar').textContent = 'EMPEZAR';
+    $('btnEmpezar').textContent = 'EMPEZAR'; $('btnTenis').textContent = 'JUGAR TENIS';
     $('error').textContent = /Permission|NotAllowed/i.test(e && (e.name + e.message)) ? 'Hay que dar permiso a la cámara.' : 'No se pudo arrancar: ' + (e && e.message || e);
   }
 }
-$('btnEmpezar').addEventListener('click', empezar);
-$('btnOtra').addEventListener('click', arrancarRutina);
+$('btnEmpezar').addEventListener('click', () => empezar('rutina'));
+$('btnTenis').addEventListener('click', () => empezar('tenis'));
+$('btnOtra').addEventListener('click', () => MODO === 'tenis' ? arrancarTenis() : arrancarRutina());
 
 let ultT = 0;
 function bucle() {
   const t = performance.now();
   if (video.readyState >= 2 && t - ultT > 5) { ultT = t; const r = pose.detectForVideo(video, t), lm = r.landmarks && r.landmarks[0]; if (lm) leerCuerpo(lm); }
-  if (!R.enPausa) actualizar(); dibujar();
+  if (MODO === 'tenis') { if (!TN.enPausa) tenisActualizar(); dibujar(); tenisDibujar(); }
+  else { if (!R.enPausa) actualizar(); dibujar(); }
   requestAnimationFrame(bucle);
 }
 
@@ -432,7 +595,7 @@ function dibujar() {
   textos = textos.filter(x => now - x.t < 700);
   for (const x of textos) { const k = (now - x.t) / 700; ctx.save(); ctx.globalAlpha = 1 - k * k; texto(x.txt, x.x, x.y - k * 40, Math.round(40 * x.tam * (1 + k * .3)), x.col); ctx.restore(); }
 }
-window.__t = { R, C, P, est: () => est, objs: () => objs, ta: () => ac.currentTime, LOGICA, TRAMOS, lm: l => leerCuerpo(l), parar: () => { video.pause(); video.srcObject = null; } };
+window.__t = { TN, bolaEn, raqueta, R, C, P, est: () => est, objs: () => objs, ta: () => ac.currentTime, LOGICA, TRAMOS, lm: l => leerCuerpo(l), parar: () => { video.pause(); video.srcObject = null; } };
 </script>
 </body>
 </html>
