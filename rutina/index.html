@@ -144,7 +144,7 @@ async function fabricar() {
   SON.bote = await hacer(.15, o => { tono(o, 300, 160, .07, .45); filt(o, 'lowpass', 900, .7, .05, .35, .1); });
   SON.aplauso = await hacer(1.6, o => { for (let i = 0; i < 26; i++) filt(o, 'bandpass', 1500 + Math.random() * 2500, 1.5, .05, .25 + Math.random() * .2, .1, Math.random() * 1.3); });
 }
-function sonar(n, v = 1, cuando = 0) { const b = SON[n]; if (!b || !ac) return; const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = b; g.gain.value = v; s.connect(g).connect(ac.destination); s.start(cuando || 0); }
+function sonar(n, v = 1, cuando = 0, vel = 1) { const b = SON[n]; if (!b || !ac) return; const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = b; s.playbackRate.value = vel; g.gain.value = v; s.connect(g).connect(ac.destination); s.start(cuando || 0); }
 
 // ───────── CUERPO (todo medido en "torsos": largo de hombros a cadera tomado al calibrar) ─────────
 let pose = null, ultLm = null;
@@ -386,7 +386,7 @@ const cuerpoMedio = () => ultLm && [0, 11, 12, 13, 14].every(i => (ultLm[i].visi
 // ── perspectiva real: la pelota sale chiquita desde el fondo (14 m) y viene hacia vos (1 m).
 // Avanza a velocidad pareja en el mundo, así en la pantalla se ve lenta al principio y rápida al final, como en la realidad.
 const Z0 = 14;
-const HOR = () => H * .16;                        // línea del horizonte (fondo de la cancha del rival)
+const HOR = () => H * .22;                        // línea del horizonte (fondo de la cancha del rival)
 const prof = p => { const z = Z0 + (1 - Z0) * p; return { z, w: (1 / z - 1 / Z0) / (1 - 1 / Z0) }; };   // p: 0 = rival, 1 = vos
 const altoMundo = () => 1.25 * Math.max(40, C.hombroAncho);   // píxeles que mide 1 metro a 1 m de distancia (aprox.)
 function marcador() {
@@ -408,7 +408,7 @@ function zonaGolpe() {   // dónde te llega la pelota: a un costado del cuerpo, 
   return { x: Math.max(W * .1, Math.min(W * .9, x)), y: Math.max(H * .3, Math.min(H * .9, y)) };
 }
 function bolaNueva(desdeX) {
-  const z = zonaGolpe(), dur = Math.max(1.35, 2.4 - TN.dif * .15) * 1000;   // arranca lenta (2,4 s) y se va acelerando
+  const z = zonaGolpe(), dur = Math.max(1.2, 2.4 - TN.dif * .15 - (TN.ultFuerza || 0) * .5) * 1000;   // arranca lenta (2,4 s) y se va acelerando
   TN.bola = { fase: 'viene', t0: performance.now(), dur, x0: W / 2 + desdeX * W * .3, x1: z.x, y1: z.y, boto: false, avisado: false };
 }
 function saqueRival() { if (!TN.activo) return; bolaNueva(TN.rival.x); sonar('pelota', .5); TN.rival.golpeT = performance.now(); TN.rival.saque = true; TN.rival.lado = 1; TN.rival.tiro = TN.bola.x1 < W / 2 + TN.rival.x * W * .3 ? -1 : 1; }
@@ -430,6 +430,7 @@ function tenisActualizar() {
   const r = raqueta();
   if (TN.cab) { const v = Math.hypot(r.hx - TN.cab.x, r.hy - TN.cab.y) / C.u / Math.max(dt, .001); TN.cabV = TN.cabV * .4 + v * .6; TN.cabVx = (TN.cabVx || 0) * .4 + (r.hx - TN.cab.x) / C.u / Math.max(dt, .001) * .6; TN.cabVy = (TN.cabVy || 0) * .4 + (r.hy - TN.cab.y) / C.u / Math.max(dt, .001) * .6; }
   TN.cab = { x: r.hx, y: r.hy };
+  TN.hist = (TN.hist || []).filter(h => ya - h.t < 160); TN.hist.push({ t: ya, v: TN.cabV || 0 }); TN.pico = Math.max(...TN.hist.map(h => h.v));
   TN.rival.x += Math.max(-1, Math.min(1, (TN.rival.obj - TN.rival.x) * 6)) * dt * (1.1 + TN.dif * .15);   // el rival corre a la pelota
   const b = TN.bola; if (!b) return;
   const s = (ya - b.t0) / b.dur;
@@ -437,21 +438,25 @@ function tenisActualizar() {
     if (!b.boto && s > .7) { b.boto = true; sonar('bote', .6); }
     if (!b.avisado && s > .86) { b.avisado = true; sonar('tic', .5); }
     const pos = bolaEn(b, s), radio = Math.max(80, .7 * C.u);
-    if (s > .86 && s < 1.14 && TN.cabV > 2 && Math.hypot(r.hx - pos.x, r.hy - pos.y) < radio) {   // ¡golpe!
-      TN.golpes++; TN.rally++; sonar('pelota', 1);
+    if (s > .86 && s < 1.14 && TN.pico > 1.3 && Math.hypot(r.hx - pos.x, r.hy - pos.y) < radio) {   // ¡golpe!
+      TN.golpes++; TN.rally++;
       // cómo moviste la mano decide el golpe:
       //  rápido = fuerte (la pelota va más rápido) · de costado = dirección · de abajo hacia arriba = TOP SPIN (sube y cae picando fuerte)
       //  de arriba hacia abajo = SLICE (va baja, flota y pica bajito) · derecho = PLANO
       const vx = TN.cabVx || 0, vy = TN.cabVy || 0;
       const dir = Math.max(-1, Math.min(1, vx / 5 + (Math.random() - .5) * .2));
-      const fuerza = Math.min(1, Math.max(0, (TN.cabV - 2) / 6)), perfecto = Math.abs(s - 1) < .05;
+      // fuerza continua según qué tan rápido movés la mano: despacio = pelota lenta y alta; rápido = pelota rápida y tensa
+      const fuerza = Math.min(1, Math.max(0, (TN.pico - 1.3) / 9)), perfecto = Math.abs(s - 1) < .05;
+      sonar('pelota', .35 + fuerza * .65, 0, .85 + fuerza * .45); try { navigator.vibrate && navigator.vibrate(Math.round(12 + fuerza * 50)); } catch (e) {}
+      TN.sacudon = { t: ya, f: fuerza };
+      frase(Math.round(20 + fuerza * 130) + ' km/h', pos.x, pos.y + .45 * C.u, fuerza > .7 ? '#ff4d6d' : fuerza > .35 ? '#ffd23f' : '#fff8ec', .75);
       const efecto = vy < -1.6 && -vy > Math.abs(vx) * .45 ? 'top' : vy > 1.6 && vy > Math.abs(vx) * .45 ? 'slice' : 'plano';
       const NOM = { top: 'TOP SPIN', slice: 'SLICE', plano: fuerza > .65 ? 'PLANO FUERTE' : 'PLANO' };
       frase(perfecto ? '¡PERFECTO!' : fuerza > .65 ? '¡ZAS!' : '¡TOC!', pos.x, pos.y - .55 * C.u, perfecto ? '#3ec8a0' : '#ffd23f');
       frase(NOM[efecto], pos.x, pos.y - .05 * C.u, efecto === 'top' ? '#ff8a3d' : efecto === 'slice' ? '#4f8fff' : '#fff8ec', .7);
-      const dur = (1.75 - fuerza * .75 + (efecto === 'slice' ? .3 : efecto === 'top' ? .1 : 0)) * 1000;
+      const dur = (2.3 - fuerza * 1.55 + (efecto === 'slice' ? .3 : efecto === 'top' ? .1 : 0)) * 1000;   // de 2,3 s (suave) a 0,75 s (muy fuerte)
       TN.bola = { fase: 'va', t0: ya, dur, hx: pos.x, hy: pos.y, x1: Math.max(-.95, Math.min(.95, dir * .95)), boto: false, perfecto, fuerza, efecto, giro: 0 };
-      TN.rival.obj = TN.bola.x1;
+      TN.rival.obj = TN.bola.x1; TN.ultFuerza = fuerza;
       // riesgo de que se vaya afuera: el plano fuerte y cruzado es el más riesgoso, el top spin es el más seguro
       const riesgo = efecto === 'plano' ? (fuerza > .7 ? .18 : .04) + (Math.abs(dir) > .8 ? .15 : 0) : efecto === 'top' ? .03 + (Math.abs(dir) > .85 ? .05 : 0) : .06;
       TN.bola.afuera = Math.random() < riesgo;
@@ -470,7 +475,7 @@ function tenisActualizar() {
 }
 // posición de la pelota en la pantalla (con perspectiva) y su sombra en el piso
 function bolaEn(b, s) {
-  const yH = HOR(), m = altoMundo(), r1 = Math.max(16, .13 * C.u);
+  const yH = HOR(), m = altoMundo(), r1 = Math.max(30, .2 * C.u);
   if (b.fase === 'viene') {
     const p = Math.min(1.2, s), { z, w } = prof(Math.min(1, p));
     const x = b.x0 + (b.x1 - b.x0) * w, yLinea = yH + (b.y1 - yH) * w;
@@ -480,59 +485,37 @@ function bolaEn(b, s) {
     let y = yLinea - d * m / z, xx = x;
     if (p > 1) { y += (p - 1) * 4 * m; xx += (p - 1) * (b.x1 > W / 2 ? 1 : -1) * 3 * m; }   // te pasó de largo
     const piso = yLinea + caida * m / z;
-    return { x: xx, y, r: Math.max(9, r1 * (.28 + .72 / z)), sx: x, sy: piso };
+    return { x: xx, y, r: Math.max(4, r1 * (.1 + .9 / z)), sx: x, sy: piso };
   }
   const k = Math.min(1, s), { z, w } = prof(1 - k), xF = W / 2 + b.x1 * W * .3;
   const x = xF + (b.hx - xF) * w, yLinea = yH + (b.hy - yH) * w;
   // top spin: sube mucho y cae de golpe · slice: va bajita y estirada · plano: tenso, más alto si le pegaste suave
   const e = b.efecto || 'plano';
-  const d = e === 'top' ? 2.3 * Math.sin(Math.PI * Math.pow(k, .75)) : e === 'slice' ? .75 * Math.sin(Math.PI * k) : (1.5 - (b.fuerza || 0) * .6) * Math.sin(Math.PI * k);
-  return { x, y: yLinea - d * m / z, r: Math.max(9, r1 * (.28 + .72 / z)), sx: x, sy: yLinea + 1.1 * m / z, efecto: e };
+  const d = e === 'top' ? 2.3 * Math.sin(Math.PI * Math.pow(k, .75)) : e === 'slice' ? .75 * Math.sin(Math.PI * k) : (2 - (b.fuerza || 0) * 1.3) * Math.sin(Math.PI * k);
+  return { x, y: yLinea - d * m / z, r: Math.max(4, r1 * (.1 + .9 / z)), sx: x, sy: yLinea + 1.1 * m / z, efecto: e };
 }
-function dibujarRival(rx, piso, e) {
-  const Rv = TN.rival, ahoraMs = performance.now(), t = ahoraMs / 1000, b = TN.bola;
-  const corre = Math.abs(Rv.obj - Rv.x) > .02, pierna = corre ? Math.sin(t * 18) * .55 : 0;
-  // brazo con la raqueta: ángulo en radianes (0 = hacia la derecha de la pantalla, negativo = hacia arriba)
-  const lado = Rv.lado || 1, quieto = lado > 0 ? .9 : Math.PI - .9;
-  const atras = lado > 0 ? -.35 : Math.PI + .35;                                   // raqueta atrás, lista para pegar
-  const fin = (Rv.tiro || 1) < 0 ? Math.PI + .5 : -.5 + (lado < 0 ? 0 : 0);          // terminación hacia donde mandó la pelota
-  let ang = quieto, saque = false;
-  const dg = ahoraMs - (Rv.golpeT || -9999);
-  if (dg < 380) { const k = Math.min(1, dg / 380), ease = 1 - Math.pow(1 - k, 3); saque = Rv.saque;
-    const desde = saque ? -Math.PI / 2 - .9 : atras, hasta = saque ? (Rv.tiro < 0 ? Math.PI * .8 : Math.PI * .2) : (lado > 0 ? (Rv.tiro < 0 ? Math.PI + .6 : Math.PI * .55) : (Rv.tiro < 0 ? Math.PI * .45 : -.6));
-    ang = desde + (hasta - desde) * ease; }
-  else { if (Rv.saque && dg >= 380) Rv.saque = false;
-    if (b && b.fase === 'va') { const s = (ahoraMs - b.t0) / b.dur; Rv.lado = b.x1 >= Rv.x ? 1 : -1; if (s > .55) { const k = Math.min(1, (s - .55) / .4); ang = quieto + (atras - quieto) * k; } } }
-  ctx.save(); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  // sombra
-  ctx.globalAlpha = .3; ctx.fillStyle = '#2a2238'; ctx.beginPath(); ctx.ellipse(rx, piso, e * .8, e * .18, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
-  // piernas (corren cuando se mueve)
-  ctx.lineWidth = e * .22; ctx.strokeStyle = '#2a2238';
-  ctx.beginPath(); ctx.moveTo(rx - e * .18, piso - e * .9); ctx.lineTo(rx - e * .18 + Math.sin(pierna) * e * .5, piso); ctx.moveTo(rx + e * .18, piso - e * .9); ctx.lineTo(rx + e * .18 - Math.sin(pierna) * e * .5, piso); ctx.stroke();
-  ctx.lineWidth = e * .14; ctx.strokeStyle = '#fff8ec';
-  ctx.beginPath(); ctx.moveTo(rx - e * .18, piso - e * .9); ctx.lineTo(rx - e * .18 + Math.sin(pierna) * e * .5, piso); ctx.moveTo(rx + e * .18, piso - e * .9); ctx.lineTo(rx + e * .18 - Math.sin(pierna) * e * .5, piso); ctx.stroke();
-  // cuerpo y cabeza
-  ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.fillStyle = '#4f8fff';
-  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(rx - e * .42, piso - e * 2.15, e * .84, e * 1.3, e * .2) : ctx.rect(rx - e * .42, piso - e * 2.15, e * .84, e * 1.3); ctx.fill(); ctx.stroke();
-  ctx.beginPath(); ctx.arc(rx, piso - e * 2.5, e * .36, 0, Math.PI * 2); ctx.fillStyle = '#f2c9a0'; ctx.fill(); ctx.stroke();
-  ctx.beginPath(); ctx.arc(rx, piso - e * 2.62, e * .37, Math.PI * 1.05, Math.PI * 1.95); ctx.fillStyle = '#ff4d6d'; ctx.fill(); ctx.stroke();   // gorra
-  // brazo libre
-  const hombroL = { x: rx - lado * e * .38, y: piso - e * 1.95 };
-  ctx.lineWidth = e * .16; ctx.strokeStyle = '#f2c9a0'; ctx.beginPath(); ctx.moveTo(hombroL.x, hombroL.y); ctx.lineTo(hombroL.x - lado * e * .35, hombroL.y + e * (saque ? -.9 : .55)); ctx.stroke();
-  // brazo con la raqueta
-  const hombro = { x: rx + lado * e * .38, y: piso - e * 1.95 }, largo = e * .75;
-  const mano = { x: hombro.x + Math.cos(ang) * largo, y: hombro.y + Math.sin(ang) * largo };
-  ctx.lineWidth = e * .16; ctx.strokeStyle = '#f2c9a0'; ctx.beginPath(); ctx.moveTo(hombro.x, hombro.y); ctx.lineTo(mano.x, mano.y); ctx.stroke();
-  const cab = { x: mano.x + Math.cos(ang) * e * .55, y: mano.y + Math.sin(ang) * e * .55 };
-  ctx.lineWidth = e * .1; ctx.strokeStyle = '#2a2238'; ctx.beginPath(); ctx.moveTo(mano.x, mano.y); ctx.lineTo(cab.x, cab.y); ctx.stroke();
-  ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(cab.x + Math.cos(ang) * e * .2, cab.y + Math.sin(ang) * e * .2, e * .34, e * .24, ang, 0, Math.PI * 2); ctx.fillStyle = '#ffd23f'; ctx.fill(); ctx.stroke();
-  // estela del golpe
-  if (dg < 300) { ctx.globalAlpha = (1 - dg / 300) * .7; ctx.strokeStyle = '#fff8ec'; ctx.lineWidth = e * .12; ctx.beginPath(); ctx.arc(hombro.x, hombro.y, largo + e * .7, Math.min(ang, ang - lado * .9), Math.max(ang, ang - lado * .9)); ctx.stroke(); }
+function dibujarRival(rx, piso, e) {   // el rival es una paleta de ping pong flotando: va a la pelota, se prepara y pega
+  const Rv = TN.rival, ya = performance.now(), b = TN.bola, t = ya / 1000;
+  const y = piso - e * 1.6 + Math.sin(t * 3) * e * .12;
+  const lado = Rv.lado || 1;
+  let ang = lado * .35, esc = 1;   // inclinación de la paleta (radianes)
+  const dg = ya - (Rv.golpeT || -9999);
+  if (dg < 320) { const k = Math.min(1, dg / 320), ease = 1 - Math.pow(1 - k, 3); const desde = lado * 1.3, hasta = (Rv.tiro || 1) * -.9; ang = desde + (hasta - desde) * ease; esc = 1 + .25 * Math.sin(Math.PI * k); }
+  else if (b && b.fase === 'va') { const s = (ya - b.t0) / b.dur; Rv.lado = b.x1 >= Rv.x ? 1 : -1; if (s > .5) ang = lado * (.35 + Math.min(1, (s - .5) / .45) * .95); }
+  ctx.save(); ctx.translate(rx, y); ctx.rotate(ang); ctx.scale(esc, esc);
+  ctx.globalAlpha = .25; ctx.fillStyle = '#2a2238'; ctx.beginPath(); ctx.ellipse(0, piso - y + e * .2, e * .7, e * .15, -ang, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+  ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238';
+  ctx.fillStyle = '#c98b4a'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-e * .14, e * .55, e * .28, e * .75, e * .1) : ctx.rect(-e * .14, e * .55, e * .28, e * .75); ctx.fill(); ctx.stroke();   // mango
+  ctx.beginPath(); ctx.ellipse(0, 0, e * .72, e * .78, 0, 0, Math.PI * 2); ctx.fillStyle = '#ff4d6d'; ctx.fill(); ctx.lineWidth = 4; ctx.stroke();   // goma
+  ctx.beginPath(); ctx.ellipse(-e * .18, -e * .22, e * .25, e * .14, -.6, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fill();
   ctx.restore();
+  if (dg < 260) { ctx.save(); ctx.globalAlpha = (1 - dg / 260) * .7; ctx.strokeStyle = '#fff8ec'; ctx.lineWidth = e * .15; ctx.beginPath(); ctx.arc(rx, y, e * 1.2, -Math.PI / 2 - .8, -Math.PI / 2 + .8); ctx.stroke(); ctx.restore(); }
 }
 function tenisDibujar() {
   if (!TN.activo || !TN.listo || !P.hom) return;
   const u = C.u, yH = HOR(), cx = W / 2;
+  const sh = TN.sacudon && performance.now() - TN.sacudon.t < 160 ? TN.sacudon.f * 9 * (1 - (performance.now() - TN.sacudon.t) / 160) : 0;
+  ctx.save(); if (sh) ctx.translate((Math.random() - .5) * sh, (Math.random() - .5) * sh);
   // cancha en perspectiva desde el horizonte hasta abajo de la pantalla
   ctx.save(); ctx.globalAlpha = .5; ctx.strokeStyle = '#fff8ec'; ctx.lineWidth = 4;
   const fondo = W * .3, frente = W * 1.7;
@@ -543,7 +526,7 @@ function tenisDibujar() {
   ctx.globalAlpha = .85; ctx.fillStyle = 'rgba(42,34,56,.55)'; ctx.fillRect(cx - ar, yr - hr, ar * 2, hr); ctx.strokeRect(cx - ar, yr - hr, ar * 2, hr);
   ctx.restore();
   // rival (muñeco de cómic): corre a la pelota, se prepara y pega hacia donde la manda
-  dibujarRival(cx + TN.rival.x * W * .3, yH, H * .05);
+  dibujarRival(cx + TN.rival.x * W * .3, yH, H * .045);
   const b = TN.bola;
   if (b) {
     const s = (performance.now() - b.t0) / b.dur, pos = bolaEn(b, s);
@@ -564,6 +547,7 @@ function tenisDibujar() {
       ctx.save(); ctx.globalAlpha = .5; ctx.strokeStyle = col; ctx.lineWidth = Math.max(2, pos.r / 3); ctx.beginPath(); ctx.arc(pos.x, pos.y, pos.r * 1.5, b.efecto === 'top' ? -2.6 : .5, b.efecto === 'top' ? -.5 : 2.6); ctx.stroke(); ctx.restore();
     }
   }
+  ctx.restore();
 }
 function arrancarTenis() {
   $('fin').hidden = true; $('inicio').hidden = true; $('barraTot').style.display = 'none'; objs = []; textos = [];
