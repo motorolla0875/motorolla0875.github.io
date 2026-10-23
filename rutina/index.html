@@ -355,7 +355,7 @@ function terminar() {
 }
 
 function arrancarRutina() {
-  document.body.classList.remove('tenis'); $('reloj').textContent = '0:00';
+  document.body.classList.remove('tenis'); video.style.opacity = ''; $('reloj').textContent = '0:00';
   $('fin').hidden = true; $('inicio').hidden = true; $('barraTot').style.display = 'block';
   R.sinSaltos = leerImp() === '0'; const corta = leerDur() === 'corta';
   R.lista = TRAMOS.map(T => ({ ...T, seg: corta ? 20 : T.seg, meta: T.meta ? (corta ? Math.round(T.meta / 3) : T.meta) : 0 }));
@@ -411,7 +411,7 @@ function bolaNueva(desdeX) {
   const z = zonaGolpe(), dur = Math.max(1.35, 2.4 - TN.dif * .15) * 1000;   // arranca lenta (2,4 s) y se va acelerando
   TN.bola = { fase: 'viene', t0: performance.now(), dur, x0: W / 2 + desdeX * W * .3, x1: z.x, y1: z.y, boto: false, avisado: false };
 }
-function saqueRival() { if (!TN.activo) return; bolaNueva(TN.rival.x); sonar('pelota', .5); }
+function saqueRival() { if (!TN.activo) return; bolaNueva(TN.rival.x); sonar('pelota', .5); TN.rival.golpeT = performance.now(); TN.rival.saque = true; TN.rival.lado = 1; TN.rival.tiro = TN.bola.x1 < W / 2 + TN.rival.x * W * .3 ? -1 : 1; }
 function puntoPara(q, txt) {
   TN.pts[q]++; TN.rallyMax = Math.max(TN.rallyMax, TN.rally); TN.rally = 0; TN.bola = null;
   if (q === 0) { TN.ganados++; sonar('aplauso', .6); }
@@ -463,6 +463,7 @@ function tenisActualizar() {
       const alcance = .34 - TN.dif * .015 - (b.perfecto ? .06 : 0) - b.fuerza * .12 - Math.abs(b.x1) * .05 + (b.efecto === 'slice' ? .08 : b.efecto === 'top' ? -.03 : 0);
       if (Math.abs(TN.rival.x - b.x1) < Math.max(.14, alcance) && Math.random() > .06) {   // el rival devuelve
         sonar('pelota', .55); TN.dif = Math.min(6, TN.dif + .15); bolaNueva(TN.rival.x);
+        TN.rival.golpeT = performance.now(); TN.rival.lado = b.x1 >= TN.rival.x ? 1 : -1; TN.rival.tiro = TN.bola.x1 < W / 2 + TN.rival.x * W * .3 ? -1 : 1;
       } else puntoPara(0, b.perfecto ? '¡WINNER!' : '¡EL RIVAL NO LLEGÓ!');
     }
   }
@@ -479,14 +480,55 @@ function bolaEn(b, s) {
     let y = yLinea - d * m / z, xx = x;
     if (p > 1) { y += (p - 1) * 4 * m; xx += (p - 1) * (b.x1 > W / 2 ? 1 : -1) * 3 * m; }   // te pasó de largo
     const piso = yLinea + caida * m / z;
-    return { x: xx, y, r: Math.max(3, r1 / z), sx: x, sy: piso };
+    return { x: xx, y, r: Math.max(9, r1 * (.28 + .72 / z)), sx: x, sy: piso };
   }
   const k = Math.min(1, s), { z, w } = prof(1 - k), xF = W / 2 + b.x1 * W * .3;
   const x = xF + (b.hx - xF) * w, yLinea = yH + (b.hy - yH) * w;
   // top spin: sube mucho y cae de golpe · slice: va bajita y estirada · plano: tenso, más alto si le pegaste suave
   const e = b.efecto || 'plano';
   const d = e === 'top' ? 2.3 * Math.sin(Math.PI * Math.pow(k, .75)) : e === 'slice' ? .75 * Math.sin(Math.PI * k) : (1.5 - (b.fuerza || 0) * .6) * Math.sin(Math.PI * k);
-  return { x, y: yLinea - d * m / z, r: Math.max(3, r1 / z), sx: x, sy: yLinea + 1.1 * m / z, efecto: e };
+  return { x, y: yLinea - d * m / z, r: Math.max(9, r1 * (.28 + .72 / z)), sx: x, sy: yLinea + 1.1 * m / z, efecto: e };
+}
+function dibujarRival(rx, piso, e) {
+  const Rv = TN.rival, ahoraMs = performance.now(), t = ahoraMs / 1000, b = TN.bola;
+  const corre = Math.abs(Rv.obj - Rv.x) > .02, pierna = corre ? Math.sin(t * 18) * .55 : 0;
+  // brazo con la raqueta: ángulo en radianes (0 = hacia la derecha de la pantalla, negativo = hacia arriba)
+  const lado = Rv.lado || 1, quieto = lado > 0 ? .9 : Math.PI - .9;
+  const atras = lado > 0 ? -.35 : Math.PI + .35;                                   // raqueta atrás, lista para pegar
+  const fin = (Rv.tiro || 1) < 0 ? Math.PI + .5 : -.5 + (lado < 0 ? 0 : 0);          // terminación hacia donde mandó la pelota
+  let ang = quieto, saque = false;
+  const dg = ahoraMs - (Rv.golpeT || -9999);
+  if (dg < 380) { const k = Math.min(1, dg / 380), ease = 1 - Math.pow(1 - k, 3); saque = Rv.saque;
+    const desde = saque ? -Math.PI / 2 - .9 : atras, hasta = saque ? (Rv.tiro < 0 ? Math.PI * .8 : Math.PI * .2) : (lado > 0 ? (Rv.tiro < 0 ? Math.PI + .6 : Math.PI * .55) : (Rv.tiro < 0 ? Math.PI * .45 : -.6));
+    ang = desde + (hasta - desde) * ease; }
+  else { if (Rv.saque && dg >= 380) Rv.saque = false;
+    if (b && b.fase === 'va') { const s = (ahoraMs - b.t0) / b.dur; Rv.lado = b.x1 >= Rv.x ? 1 : -1; if (s > .55) { const k = Math.min(1, (s - .55) / .4); ang = quieto + (atras - quieto) * k; } } }
+  ctx.save(); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // sombra
+  ctx.globalAlpha = .3; ctx.fillStyle = '#2a2238'; ctx.beginPath(); ctx.ellipse(rx, piso, e * .8, e * .18, 0, 0, Math.PI * 2); ctx.fill(); ctx.globalAlpha = 1;
+  // piernas (corren cuando se mueve)
+  ctx.lineWidth = e * .22; ctx.strokeStyle = '#2a2238';
+  ctx.beginPath(); ctx.moveTo(rx - e * .18, piso - e * .9); ctx.lineTo(rx - e * .18 + Math.sin(pierna) * e * .5, piso); ctx.moveTo(rx + e * .18, piso - e * .9); ctx.lineTo(rx + e * .18 - Math.sin(pierna) * e * .5, piso); ctx.stroke();
+  ctx.lineWidth = e * .14; ctx.strokeStyle = '#fff8ec';
+  ctx.beginPath(); ctx.moveTo(rx - e * .18, piso - e * .9); ctx.lineTo(rx - e * .18 + Math.sin(pierna) * e * .5, piso); ctx.moveTo(rx + e * .18, piso - e * .9); ctx.lineTo(rx + e * .18 - Math.sin(pierna) * e * .5, piso); ctx.stroke();
+  // cuerpo y cabeza
+  ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.fillStyle = '#4f8fff';
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(rx - e * .42, piso - e * 2.15, e * .84, e * 1.3, e * .2) : ctx.rect(rx - e * .42, piso - e * 2.15, e * .84, e * 1.3); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.arc(rx, piso - e * 2.5, e * .36, 0, Math.PI * 2); ctx.fillStyle = '#f2c9a0'; ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.arc(rx, piso - e * 2.62, e * .37, Math.PI * 1.05, Math.PI * 1.95); ctx.fillStyle = '#ff4d6d'; ctx.fill(); ctx.stroke();   // gorra
+  // brazo libre
+  const hombroL = { x: rx - lado * e * .38, y: piso - e * 1.95 };
+  ctx.lineWidth = e * .16; ctx.strokeStyle = '#f2c9a0'; ctx.beginPath(); ctx.moveTo(hombroL.x, hombroL.y); ctx.lineTo(hombroL.x - lado * e * .35, hombroL.y + e * (saque ? -.9 : .55)); ctx.stroke();
+  // brazo con la raqueta
+  const hombro = { x: rx + lado * e * .38, y: piso - e * 1.95 }, largo = e * .75;
+  const mano = { x: hombro.x + Math.cos(ang) * largo, y: hombro.y + Math.sin(ang) * largo };
+  ctx.lineWidth = e * .16; ctx.strokeStyle = '#f2c9a0'; ctx.beginPath(); ctx.moveTo(hombro.x, hombro.y); ctx.lineTo(mano.x, mano.y); ctx.stroke();
+  const cab = { x: mano.x + Math.cos(ang) * e * .55, y: mano.y + Math.sin(ang) * e * .55 };
+  ctx.lineWidth = e * .1; ctx.strokeStyle = '#2a2238'; ctx.beginPath(); ctx.moveTo(mano.x, mano.y); ctx.lineTo(cab.x, cab.y); ctx.stroke();
+  ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(cab.x + Math.cos(ang) * e * .2, cab.y + Math.sin(ang) * e * .2, e * .34, e * .24, ang, 0, Math.PI * 2); ctx.fillStyle = '#ffd23f'; ctx.fill(); ctx.stroke();
+  // estela del golpe
+  if (dg < 300) { ctx.globalAlpha = (1 - dg / 300) * .7; ctx.strokeStyle = '#fff8ec'; ctx.lineWidth = e * .12; ctx.beginPath(); ctx.arc(hombro.x, hombro.y, largo + e * .7, Math.min(ang, ang - lado * .9), Math.max(ang, ang - lado * .9)); ctx.stroke(); }
+  ctx.restore();
 }
 function tenisDibujar() {
   if (!TN.activo || !TN.listo || !P.hom) return;
@@ -500,14 +542,8 @@ function tenisDibujar() {
   const red = prof(.5), yr = yH + (H - yH) * red.w, ar = fondo + (frente - fondo) * red.w, hr = altoMundo() * .9 / red.z;
   ctx.globalAlpha = .85; ctx.fillStyle = 'rgba(42,34,56,.55)'; ctx.fillRect(cx - ar, yr - hr, ar * 2, hr); ctx.strokeRect(cx - ar, yr - hr, ar * 2, hr);
   ctx.restore();
-  // rival (muñeco de cómic) en el fondo
-  const rx = cx + TN.rival.x * W * .3, e = H * .042;
-  ctx.save(); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238';
-  ctx.fillStyle = '#4f8fff'; ctx.fillRect(rx - e * .45, yH - e * 2.2, e * .9, e * 1.3); ctx.strokeRect(rx - e * .45, yH - e * 2.2, e * .9, e * 1.3);
-  ctx.beginPath(); ctx.arc(rx, yH - e * 2.55, e * .38, 0, Math.PI * 2); ctx.fillStyle = '#f2c9a0'; ctx.fill(); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(rx - e * .3, yH - e * .9); ctx.lineTo(rx - e * .35, yH); ctx.moveTo(rx + e * .3, yH - e * .9); ctx.lineTo(rx + e * .35, yH); ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(rx + e * .9, yH - e * 2, e * .28, e * .4, .4, 0, Math.PI * 2); ctx.fillStyle = '#ffd23f'; ctx.fill(); ctx.stroke();
-  ctx.restore();
+  // rival (muñeco de cómic): corre a la pelota, se prepara y pega hacia donde la manda
+  dibujarRival(cx + TN.rival.x * W * .3, yH, H * .05);
   const b = TN.bola;
   if (b) {
     const s = (performance.now() - b.t0) / b.dur, pos = bolaEn(b, s);
@@ -533,7 +569,7 @@ function arrancarTenis() {
   $('fin').hidden = true; $('inicio').hidden = true; $('barraTot').style.display = 'none'; objs = []; textos = [];
   Object.assign(TN, { activo: true, enPausa: false, listo: false, mano: leerMano(), pts: [0, 0], juegos: [0, 0], golpes: 0, rally: 0, rallyMax: 0, ganados: 0, kcal: 0, seg: 0, bola: null, rival: { x: 0, obj: 0 }, dif: 1, cab: null, ult: 0 });
   C.listo = false; C.muestras = [];
-  document.body.classList.add('tenis'); marcador();
+  document.body.classList.add('tenis'); video.style.opacity = 1; marcador();
   const espera = () => { if (!TN.activo) return;
     if (cuerpoMedio() && calibrar()) { C.listo = TN.listo = true; aviso('¡A JUGAR!<small>Primero a 3 games. Pegale cuando el aro se cierra</small>', 2200); decir('¡a jugar! primero a tres games'); setTimeout(saqueRival, 2400); }
     else { aviso(cuerpoMedio() ? 'QUEDATE QUIETO<small>midiendo tu cuerpo…</small>' : 'ACOMODATE<small>se te tiene que ver la cabeza, los hombros y los codos</small>', 0); setTimeout(espera, 100); } };
@@ -589,7 +625,7 @@ function estrella(x, y, r, col) { ctx.beginPath(); for (let i = 0; i < 18; i++) 
 function dibujar() {
   ctx.clearRect(0, 0, W, H);
   const now = performance.now();
-  if (ultLm && P.cad) {
+  if (ultLm && P.cad && MODO !== 'tenis') {
     ctx.lineCap = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(255,248,236,.6)';
     const q = ultLm.map(aPantalla);
     for (const [a, b] of HUESOS) { ctx.beginPath(); ctx.moveTo(q[a].x, q[a].y); ctx.lineTo(q[b].x, q[b].y); ctx.stroke(); }
