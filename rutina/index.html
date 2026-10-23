@@ -15,7 +15,8 @@
   .hud { position: fixed; top: max(8px, env(safe-area-inset-top)); left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; pointer-events: none; z-index: 3; }
   .pill { background: var(--crema); color: var(--tinta); border: 3px solid var(--tinta); border-radius: 14px; box-shadow: 0 3px 0 var(--tinta); padding: 1px 12px; font-weight: 800; font-size: 15px; line-height: 1.55; white-space: nowrap; }
   .pill small { font-size: 11px; opacity: .65; letter-spacing: 1px; margin-right: 4px; }
-  .pill.grande { font-size: 22px; padding: 0 12px; }
+  .pill.grande { font-size: 30px; padding: 0 14px; }
+  #cuenta { font-size: 26px; }
   .pill.am { background: var(--amarillo); }
   .col { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
   .col.der { align-items: flex-end; }
@@ -23,8 +24,8 @@
   #pausa { pointer-events: auto; cursor: pointer; }
   #barraTot { position: fixed; left: 10px; right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); height: 12px; border: 3px solid var(--tinta); border-radius: 10px; background: var(--crema); z-index: 3; overflow: hidden; display: none; }
   #barraTot i { display: block; height: 100%; width: 0; background: var(--verde); }
-  #aviso { position: fixed; left: 50%; top: 40%; transform: translate(-50%, -50%); z-index: 4; text-align: center; pointer-events: none; font-weight: 800; font-size: 58px; line-height: .92; color: var(--amarillo); -webkit-text-stroke: 2.5px var(--tinta); paint-order: stroke fill; text-shadow: 4px 5px 0 var(--tinta); width: 92vw; }
-  #aviso small { display: block; font-size: 21px; line-height: 1.15; color: var(--crema); -webkit-text-stroke: 1.5px var(--tinta); margin-top: 10px; }
+  #aviso { position: fixed; left: 50%; top: 40%; transform: translate(-50%, -50%); z-index: 4; text-align: center; pointer-events: none; font-weight: 800; font-size: 74px; line-height: .92; color: var(--amarillo); -webkit-text-stroke: 2.5px var(--tinta); paint-order: stroke fill; text-shadow: 4px 5px 0 var(--tinta); width: 92vw; }
+  #aviso small { display: block; font-size: 26px; line-height: 1.15; color: var(--crema); -webkit-text-stroke: 1.5px var(--tinta); margin-top: 10px; }
   .capa { position: fixed; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center; padding: 16px;
     background: radial-gradient(circle, rgba(255,210,63,.18) 1.5px, transparent 2px) 0 0/12px 12px, repeating-conic-gradient(from 0deg at 50% 45%, #1f4a3f 0 7deg, #15302a 7deg 16deg); }
   .capa[hidden] { display: none; }
@@ -77,6 +78,7 @@
     <div class="btn" id="btnEmpezar">EMPEZAR</div>
     <div class="otro">
       <div class="otro-tit">O JUGÁ UN PARTIDO DE <b>TENIS</b></div>
+      <div class="aviso-salud" style="margin-top:2px">Para el tenis podés estar a 1 metro: alcanza con que se vean la cabeza, los hombros y los codos.</div>
       <div class="opc" id="mano"><button data-m="D" class="sel">DIESTRO</button><button data-m="I">ZURDO</button></div>
       <div class="btn rojo" id="btnTenis">JUGAR TENIS</div>
     </div>
@@ -164,7 +166,10 @@ const rel = {
 };
 function calibrar() {
   if (!P.cad) return false;
-  C.muestras.push({ u: Math.hypot(P.hom.x - P.cad.x, P.hom.y - P.cad.y), cadY: P.cad.y, narY: P.nariz.y, narX: P.nariz.x, rodY: P.rod.y, ha: Math.abs(P.hI.x - P.hD.x), ox: P.cad.x });
+  const ha = Math.abs(P.hI.x - P.hD.x), caderas = ultLm && (ultLm[23].visibility ?? 1) > .5 && (ultLm[24].visibility ?? 1) > .5;
+  // si no se ven las caderas (estás cerca, para el tenis), el torso se estima con el ancho de hombros
+  const u = caderas ? Math.hypot(P.hom.x - P.cad.x, P.hom.y - P.cad.y) : ha * 1.35;
+  C.muestras.push({ u, cadY: caderas ? P.cad.y : P.hom.y + u, narY: P.nariz.y, narX: P.nariz.x, rodY: P.rod.y, ha, ox: caderas ? P.cad.x : P.hom.x });
   if (C.muestras.length > 45) C.muestras.shift();
   const m = k => C.muestras.reduce((a, b) => a + b[k], 0) / C.muestras.length;
   Object.assign(C, { u: Math.max(40, m('u')), cadY: m('cadY'), narY: m('narY'), narX: m('narX'), rodY: m('rodY'), hombroAncho: Math.max(20, m('ha')), ox: m('ox') });
@@ -189,6 +194,12 @@ let est = {}, objs = [], textos = [], ritmo = { sig: 0, beat: 0, bpm: 120 };
 const ahora = () => ac.currentTime;
 function frase(txt, x, y, col = '#ffd23f', tam = 1) { textos.push({ txt, x, y, col, tam, t: performance.now() }); }
 function aviso(html, ms = 1000) { $('aviso').innerHTML = html; clearTimeout(aviso.t); if (ms) aviso.t = setTimeout(() => $('aviso').innerHTML = '', ms); }
+// voz: para no tener que mirar la pantalla de lejos
+let vozES = null;
+function elegirVoz() { try { const v = speechSynthesis.getVoices(); vozES = v.find(x => /es[-_](AR|419|US|MX)/i.test(x.lang)) || v.find(x => /^es/i.test(x.lang)) || null; } catch (e) {} }
+try { elegirVoz(); speechSynthesis.onvoiceschanged = elegirVoz; } catch (e) {}
+function decir(txt, cortar = true) { try { if (!window.speechSynthesis) return; if (cortar) speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(txt); u.lang = vozES ? vozES.lang : 'es-AR'; if (vozES) u.voice = vozES; u.rate = 1.12; u.volume = 1; speechSynthesis.speak(u); } catch (e) {} }
+let ultVoz = 0; const decirCada = (txt, ms = 4000) => { const t = performance.now(); if (t - ultVoz > ms) { ultVoz = t; decir(txt); } };
 const centro = () => ({ x: C.ox, y: C.cadY });
 const sumar = (pts, txt, x, y, col) => { R.puntos += pts; if (txt) frase(txt, x ?? W / 2, y ?? H * .3, col); };
 
@@ -197,9 +208,9 @@ function empezarTramo(i) {
   objs = []; est = { cont: 0, fase: 'arriba', ult: 0, sig: 0, pose: 0, poseT: 0, pasos: 0, dist: 0, vel: 0 };
   const nom = R.sinSaltos && T.sinSalto ? T.sinSalto.nom : T.nom, ins = R.sinSaltos && T.sinSalto ? T.sinSalto.ins : T.ins;
   $('tramo').textContent = nom; R.pausa = true;
-  aviso(`${nom}<small>${ins}</small>`, 0); sonar('campana', .5);
+  aviso(`${nom}<small>${ins}</small>`, 0); sonar('campana', .5); decir(`${nom.toLowerCase()}. ${ins}`);
   let n = 3; const paso = () => { if (!R.activo) return; if (n > 0) { aviso(`${n}<small>${ins}</small>`, 0); sonar('tic', .5); n--; setTimeout(paso, 900); return; }
-    aviso('¡YA!', 600); R.pausa = false; R.tTramo = ahora(); };
+    aviso('¡YA!', 600); decir('¡Ya!'); R.pausa = false; R.tTramo = ahora(); };
   setTimeout(paso, 2200);
 }
 
@@ -214,7 +225,7 @@ const LOGICA = {
       ['MANO DERECHA AL CIELO', () => rel.manoArriba('D') > .35 && rel.manoArriba('I') < 0],
       ['MANO IZQUIERDA AL CIELO', () => rel.manoArriba('I') > .35 && rel.manoArriba('D') < 0],
     ];
-    const p = POSES[est.pose % POSES.length]; est.nomPose = p[0];
+    const p = POSES[est.pose % POSES.length]; if (est.nomPose !== p[0]) decir(p[0].toLowerCase()); est.nomPose = p[0];
     if (p[1]()) { est.poseT += DT; if (est.poseT > 1.2) { sonar('punto', .6); sumar(100, '¡BIEN!', W / 2, H * .25, '#3ec8a0'); est.pose++; est.poseT = 0; R.reps++; } } else est.poseT = Math.max(0, est.poseT - DT / 2);
     $('cuenta').innerHTML = `<small>POSES</small>${est.pose}`;
   },
@@ -228,10 +239,11 @@ const LOGICA = {
     est.dist += est.vel * .9 * DT;
     if (est.pasos && est.pasos % 20 === 0 && est.pasos !== est.ultAviso) { est.ultAviso = est.pasos; sonar('punto', .5); sumar(200, est.vel > 2.6 ? '¡VOLÁS!' : '¡BIEN!'); }
     $('cuenta').innerHTML = `<small>PASOS</small>${est.pasos}`;
-    if (t > 6 && est.vel < 1.2 && (!est.avisoLento || t - est.avisoLento > 6)) { est.avisoLento = t; aviso('¡MÁS RÁPIDO!', 900); }
+    if (t > 6 && est.vel < 1.2 && (!est.avisoLento || t - est.avisoLento > 6)) { est.avisoLento = t; aviso('¡MÁS RÁPIDO!', 900); decir('¡más rápido!'); }
   },
   vallas(T, t) {   // las vallas llegan a ritmo; al llegar hay que estar en el aire (o con la rodilla arriba)
     if (t > est.sig) { objs.push({ tipo: 'valla', tLlega: ahora() + 2, tAp: ahora(), estado: 'vivo' }); est.sig = t + (R.sinSaltos ? 2.2 : 2.6); }
+    for (const o of objs) if (o.estado === 'vivo' && !o.dicho && ahora() > o.tLlega - .75) { o.dicho = true; decir(R.sinSaltos ? '¡rodilla!' : '¡saltá!'); }
     const enAire = R.sinSaltos ? Math.max(rel.rodilla('I'), rel.rodilla('D')) > .3 : rel.cad() < -.1;
     for (const o of objs) if (o.estado === 'vivo') {
       if (ahora() > o.tLlega - .25 && enAire) { o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; sonar('punto', .6); sumar(150, '¡SALTO!', W / 2, H * .55, '#3ec8a0'); }
@@ -241,6 +253,7 @@ const LOGICA = {
   },
   esquivar(T, t) {
     if (t > est.sig) { const clase = ['agachate', 'izq', 'der'][Math.floor(Math.random() * 3)]; objs.push({ tipo: 'barra', clase, tLlega: ahora() + 2.2, tAp: ahora(), estado: 'vivo' }); est.sig = t + 3.2; }
+    for (const o of objs) if (o.estado === 'vivo' && !o.dicho && ahora() > o.tLlega - 1.3) { o.dicho = true; decir(o.clase === 'agachate' ? '¡agachate!' : o.clase === 'izq' ? '¡a la derecha!' : '¡a la izquierda!'); }
     for (const o of objs) if (o.estado === 'vivo' && ahora() >= o.tLlega) {
       const ok = o.clase === 'agachate' ? rel.narY() > .3 : o.clase === 'izq' ? rel.narX() > .3 : rel.narX() < -.3;
       o.estado = ok ? 'ok' : 'falla'; o.tFin = performance.now();
@@ -265,14 +278,14 @@ const LOGICA = {
   sentadillas(T, t) {   // abajo: la cadera baja casi medio torso; arriba: vuelve cerca de la posición de pie
     const c = rel.cad();
     if (est.fase === 'arriba' && c > .42) est.fase = 'abajo';
-    else if (est.fase === 'abajo' && c < .15) { est.fase = 'arriba'; est.cont++; R.reps++; sonar('punto', .6); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
+    else if (est.fase === 'abajo' && c < .15) { est.fase = 'arriba'; est.cont++; R.reps++; sonar('punto', .6); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
     est.prof = c; $('cuenta').innerHTML = `<small>SENTADILLAS</small>${est.cont}/${T.meta}`;
   },
   tijera(T, t) {   // abierto: manos arriba (y pies separados si hay saltos); cerrado: manos abajo
     const manos = rel.manoArriba('I') > .1 && rel.manoArriba('D') > .1, abajo = rel.manoArriba('I') < -.6 && rel.manoArriba('D') < -.6;
     const pies = R.sinSaltos ? true : rel.piesAbiertos() > 1.6;
     if (est.fase === 'arriba' && manos && pies) est.fase = 'abierto';
-    else if (est.fase === 'abierto' && abajo) { est.fase = 'arriba'; est.cont++; R.reps++; sonar('punto', .55); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
+    else if (est.fase === 'abierto' && abajo) { est.fase = 'arriba'; est.cont++; R.reps++; sonar('punto', .55); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
     $('cuenta').innerHTML = `<small>TIJERAS</small>${est.cont}/${T.meta}`;
   },
   estirar(T, t) {
@@ -282,7 +295,7 @@ const LOGICA = {
       ['INCLINATE A LA IZQUIERDA', () => P.hI.y - P.hD.y > .18 * C.u && rel.manoArriba('D') > 0],
       ['RESPIRÁ: MANOS AL PECHO', () => Math.abs(P.muI.x - P.muD.x) < .45 * C.u && Math.abs(P.muI.y - P.hom.y) < .5 * C.u],
     ];
-    const p = POSES[est.pose % POSES.length]; est.nomPose = p[0];
+    const p = POSES[est.pose % POSES.length]; if (est.nomPose !== p[0]) decir(p[0].toLowerCase().replace('estirate: ', 'estirate, ').replace('respirá: ', 'respirá, ')); est.nomPose = p[0];
     if (p[1]()) { est.poseT += DT; if (est.poseT > 8) { sonar('punto', .5); sumar(150, '¡MUY BIEN!', W / 2, H * .25, '#3ec8a0'); est.pose++; est.poseT = 0; } }
     $('cuenta').innerHTML = `<small>MANTENÉ</small>${Math.max(0, 8 - est.poseT).toFixed(0)} s`;
   },
@@ -346,8 +359,8 @@ function arrancarRutina() {
   $('tramo').textContent = 'CALIBRANDO'; $('cuenta').innerHTML = '<small>QUIETO</small>';
   aviso('PARATE DERECHO<small>de frente, con los brazos al costado</small>', 0);
   const espera = () => { if (!R.activo) return;
-    if (cuerpoEntero() && calibrar()) { C.listo = true; aviso('¡LISTO!', 800); setTimeout(() => empezarTramo(0), 900); }
-    else { if (!cuerpoEntero()) aviso('ALEJATE UN POCO<small>se te tiene que ver de la cabeza a los pies</small>', 0); else aviso('QUEDATE QUIETO<small>midiendo tu cuerpo…</small>', 0); setTimeout(espera, 100); } };
+    if (cuerpoEntero() && calibrar()) { C.listo = true; aviso('¡LISTO!', 800); decir('¡listo!'); setTimeout(() => empezarTramo(0), 900); }
+    else { if (!cuerpoEntero()) { aviso('ALEJATE UN POCO<small>se te tiene que ver de la cabeza a los pies</small>', 0); decirCada('alejate un poco, que se te vea de la cabeza a los pies', 6000); } else aviso('QUEDATE QUIETO<small>midiendo tu cuerpo…</small>', 0); setTimeout(espera, 100); } };
   espera();
 }
 
@@ -362,7 +375,7 @@ $('pausa').addEventListener('click', () => {
 // ───────── TENIS: raqueta en tu mano, el rival del otro lado de la cancha ─────────
 const TN = { activo: false, enPausa: false, listo: false, mano: 'D', pts: [0, 0], juegos: [0, 0], golpes: 0, rally: 0, rallyMax: 0, ganados: 0, kcal: 0, seg: 0, bola: null, rival: { x: 0, obj: 0 }, dif: 1, cab: null, cabV: 0, ult: 0 };
 const NUM = ['0', '15', '30', '40'];
-const cuerpoMedio = () => ultLm && [0, 11, 12, 23, 24].every(i => (ultLm[i].visibility ?? 1) > .45);
+const cuerpoMedio = () => ultLm && [0, 11, 12, 13, 14].every(i => (ultLm[i].visibility ?? 1) > .45);
 // geometría de la cancha en la pantalla (s: 0 = lado del rival, 1 = tu lado)
 const CAN = () => { const yF = H * .2, yN = Math.min(H * .97, C.cadY + 1.3 * C.u); return { yF, yN, aF: W * .2, aN: W * .62, cx: W / 2 }; };
 const pisoEn = (s, xr) => { const k = CAN(), y = k.yF + (k.yN - k.yF) * s, a = k.aF + (k.aN - k.aF) * s; return { x: k.cx + xr * a, y, esc: .3 + .7 * s }; };
@@ -391,10 +404,10 @@ function puntoPara(q, txt) {
   if (q === 0) { TN.ganados++; sonar('aplauso', .6); }
   else sonar('falla', .4);
   if (TN.pts[q] >= 4 && TN.pts[q] - TN.pts[1 - q] >= 2) {
-    TN.juegos[q]++; TN.pts = [0, 0]; aviso(q === 0 ? `¡GAME PARA VOS!<small>${txt || ''}</small>` : `GAME DEL RIVAL<small>${txt || ''}</small>`, 1500);
+    TN.juegos[q]++; TN.pts = [0, 0]; decir(q === 0 ? '¡game para vos!' : 'game del rival'); aviso(q === 0 ? `¡GAME PARA VOS!<small>${txt || ''}</small>` : `GAME DEL RIVAL<small>${txt || ''}</small>`, 1500);
     if (TN.juegos[q] >= 3) { marcador(); setTimeout(finTenis, 1600); return; }
   } else aviso(q === 0 ? `¡PUNTO!<small>${txt || ''}</small>` : `PUNTO DEL RIVAL<small>${txt || ''}</small>`, 1100);
-  marcador(); setTimeout(saqueRival, 1800);
+  marcador(); const [a2, b2] = TN.pts, NV = ['cero', 'quince', 'treinta', 'cuarenta']; decir(a2 >= 3 && b2 >= 3 ? (a2 === b2 ? 'iguales' : a2 > b2 ? 'ventaja para vos' : 'ventaja rival') : `${NV[a2]}, ${NV[b2]}`, false); setTimeout(saqueRival, 1800);
 }
 function tenisActualizar() {
   if (!TN.activo) return;
@@ -409,7 +422,8 @@ function tenisActualizar() {
   const b = TN.bola; if (!b) return;
   const s = (ya - b.t0) / b.dur;
   if (b.fase === 'viene') {
-    if (!b.boto && s > .72) { b.boto = true; sonar('bote', .5); }
+    if (!b.boto && s > .72) { b.boto = true; sonar('bote', .6); }
+    if (!b.avisado && s > .9) { b.avisado = true; sonar('tic', .45); }
     const pos = bolaEn(b, s);
     if (s > .85 && s < 1.18 && TN.cabV > 2.2 && Math.hypot(r.hx - pos.x, r.hy - pos.y) < .5 * C.u) {   // ¡golpe!
       TN.golpes++; TN.rally++; sonar('pelota', 1);
@@ -472,10 +486,10 @@ function tenisDibujar() {
   const b = TN.bola;
   if (b) {
     const s = (performance.now() - b.t0) / b.dur, pos = bolaEn(b, s);
-    if (b.fase === 'viene' && s > .45 && s < 1.05) { const fin = bolaEn(b, 1); ctx.save(); ctx.globalAlpha = Math.min(1, (s - .45) * 3) * .9; ctx.setLineDash([8, 7]); ctx.lineWidth = 4; ctx.strokeStyle = '#ffd23f'; ctx.beginPath(); ctx.arc(fin.x, fin.y, .42 * u, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+    if (b.fase === 'viene' && s > .45 && s < 1.05) { const fin = bolaEn(b, 1); ctx.save(); ctx.globalAlpha = Math.min(1, (s - .45) * 3) * .95; ctx.setLineDash([10, 8]); ctx.lineWidth = 7; ctx.strokeStyle = '#ffd23f'; ctx.beginPath(); ctx.arc(fin.x, fin.y, .42 * u, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
     const sombra = b.fase === 'viene' ? pisoEn(Math.min(1, s), b.x0 + (b.x1 - b.x0) * Math.min(1, s)) : pisoEn(1 - Math.min(1, s), b.x1 * Math.min(1, s));
     ctx.save(); ctx.globalAlpha = .35; ctx.fillStyle = '#2a2238'; ctx.beginPath(); ctx.ellipse(sombra.x, sombra.y, pos.r * 1.2, pos.r * .45, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-    ctx.beginPath(); ctx.arc(pos.x, pos.y, Math.max(4, pos.r), 0, Math.PI * 2); ctx.fillStyle = '#d7ff3a'; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, Math.max(10, pos.r * 1.4), 0, Math.PI * 2); ctx.fillStyle = '#d7ff3a'; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.stroke();
   }
   // tu raqueta
   const r = raqueta();
@@ -491,8 +505,8 @@ function arrancarTenis() {
   C.listo = false; C.muestras = [];
   $('tramo').textContent = 'TENIS'; marcador();
   const espera = () => { if (!TN.activo) return;
-    if (cuerpoMedio() && calibrar()) { C.listo = TN.listo = true; aviso('¡A JUGAR!<small>Primero a 3 games. Pegale cuando la pelota llega al círculo amarillo</small>', 2200); setTimeout(saqueRival, 2400); }
-    else { aviso(cuerpoMedio() ? 'QUEDATE QUIETO<small>midiendo tu cuerpo…</small>' : 'ALEJATE UN POCO<small>se te tiene que ver al menos hasta la cintura</small>', 0); setTimeout(espera, 100); } };
+    if (cuerpoMedio() && calibrar()) { C.listo = TN.listo = true; aviso('¡A JUGAR!<small>Primero a 3 games. Pegale cuando la pelota llega al círculo amarillo</small>', 2200); decir('¡a jugar! primero a tres games'); setTimeout(saqueRival, 2400); }
+    else { aviso(cuerpoMedio() ? 'QUEDATE QUIETO<small>midiendo tu cuerpo…</small>' : 'ACOMODATE<small>se te tiene que ver la cabeza, los hombros y los codos</small>', 0); setTimeout(espera, 100); } };
   espera();
 }
 function finTenis() {
@@ -505,6 +519,7 @@ function finTenis() {
 
 // ───────── ARRANQUE ─────────
 async function empezar(modo = 'rutina') {
+  try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) {}   // habilita la voz (en iPhone necesita un toque)
   $('error').textContent = ''; $(modo === 'tenis' ? 'btnTenis' : 'btnEmpezar').textContent = 'CARGANDO…';
   try {
     if (!ac) {
@@ -539,7 +554,7 @@ function bucle() {
 
 // ───────── DIBUJO estilo cómic sobre tu propia imagen ─────────
 const HUESOS = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
-function texto(t, x, y, tam, col = '#ffd23f') { ctx.save(); ctx.font = `800 ${tam}px "Baloo 2", system-ui`; ctx.textAlign = 'center'; ctx.lineWidth = Math.max(4, tam / 7); ctx.strokeStyle = '#2a2238'; ctx.fillStyle = col; ctx.strokeText(t, x, y); ctx.fillText(t, x, y); ctx.restore(); }
+function texto(t, x, y, tam, col = '#ffd23f') { tam = Math.round(tam * 1.35); ctx.save(); ctx.font = `800 ${tam}px "Baloo 2", system-ui`; ctx.textAlign = 'center'; ctx.lineWidth = Math.max(4, tam / 7); ctx.strokeStyle = '#2a2238'; ctx.fillStyle = col; ctx.strokeText(t, x, y); ctx.fillText(t, x, y); ctx.restore(); }
 function estrella(x, y, r, col) { ctx.beginPath(); for (let i = 0; i < 18; i++) { const a = i * Math.PI / 9 - Math.PI / 2, rr = i % 2 ? r * .55 : r; ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } ctx.closePath(); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.stroke(); }
 function dibujar() {
   ctx.clearRect(0, 0, W, H);
