@@ -72,7 +72,8 @@
   .btn.chico { font-size: 16px; padding: 9px 13px 6px; margin: 0; border-width: 3px; box-shadow: 0 4px 0 var(--tinta); }
   .btn.azul { background: var(--azul); } .btn.naranja { background: var(--naranja); }
   .lista-pr .btn { background: #fff; color: var(--tinta); font-size: 13px; padding: 7px 9px 4px; }
-  .pruebas { background: rgba(79,143,255,.08); border-radius: 12px; padding: 8px 6px 10px; }
+  .seccion { margin-top: 12px; padding-top: 10px; border-top: 3px dashed rgba(42,34,56,.25); }
+  .seccion:first-of-type { border-top: 0; margin-top: 6px; padding-top: 0; }
   #salir { pointer-events: auto; cursor: pointer; }
   /* ping pong: nada arriba tapando la mesa; marcador chiquito abajo */
   body.pp .hud, body.pp #barraTot { display: none !important; }
@@ -99,23 +100,24 @@
 <div class="capa" id="inicio">
   <div class="cartel">
     <h1>RUTINA EN CASA<span>SIN EQUIPO</span></h1>
-    <a class="btn azul" href="./entrenar/" style="display:block;text-decoration:none;margin:10px 0 4px">ENTRENAMIENTO CON PLAN</a>
-    <div class="aviso-salud" style="margin-top:0">Plan por objetivo y nivel, ejercicios guiados e informe con gráficos</div>
+    <div class="seccion"><div class="otro-tit">1 · ENTRENAMIENTO CON PLAN</div>
+    <div class="aviso-salud" style="margin-top:0">Modo clásico: plan por objetivo y nivel, ejercicios guiados con dibujos e informe con gráficos</div>
+    <a class="btn azul" href="./entrenar/" style="display:block;text-decoration:none;margin:8px 0 2px">ENTRAR A MI PLAN</a></div>
     <div class="otro" id="pruebaNivel" hidden style="border:0;margin-top:4px">
       <div class="otro-tit">PRUEBA DE NIVEL</div>
       <div class="aviso-salud" style="margin-top:2px;font-size:14px;opacity:1">Hacé todas las <b>sentadillas</b> que puedas en <b>1 minuto</b>. Teléfono parado a 2,5 metros, que se te vea entero.</div>
       <div class="btn" id="btnPruebaNivel">EMPEZAR LA PRUEBA</div>
       <a class="link-volver" href="./entrenar/" style="display:block;font-weight:800;color:var(--tinta);margin-top:8px">Volver a mi plan</a>
     </div>
-    <div class="sec-tit">TU RUTINA DIARIA · SEMANA 1</div>
+    <div class="seccion"><div class="otro-tit">2 · RUTINA CON CÁMARA</div><div class="aviso-salud" style="margin-top:0">La cámara te sigue y cuenta tus movimientos. Semana 1, un día por vez</div>
     <div class="racha" id="racha"></div>
     <div class="dias" id="dias"></div>
     <div class="nota-dia" id="notaDia"></div>
     <div class="opc" id="imp"><button data-i="1" class="sel">CON SALTOS</button><button data-i="0">SIN SALTOS</button></div>
     <div class="btn" id="btnEmpezar">EMPEZAR</div>
-    <div class="aviso-salud" style="margin-top:2px">Apoyá el teléfono parado a unos <b>2,5 metros</b>: se te tiene que ver de la cabeza a los pies.</div>
-    <div class="otro">
-      <div class="otro-tit">JUEGOS</div>
+    <div class="aviso-salud" style="margin-top:2px">Apoyá el teléfono parado a unos <b>2,5 metros</b>: se te tiene que ver de la cabeza a los pies.</div></div>
+    <div class="seccion">
+      <div class="otro-tit">3 · JUEGOS</div>
       <div class="juegos">
         <div class="btn rojo chico" data-jugar="tenis">TENIS</div>
         <div class="btn naranja chico" data-jugar="frutas">CORTAR FRUTAS</div>
@@ -123,11 +125,12 @@
         <div class="btn chico" data-jugar="luces">LUCES EN EL PISO</div>
         <div class="btn rojo chico" data-jugar="pingpong">PING PONG</div>
       </div>
-      <div class="opc" id="mano" style="margin:6px 0 0"><button data-m="D" class="sel">PALETA EN LA DERECHA</button><button data-m="I">EN LA IZQUIERDA</button></div>
+      <div class="opc" id="mano" style="margin:6px 0 0"><button data-m="D" class="sel">PALETA: MANO DERECHA</button><button data-m="I">IZQUIERDA</button></div>
       <div class="aviso-salud" style="margin-top:6px">Tenis y frutas: teléfono a unos 50 cm, como una selfie. Baile: a 1 metro. Luces: a 2,5 metros, que se te vean los pies. Ping pong: a unos 2 metros, que se te vea hasta la cintura.</div>
     </div>
-    <div class="otro pruebas">
-      <div class="otro-tit">ZONA DE PRUEBAS <b>(solo para vos)</b></div>
+    <div class="seccion">
+      <div class="otro-tit">4 · EJERCICIOS CON CÁMARA</div>
+      <div class="aviso-salud" style="margin-top:0">Elegí uno y hacelo suelto. La cámara cuenta tus repeticiones</div>
       <div class="lista-pr" id="pruebas"></div>
     </div>
     <div id="error"></div>
@@ -600,7 +603,7 @@ function terminar(cortado = false) {
   else $('btnOtra').textContent = 'OTRA VEZ';
   sonar('campana', .8); setTimeout(() => $('fin').hidden = false, 700);
 }
-// pantalla de inicio: los 7 días de la semana 1, los juegos y la zona de pruebas
+// pantalla de inicio: plan, rutina con cámara (semana 1), juegos y ejercicios sueltos
 let diaSel = 1;
 function pintarDias() {
   const d = leerDias(), hoy = hoyStr();
@@ -614,7 +617,7 @@ function pintarDias() {
   $('notaDia').textContent = sig && !abierto(sig) ? `El día ${sig} se abre mañana. ¡Hoy ya entrenaste!` : !sig ? '¡Terminaste la semana 1!' : '';
 }
 $('dias').addEventListener('click', e => { const c = e.target.closest('.dia'); if (!c || c.classList.contains('bloq')) return; diaSel = +c.dataset.dia; pintarDias(); });
-const PRUEBAS = [['sentadillas', 'SENTADILLAS'], ['tijera', 'SALTOS DE TIJERA'], ['carrera', 'CORRER EN EL LUGAR'], ['circulos', 'CÍRCULOS DE BRAZOS'], ['patadas', 'PATADAS AL FRENTE'], ['cruzadas', 'RODILLA CRUZADA'], ['rodillazos', 'RODILLAZOS'], ['vallas', 'SALTAR OBSTÁCULOS'], ['agarrar', 'SALTÁ Y AGARRÁ'], ['baile', 'BAILE'], ['luces', 'LUCES EN EL PISO'], ['frutas', 'CORTAR FRUTAS'], ['boxeo', 'BOXEO'], ['esquivar', 'ESQUIVAR'], ['calor', 'POSES'], ['estirar', 'ESTIRAMIENTO'], ['tenis', 'TENIS'], ['pingpong', 'PING PONG']];
+const PRUEBAS = [['sentadillas', 'SENTADILLAS'], ['tijera', 'SALTOS DE TIJERA'], ['carrera', 'CORRER EN EL LUGAR'], ['circulos', 'CÍRCULOS DE BRAZOS'], ['patadas', 'PATADAS AL FRENTE'], ['cruzadas', 'RODILLA CRUZADA'], ['rodillazos', 'RODILLAZOS'], ['vallas', 'SALTAR OBSTÁCULOS'], ['agarrar', 'SALTÁ Y AGARRÁ'], ['boxeo', 'BOXEO'], ['esquivar', 'ESQUIVAR'], ['calor', 'POSES'], ['estirar', 'ESTIRAMIENTO']];
 $('pruebas').innerHTML = PRUEBAS.map(([id, n]) => `<div class="btn chico" data-jugar="${id}">${n}</div>`).join('');
 pintarDias();
 
