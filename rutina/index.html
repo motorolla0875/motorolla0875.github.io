@@ -74,6 +74,14 @@
   .lista-pr .btn { background: #fff; color: var(--tinta); font-size: 13px; padding: 7px 9px 4px; }
   .pruebas { background: rgba(79,143,255,.08); border-radius: 12px; padding: 8px 6px 10px; }
   #salir { pointer-events: auto; cursor: pointer; }
+  /* ping pong: nada arriba tapando la mesa; marcador chiquito abajo */
+  body.pp .hud, body.pp #barraTot { display: none !important; }
+  #ppHud { position: fixed; left: 10px; right: 10px; bottom: max(8px, env(safe-area-inset-bottom)); display: none; justify-content: space-between; align-items: center; z-index: 3; pointer-events: none; }
+  body.pp #ppHud { display: flex; }
+  #ppHud .pill { font-size: 14px; opacity: .85; }
+  #ppSalir { pointer-events: auto; cursor: pointer; }
+  body.pp #aviso { top: 11%; font-size: 46px; }
+  body.pp #aviso small { font-size: 19px; }
 </style>
 </head>
 <body>
@@ -85,6 +93,7 @@
   <div class="col der"><div class="pill grande" id="reloj">0:00</div><div class="pill"><small>KCAL</small><span id="kcal">0</span></div><div class="pill" id="pausa">PAUSA</div><div class="pill" id="salir">SALIR</div></div>
 </div>
 <div id="barraTot"><i></i></div>
+<div id="ppHud"><div class="pill" id="ppSalir">SALIR</div><div class="pill" id="ppMarca">VOS 0 · 0 RIVAL</div></div>
 <div id="aviso"></div>
 
 <div class="capa" id="inicio">
@@ -104,8 +113,10 @@
         <div class="btn naranja chico" data-jugar="frutas">CORTAR FRUTAS</div>
         <div class="btn azul chico" data-jugar="baile">BAILE</div>
         <div class="btn chico" data-jugar="luces">LUCES EN EL PISO</div>
+        <div class="btn rojo chico" data-jugar="pingpong">PING PONG</div>
       </div>
-      <div class="aviso-salud" style="margin-top:6px">Tenis y frutas: teléfono a unos 50 cm, como una selfie. Baile: a 1 metro. Luces: a 2,5 metros, que se te vean los pies.</div>
+      <div class="opc" id="mano" style="margin:6px 0 0"><button data-m="D" class="sel">PALETA EN LA DERECHA</button><button data-m="I">EN LA IZQUIERDA</button></div>
+      <div class="aviso-salud" style="margin-top:6px">Tenis y frutas: teléfono a unos 50 cm, como una selfie. Baile: a 1 metro. Luces: a 2,5 metros, que se te vean los pies. Ping pong: a unos 2 metros, que se te vea hasta la cintura.</div>
     </div>
     <div class="otro pruebas">
       <div class="otro-tit">ZONA DE PRUEBAS <b>(solo para vos)</b></div>
@@ -144,7 +155,7 @@ let W = 0, H = 0;
 function medir() { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
 addEventListener('resize', medir); medir();
 const opcion = (id, attr) => { $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; [...$(id).children].forEach(x => x.classList.toggle('sel', x === b)); }); return () => $(id).querySelector('.sel').dataset[attr]; };
-const leerImp = opcion('imp', 'i');
+const leerImp = opcion('imp', 'i'), leerMano = opcion('mano', 'm');
 
 // ───────── SONIDO ─────────
 let ac = null; const SON = {};
@@ -337,11 +348,26 @@ const LOGICA = {
     else if (est.fase === 'abajo' && c < .15) { est.fase = 'arriba'; est.cont++; R.reps++; sonar('punto', .6); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
     est.prof = c; $('cuenta').innerHTML = `<small>SENTADILLAS</small>${est.cont}/${T.meta}`;
   },
-  tijera(T, t) {   // abierto: manos arriba (y pies separados si hay saltos); cerrado: manos abajo
-    const manos = rel.manoArriba('I') > .1 && rel.manoArriba('D') > .1, abajo = rel.manoArriba('I') < -.6 && rel.manoArriba('D') < -.6;
-    const pies = R.sinSaltos ? true : rel.piesAbiertos() > 1.6;
-    if (est.fase === 'arriba' && manos && pies) est.fase = 'abierto';
-    else if (est.fase === 'abierto' && abajo) { est.fase = 'arriba'; est.cont++; R.reps++; sonar('punto', .55); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
+  tijera(T, t) {   // 4 bolitas: arriba a los costados para las manos y abajo a los costados para los pies; explotan al tocarlas
+    const u = C.u, ha = C.hombroAncho;
+    if (!est.bolas) {
+      if (est.esperaCerrar) { if (rel.manoArriba('I') < -.4 && rel.manoArriba('D') < -.4) est.esperaCerrar = false; else { $('cuenta').innerHTML = `<small>TIJERAS</small>${est.cont}/${T.meta}`; return; } }
+      est.lado = -(est.lado || 1);
+      est.bolas = [
+        { p: 'mano', x: -.8 * u, y: () => Math.max(H * .22, C.narY - .25 * u), col: '#4f8fff' },
+        { p: 'mano', x: .8 * u, y: () => Math.max(H * .22, C.narY - .25 * u), col: '#ff4d6d' },
+        ...(R.sinSaltos ? [{ p: 'pie', x: est.lado * .95 * ha, y: () => C.toY, col: '#3ec8a0' }]
+                        : [{ p: 'pie', x: -.85 * ha, y: () => C.toY, col: '#ffd23f' }, { p: 'pie', x: .85 * ha, y: () => C.toY, col: '#ff8a3d' }]),
+      ].map(b => ({ ...b, x: Math.max(-C.ox + .22 * u, Math.min(W - C.ox - .22 * u, b.x)), vivo: true, t0: performance.now() }));
+    }
+    const r = .2 * u;
+    for (const b of est.bolas) if (b.vivo) {
+      const bx = C.ox + b.x, by = b.y();
+      const toca = b.p === 'mano' ? ['I', 'D'].some(k => Math.hypot(P['ma' + k].x - bx, P['ma' + k].y - by) < r * 1.6)
+                                  : ['I', 'D'].some(k => Math.abs(P['to' + k].x - bx) < r * 1.5 && Math.abs(P['to' + k].y - by) < r * 2.5);
+      if (toca) { b.vivo = false; explotar(bx, by, b.col, r); sonar('pum', .5); sumar(30); }
+    }
+    if (est.bolas.every(b => !b.vivo)) { est.bolas = null; est.esperaCerrar = true; est.cont++; R.reps++; sonar('punto', .55); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
     $('cuenta').innerHTML = `<small>TIJERAS</small>${est.cont}/${T.meta}`;
   },
   estirar(T, t) {
@@ -368,11 +394,20 @@ const LOGICA = {
     }
     $('cuenta').innerHTML = `<small>CAJAS</small>${est.cont}`;
   },
-  patadas(T, t) {   // el tobillo sube y la pierna queda estirada hacia adelante (tobillo casi a la altura de la rodilla)
-    for (const k of ['I', 'D']) {
-      const sube = (C.toY - P['to' + k].y) / C.u, estirada = (P['to' + k].y - P['ro' + k].y) / C.u < .55;
-      if (!est['arr' + k] && sube > .42 && estirada && est.ultPie !== k) { est['arr' + k] = true; est.ultPie = k; est.cont++; R.reps++; sonar('pum', .6); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
-      if (est['arr' + k] && sube < .15) est['arr' + k] = false;
+  patadas(T, t) {   // círculos a la altura de la patada, de un lado o del otro y a distintas alturas: pegales con el pie
+    if (t > est.sig) {
+      let lado = Math.random() < .5 ? -1 : 1; if (lado === est.ultLado && (est.rep = (est.rep || 0) + 1) > 1) { lado = -lado; est.rep = 0; } est.ultLado = lado;
+      const alto = [.55, .75, .95][Math.floor(Math.random() * 3)], dx = (.2 + Math.random() * .25) * lado;
+      const cols = ['#4f8fff', '#ff4d6d', '#ffd23f', '#3ec8a0', '#ff8a3d'];
+      objs.push({ tipo: 'blanco', lado, dx, alto, r: .2, col: cols[Math.floor(Math.random() * cols.length)], tGolpe: ahora() + 1.5, tAp: ahora(), estado: 'vivo' }); est.sig = t + 2;
+    }
+    for (const o of objs) if (o.estado === 'vivo') {
+      const dt = ahora() - o.tGolpe, px = C.ox + o.dx * C.u, py = C.toY - o.alto * C.u, rr = o.r * C.u;
+      if (!o.dicho && dt > -.9) { o.dicho = true; decir(o.lado < 0 ? 'patada izquierda' : 'patada derecha'); }
+      if (dt > -.5) for (const k of ['I', 'D']) { const pie = P['to' + k]; if ((C.toY - pie.y) / C.u > .3 && Math.hypot(pie.x - px, pie.y - py) < rr * 1.7) {
+        o.estado = 'ok'; o.tFin = performance.now(); est.cont++; R.reps++; explotar(px, py, o.col, rr); sonar('pum', .9); const perf = Math.abs(dt) < .2; if (perf) sonar('punto', .5);
+        sumar(perf ? 200 : 100, perf ? 'PERFECTO' : String(est.cont), px, py - rr * 1.6, perf ? '#3ec8a0' : '#ffd23f'); break; } }
+      if (o.estado === 'vivo' && dt > .5) { o.estado = 'falla'; o.tFin = performance.now(); sonar('falla', .3); }
     }
     $('cuenta').innerHTML = `<small>PATADAS</small>${est.cont}/${T.meta}`;
   },
@@ -483,6 +518,8 @@ const LOGICA = {
     $('cuenta').innerHTML = `<small>LUCES</small>${est.cont}`;
   },
 };
+let chispas = [];
+function explotar(x, y, col, r) { const n = 14; for (let q = 0; q < n; q++) { const a = q / n * Math.PI * 2 + Math.random() * .3, v = r * (4 + Math.random() * 5); chispas.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: r * (.18 + Math.random() * .2), col, t: performance.now() }); } }
 const JUGO = { sandia: '#ff4d6d', naranja: '#ff8a3d', manzana: '#fff1c9', limon: '#f4f06a', kiwi: '#8fd14f' };
 
 function agendarRitmo() {   // base rítmica suave durante toda la rutina
@@ -559,12 +596,12 @@ function pintarDias() {
   $('notaDia').textContent = sig && !abierto(sig) ? `El día ${sig} se abre mañana. ¡Hoy ya entrenaste!` : !sig ? '¡Terminaste la semana 1!' : '';
 }
 $('dias').addEventListener('click', e => { const c = e.target.closest('.dia'); if (!c || c.classList.contains('bloq')) return; diaSel = +c.dataset.dia; pintarDias(); });
-const PRUEBAS = [['sentadillas', 'SENTADILLAS'], ['tijera', 'SALTOS DE TIJERA'], ['carrera', 'CORRER EN EL LUGAR'], ['circulos', 'CÍRCULOS DE BRAZOS'], ['patadas', 'PATADAS AL FRENTE'], ['cruzadas', 'RODILLA CRUZADA'], ['rodillazos', 'RODILLAZOS'], ['vallas', 'SALTAR OBSTÁCULOS'], ['agarrar', 'SALTÁ Y AGARRÁ'], ['baile', 'BAILE'], ['luces', 'LUCES EN EL PISO'], ['frutas', 'CORTAR FRUTAS'], ['boxeo', 'BOXEO'], ['esquivar', 'ESQUIVAR'], ['calor', 'POSES'], ['estirar', 'ESTIRAMIENTO'], ['tenis', 'TENIS']];
+const PRUEBAS = [['sentadillas', 'SENTADILLAS'], ['tijera', 'SALTOS DE TIJERA'], ['carrera', 'CORRER EN EL LUGAR'], ['circulos', 'CÍRCULOS DE BRAZOS'], ['patadas', 'PATADAS AL FRENTE'], ['cruzadas', 'RODILLA CRUZADA'], ['rodillazos', 'RODILLAZOS'], ['vallas', 'SALTAR OBSTÁCULOS'], ['agarrar', 'SALTÁ Y AGARRÁ'], ['baile', 'BAILE'], ['luces', 'LUCES EN EL PISO'], ['frutas', 'CORTAR FRUTAS'], ['boxeo', 'BOXEO'], ['esquivar', 'ESQUIVAR'], ['calor', 'POSES'], ['estirar', 'ESTIRAMIENTO'], ['tenis', 'TENIS'], ['pingpong', 'PING PONG']];
 $('pruebas').innerHTML = PRUEBAS.map(([id, n]) => `<div class="btn chico" data-jugar="${id}">${n}</div>`).join('');
 pintarDias();
 
 function arrancarRutina(plan) {   // plan: { dia } para un día de la semana, o { solo: id } para un juego o una prueba
-  R.plan = plan; document.body.classList.remove('tenis'); video.style.opacity = ''; $('reloj').textContent = '0:00';
+  R.plan = plan; document.body.classList.remove('tenis', 'pp'); video.style.opacity = ''; $('reloj').textContent = '0:00';
   $('fin').hidden = true; $('inicio').hidden = true; $('barraTot').style.display = 'block';
   R.sinSaltos = leerImp() === '0'; R.dia = plan.dia || 0; R.solo = !!plan.solo;
   R.lista = plan.dia ? DIAS[plan.dia - 1].l.map(([id, seg, meta]) => ({ ...TR[id], seg, meta: meta || TR[id].meta || 0 })) : [{ ...TR[plan.solo] }];
@@ -839,7 +876,7 @@ function arrancarTenis() {
   $('fin').hidden = true; $('inicio').hidden = true; $('barraTot').style.display = 'none'; objs = []; textos = [];
   Object.assign(TN, { activo: true, enPausa: false, listo: false, mano: 'D', pts: [0, 0], juegos: [0, 0], golpes: 0, rally: 0, rallyMax: 0, ganados: 0, kcal: 0, seg: 0, bola: null, rival: { x: 0, obj: 0 }, dif: 1, cab: null, ult: 0 });
   C.listo = false; C.muestras = [];
-  document.body.classList.add('tenis'); video.style.opacity = 1; marcador();
+  document.body.classList.remove('pp'); document.body.classList.add('tenis'); video.style.opacity = 1; marcador();
   TN.mh = {}; TN.ultZona = null;
   const espera = () => { if (!TN.activo) return;
     if (ultLm && (ultLm[0].visibility ?? 1) > .5) {   // modo selfie: con verte la cara alcanza
@@ -855,6 +892,128 @@ function finTenis() {
   $('fSem').parentElement.style.display = 'none';
   setTimeout(() => $('fin').hidden = false, 700);
 }
+
+// ───────── PING PONG: la paleta en tu mano, la mesa adelante y el rival del otro lado ─────────
+const PP = { activo: false, listo: false, mano: 'D', pts: [0, 0], golpes: 0, rally: 0, rallyMax: 0, kcal: 0, bola: null, rival: { x: 0, obj: 0, golpeT: 0 }, dif: 1, cab: null, cabV: 0, ult: 0 };
+const cintura = () => ultLm && [0, 11, 12, 23, 24].every(i => (ultLm[i].visibility ?? 1) > .45);
+const MESA = () => { const yF = H * .3, yN = Math.min(H * .97, C.cadY + .4 * C.u); return { yF, yN, aF: W * .17, aN: W * .5, cx: W / 2 }; };
+const mesaEn = (s, xr) => { const k = MESA(), y = k.yF + (k.yN - k.yF) * s, a = k.aF + (k.aN - k.aF) * s; return { x: k.cx + xr * a, y, esc: .3 + .7 * s }; };
+function ppMarca() { $('ppMarca').textContent = `VOS ${PP.pts[0]} · ${PP.pts[1]} RIVAL`; }
+function paleta() {   // la paleta sigue la dirección del antebrazo, apenas más allá de la mano
+  const k = PP.mano, mu = P['mu' + k], ma = P['ma' + k], co = P['co' + k];
+  let dx = ma.x - mu.x, dy = ma.y - mu.y, l = Math.hypot(dx, dy);
+  if (l < .05 * C.u) { dx = mu.x - co.x; dy = mu.y - co.y; l = Math.hypot(dx, dy) || 1; }
+  dx /= l; dy /= l;
+  return { mx: mu.x, my: mu.y, hx: mu.x + dx * .4 * C.u, hy: mu.y + dy * .4 * C.u, dx, dy };
+}
+function ppDestino() { const lado = Math.random() < .5 ? -1 : 1, off = (.4 + Math.random() * (.5 + PP.dif * .05)) * lado; return (C.ox + off * C.u - W / 2) / MESA().aN; }
+function ppSaque() {
+  if (!PP.activo) return;
+  PP.bola = { fase: 'viene', t0: performance.now(), dur: Math.max(.95, 1.6 - PP.dif * .1) * 1000, x0: PP.rival.x, x1: ppDestino(), alto: .4 + Math.random() * .7, boto: false };
+  PP.rival.golpeT = performance.now(); sonar('pelota', .5);
+}
+function ppPunto(q, txt) {
+  PP.pts[q]++; PP.rallyMax = Math.max(PP.rallyMax, PP.rally); PP.rally = 0; PP.bola = null; ppMarca();
+  if (q === 0) sonar('aplauso', .5); else sonar('falla', .4);
+  const [a, b] = PP.pts;
+  if ((a >= 11 || b >= 11) && Math.abs(a - b) >= 2) { setTimeout(ppFin, 1200); aviso(a > b ? '¡GANASTE!' : 'GANÓ EL RIVAL', 1200); return; }
+  aviso(q === 0 ? `¡PUNTO!<small>${txt || ''}</small>` : `PUNTO DEL RIVAL<small>${txt || ''}</small>`, 1000);
+  setTimeout(ppSaque, 1600);
+}
+function ppActualizar() {
+  if (!PP.activo) return;
+  const ya = performance.now(), dt = Math.min(.1, Math.max(.001, (ya - (PP.ult || ya)) / 1000)); PP.ult = ya;
+  if (!PP.listo || !P.cad) return;
+  PP.kcal += 5 * 70 / 3600 * dt;
+  const r = paleta();
+  if (PP.cab) { PP.cabV = PP.cabV * .4 + Math.hypot(r.hx - PP.cab.x, r.hy - PP.cab.y) / C.u / dt * .6; PP.cabVx = (PP.cabVx || 0) * .4 + (r.hx - PP.cab.x) / C.u / dt * .6; }
+  PP.cab = { x: r.hx, y: r.hy };
+  PP.rival.x += Math.max(-1, Math.min(1, (PP.rival.obj - PP.rival.x) * 6)) * dt * (1.2 + PP.dif * .15);
+  const b = PP.bola; if (!b) return;
+  const s = (ya - b.t0) / b.dur;
+  if (b.fase === 'viene') {
+    if (!b.boto && s > .72) { b.boto = true; sonar('bote', .5, 0, 1.4); }
+    const pos = ppBolaEn(b, s);
+    if (s > .85 && s < 1.18 && PP.cabV > 2 && Math.hypot(r.hx - pos.x, r.hy - pos.y) < .45 * C.u) {   // ¡golpe!
+      PP.golpes++; PP.rally++; sonar('pelota', 1, 0, 1.3);
+      const dir = Math.max(-1, Math.min(1, (PP.cabVx || 0) / 5 + (Math.random() - .5) * .3)), fuerza = Math.min(1, (PP.cabV - 2) / 6);
+      PP.bola = { fase: 'va', t0: ya, dur: (1.3 - fuerza * .5) * 1000, hx: pos.x, hy: pos.y, x1: Math.max(-.95, Math.min(.95, dir * .9)), alto: .35 + fuerza * .2, boto: false, fuerza, perfecto: Math.abs(s - 1) < .07 };
+      PP.rival.obj = PP.bola.x1; PP.bola.afuera = Math.abs(dir) > .92 && Math.random() < .2;
+    } else if (s > 1.25) ppPunto(1, '¡NO LLEGASTE!');
+  } else {
+    if (!b.boto && s > .55) { b.boto = true; sonar('bote', .35, 0, 1.4); }
+    if (s >= 1) {
+      if (b.afuera) return ppPunto(1, '¡AFUERA!');
+      const alcance = .32 - PP.dif * .015 - (b.perfecto ? .08 : 0) - b.fuerza * .06;
+      if (Math.abs(PP.rival.x - b.x1) < Math.max(.14, alcance) && Math.random() > .06) {
+        sonar('pelota', .55, 0, 1.3); PP.dif = Math.min(6, PP.dif + .15); PP.rival.golpeT = ya;
+        PP.bola = { fase: 'viene', t0: ya, dur: Math.max(.85, 1.5 - PP.dif * .1) * 1000, x0: PP.rival.x, x1: ppDestino(), alto: .3 + Math.random() * .8, boto: false };
+      } else ppPunto(0, b.perfecto ? '¡IMPARABLE!' : '¡EL RIVAL NO LLEGÓ!');
+    }
+  }
+}
+function ppBolaEn(b, s) {   // viene en arco, pica en tu lado de la mesa y sube hasta la altura del golpe
+  if (b.fase === 'viene') {
+    const sp = Math.min(1.25, s), g = mesaEn(Math.min(1, sp), b.x0 + (b.x1 - b.x0) * Math.min(1, sp)), hFin = .2 + b.alto;
+    let h; if (sp < .72) { const k = sp / .72; h = .5 * (1 - k) + .7 * Math.sin(Math.PI * k); } else { const k = Math.min(1, (sp - .72) / .28); h = hFin * Math.sin(k * Math.PI / 2); }
+    const py = sp <= 1 ? g.y - h * C.u * g.esc : g.y - hFin * C.u + (sp - 1) * 3 * C.u;
+    return { x: g.x + (sp > 1 ? (sp - 1) * (b.x1 > 0 ? 1 : -1) * C.u : 0), y: py, r: (.03 + .07 * Math.min(1, sp)) * C.u, sx: g.x, sy: g.y };
+  }
+  const k = Math.min(1, s), g = mesaEn(1 - k, b.x1 * k), x = b.hx + (g.x - b.hx) * k, base = b.hy + (g.y - b.hy) * k;
+  return { x, y: base - Math.sin(Math.PI * k) * (b.alto + .4) * C.u * (1 - k * .5), r: (.1 - .07 * k) * C.u, sx: g.x, sy: g.y };
+}
+function ppPaletaDibujo(x, y, ang, e, col) {   // paleta de ping pong: goma de color y mango de madera
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.lineWidth = Math.max(3, e * .08); ctx.strokeStyle = '#2a2238';
+  ctx.fillStyle = '#c98b4a'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-e * .16, e * .6, e * .32, e * .85, e * .1) : ctx.rect(-e * .16, e * .6, e * .32, e * .85); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(0, 0, e * .75, e * .8, 0, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(-e * .2, -e * .25, e * .26, e * .14, -.6, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fill();
+  ctx.restore();
+}
+function ppDibujar() {
+  if (!PP.activo || !PP.listo || !P.cad) return;
+  const k = MESA(), u = C.u;
+  // mesa azul con líneas blancas y la red en el medio
+  ctx.save(); ctx.globalAlpha = .75;
+  ctx.beginPath(); ctx.moveTo(k.cx - k.aF, k.yF); ctx.lineTo(k.cx + k.aF, k.yF); ctx.lineTo(k.cx + k.aN, k.yN); ctx.lineTo(k.cx - k.aN, k.yN); ctx.closePath();
+  ctx.fillStyle = 'rgba(40,96,190,.55)'; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = '#fff8ec'; ctx.stroke();
+  ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(k.cx, k.yF); ctx.lineTo(k.cx, k.yN); ctx.stroke();
+  const red = mesaEn(.5, 0), an = k.aF + (k.aN - k.aF) * .5, hr = .18 * u * red.esc;
+  ctx.globalAlpha = .9; ctx.fillStyle = 'rgba(42,34,56,.6)'; ctx.fillRect(k.cx - an - 6, red.y - hr, an * 2 + 12, hr); ctx.fillStyle = '#fff8ec'; ctx.fillRect(k.cx - an - 6, red.y - hr - 3, an * 2 + 12, 4);
+  ctx.restore();
+  // rival: una paleta flotando del otro lado
+  const rv = mesaEn(0, PP.rival.x), e = Math.max(14, .22 * u * .55), dg = performance.now() - (PP.rival.golpeT || -9999);
+  const angR = dg < 300 ? (1 - dg / 300) * 1.1 - .4 : Math.sin(performance.now() / 500) * .15;
+  ppPaletaDibujo(rv.x, rv.y - e * 1.4 + Math.sin(performance.now() / 330) * 3, angR, e, '#4f8fff');
+  // pelota y sombra
+  const b = PP.bola;
+  if (b) {
+    const s = (performance.now() - b.t0) / b.dur, pos = ppBolaEn(b, s);
+    if (b.fase === 'viene' && s > .45 && s < 1.05) { const fin = ppBolaEn(b, 1); ctx.save(); ctx.globalAlpha = Math.min(1, (s - .45) * 3) * .8; ctx.setLineDash([8, 7]); ctx.lineWidth = 4; ctx.strokeStyle = '#ffd23f'; ctx.beginPath(); ctx.arc(fin.x, fin.y, .38 * u, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+    if (s <= 1) { ctx.save(); ctx.globalAlpha = .35; ctx.fillStyle = '#2a2238'; ctx.beginPath(); ctx.ellipse(pos.sx, pos.sy, pos.r * 1.2, pos.r * .45, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, Math.max(4, pos.r), 0, Math.PI * 2); ctx.fillStyle = '#fff8ec'; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#2a2238'; ctx.stroke();
+  }
+  // tu paleta, en la mano
+  const r = paleta();
+  ppPaletaDibujo(r.hx, r.hy, Math.atan2(r.dx, -r.dy), .3 * u, '#ff4d6d');
+}
+function arrancarPP() {
+  document.body.classList.remove('tenis'); document.body.classList.add('pp'); video.style.opacity = '';
+  $('fin').hidden = true; $('inicio').hidden = true; objs = []; textos = [];
+  Object.assign(PP, { activo: true, listo: false, mano: leerMano(), pts: [0, 0], golpes: 0, rally: 0, rallyMax: 0, kcal: 0, bola: null, rival: { x: 0, obj: 0, golpeT: 0 }, dif: 1, cab: null, ult: 0 });
+  C.listo = false; C.muestras = []; ppMarca();
+  const espera = () => { if (!PP.activo) return;
+    if (cintura() && calibrar()) { C.listo = PP.listo = true; aviso('¡A JUGAR!<small>a 11 puntos</small>', 1800); decir('¡a jugar! a once puntos'); setTimeout(ppSaque, 2000); }
+    else { aviso(cintura() ? 'QUEDATE QUIETO<small>midiendo tu cuerpo…</small>' : 'ALEJATE UN POCO<small>que se te vea hasta la cintura</small>', 0); if (!cintura()) decirCada('alejate un poco, que se te vea hasta la cintura', 6000); setTimeout(espera, 100); } };
+  espera();
+}
+function ppFin() {
+  PP.activo = false; aviso('', 0); sonar('campana', .8); const gane = PP.pts[0] > PP.pts[1]; if (gane) sonar('aplauso', .8);
+  document.querySelector('#fin h1').innerHTML = gane ? '¡GANASTE<span>EL PARTIDO!</span>' : 'PERDISTE<span>¡LA REVANCHA!</span>';
+  document.querySelector('#fin .stats').innerHTML = `<div><b>${PP.pts[0]} - ${PP.pts[1]}</b><small>PUNTOS</small></div><div><b>${PP.golpes}</b><small>GOLPES</small></div><div><b>${Math.max(PP.rallyMax, PP.rally)}</b><small>RALLY MÁS LARGO</small></div><div><b>${Math.round(PP.kcal)}</b><small>KCAL (APROX.)</small></div>`;
+  $('fSem').parentElement.style.display = 'none';
+  setTimeout(() => { $('fin').hidden = false; document.body.classList.remove('pp'); }, 700);
+}
+$('ppSalir').addEventListener('click', () => { if (PP.activo) ppFin(); });
 
 // ───────── ARRANQUE ─────────
 async function empezar(modo, plan, btn) {
@@ -872,22 +1031,23 @@ async function empezar(modo, plan, btn) {
       bucle();
     }
     btn.textContent = txt;
-    MODO = modo; if (modo === 'tenis') arrancarTenis(); else arrancarRutina(plan);
+    MODO = modo; if (modo === 'tenis') arrancarTenis(); else if (modo === 'pingpong') arrancarPP(); else arrancarRutina(plan);
   } catch (e) {
     btn.textContent = txt;
     $('error').textContent = /Permission|NotAllowed/i.test(e && (e.name + e.message)) ? 'Hay que dar permiso a la cámara.' : 'No se pudo arrancar: ' + (e && e.message || e);
   }
 }
 $('btnEmpezar').addEventListener('click', e => empezar('rutina', { dia: diaSel }, e.currentTarget));
-document.addEventListener('click', e => { const b = e.target.closest('[data-jugar]'); if (!b) return; const id = b.dataset.jugar; empezar(id === 'tenis' ? 'tenis' : 'rutina', { solo: id }, b); });
-$('btnOtra').addEventListener('click', () => MODO === 'tenis' ? arrancarTenis() : arrancarRutina(R.plan));
-$('btnMenu').addEventListener('click', () => { $('fin').hidden = true; $('inicio').hidden = false; document.body.classList.remove('tenis'); pintarDias(); });
+document.addEventListener('click', e => { const b = e.target.closest('[data-jugar]'); if (!b) return; const id = b.dataset.jugar; empezar(id === 'tenis' || id === 'pingpong' ? id : 'rutina', { solo: id }, b); });
+$('btnOtra').addEventListener('click', () => MODO === 'tenis' ? arrancarTenis() : MODO === 'pingpong' ? arrancarPP() : arrancarRutina(R.plan));
+$('btnMenu').addEventListener('click', () => { $('fin').hidden = true; $('inicio').hidden = false; document.body.classList.remove('tenis', 'pp'); pintarDias(); });
 
 let ultT = 0;
 function bucle() {
   const t = performance.now();
   if (video.readyState >= 2 && t - ultT > 5) { ultT = t; const r = pose.detectForVideo(video, t), lm = r.landmarks && r.landmarks[0]; if (lm) leerCuerpo(lm); }
   if (MODO === 'tenis') { if (!TN.enPausa) tenisActualizar(); dibujar(); tenisDibujar(); }
+  else if (MODO === 'pingpong') { ppActualizar(); dibujar(); ppDibujar(); }
   else { if (!R.enPausa) actualizar(); dibujar(); }
   requestAnimationFrame(bucle);
 }
@@ -900,7 +1060,7 @@ function dibujar() {
   ctx.clearRect(0, 0, W, H);
   const now = performance.now();
   const Tv = R.activo && R.lista[R.i];
-  if (ultLm && P.cad && MODO !== 'tenis' && !(Tv && (Tv.vista === 'cara' || R.vista === 'cara'))) {
+  if (ultLm && P.cad && MODO === 'rutina' && !(Tv && (Tv.vista === 'cara' || R.vista === 'cara'))) {
     ctx.lineCap = 'round'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(255,248,236,.6)';
     const q = ultLm.map(aPantalla);
     for (const [a, b] of HUESOS) { ctx.beginPath(); ctx.moveTo(q[a].x, q[a].y); ctx.lineTo(q[b].x, q[b].y); ctx.stroke(); }
@@ -927,6 +1087,10 @@ function dibujar() {
       texto(est.fase === 'abajo' ? '¡ARRIBA!' : 'BAJÁ', x + 11, y - 10, 20);
     }
     if (T.id === 'frutas') dibujarFrutas(now);
+    if (T.id === 'tijera' && est.bolas) for (const b of est.bolas) if (b.vivo) { const bx = C.ox + b.x, by = b.y(), r = .2 * u * (1 + Math.sin(now / 160 + b.x) * .06), ap = Math.min(1, (now - b.t0) / 250);
+      ctx.save(); ctx.globalAlpha = ap; ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI * 2); ctx.fillStyle = b.col; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = '#2a2238'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(bx - r * .3, by - r * .3, r * .25, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.fill(); ctx.restore(); }
+    if (T.id === 'tijera' && !est.bolas && est.esperaCerrar) texto('¡CERRÁ!', W / 2, H * .5, 40);
     if (T.id === 'luces') dibujarPiso(ta);
     if (T.id === 'cruzadas') for (const k of ['I', 'D']) { const r = P['ro' + k]; ctx.beginPath(); ctx.arc(r.x, r.y, .16 * u, 0, Math.PI * 2); ctx.lineWidth = 5; ctx.strokeStyle = est['arr' + k] ? '#3ec8a0' : '#ffd23f'; ctx.stroke(); }
     if (T.id === 'circulos') for (const k of ['I', 'D']) { const h = P['h' + k], a = est['acc' + k] || 0; ctx.beginPath(); ctx.arc(h.x, h.y, .75 * u, -Math.PI / 2, -Math.PI / 2 + Math.max(-6.28, Math.min(6.28, a)), a < 0); ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.strokeStyle = '#ffd23f'; ctx.stroke(); }
@@ -953,6 +1117,11 @@ function dibujar() {
           ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fillStyle = '#ff4d6d'; ctx.fill(); ctx.lineWidth = 5; ctx.strokeStyle = '#2a2238'; ctx.stroke();
           ctx.beginPath(); ctx.arc(px, py, r * .5, 0, Math.PI * 2); ctx.fillStyle = '#fff8ec'; ctx.fill(); ctx.lineWidth = 3; ctx.stroke(); }
         else if (o.estado === 'ok') estrella(px, py, r * (1.1 + k * .8), '#ffd23f');
+      } else if (o.tipo === 'blanco') {   // círculo para la patada
+        const px = C.ox + o.dx * u, py = C.toY - o.alto * u, r = o.r * u;
+        if (o.estado === 'vivo') { const prog = Math.min(1, Math.max(0, (ta - o.tAp) / (o.tGolpe - o.tAp)));
+          ctx.beginPath(); ctx.arc(px, py, r * (1.2 + (1 - prog) * 1.8), 0, Math.PI * 2); ctx.lineWidth = 4; ctx.strokeStyle = prog > .86 ? '#3ec8a0' : '#fff8ec'; ctx.stroke();
+          for (const [f, c] of [[1, o.col], [.66, '#fff8ec'], [.33, o.col]]) { ctx.beginPath(); ctx.arc(px, py, r * f, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.stroke(); } }
       } else if (o.tipo === 'caja') {   // caja de madera a la altura de la cadera
         const px = C.ox + o.x * u, py = C.cadY + o.y * u, r = o.r * u;
         if (o.estado === 'vivo') { const prog = Math.min(1, Math.max(0, (ta - o.tAp) / (o.tGolpe - o.tAp)));
@@ -979,6 +1148,8 @@ function dibujar() {
     if (T.id === 'baile' || T.id === 'agarrar') for (const k of ['I', 'D']) { const m = P['ma' + k]; ctx.beginPath(); ctx.arc(m.x, m.y, .1 * u, 0, Math.PI * 2); ctx.fillStyle = '#fff8ec'; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.stroke(); }
     if (T.id === 'boxeo') for (const k of ['I', 'D']) { const m = P['ma' + k]; ctx.beginPath(); ctx.arc(m.x, m.y, .15 * u, 0, Math.PI * 2); ctx.fillStyle = k === 'I' ? '#4f8fff' : '#ff4d6d'; ctx.fill(); ctx.lineWidth = 4; ctx.strokeStyle = '#2a2238'; ctx.stroke(); }
   }
+  chispas = chispas.filter(c => now - c.t < 550);
+  for (const c of chispas) { const k = (now - c.t) / 550, kk = k * (2 - k); ctx.save(); ctx.globalAlpha = 1 - k; ctx.beginPath(); ctx.arc(c.x + c.vx * kk * .5, c.y + c.vy * kk * .5 + k * k * 60, c.r * (1 - k * .5), 0, Math.PI * 2); ctx.fillStyle = c.col; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#2a2238'; ctx.stroke(); ctx.restore(); }
   textos = textos.filter(x => now - x.t < 700);
   for (const x of textos) { const k = (now - x.t) / 700; ctx.save(); ctx.globalAlpha = 1 - k * k; texto(x.txt, x.x, x.y - k * 40, Math.round(40 * x.tam * (1 + k * .3)), x.col); ctx.restore(); }
 }
@@ -1026,7 +1197,7 @@ function dibujarPiso(ta) {   // piso con 3 carriles en perspectiva; las luces vi
   }
   texto(`COMBO ${est.combo || 0}`, W / 2, H * .44, 22, '#ffd23f');
 }
-window.__t = { DIAS, leerDias, pintarDias, ritmo, TN, bolaEn, raqueta, R, C, P, est: () => est, objs: () => objs, ta: () => ac.currentTime, LOGICA, TRAMOS, lm: l => leerCuerpo(l), parar: () => { video.pause(); video.srcObject = null; } };
+window.__t = { PP, ppBolaEn, paleta, DIAS, leerDias, pintarDias, ritmo, TN, bolaEn, raqueta, R, C, P, est: () => est, objs: () => objs, ta: () => ac.currentTime, LOGICA, TRAMOS, lm: l => leerCuerpo(l), parar: () => { video.pause(); video.srcObject = null; } };
 </script>
 </body>
 </html>
