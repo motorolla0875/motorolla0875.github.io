@@ -386,6 +386,7 @@ const cuerpoMedio = () => ultLm && [0, 11, 12, 13, 14].every(i => (ultLm[i].visi
 // ── perspectiva real: la pelota sale chiquita desde el fondo (14 m) y viene hacia vos (1 m).
 // Avanza a velocidad pareja en el mundo, así en la pantalla se ve lenta al principio y rápida al final, como en la realidad.
 const Z0 = 14;
+const aroR = () => Math.max(55, .5 * C.u);   // el aro donde le pegás
 const HOR = () => H * .22;                        // línea del horizonte (fondo de la cancha del rival)
 const prof = p => { const z = Z0 + (1 - Z0) * p; return { z, w: (1 / z - 1 / Z0) / (1 - 1 / Z0) }; };   // p: 0 = rival, 1 = vos
 const altoMundo = () => 1.25 * Math.max(40, C.hombroAncho);   // píxeles que mide 1 metro a 1 m de distancia (aprox.)
@@ -446,8 +447,9 @@ function tenisActualizar() {
       const vx = TN.cabVx || 0, vy = TN.cabVy || 0;
       const dir = Math.max(-1, Math.min(1, vx / 5 + (Math.random() - .5) * .2));
       // fuerza continua según qué tan rápido movés la mano: despacio = pelota lenta y alta; rápido = pelota rápida y tensa
-      const fuerza = Math.min(1, Math.max(0, (TN.pico - 1.3) / 9)), perfecto = Math.abs(s - 1) < .05;
-      sonar('pelota', .35 + fuerza * .65, 0, .85 + fuerza * .45); try { navigator.vibrate && navigator.vibrate(Math.round(12 + fuerza * 50)); } catch (e) {}
+      const fuerza = Math.min(1, Math.max(0, (TN.pico - 1.3) / 9)), perfecto = Math.hypot(pos.x - b.x1, pos.y - b.y1) + pos.r <= aroR() * 1.06;
+      if (perfecto) { sonar('punto', .6); TN.flashPerfecto = ya; TN.flashPos = { x: b.x1, y: b.y1 }; }
+      sonar('pelota', .35 + fuerza * .65, 0, .85 + fuerza * .45);
       TN.sacudon = { t: ya, f: fuerza };
 
       const efecto = vy < -1.6 && -vy > Math.abs(vx) * .45 ? 'top' : vy > 1.6 && vy > Math.abs(vx) * .45 ? 'slice' : 'plano';
@@ -473,7 +475,7 @@ function tenisActualizar() {
 }
 // posición de la pelota en la pantalla (con perspectiva) y su sombra en el piso
 function bolaEn(b, s) {
-  const yH = HOR(), m = altoMundo(), r1 = Math.max(30, .2 * C.u);
+  const yH = HOR(), m = altoMundo(), r1 = aroR() * .9;   // al llegar, la pelota llena casi todo el aro
   if (b.fase === 'viene') {
     const p = Math.min(1.2, s), { z, w } = prof(Math.min(1, p));
     const x = b.x0 + (b.x1 - b.x0) * w, yLinea = yH + (b.y1 - yH) * w;
@@ -560,8 +562,7 @@ function dibujarMascara() {
 function tenisDibujar() {
   if (!TN.activo || !TN.listo || !P.hom) return;
   const u = C.u, yH = HOR(), cx = W / 2;
-  const sh = TN.sacudon && performance.now() - TN.sacudon.t < 160 ? TN.sacudon.f * 9 * (1 - (performance.now() - TN.sacudon.t) / 160) : 0;
-  ctx.save(); if (sh) ctx.translate((Math.random() - .5) * sh, (Math.random() - .5) * sh);
+  ctx.save();
   // cancha en perspectiva desde el horizonte hasta abajo de la pantalla
   ctx.save(); ctx.globalAlpha = .5; ctx.strokeStyle = '#fff8ec'; ctx.lineWidth = 4;
   const fondo = W * .3, frente = W * 1.7;
@@ -578,7 +579,7 @@ function tenisDibujar() {
     const s = (performance.now() - b.t0) / b.dur, pos = bolaEn(b, s);
     // aro que se cierra justo cuando la pelota llega: ahí le pegás
     if (b.fase === 'viene' && s > .35 && s < 1.08) {
-      const q = Math.min(1, Math.max(0, (s - .35) / .65)), R0 = Math.max(55, .5 * C.u), rr = R0 * (1 + (1 - q) * 2.2);
+      const q = Math.min(1, Math.max(0, (s - .35) / .65)), R0 = aroR(), rr = R0 * (1 + (1 - q) * 2.2);
       ctx.save(); ctx.globalAlpha = .9; ctx.lineWidth = 7; ctx.strokeStyle = s > .9 ? '#3ec8a0' : '#ffd23f';
       ctx.beginPath(); ctx.arc(b.x1, b.y1, rr, 0, Math.PI * 2); ctx.stroke();
       ctx.setLineDash([10, 8]); ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(b.x1, b.y1, R0, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
@@ -598,7 +599,10 @@ function tenisDibujar() {
       ctx.save(); ctx.globalAlpha = .5; ctx.strokeStyle = col; ctx.lineWidth = Math.max(2, pos.r / 3); ctx.beginPath(); ctx.arc(pos.x, pos.y, pos.r * 1.5, b.efecto === 'top' ? -2.6 : .5, b.efecto === 'top' ? -.5 : 2.6); ctx.stroke(); ctx.restore();
     }
   }
-  dibujarMascara();
+
+  // tiro perfecto: el aro destella en verde (sin textos)
+  const fp = performance.now() - (TN.flashPerfecto || -9999);
+  if (fp < 380 && TN.flashPos) { const k = fp / 380; ctx.save(); ctx.globalAlpha = 1 - k; ctx.strokeStyle = '#3ec8a0'; ctx.lineWidth = 10 * (1 - k) + 3; ctx.beginPath(); ctx.arc(TN.flashPos.x, TN.flashPos.y, aroR() * (1 + k * .8), 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
   ctx.restore();
 }
 function arrancarTenis() {
