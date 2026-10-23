@@ -430,7 +430,7 @@ function tenisActualizar() {
   TN.seg += dt; TN.kcal += 6 * 70 / 3600 * dt; $('kcal').textContent = Math.round(TN.kcal);
   const r = raqueta();
   if (TN.cab) { const v = Math.hypot(r.hx - TN.cab.x, r.hy - TN.cab.y) / C.u / Math.max(dt, .001); TN.cabV = TN.cabV * .4 + v * .6; TN.cabVx = (TN.cabVx || 0) * .4 + (r.hx - TN.cab.x) / C.u / Math.max(dt, .001) * .6; TN.cabVy = (TN.cabVy || 0) * .4 + (r.hy - TN.cab.y) / C.u / Math.max(dt, .001) * .6; }
-  TN.cab = { x: r.hx, y: r.hy };
+  TN.cabAnt = TN.cab; TN.cab = { x: r.hx, y: r.hy };
   TN.hist = (TN.hist || []).filter(h => ya - h.t < 160); TN.hist.push({ t: ya, v: TN.cabV || 0 }); TN.pico = Math.max(...TN.hist.map(h => h.v));
   TN.rival.x += Math.max(-1, Math.min(1, (TN.rival.obj - TN.rival.x) * 6)) * dt * (1.1 + TN.dif * .15);   // el rival corre a la pelota
   const b = TN.bola; if (!b) return;
@@ -438,8 +438,11 @@ function tenisActualizar() {
   if (b.fase === 'viene') {
     if (!b.boto && s > .7) { b.boto = true; sonar('bote', .6); }
     if (!b.avisado && s > .86) { b.avisado = true; sonar('tic', .5); }
-    const pos = bolaEn(b, s), radio = Math.max(80, .7 * C.u);
-    if (s > .86 && s < 1.14 && TN.pico > 1.3 && Math.hypot(r.hx - pos.x, r.hy - pos.y) < radio) {   // ¡golpe!
+    // más margen: ventana de tiempo más larga, zona más grande y cuenta todo el recorrido de la mano en ese cuadro
+    const pos = bolaEn(b, s), radio = Math.max(120, 1.1 * C.u);
+    const A = TN.cabAnt || TN.cab, Bm = TN.cab, dx = Bm.x - A.x, dy = Bm.y - A.y, l2 = dx * dx + dy * dy || 1;
+    const tt = Math.max(0, Math.min(1, ((pos.x - A.x) * dx + (pos.y - A.y) * dy) / l2)), distMano = Math.hypot(A.x + dx * tt - pos.x, A.y + dy * tt - pos.y);
+    if (s > .72 && s < 1.3 && TN.pico > .9 && distMano < radio) {   // ¡golpe!
       TN.golpes++; TN.rally++;
       // cómo moviste la mano decide el golpe:
       //  rápido = fuerte (la pelota va más rápido) · de costado = dirección · de abajo hacia arriba = TOP SPIN (sube y cae picando fuerte)
@@ -460,7 +463,7 @@ function tenisActualizar() {
       // riesgo de que se vaya afuera: el plano fuerte y cruzado es el más riesgoso, el top spin es el más seguro
       const riesgo = efecto === 'plano' ? (fuerza > .7 ? .18 : .04) + (Math.abs(dir) > .8 ? .15 : 0) : efecto === 'top' ? .03 + (Math.abs(dir) > .85 ? .05 : 0) : .06;
       TN.bola.afuera = Math.random() < riesgo;
-    } else if (s > 1.2) puntoPara(1, '¡NO LLEGASTE!');
+    } else if (s > 1.36) puntoPara(1, '¡NO LLEGASTE!');
   } else {
     if (!b.boto && s > .6) { b.boto = true; sonar('bote', .35); }
     if (s >= 1) {
