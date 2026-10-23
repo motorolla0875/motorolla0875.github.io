@@ -98,7 +98,15 @@
 
 <div class="capa" id="inicio">
   <div class="cartel">
-    <h1>RUTINA<span>EN CASA</span></h1>
+    <h1>RUTINA EN CASA<span>SIN EQUIPO</span></h1>
+    <a class="btn azul" href="./entrenar/" style="display:block;text-decoration:none;margin:10px 0 4px">ENTRENAMIENTO CON PLAN</a>
+    <div class="aviso-salud" style="margin-top:0">Plan por objetivo y nivel, ejercicios guiados e informe con gráficos</div>
+    <div class="otro" id="pruebaNivel" hidden style="border:0;margin-top:4px">
+      <div class="otro-tit">PRUEBA DE NIVEL</div>
+      <div class="aviso-salud" style="margin-top:2px;font-size:14px;opacity:1">Hacé todas las <b>sentadillas</b> que puedas en <b>1 minuto</b>. Teléfono parado a 2,5 metros, que se te vea entero.</div>
+      <div class="btn" id="btnPruebaNivel">EMPEZAR LA PRUEBA</div>
+      <a class="link-volver" href="./entrenar/" style="display:block;font-weight:800;color:var(--tinta);margin-top:8px">Volver a mi plan</a>
+    </div>
     <div class="sec-tit">TU RUTINA DIARIA · SEMANA 1</div>
     <div class="racha" id="racha"></div>
     <div class="dias" id="dias"></div>
@@ -150,6 +158,12 @@
 <script type="module">
 import { FilesetResolver, PoseLandmarker } from '../bateria/vision_bundle.mjs';
 const $ = id => document.getElementById(id);
+const PESO = (() => { try { return JSON.parse(localStorage.getItem('rcPerfil')).peso || 70; } catch (e) { return 70; } })();
+function anotar(nombre, seg, kcal) {   // lo que hacés acá también aparece en el informe del plan
+  if (seg < 20) return;
+  try { const h = JSON.parse(localStorage.getItem('rcHistorial') || '[]'); h.push({ t: new Date().toISOString(), fecha: new Date().toLocaleDateString('sv'), tipo: 'juego', nombre, seg: Math.round(seg), kcal: Math.round(kcal) }); localStorage.setItem('rcHistorial', JSON.stringify(h)); } catch (e) {}
+}
+const PRUEBA = new URLSearchParams(location.search).has('nivel');
 const video = $('video'), cv = $('lienzo'), ctx = cv.getContext('2d');
 let W = 0, H = 0;
 function medir() { const d = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
@@ -346,7 +360,7 @@ const LOGICA = {
     const c = rel.cad();
     if (est.fase === 'arriba' && c > .42) est.fase = 'abajo';
     else if (est.fase === 'abajo' && c < .15) { est.fase = 'arriba'; est.cont++; R.reps++; sonar('punto', .6); decir(String(est.cont)); sumar(120, est.cont >= T.meta ? '¡META!' : String(est.cont), W / 2, H * .3, est.cont >= T.meta ? '#3ec8a0' : '#ffd23f', 1.3); }
-    est.prof = c; $('cuenta').innerHTML = `<small>SENTADILLAS</small>${est.cont}/${T.meta}`;
+    est.prof = c; $('cuenta').innerHTML = `<small>SENTADILLAS</small>${est.cont}${T.meta < 999 ? '/' + T.meta : ''}`;
   },
   tijera(T, t) {   // 4 bolitas: arriba a los costados para las manos y abajo a los costados para los pies; explotan al tocarlas
     const u = C.u, ha = C.hombroAncho;
@@ -550,7 +564,7 @@ function actualizar() {
       const v = T.vista === 'cara' || T.vista === 'medio' ? T.vista : R.vista;
       if (vistaOk(v)) LOGICA[T.id](T, t); else if (!est.avisoCuerpo || t - est.avisoCuerpo > 4) { est.avisoCuerpo = t; aviso(v === 'cara' ? 'MIRÁ AL TELÉFONO<small>que se te vea la cara</small>' : v === 'medio' ? 'ALEJATE UN POCO<small>que se te vean la cabeza, los hombros y los brazos</small>' : 'ALEJATE UN POCO<small>se te tiene que ver entero</small>', 1400); }
     }
-    R.kcal += T.met * 70 / 3600 * DT;   // MET x kg x horas
+    R.kcal += T.met * PESO / 3600 * DT;   // MET x kg x horas
     R.activoSeg += DT;
     $('kcal').textContent = Math.round(R.kcal);
     const hecho = R.lista.slice(0, R.i).reduce((a, x) => a + x.seg, 0) + Math.min(t, T.seg);
@@ -569,6 +583,8 @@ function racha(d) { const f = new Set(d.fechas); let n = 0; const x = new Date()
 function terminar(cortado = false) {
   document.querySelector('#fin .stats').innerHTML = STATS_RUTINA; document.querySelector('#fin h1').innerHTML = H1_RUTINA; $('fSem').parentElement.style.display = '';
   ritmo.melodia = false;
+  anotar(R.dia ? `Rutina día ${R.dia}` : R.lista[0].nom, R.activoSeg, R.kcal);
+  if (R.prueba) { const reps = R.lista[0] ? (est.cont || 0) : 0; if (!cortado) { try { const a = JSON.parse(localStorage.getItem('rcPrueba') || '[]'); a.push({ fecha: new Date().toLocaleDateString('sv'), reps }); localStorage.setItem('rcPrueba', JSON.stringify(a)); } catch (e) {} } }
   if (R.dia && !cortado) { const d = leerDias(); if (!d.hechos[R.dia]) d.hechos[R.dia] = hoyStr(); if (!d.fechas.includes(hoyStr())) d.fechas.push(hoyStr()); guardarDias(d); }
   document.querySelector('#fin h1').innerHTML = R.dia ? (cortado ? `DÍA ${R.dia}<span>A MEDIAS</span>` : `¡DÍA ${R.dia}<span>COMPLETO!</span>`) : R.solo ? `${R.lista[0].nom}<span>${cortado ? 'TERMINADO' : '¡BIEN HECHO!'}</span>` : H1_RUTINA;
   R.activo = false; $('barraTot').style.display = 'none'; aviso('', 0);
@@ -580,6 +596,8 @@ function terminar(cortado = false) {
   sem.min += R.activoSeg / 60; try { localStorage.setItem('rutinaSemana', JSON.stringify(sem)); } catch (e) {}
   $('fMin').textContent = min; $('fKcal').textContent = Math.round(R.kcal); $('fReps').textContent = R.reps; $('fPuntos').textContent = R.puntos.toLocaleString('es-AR');
   $('fSem').textContent = Math.round(sem.min); $('fSemB').style.width = Math.min(100, sem.min / 150 * 100) + '%';
+  if (R.prueba && !cortado) { document.querySelector('#fin h1').innerHTML = `${est.cont || 0} SENTADILLAS<span>EN 1 MINUTO</span>`; $('btnOtra').textContent = 'VOLVER A MI PLAN'; }
+  else $('btnOtra').textContent = 'OTRA VEZ';
   sonar('campana', .8); setTimeout(() => $('fin').hidden = false, 700);
 }
 // pantalla de inicio: los 7 días de la semana 1, los juegos y la zona de pruebas
@@ -603,8 +621,8 @@ pintarDias();
 function arrancarRutina(plan) {   // plan: { dia } para un día de la semana, o { solo: id } para un juego o una prueba
   R.plan = plan; document.body.classList.remove('tenis', 'pp'); video.style.opacity = ''; $('reloj').textContent = '0:00';
   $('fin').hidden = true; $('inicio').hidden = true; $('barraTot').style.display = 'block';
-  R.sinSaltos = leerImp() === '0'; R.dia = plan.dia || 0; R.solo = !!plan.solo;
-  R.lista = plan.dia ? DIAS[plan.dia - 1].l.map(([id, seg, meta]) => ({ ...TR[id], seg, meta: meta || TR[id].meta || 0 })) : [{ ...TR[plan.solo] }];
+  R.sinSaltos = leerImp() === '0'; R.dia = plan.dia || 0; R.solo = !!plan.solo; R.prueba = !!plan.prueba;
+  R.lista = plan.dia ? DIAS[plan.dia - 1].l.map(([id, seg, meta]) => ({ ...TR[id], seg, meta: meta || TR[id].meta || 0 })) : plan.prueba ? [{ ...TR.sentadillas, nom: 'PRUEBA', ins: 'Todas las sentadillas que puedas en 1 minuto', seg: 60, meta: 999 }] : [{ ...TR[plan.solo] }];
   R.vista = R.solo ? (R.lista[0].vista || 'entero') : 'entero';
   Object.assign(R, { activo: true, pausa: true, i: -1, puntos: 0, reps: 0, kcal: 0, activoSeg: 0 });
   C.listo = false; C.muestras = []; objs = []; textos = [];
@@ -681,7 +699,7 @@ function tenisActualizar() {
   if (!TN.activo) return;
   const ya = performance.now(), dt = Math.min(.1, Math.max(.001, (ya - (TN.ult || ya)) / 1000)); TN.ult = ya;
   if (!TN.listo || !ultLm) return;
-  TN.seg += dt; TN.kcal += 5 * 70 / 3600 * dt;
+  TN.seg += dt; TN.kcal += 5 * PESO / 3600 * dt;
   // seguimos las dos manos (la punta de la mano): le podés pegar con cualquiera
   TN.mh = TN.mh || {};
   for (const k of ['I', 'D']) {
@@ -886,7 +904,7 @@ function arrancarTenis() {
   espera();
 }
 function finTenis() {
-  TN.activo = false; aviso('', 0); sonar('campana', .8); if (TN.juegos[0] > TN.juegos[1]) sonar('aplauso', .8);
+  TN.activo = false; anotar('Tenis', TN.seg, TN.kcal); aviso('', 0); sonar('campana', .8); if (TN.juegos[0] > TN.juegos[1]) sonar('aplauso', .8);
   document.querySelector('#fin h1').innerHTML = TN.juegos[0] > TN.juegos[1] ? '¡GANASTE<span>EL PARTIDO!</span>' : 'PERDISTE<span>¡LA REVANCHA!</span>';
   document.querySelector('#fin .stats').innerHTML = `<div><b>${TN.juegos[0]} - ${TN.juegos[1]}</b><small>GAMES</small></div><div><b>${TN.golpes}</b><small>GOLPES</small></div><div><b>${Math.max(TN.rallyMax, TN.rally)}</b><small>RALLY MÁS LARGO</small></div><div><b>${Math.round(TN.kcal)}</b><small>KCAL (APROX.)</small></div>`;
   $('fSem').parentElement.style.display = 'none';
@@ -924,7 +942,7 @@ function ppActualizar() {
   if (!PP.activo) return;
   const ya = performance.now(), dt = Math.min(.1, Math.max(.001, (ya - (PP.ult || ya)) / 1000)); PP.ult = ya;
   if (!PP.listo || !P.cad) return;
-  PP.kcal += 5 * 70 / 3600 * dt;
+  PP.kcal += 5 * PESO / 3600 * dt;
   const r = paleta();
   if (PP.cab) { PP.cabV = PP.cabV * .4 + Math.hypot(r.hx - PP.cab.x, r.hy - PP.cab.y) / C.u / dt * .6; PP.cabVx = (PP.cabVx || 0) * .4 + (r.hx - PP.cab.x) / C.u / dt * .6; }
   PP.cab = { x: r.hx, y: r.hy };
@@ -1007,7 +1025,7 @@ function arrancarPP() {
   espera();
 }
 function ppFin() {
-  PP.activo = false; aviso('', 0); sonar('campana', .8); const gane = PP.pts[0] > PP.pts[1]; if (gane) sonar('aplauso', .8);
+  PP.activo = false; anotar('Ping pong', PP.kcal / (5 * PESO / 3600), PP.kcal); aviso('', 0); sonar('campana', .8); const gane = PP.pts[0] > PP.pts[1]; if (gane) sonar('aplauso', .8);
   document.querySelector('#fin h1').innerHTML = gane ? '¡GANASTE<span>EL PARTIDO!</span>' : 'PERDISTE<span>¡LA REVANCHA!</span>';
   document.querySelector('#fin .stats').innerHTML = `<div><b>${PP.pts[0]} - ${PP.pts[1]}</b><small>PUNTOS</small></div><div><b>${PP.golpes}</b><small>GOLPES</small></div><div><b>${Math.max(PP.rallyMax, PP.rally)}</b><small>RALLY MÁS LARGO</small></div><div><b>${Math.round(PP.kcal)}</b><small>KCAL (APROX.)</small></div>`;
   $('fSem').parentElement.style.display = 'none';
@@ -1038,8 +1056,10 @@ async function empezar(modo, plan, btn) {
   }
 }
 $('btnEmpezar').addEventListener('click', e => empezar('rutina', { dia: diaSel }, e.currentTarget));
+$('btnPruebaNivel').addEventListener('click', e => empezar('rutina', { prueba: true }, e.currentTarget));
+if (PRUEBA) { $('pruebaNivel').hidden = false; for (const el of [...document.querySelectorAll('#inicio .cartel > *')]) if (!['H1', 'pruebaNivel', 'error'].includes(el.id || el.tagName)) el.style.display = 'none'; }
 document.addEventListener('click', e => { const b = e.target.closest('[data-jugar]'); if (!b) return; const id = b.dataset.jugar; empezar(id === 'tenis' || id === 'pingpong' ? id : 'rutina', { solo: id }, b); });
-$('btnOtra').addEventListener('click', () => MODO === 'tenis' ? arrancarTenis() : MODO === 'pingpong' ? arrancarPP() : arrancarRutina(R.plan));
+$('btnOtra').addEventListener('click', () => R.prueba && $('btnOtra').textContent === 'VOLVER A MI PLAN' ? location.href = './entrenar/' : MODO === 'tenis' ? arrancarTenis() : MODO === 'pingpong' ? arrancarPP() : arrancarRutina(R.plan));
 $('btnMenu').addEventListener('click', () => { $('fin').hidden = true; $('inicio').hidden = false; document.body.classList.remove('tenis', 'pp'); pintarDias(); });
 
 let ultT = 0;

@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rutina en casa sin equipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --tinta: #2a2238; --crema: #fff8ec; --amarillo: #ffd23f; --rojo: #ff4d6d; --verde: #3ec8a0; --azul: #4f8fff; --naranja: #ff8a3d; --lila: #b48cff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { min-height: 100%; }
+  body { font-family: 'Baloo 2', system-ui, sans-serif; color: var(--tinta); background: var(--crema); background-image: radial-gradient(circle, rgba(42,34,56,.07) 1.5px, transparent 2px); background-size: 12px 12px; user-select: none; -webkit-user-select: none; }
+  .pant { max-width: 520px; margin: 0 auto; padding: max(16px, env(safe-area-inset-top)) 16px 96px; }
+  .pant[hidden] { display: none; }
+  h1 { font-size: 30px; line-height: .95; font-weight: 800; color: var(--verde); -webkit-text-stroke: 1.5px var(--tinta); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--tinta); letter-spacing: .5px; }
+  h1 span { color: var(--amarillo); display: block; }
+  .sub { font-weight: 700; font-size: 14px; opacity: .7; margin: 6px 0 12px; }
+  .lab { font-weight: 800; font-size: 13px; letter-spacing: 1px; opacity: .65; margin: 14px 0 6px; }
+  .caja { background: #fff; border: 3px solid var(--tinta); border-radius: 16px; box-shadow: 0 4px 0 var(--tinta); padding: 10px 12px; }
+  .fila { display: flex; gap: 8px; align-items: center; }
+  .dato { flex: 1; text-align: center; } .dato b { display: block; font-size: 25px; line-height: 1.05; } .dato small { font-weight: 800; font-size: 11px; opacity: .6; letter-spacing: .5px; }
+  .btn { display: block; width: 100%; text-align: center; font: 800 21px/1 'Baloo 2', system-ui; color: #fff; background: var(--verde); border: 4px solid var(--tinta); border-radius: 16px; box-shadow: 0 5px 0 var(--tinta); padding: 12px 0 8px; margin-top: 14px; cursor: pointer; }
+  .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--tinta); }
+  .btn.blanco { background: #fff; color: var(--tinta); } .btn.rojo { background: var(--rojo); } .btn.chico { font-size: 16px; padding: 9px 0 6px; margin-top: 8px; border-width: 3px; box-shadow: 0 4px 0 var(--tinta); }
+  .link { text-align: center; font-weight: 800; font-size: 14px; margin-top: 12px; text-decoration: underline; cursor: pointer; }
+  .opciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .op { background: #fff; border: 3px solid var(--tinta); border-radius: 14px; box-shadow: 0 3px 0 var(--tinta); padding: 8px 10px; font-weight: 800; font-size: 15px; display: flex; align-items: center; gap: 8px; cursor: pointer; line-height: 1.1; }
+  .op.sel { background: var(--amarillo); }
+  .op i { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--tinta); flex: none; }
+  .segm { display: flex; gap: 6px; } .segm div { flex: 1; text-align: center; border: 3px solid var(--tinta); border-radius: 12px; padding: 7px 0 4px; font-weight: 800; font-size: 14px; background: #fff; cursor: pointer; }
+  .segm .sel { background: var(--verde); color: #fff; }
+  .num { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .num button { width: 34px; height: 34px; border: 3px solid var(--tinta); border-radius: 50%; background: var(--amarillo); font: 800 20px/1 'Baloo 2'; cursor: pointer; padding-top: 3px; }
+  .num b { font-size: 24px; min-width: 56px; text-align: center; }
+  .barra { height: 14px; border: 3px solid var(--tinta); border-radius: 10px; background: #fff; overflow: hidden; } .barra i { display: block; height: 100%; background: var(--verde); }
+  .dia { display: flex; align-items: center; gap: 10px; border: 3px solid var(--tinta); border-radius: 14px; background: #fff; padding: 7px 10px; margin-bottom: 7px; box-shadow: 0 3px 0 var(--tinta); cursor: pointer; }
+  .dia .n { width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--tinta); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex: none; }
+  .dia .t { flex: 1; line-height: 1.1; } .dia .t b { font-size: 16px; } .dia .t small { display: block; font-weight: 700; font-size: 12px; opacity: .65; }
+  .dia.hecho .n { background: var(--verde); color: #fff; } .dia.hoy { background: var(--amarillo); } .dia.desc { opacity: .55; cursor: default; box-shadow: none; }
+  .ok { font-weight: 800; color: var(--verde); font-size: 13px; }
+  .ej { display: flex; gap: 10px; align-items: center; border-bottom: 2px dashed rgba(42,34,56,.2); padding: 7px 0; }
+  .ej .fig { flex: none; background: #fff; border: 3px solid var(--tinta); border-radius: 12px; width: 64px; height: 66px; }
+  .ej b { font-size: 16px; display: block; line-height: 1.1; } .ej small { font-weight: 700; opacity: .65; font-size: 13px; }
+  .tag { font-size: 11px; font-weight: 800; background: var(--azul); color: #fff; border-radius: 8px; padding: 1px 6px; margin-left: 4px; vertical-align: 2px; }
+  .semanas { display: flex; gap: 6px; margin-bottom: 10px; } .semanas div { flex: 1; text-align: center; border: 3px solid var(--tinta); border-radius: 12px; padding: 5px 0 2px; font-weight: 800; font-size: 13px; background: #fff; cursor: pointer; }
+  .semanas .sel { background: var(--tinta); color: var(--crema); } .semanas .hecha { background: #c9f2e4; }
+  /* barra de abajo */
+  nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--crema); border-top: 3px solid var(--tinta); display: flex; padding: 6px 6px max(6px, env(safe-area-inset-bottom)); z-index: 5; }
+  nav div { flex: 1; text-align: center; font-weight: 800; font-size: 13px; padding: 6px 0 3px; border-radius: 12px; cursor: pointer; letter-spacing: .5px; }
+  nav div.sel { background: var(--amarillo); border: 3px solid var(--tinta); padding: 3px 0 0; }
+  nav[hidden] { display: none; }
+  /* entrenamiento en curso */
+  #juego { position: fixed; inset: 0; background: var(--crema); z-index: 10; display: flex; flex-direction: column; padding: max(14px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom)); }
+  #juego[hidden] { display: none; }
+  #juego .top { display: flex; justify-content: space-between; font-weight: 800; font-size: 15px; }
+  #jFig { flex: 1; min-height: 0; background: #fff; border: 4px solid var(--tinta); border-radius: 20px; box-shadow: 0 5px 0 var(--tinta); margin: 8px 0 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+  #jFig svg { height: 100%; width: auto; max-width: 100%; }
+  #jFig .fase { position: absolute; top: 8px; left: 10px; font-weight: 800; font-size: 14px; background: var(--amarillo); border: 3px solid var(--tinta); border-radius: 10px; padding: 1px 8px 0; }
+  #jNom { font-size: 30px; text-align: center; font-weight: 800; line-height: 1; color: var(--verde); -webkit-text-stroke: 1.5px var(--tinta); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--tinta); margin-top: 6px; }
+  #jCnt { font-size: 64px; font-weight: 800; text-align: center; line-height: 1; margin-top: 2px; }
+  #jCnt small { font-size: 26px; opacity: .55; }
+  #jComo { font-weight: 700; font-size: 14px; line-height: 1.3; text-align: center; opacity: .8; min-height: 36px; }
+  #juego .fila .btn { margin-top: 8px; font-size: 18px; white-space: nowrap; min-width: 0; }
+  #juego .fila .btn.chico { font-size: 14px; }
+  #juego.descanso { background: #dff6ee; }
+  .anillo { width: 120px; height: 120px; margin: 0 auto; position: relative; } .anillo svg { width: 100%; height: 100%; transform: rotate(-90deg); } .anillo b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 44px; }
+  /* informe */
+  .graf { width: 100%; display: block; }
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-weight: 800; font-size: 12px; }
+  .cal span { padding: 4px 0 2px; border-radius: 8px; } .cal .si { background: var(--verde); color: #fff; } .cal .hoy { outline: 3px solid var(--tinta); } .cal .cab { opacity: .5; font-size: 11px; }
+  .modal { position: fixed; inset: 0; background: rgba(42,34,56,.6); z-index: 20; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .modal[hidden] { display: none; }
+  .modal .caja { width: min(420px, 100%); }
+  .aviso-salud { font-size: 11.5px; font-weight: 600; opacity: .7; margin-top: 14px; line-height: 1.25; text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- ───────── BIENVENIDA / PERFIL ───────── -->
+<div class="pant" id="pPerfil" hidden>
+  <h1>RUTINA EN CASA <span>SIN EQUIPO</span></h1>
+  <div class="sub" id="perfilSub">Contanos de vos para armarte tu plan</div>
+  <div class="caja">
+    <div class="fila" style="justify-content:space-between"><b>EDAD</b><div class="num" data-k="edad" data-min="13" data-max="90" data-paso="1"><button>−</button><b></b><button>+</button></div></div>
+    <div class="fila" style="justify-content:space-between;margin-top:6px"><b>PESO (KG)</b><div class="num" data-k="peso" data-min="35" data-max="200" data-paso="0.5"><button>−</button><b></b><button>+</button></div></div>
+    <div class="fila" style="justify-content:space-between;margin-top:6px"><b>ALTURA (CM)</b><div class="num" data-k="altura" data-min="120" data-max="220" data-paso="1"><button>−</button><b></b><button>+</button></div></div>
+    <div class="fila" style="justify-content:space-between;margin-top:8px"><b>SEXO</b><div class="segm" id="sexo" style="width:170px"><div data-v="H">HOMBRE</div><div data-v="M">MUJER</div></div></div>
+  </div>
+  <div class="lab">TU OBJETIVO</div>
+  <div class="opciones" id="objetivos"></div>
+  <div class="lab">DÍAS POR SEMANA</div>
+  <div class="segm" id="diasSem"><div data-v="2">2</div><div data-v="3">3</div><div data-v="4">4</div><div data-v="5">5</div><div data-v="6">6</div></div>
+  <div class="lab">TU NIVEL</div>
+  <div class="segm" id="nivel"><div data-v="0">PRINCIPIANTE</div><div data-v="1">INTERMEDIO</div><div data-v="2">AVANZADO</div></div>
+  <div class="caja" style="margin-top:10px;font-weight:700;font-size:14px;line-height:1.3" id="pruebaTxt">¿No sabés tu nivel? Hacé la <b>prueba de 1 minuto</b>: todas las sentadillas que puedas. La cámara las cuenta y te dice qué nivel te conviene.</div>
+  <div class="btn blanco chico" id="btnPrueba">HACER LA PRUEBA CON LA CÁMARA</div>
+  <div class="btn" id="btnGuardarPerfil">ARMAR MI PLAN</div>
+  <div class="aviso-salud">Si tenés alguna condición de salud, consultá a tu médico antes de empezar. Tus datos quedan solo en este teléfono.</div>
+</div>
+
+<!-- ───────── PLAN ───────── -->
+<div class="pant" id="pPlan" hidden>
+  <div class="lab" style="margin-top:0">TU PLAN</div>
+  <h1 id="planTit"></h1>
+  <div class="sub" id="planSub"></div>
+  <div class="segm" id="planNivel" style="margin-bottom:10px"><div data-v="0">PRINCIPIANTE</div><div data-v="1">INTERMEDIO</div><div data-v="2">AVANZADO</div></div>
+  <div class="semanas" id="semanas"></div>
+  <div class="fila" style="margin-bottom:8px"><b style="font-size:15px" id="semTit"></b><div class="barra" style="flex:1"><i id="semBar"></i></div><b style="font-size:14px" id="semCnt"></b></div>
+  <div id="listaDias"></div>
+  <div class="btn" id="btnHoy"></div>
+</div>
+
+<!-- ───────── DETALLE DEL DÍA ───────── -->
+<div class="pant" id="pDia" hidden>
+  <div class="link" style="text-align:left;margin:0 0 6px" id="volverPlan">‹ VOLVER</div>
+  <div class="lab" style="margin-top:0" id="diaLab"></div>
+  <h1 id="diaTit"></h1>
+  <div class="sub" id="diaSub"></div>
+  <div id="diaLista"></div>
+  <div class="btn" id="btnEmpezarDia">EMPEZAR</div>
+</div>
+
+<!-- ───────── INFORME ───────── -->
+<div class="pant" id="pInforme" hidden>
+  <h1>TU <span>INFORME</span></h1>
+  <div class="sub" id="infSemana"></div>
+  <div class="caja fila">
+    <div class="dato"><b style="color:var(--naranja)" id="iKcal">0</b><small>KCAL</small></div>
+    <div class="dato"><b style="color:var(--verde)" id="iMin">0</b><small>MINUTOS</small></div>
+    <div class="dato"><b style="color:var(--azul)" id="iSes">0</b><small>SESIONES</small></div>
+    <div class="dato"><b style="color:var(--rojo)" id="iRacha">0</b><small>RACHA</small></div>
+  </div>
+  <div class="lab">CALORÍAS POR DÍA (ESTA SEMANA)</div>
+  <div class="caja" style="padding:6px 8px"><svg class="graf" id="gKcal" viewBox="0 0 330 150"></svg></div>
+  <div class="lab">META SEMANAL OMS: 150 MINUTOS DE ACTIVIDAD</div>
+  <div class="caja"><div class="fila"><div class="barra" style="flex:1;height:18px"><i id="iOmsB"></i></div><b id="iOms" style="font-size:15px"></b></div></div>
+  <div class="lab">PESO</div>
+  <div class="caja" style="padding:8px"><svg class="graf" id="gPeso" viewBox="0 0 330 140"></svg>
+    <div class="fila" style="margin-top:4px"><div style="flex:1;font-weight:800;font-size:14px" id="iImc"></div><div class="btn chico" style="width:auto;padding:8px 14px 5px;margin:0" id="btnPeso">ANOTAR PESO</div></div></div>
+  <div class="lab">ESTE MES</div>
+  <div class="caja"><div class="cal" id="iCal"></div></div>
+  <div class="lab">TU PROGRESO</div>
+  <div class="caja" style="font-weight:700;font-size:14px;line-height:1.4" id="iProg"></div>
+  <div class="lab">EN TOTAL</div>
+  <div class="caja fila">
+    <div class="dato"><b id="tSes">0</b><small>SESIONES</small></div>
+    <div class="dato"><b id="tMin">0</b><small>MINUTOS</small></div>
+    <div class="dato"><b id="tKcal">0</b><small>KCAL</small></div>
+  </div>
+  <div class="aviso-salud">Las calorías se calculan con tu peso, edad, altura y sexo, el tipo de ejercicio (valores MET del Compendio de Actividad Física) y el tiempo que estuviste activo. Son una estimación: ninguna app puede medirlas exacto sin un reloj que lea el pulso.</div>
+</div>
+
+<!-- ───────── PERFIL (ajustes) ───────── -->
+<div class="pant" id="pAjustes" hidden>
+  <h1>MI <span>PERFIL</span></h1>
+  <div class="sub">Cambiá tus datos o tu objetivo cuando quieras</div>
+  <div class="caja" id="ajResumen" style="font-weight:700;font-size:15px;line-height:1.5"></div>
+  <div class="btn" id="btnEditarPerfil">CAMBIAR MIS DATOS Y OBJETIVO</div>
+  <div class="lab">VOZ</div>
+  <div class="segm" id="voz"><div data-v="1">CON VOZ</div><div data-v="0">SIN VOZ</div></div>
+  <div class="lab">DESCANSO ENTRE EJERCICIOS</div>
+  <div class="segm" id="desc"><div data-v="-5">MÁS CORTO</div><div data-v="0">NORMAL</div><div data-v="10">MÁS LARGO</div></div>
+  <div class="btn rojo chico" id="btnBorrar" style="margin-top:22px">BORRAR TODO Y EMPEZAR DE CERO</div>
+</div>
+
+<nav id="nav" hidden>
+  <div data-p="pPlan" class="sel">PLAN</div>
+  <div data-p="pInforme">INFORME</div>
+  <div data-p="juegos">JUEGOS</div>
+  <div data-p="pAjustes">PERFIL</div>
+</nav>
+
+<!-- ───────── ENTRENAMIENTO EN CURSO ───────── -->
+<div id="juego" hidden>
+  <div class="top"><span id="jPaso"></span><span id="jReloj">0:00</span></div>
+  <div class="barra" style="margin-top:6px"><i id="jBar"></i></div>
+  <div id="jNom"></div>
+  <div id="jFig"><span class="fase" id="jFase"></span></div>
+  <div id="jCnt"></div>
+  <div id="jComo"></div>
+  <div class="fila"><div class="btn blanco" id="jAtras" style="flex:0 0 58px">‹</div><div class="btn blanco" id="jPausa" style="flex:1">PAUSA</div><div class="btn rojo" id="jSig" style="flex:1.3">LISTO</div></div>
+  <div class="fila"><div class="btn blanco chico" id="jCambiar">CAMBIAR EJERCICIO</div><div class="btn blanco chico" id="jSalir">SALIR</div></div>
+</div>
+
+<div class="modal" id="mFin" hidden><div class="caja" style="text-align:center">
+  <h1 style="font-size:30px">¡DÍA <span>COMPLETO!</span></h1>
+  <div class="caja fila" style="margin-top:12px;box-shadow:none">
+    <div class="dato"><b style="color:var(--verde)" id="fMin">0</b><small>MINUTOS</small></div>
+    <div class="dato"><b style="color:var(--naranja)" id="fKcal">0</b><small>KCAL</small></div>
+    <div class="dato"><b style="color:var(--azul)" id="fEj">0</b><small>EJERCICIOS</small></div>
+  </div>
+  <div style="font-weight:800;margin-top:10px">¿CÓMO TE RESULTÓ?</div>
+  <div class="segm" id="fSens" style="margin-top:6px"><div data-v="-1">FÁCIL</div><div data-v="0" class="sel">JUSTO</div><div data-v="1">DIFÍCIL</div></div>
+  <div class="btn" id="btnFinOk">VER MI INFORME</div>
+</div></div>
+
+<div class="modal" id="mPeso" hidden><div class="caja" style="text-align:center">
+  <h1 style="font-size:28px">ANOTAR <span>PESO</span></h1>
+  <div class="num" style="justify-content:center;gap:14px;margin-top:14px" id="pesoNum"><button>−</button><b style="font-size:34px"></b><button>+</button></div>
+  <div class="btn" id="btnPesoOk">GUARDAR</div>
+  <div class="link" id="btnPesoNo">CANCELAR</div>
+</div></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const leer = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v ?? d; } catch (e) { return d; } };
+const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const hoyStr = (d = new Date()) => d.toLocaleDateString('sv');
+
+// ───────── PERSONAJE CÓMIC (dibujado con código) ─────────
+// cada pose: cabeza, hombros, cadera, rodillas, pies y manos; las animaciones van de la pose A a la B
+const POSES = {
+  pie:   { cab: [60, 24], hom: [60, 44], cad: [60, 78], rodI: [55, 100], rodD: [65, 100], pieI: [54, 122], pieD: [66, 122], manI: [47, 72], manD: [73, 72] },
+  lado:  { cab: [58, 24], hom: [58, 44], cad: [57, 78], rodI: [60, 100], rodD: [58, 100], pieI: [60, 122], pieD: [56, 122], manI: [64, 72], manD: [60, 74] },
+  plancha: { cab: [22, 86], hom: [34, 92], cad: [70, 100], rodI: [90, 108], rodD: [90, 109], pieI: [110, 118], pieD: [110, 119], manI: [34, 122], manD: [36, 122] },
+  acostado: { cab: [18, 112], hom: [30, 114], cad: [64, 116], rodI: [86, 116], rodD: [86, 117], pieI: [108, 117], pieD: [108, 118], manI: [50, 120], manD: [52, 121] },
+};
+const m = (base, cambios) => ({ ...POSES[base], ...cambios });
+const EJ = {
+  tijera: { n: 'SALTOS DE TIJERA', t: 's', met: 8, cam: 1, g: 'cardio', como: 'Saltá abriendo piernas y brazos por arriba de la cabeza, y volvé a cerrar.',
+    A: POSES.pie, B: m('pie', { manI: [32, 8], manD: [88, 8], rodI: [47, 100], rodD: [73, 100], pieI: [38, 122], pieD: [82, 122] }) },
+  rodillas: { n: 'RODILLAS ARRIBA', t: 's', met: 8, cam: 1, g: 'cardio', como: 'Corré en el lugar subiendo las rodillas hasta la altura de la cadera.',
+    A: m('pie', { rodI: [50, 72], pieI: [50, 96], manI: [44, 58], manD: [78, 66] }), B: m('pie', { rodD: [70, 72], pieD: [70, 96], manI: [42, 66], manD: [76, 58] }) },
+  talones: { n: 'TALONES A LA COLA', t: 's', met: 7, g: 'cardio', como: 'Trotá en el lugar llevando los talones hacia la cola.',
+    A: m('lado', { pieI: [44, 94], manI: [70, 62], manD: [48, 66] }), B: m('lado', { pieD: [44, 94], pieI: [60, 122], manI: [48, 66], manD: [70, 62] }) },
+  boxeo: { n: 'GOLPES AL AIRE', t: 's', met: 7, cam: 1, g: 'cardio', como: 'Piernas un poco abiertas, guardia arriba y golpes rápidos alternando los brazos.',
+    A: m('pie', { manI: [50, 48], manD: [98, 44], pieI: [48, 122], pieD: [72, 122] }), B: m('pie', { manI: [22, 44], manD: [70, 48], pieI: [48, 122], pieD: [72, 122] }) },
+  circulos: { n: 'CÍRCULOS DE BRAZOS', t: 's', met: 3.5, cam: 1, g: 'calor', como: 'Brazos estirados a los costados: hacé círculos grandes hacia adelante.',
+    A: m('pie', { manI: [22, 46], manD: [98, 46] }), B: m('pie', { manI: [26, 30], manD: [94, 58] }) },
+  sentadilla: { n: 'SENTADILLAS', t: 'r', met: 5, cam: 1, g: 'piernas', como: 'Pies al ancho de los hombros. Bajá la cola como si te sentaras, espalda derecha, y subí.',
+    A: m('lado', { manI: [84, 48], manD: [82, 52] }), B: { cab: [58, 42], hom: [58, 60], cad: [44, 90], rodI: [70, 96], rodD: [68, 98], pieI: [64, 122], pieD: [60, 122], manI: [90, 62], manD: [88, 66] } },
+  sumo: { n: 'SENTADILLA SUMO', t: 'r', met: 5, g: 'piernas', como: 'Piernas bien abiertas y puntas de los pies hacia afuera. Bajá con la espalda derecha.',
+    A: m('pie', { rodI: [48, 100], rodD: [72, 100], pieI: [40, 122], pieD: [80, 122], manI: [56, 62], manD: [64, 62] }), B: { cab: [60, 40], hom: [60, 60], cad: [60, 92], rodI: [38, 94], rodD: [82, 94], pieI: [40, 122], pieD: [80, 122], manI: [56, 76], manD: [64, 76] } },
+  estocada: { n: 'ESTOCADAS', t: 'r', met: 5, g: 'piernas', como: 'Un paso largo adelante y bajá hasta que la rodilla de atrás casi toque el piso. Alterná.',
+    A: m('lado', { manI: [52, 76], manD: [62, 76] }), B: { cab: [56, 34], hom: [56, 54], cad: [56, 86], rodI: [78, 98], rodD: [44, 112], pieI: [80, 122], pieD: [28, 120], manI: [50, 82], manD: [62, 82] } },
+  puente: { n: 'PUENTE DE GLÚTEOS', t: 'r', met: 3.5, g: 'piernas', como: 'Boca arriba con las rodillas dobladas. Subí la cadera apretando la cola y bajá despacio.',
+    A: { cab: [18, 112], hom: [30, 114], cad: [62, 118], rodI: [82, 96], rodD: [84, 97], pieI: [96, 122], pieD: [98, 122], manI: [46, 121], manD: [48, 122] }, B: { cab: [18, 112], hom: [30, 112], cad: [64, 94], rodI: [86, 92], rodD: [88, 93], pieI: [96, 122], pieD: [98, 122], manI: [46, 121], manD: [48, 122] } },
+  pared: { n: 'SENTADILLA EN LA PARED', t: 's', met: 4, g: 'piernas', prop: 'pared', como: 'Espalda contra la pared y bajá hasta que las rodillas queden en ángulo recto. Aguantá.',
+    A: { cab: [36, 44], hom: [36, 64], cad: [38, 94], rodI: [66, 94], rodD: [64, 95], pieI: [66, 122], pieD: [64, 122], manI: [56, 92], manD: [58, 93] }, B: { cab: [36, 45], hom: [36, 65], cad: [38, 94], rodI: [66, 94], rodD: [64, 95], pieI: [66, 122], pieD: [64, 122], manI: [56, 92], manD: [58, 93] } },
+  talonesArriba: { n: 'ELEVACIÓN DE TALONES', t: 'r', met: 3, g: 'piernas', como: 'De pie, subí en puntas de pie lo más alto que puedas y bajá despacio.',
+    A: POSES.pie, B: m('pie', { cab: [60, 17], hom: [60, 37], cad: [60, 71], rodI: [55, 94], rodD: [65, 94], pieI: [54, 118], pieD: [66, 118], manI: [47, 65], manD: [73, 65] }) },
+  patadaGluteo: { n: 'PATADA DE GLÚTEO', t: 'r', met: 3.5, g: 'piernas', como: 'En cuatro patas, estirá una pierna hacia atrás y arriba, y volvé. Después la otra.',
+    A: { cab: [22, 82], hom: [34, 90], cad: [66, 92], rodI: [66, 122], rodD: [68, 121], pieI: [92, 122], pieD: [94, 121], manI: [34, 122], manD: [36, 122] }, B: { cab: [22, 82], hom: [34, 90], cad: [66, 92], rodI: [66, 122], rodD: [90, 82], pieI: [92, 122], pieD: [112, 66], manI: [34, 122], manD: [36, 122] } },
+  patadaLateral: { n: 'PATADA LATERAL', t: 'r', met: 4, cam: 1, g: 'piernas', como: 'De pie, levantá una pierna estirada hacia el costado y bajala. Alterná.',
+    A: m('pie', { manI: [50, 52], manD: [70, 52] }), B: m('pie', { rodD: [80, 94], pieD: [100, 106], cad: [58, 78], manI: [50, 52], manD: [70, 52] }) },
+  abdominal: { n: 'ABDOMINALES', t: 'r', met: 3.8, g: 'abdomen', como: 'Boca arriba, rodillas dobladas. Subí los hombros del piso apretando la panza y bajá.',
+    A: { cab: [20, 110], hom: [34, 114], cad: [66, 118], rodI: [84, 96], rodD: [86, 97], pieI: [100, 122], pieD: [102, 122], manI: [22, 98], manD: [24, 100] }, B: { cab: [32, 90], hom: [42, 104], cad: [66, 118], rodI: [84, 96], rodD: [86, 97], pieI: [100, 122], pieD: [102, 122], manI: [34, 80], manD: [36, 82] } },
+  bicicleta: { n: 'BICICLETA', t: 's', met: 4, g: 'abdomen', como: 'Boca arriba, llevá el codo hacia la rodilla contraria, alternando como si pedalearas.',
+    A: { cab: [30, 96], hom: [40, 104], cad: [68, 116], rodI: [62, 92], rodD: [90, 104], pieI: [82, 92], pieD: [110, 106], manI: [30, 86], manD: [32, 88] }, B: { cab: [34, 94], hom: [42, 104], cad: [68, 116], rodI: [90, 104], rodD: [62, 92], pieI: [110, 106], pieD: [82, 92], manI: [32, 84], manD: [34, 86] } },
+  piernasArriba: { n: 'ELEVACIÓN DE PIERNAS', t: 'r', met: 3.8, g: 'abdomen', como: 'Boca arriba con las piernas estiradas: subilas hasta arriba y bajá sin tocar el piso.',
+    A: m('acostado', { rodI: [86, 112], rodD: [86, 113], pieI: [108, 108], pieD: [108, 109] }), B: m('acostado', { rodI: [72, 92], rodD: [73, 93], pieI: [76, 68], pieD: [77, 69] }) },
+  plancha: { n: 'PLANCHA', t: 's', met: 4, g: 'abdomen', como: 'Apoyá los antebrazos y las puntas de los pies. Cuerpo derecho como una tabla. Aguantá.',
+    A: { cab: [22, 98], hom: [34, 104], cad: [72, 108], rodI: [92, 114], rodD: [92, 115], pieI: [112, 120], pieD: [112, 121], manI: [54, 122], manD: [56, 122] }, B: { cab: [22, 97], hom: [34, 103], cad: [72, 107], rodI: [92, 114], rodD: [92, 115], pieI: [112, 120], pieD: [112, 121], manI: [54, 122], manD: [56, 122] } },
+  planchaLateral: { n: 'PLANCHA LATERAL', t: 's', met: 3.5, g: 'abdomen', como: 'De costado, apoyado en un antebrazo, subí la cadera y aguantá. Después del otro lado.',
+    A: { cab: [26, 88], hom: [36, 98], cad: [70, 108], rodI: [90, 114], rodD: [90, 114], pieI: [110, 120], pieD: [110, 121], manI: [52, 122], manD: [40, 70] }, B: { cab: [26, 86], hom: [36, 96], cad: [70, 104], rodI: [90, 112], rodD: [90, 112], pieI: [110, 120], pieD: [110, 121], manI: [52, 122], manD: [40, 66] } },
+  escalador: { n: 'ESCALADORES', t: 's', met: 8, g: 'abdomen', como: 'En posición de flexión, llevá las rodillas al pecho rápido, alternando.',
+    A: m('plancha', { rodI: [58, 108], pieI: [70, 116] }), B: m('plancha', { rodD: [58, 108], pieD: [70, 116], rodI: [90, 108], pieI: [110, 118] }) },
+  superman: { n: 'SUPERMAN', t: 'r', met: 3, g: 'abdomen', como: 'Boca abajo, levantá a la vez brazos y piernas estirados. Aguantá un segundo y bajá.',
+    A: { cab: [20, 110], hom: [32, 114], cad: [66, 116], rodI: [88, 117], rodD: [88, 118], pieI: [108, 118], pieD: [108, 119], manI: [6, 112], manD: [8, 113] }, B: { cab: [20, 102], hom: [32, 108], cad: [66, 116], rodI: [88, 112], rodD: [88, 113], pieI: [108, 104], pieD: [108, 105], manI: [6, 96], manD: [8, 97] } },
+  flexion: { n: 'FLEXIONES', t: 'r', met: 3.8, g: 'brazos', como: 'Manos al ancho de los hombros y cuerpo derecho. Bajá el pecho hacia el piso y empujá.',
+    A: POSES.plancha, B: m('plancha', { cab: [22, 106], hom: [34, 110], cad: [70, 112], rodI: [90, 116], rodD: [90, 117] }) },
+  flexionRod: { n: 'FLEXIONES DE RODILLAS', t: 'r', met: 3.5, g: 'brazos', como: 'Como una flexión pero apoyando las rodillas. Bajá el pecho y empujá.',
+    A: { cab: [26, 88], hom: [38, 94], cad: [72, 108], rodI: [90, 122], rodD: [91, 122], pieI: [106, 110], pieD: [107, 111], manI: [38, 122], manD: [40, 122] }, B: { cab: [26, 104], hom: [38, 110], cad: [72, 114], rodI: [90, 122], rodD: [91, 122], pieI: [106, 110], pieD: [107, 111], manI: [38, 122], manD: [40, 122] } },
+  fondos: { n: 'FONDOS EN SILLA', t: 'r', met: 3.8, g: 'brazos', prop: 'silla', como: 'Manos en el borde de una silla, a tu espalda. Doblá los codos para bajar y subí.',
+    A: { cab: [44, 40], hom: [42, 60], cad: [46, 92], rodI: [76, 92], rodD: [77, 93], pieI: [80, 122], pieD: [81, 122], manI: [30, 88], manD: [32, 88] }, B: { cab: [44, 56], hom: [42, 76], cad: [46, 108], rodI: [76, 100], rodD: [77, 101], pieI: [82, 122], pieD: [83, 122], manI: [30, 88], manD: [32, 88] } },
+  toqueHombros: { n: 'PLANCHA TOCANDO HOMBROS', t: 'r', met: 5, g: 'brazos', como: 'En posición de flexión, tocá el hombro contrario con una mano, sin mover la cadera. Alterná.',
+    A: POSES.plancha, B: m('plancha', { manD: [44, 96] }) },
+  burpee: { n: 'BURPEES', t: 'r', met: 8, g: 'cardio', como: 'Agachate, llevá los pies atrás a plancha, volvé y saltá con los brazos arriba.',
+    A: POSES.plancha, B: m('pie', { cab: [60, 12], hom: [60, 32], cad: [60, 66], rodI: [56, 88], rodD: [64, 88], pieI: [56, 110], pieD: [64, 110], manI: [50, 8], manD: [70, 8] }) },
+  sentadillaSalto: { n: 'SENTADILLA CON SALTO', t: 'r', met: 8, g: 'cardio', como: 'Bajá en sentadilla y subí saltando con fuerza. Caé suave y repetí.',
+    A: { cab: [58, 42], hom: [58, 60], cad: [44, 90], rodI: [70, 96], rodD: [68, 98], pieI: [64, 122], pieD: [60, 122], manI: [40, 92], manD: [42, 94] }, B: m('lado', { cab: [58, 12], hom: [58, 32], cad: [57, 66], rodI: [60, 88], rodD: [58, 88], pieI: [60, 110], pieD: [56, 110], manI: [64, 4], manD: [60, 6] }) },
+  estirarBrazos: { n: 'ESTIRAMIENTO DE BRAZOS', t: 's', met: 2.5, cam: 1, g: 'estirar', como: 'Brazos arriba, estirate hacia el techo y después inclinate a cada costado.',
+    A: m('pie', { manI: [54, 7], manD: [66, 7] }), B: m('pie', { cab: [66, 26], hom: [64, 46], manI: [76, 10], manD: [86, 12] }) },
+  estirarPiernas: { n: 'ESTIRAMIENTO DE CUÁDRICEPS', t: 's', met: 2.5, g: 'estirar', como: 'De pie, agarrá un pie y llevalo hacia la cola. Aguantá y cambiá de pierna.',
+    A: m('lado', { rodI: [58, 100], pieI: [44, 90], manI: [44, 88], manD: [76, 60] }), B: m('lado', { rodD: [58, 100], pieD: [44, 90], pieI: [60, 122], rodI: [60, 100], manD: [44, 88], manI: [76, 60] }) },
+  cobra: { n: 'COBRA', t: 's', met: 2.5, g: 'estirar', como: 'Boca abajo, apoyá las manos y estirá los brazos levantando el pecho. Respirá.',
+    A: { cab: [24, 96], hom: [32, 106], cad: [66, 116], rodI: [88, 118], rodD: [88, 119], pieI: [108, 119], pieD: [108, 120], manI: [36, 122], manD: [38, 122] }, B: { cab: [26, 82], hom: [34, 94], cad: [66, 116], rodI: [88, 118], rodD: [88, 119], pieI: [108, 119], pieD: [108, 120], manI: [36, 122], manD: [38, 122] } },
+  nino: { n: 'POSTURA DEL NIÑO', t: 's', met: 2.5, g: 'estirar', como: 'De rodillas, sentate sobre los talones y estirá los brazos adelante en el piso. Respirá.',
+    A: { cab: [30, 112], hom: [42, 108], cad: [76, 104], rodI: [64, 122], rodD: [65, 122], pieI: [92, 122], pieD: [93, 122], manI: [12, 120], manD: [14, 121] }, B: { cab: [29, 113], hom: [41, 109], cad: [76, 105], rodI: [64, 122], rodD: [65, 122], pieI: [92, 122], pieD: [93, 122], manI: [10, 120], manD: [12, 121] } },
+};
+// reemplazos para el botón CAMBIAR (si no podés hacer uno)
+const ALT = { flexion: 'flexionRod', flexionRod: 'toqueHombros', burpee: 'sentadillaSalto', sentadillaSalto: 'sentadilla', tijera: 'rodillas', rodillas: 'talones', talones: 'tijera', estocada: 'sumo', sumo: 'sentadilla', sentadilla: 'sumo', escalador: 'plancha', plancha: 'planchaLateral', planchaLateral: 'plancha', abdominal: 'bicicleta', bicicleta: 'abdominal', piernasArriba: 'abdominal', fondos: 'flexionRod', toqueHombros: 'plancha', puente: 'patadaGluteo', patadaGluteo: 'puente', pared: 'sentadilla', superman: 'cobra', boxeo: 'circulos', circulos: 'boxeo', patadaLateral: 'patadaGluteo', talonesArriba: 'sentadilla' };
+
+function figura(P, prop) {
+  const L = (a, b, c, wd) => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${c}" stroke-width="${wd}" stroke-linecap="round"/>`;
+  const piel = '#f2c9a0', remera = '#ff4d6d', short = '#4f8fff', t = '#2a2238';
+  const miembro = (a, b, c) => L(a, b, t, 14) + L(a, b, c, 8);
+  const codo = (h, mm) => { const dx = mm[0] - h[0], dy = mm[1] - h[1], l = Math.hypot(dx, dy) || 1, k = Math.max(0, 26 - l) * .45; return [(h[0] + mm[0]) / 2 + (-dy / l) * k, (h[1] + mm[1]) / 2 + (dx / l) * k]; };
+  let s = '<svg viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg">';
+  s += '<line x1="2" y1="126" x2="118" y2="126" stroke="rgba(42,34,56,.18)" stroke-width="4" stroke-linecap="round"/>';
+  if (prop === 'pared') s += '<rect x="14" y="10" width="10" height="116" fill="#e3d7c3" stroke="#2a2238" stroke-width="3"/>';
+  if (prop === 'silla') s += '<path d="M8 86 h28 v40 M12 86 v40 M8 86 v-34" fill="none" stroke="#8a5a2b" stroke-width="5" stroke-linecap="round"/>';
+  const cD = codo(P.hom, P.manD), cI = codo(P.hom, P.manI);
+  s += miembro(P.cad, P.rodD, short) + miembro(P.rodD, P.pieD, piel);
+  s += miembro(P.hom, cD, remera) + miembro(cD, P.manD, piel);
+  s += L(P.hom, P.cad, t, 25) + L(P.hom, P.cad, remera, 18);
+  s += miembro(P.cad, P.rodI, short) + miembro(P.rodI, P.pieI, piel);
+  s += miembro(P.hom, cI, remera) + miembro(cI, P.manI, piel);
+  for (const p of [P.pieI, P.pieD]) s += `<ellipse cx="${p[0]}" cy="${p[1] + 1}" rx="7" ry="4" fill="#fff" stroke="${t}" stroke-width="2.5"/>`;
+  s += `<circle cx="${P.cab[0]}" cy="${P.cab[1]}" r="11.5" fill="${piel}" stroke="${t}" stroke-width="3.2"/>`;
+  s += `<rect x="${P.cab[0] - 11.5}" y="${P.cab[1] - 6}" width="23" height="5" rx="2" fill="#ffd23f" stroke="${t}" stroke-width="2"/>`;
+  return s + '</svg>';
+}
+const mezcla = (A, B, k) => { const r = {}; for (const key in A) r[key] = [A[key][0] + (B[key][0] - A[key][0]) * k, A[key][1] + (B[key][1] - A[key][1]) * k]; return r; };
+const icono = id => figura(mezcla(EJ[id].A, EJ[id].B, .75), EJ[id].prop);
+
+// ───────── PLANES ─────────
+const OBJ = [
+  { id: 'bajar', n: 'BAJAR DE PESO', col: '#ff8a3d', rot: ['completo', 'cardio', 'piernas', 'abdomen', 'cardio', 'brazos'] },
+  { id: 'tonificar', n: 'TONIFICAR', col: '#ff4d6d', rot: ['piernas', 'brazos', 'abdomen', 'completo', 'piernas', 'brazos'] },
+  { id: 'fuerza', n: 'GANAR FUERZA', col: '#4f8fff', rot: ['completo', 'piernas', 'brazos', 'abdomen', 'completo', 'piernas'] },
+  { id: 'energia', n: 'MÁS ENERGÍA', col: '#3ec8a0', rot: ['cardio', 'completo', 'movilidad', 'cardio', 'abdomen', 'completo'] },
+  { id: 'abdomen', n: 'ABDOMEN', col: '#ffd23f', rot: ['abdomen', 'cardio', 'abdomen', 'completo', 'abdomen', 'piernas'] },
+  { id: 'flexibilidad', n: 'FLEXIBILIDAD', col: '#b48cff', rot: ['movilidad', 'completo', 'movilidad', 'abdomen', 'movilidad', 'piernas'] },
+];
+const TIPOS = {
+  completo: { n: 'CUERPO COMPLETO', l: ['tijera', 'circulos', 'sentadilla', 'flexion', 'puente', 'escalador', 'estocada', 'plancha', 'estirarBrazos', 'estirarPiernas'] },
+  piernas: { n: 'PIERNAS Y GLÚTEOS', l: ['tijera', 'sentadilla', 'estocada', 'puente', 'sumo', 'patadaLateral', 'talonesArriba', 'pared', 'patadaGluteo', 'estirarPiernas'] },
+  abdomen: { n: 'ABDOMEN Y CENTRO', l: ['rodillas', 'abdominal', 'bicicleta', 'piernasArriba', 'plancha', 'escalador', 'planchaLateral', 'superman', 'cobra', 'nino'] },
+  brazos: { n: 'BRAZOS Y PECHO', l: ['circulos', 'boxeo', 'flexion', 'fondos', 'toqueHombros', 'plancha', 'superman', 'flexion', 'estirarBrazos'] },
+  cardio: { n: 'CARDIO QUEMA GRASA', l: ['tijera', 'rodillas', 'talones', 'boxeo', 'burpee', 'escalador', 'sentadillaSalto', 'patadaLateral', 'estirarPiernas'] },
+  movilidad: { n: 'MOVILIDAD Y ESTIRAMIENTO', l: ['circulos', 'estirarBrazos', 'estirarPiernas', 'puente', 'patadaLateral', 'cobra', 'nino', 'planchaLateral'] },
+};
+const NIV = [
+  { n: 'PRINCIPIANTE', reps: 10, seg: 25, desc: 25, vueltas: 1, cambia: { flexion: 'flexionRod', burpee: 'sentadilla', sentadillaSalto: 'sentadilla', piernasArriba: 'abdominal', toqueHombros: 'flexionRod' } },
+  { n: 'INTERMEDIO', reps: 14, seg: 35, desc: 20, vueltas: 1, cambia: { burpee: 'sentadillaSalto' } },
+  { n: 'AVANZADO', reps: 18, seg: 45, desc: 15, vueltas: 2, cambia: { flexionRod: 'flexion' } },
+];
+const DIAS_EN_SEMANA = { 2: [0, 3], 3: [0, 2, 4], 4: [0, 1, 3, 4], 5: [0, 1, 2, 4, 5], 6: [0, 1, 2, 3, 4, 5] };
+const SEMANAS = 4;
+
+function armarDia(tipo, nivel, semana) {   // la lista de ejercicios de un día, con reps o segundos según nivel y semana
+  const N = NIV[nivel], prog = 1 + .1 * (semana - 1), lista = [];
+  const base = TIPOS[tipo].l.map(id => N.cambia[id] || id);
+  const estir = base.filter(id => EJ[id].g === 'estirar'), resto = base.filter(id => EJ[id].g !== 'estirar');
+  for (let v = 0; v < N.vueltas; v++) for (const id of resto) lista.push(id);
+  for (const id of estir) lista.push(id);
+  return lista.map((id, i) => {
+    const e = EJ[id], calor = i < 2 && e.g !== 'estirar' && N.vueltas >= 1 && (e.g === 'calor' || e.g === 'cardio') && tipo !== 'cardio';
+    const est = e.g === 'estirar';
+    return { id, reps: e.t === 'r' ? Math.round(N.reps * prog * (id === 'burpee' ? .6 : id === 'sentadillaSalto' ? .7 : 1)) : 0,
+      seg: e.t === 's' ? Math.round((est ? 30 : calor ? 30 : N.seg * prog) / 5) * 5 : 0 };
+  });
+}
+const segDe = x => x.seg || Math.round(x.reps * (EJ[x.id].g === 'cardio' ? 2.2 : 3));   // duración estimada de cada ejercicio
+
+// ───────── CALORÍAS: MET corregido con tu metabolismo basal (Mifflin-St Jeor) ─────────
+function bmr(p) { return Math.max(1000, 10 * p.peso + 6.25 * p.altura - 5 * p.edad + (p.sexo === 'M' ? -161 : 5)); }
+const kcalPorMin = (met, p) => met * bmr(p) / 1440;
+function kcalDia(lista, p, desc) { let k = 0; for (const x of lista) k += kcalPorMin(EJ[x.id].met, p) * segDe(x) / 60 + kcalPorMin(1.5, p) * desc / 60; return k; }
+
+// ───────── ESTADO ─────────
+let perfil = leer('rcPerfil', null);
+const prog = () => leer('rcProgreso', {});
+const claveP = () => `${perfil.objetivo}-${perfil.nivel}-${perfil.dias}`;
+const ajustes = () => ({ voz: 1, desc: 0, ...leer('rcAjustes', {}) });
+function sesiones() { const o = OBJ.find(x => x.id === perfil.objetivo) || OBJ[0], s = []; for (let w = 1; w <= SEMANAS; w++) for (let d = 0; d < perfil.dias; d++) s.push({ semana: w, n: d + 1, tipo: o.rot[d % o.rot.length] }); return s; }
+const hechas = () => (prog()[claveP()] || {});
+
+// ───────── NAVEGACIÓN ─────────
+function ir(id) {
+  for (const p of document.querySelectorAll('.pant')) p.hidden = p.id !== id;
+  $('nav').hidden = id === 'pPerfil' || id === 'pDia';
+  for (const d of $('nav').children) d.classList.toggle('sel', d.dataset.p === id);
+  if (id === 'pPlan') pintarPlan(); if (id === 'pInforme') pintarInforme(); if (id === 'pAjustes') pintarAjustes();
+  scrollTo(0, 0);
+}
+$('nav').addEventListener('click', e => { const d = e.target.closest('div[data-p]'); if (!d) return; if (d.dataset.p === 'juegos') { location.href = '../'; return; } ir(d.dataset.p); });
+
+// ───────── PERFIL ─────────
+let borr = {};
+const segm = (id, k) => { $(id).addEventListener('click', e => { const d = e.target.closest('div[data-v]'); if (!d) return; borr[k] = isNaN(+d.dataset.v) ? d.dataset.v : +d.dataset.v; marcarSegm(id, borr[k]); }); };
+const marcarSegm = (id, v) => { for (const d of $(id).children) d.classList.toggle('sel', String(d.dataset.v) === String(v)); };
+segm('sexo', 'sexo'); segm('diasSem', 'dias'); segm('nivel', 'nivel');
+$('objetivos').innerHTML = OBJ.map(o => `<div class="op" data-v="${o.id}"><i style="background:${o.col}"></i>${o.n}</div>`).join('');
+$('objetivos').addEventListener('click', e => { const d = e.target.closest('.op'); if (!d) return; borr.objetivo = d.dataset.v; for (const x of $('objetivos').children) x.classList.toggle('sel', x === d); });
+for (const nm of document.querySelectorAll('#pPerfil .num')) {
+  const k = nm.dataset.k, pinta = () => nm.querySelector('b').textContent = String(borr[k]).replace('.', ',');
+  nm.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; const paso = +nm.dataset.paso * (b.textContent === '+' ? 1 : -1); borr[k] = Math.max(+nm.dataset.min, Math.min(+nm.dataset.max, Math.round((borr[k] + paso) * 10) / 10)); pinta(); });
+  nm.pinta = pinta;
+}
+// mantener apretado el + o − para que cambie rápido
+let rep = null; document.addEventListener('pointerdown', e => { const b = e.target.closest('.num button'); if (!b) return; rep = setTimeout(function f() { b.click(); rep = setTimeout(f, 70); }, 450); });
+['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => document.addEventListener(ev, () => clearTimeout(rep)));
+function abrirPerfil() {
+  borr = { edad: 30, peso: 70, altura: 170, sexo: 'H', objetivo: 'bajar', dias: 3, nivel: 0, ...(perfil || {}) };
+  const prueba = leer('rcPrueba', []).slice(-1)[0];
+  if (prueba && !perfil) borr.nivel = nivelDePrueba(prueba.reps);
+  for (const nm of document.querySelectorAll('#pPerfil .num')) nm.pinta();
+  marcarSegm('sexo', borr.sexo); marcarSegm('diasSem', borr.dias); marcarSegm('nivel', borr.nivel);
+  for (const x of $('objetivos').children) x.classList.toggle('sel', x.dataset.v === borr.objetivo);
+  $('pruebaTxt').innerHTML = prueba ? `Tu última prueba: <b>${prueba.reps} sentadillas en 1 minuto</b> → nivel recomendado: <b>${NIV[nivelDePrueba(prueba.reps)].n}</b>.` : $('pruebaTxt').innerHTML;
+  $('perfilSub').textContent = perfil ? 'Cambiá lo que quieras' : 'Contanos de vos para armarte tu plan';
+  ir('pPerfil');
+}
+const nivelDePrueba = r => r >= 35 ? 2 : r >= 20 ? 1 : 0;
+$('btnPrueba').addEventListener('click', () => { guardar('rcBorrador', borr); location.href = '../?nivel=1'; });
+$('btnGuardarPerfil').addEventListener('click', () => {
+  const nuevo = !perfil; perfil = { ...borr }; guardar('rcPerfil', perfil); localStorage.removeItem('rcBorrador');
+  const pesos = leer('rcPeso', []); if (nuevo || !pesos.length || pesos[pesos.length - 1].kg !== perfil.peso) { pesos.push({ fecha: hoyStr(), kg: perfil.peso }); guardar('rcPeso', pesos.filter((x, i, a) => a.findLastIndex(y => y.fecha === x.fecha) === i)); }
+  ir('pPlan');
+});
+
+// ───────── PLAN ─────────
+let semVista = 1;
+function proxima() { const h = hechas(); return sesiones().find(s => !h[`${s.semana}-${s.n}`]); }
+function pintarPlan() {
+  const o = OBJ.find(x => x.id === perfil.objetivo), h = hechas(), ses = sesiones(), sig = proxima();
+  $('planTit').innerHTML = `${o.n} <span>${NIV[perfil.nivel].n}</span>`;
+  $('planSub').textContent = `${SEMANAS} semanas · ${perfil.dias} días por semana · ${Object.keys(h).length} de ${ses.length} hechos`;
+  marcarSegm('planNivel', perfil.nivel);
+  if (sig && !pintarPlan.fijada) semVista = sig.semana; pintarPlan.fijada = false;
+  $('semanas').innerHTML = Array.from({ length: SEMANAS }, (_, i) => { const w = i + 1, todas = ses.filter(s => s.semana === w).every(s => h[`${s.semana}-${s.n}`]); return `<div data-w="${w}" class="${w === semVista ? 'sel' : todas ? 'hecha' : ''}">SEMANA ${w}</div>`; }).join('');
+  const deSem = ses.filter(s => s.semana === semVista), hechasSem = deSem.filter(s => h[`${s.semana}-${s.n}`]).length;
+  $('semTit').textContent = `SEMANA ${semVista}`; $('semBar').style.width = hechasSem / deSem.length * 100 + '%'; $('semCnt').textContent = `${hechasSem} / ${deSem.length}`;
+  const slots = DIAS_EN_SEMANA[perfil.dias]; let html = '', n = 0;
+  for (let d = 0; d < 7; d++) {
+    if (slots.includes(d)) { const s = deSem[n++], k = `${s.semana}-${s.n}`, lista = armarDia(s.tipo, perfil.nivel, s.semana), min = Math.round((lista.reduce((a, x) => a + segDe(x), 0) + lista.length * (NIV[perfil.nivel].desc + ajustes().desc + 10)) / 60), kc = Math.round(kcalDia(lista, perfil, NIV[perfil.nivel].desc));
+      const esHoy = sig && sig.semana === s.semana && sig.n === s.n;
+      html += `<div class="dia${h[k] ? ' hecho' : ''}${esHoy ? ' hoy' : ''}" data-k="${k}"><div class="n">${d + 1}</div><div class="t"><b>${TIPOS[s.tipo].n}</b><small>${lista.length} ejercicios · ${min} min · ~${kc} kcal</small></div>${h[k] ? '<span class="ok">HECHO</span>' : esHoy ? '<b>HOY</b>' : ''}</div>`; }
+    else html += `<div class="dia desc"><div class="n">${d + 1}</div><div class="t"><b>DESCANSO</b><small>${d === 6 ? 'o un juego de la parte divertida' : 'estirá un poco o caminá'}</small></div></div>`;
+  }
+  $('listaDias').innerHTML = html;
+  $('btnHoy').textContent = sig ? `EMPEZAR: ${TIPOS[sig.tipo].n}` : '¡PLAN TERMINADO! SUBÍ DE NIVEL';
+}
+$('semanas').addEventListener('click', e => { const d = e.target.closest('div[data-w]'); if (!d) return; semVista = +d.dataset.w; pintarPlan.fijada = true; pintarPlan(); });
+$('planNivel').addEventListener('click', e => { const d = e.target.closest('div[data-v]'); if (!d) return; perfil.nivel = +d.dataset.v; guardar('rcPerfil', perfil); pintarPlan(); });
+$('listaDias').addEventListener('click', e => { const d = e.target.closest('.dia[data-k]'); if (!d) return; const [w, n] = d.dataset.k.split('-').map(Number); abrirDia(sesiones().find(s => s.semana === w && s.n === n)); });
+$('btnHoy').addEventListener('click', () => { const s = proxima(); if (s) abrirDia(s); else { perfil.nivel = Math.min(2, perfil.nivel + 1); guardar('rcPerfil', perfil); pintarPlan(); } });
+
+// ───────── DETALLE DEL DÍA ─────────
+let diaAct = null;
+function abrirDia(s) {
+  diaAct = { ...s, lista: armarDia(s.tipo, perfil.nivel, s.semana) };
+  const L = diaAct.lista, desc = NIV[perfil.nivel].desc + ajustes().desc;
+  $('diaLab').textContent = `SEMANA ${s.semana} · ENTRENAMIENTO ${s.n} DE ${perfil.dias} · ${NIV[perfil.nivel].n}`;
+  const [a, ...b] = TIPOS[s.tipo].n.split(' '); $('diaTit').innerHTML = `${a} <span>${b.join(' ')}</span>`;
+  $('diaSub').textContent = `${Math.round((L.reduce((x, y) => x + segDe(y), 0) + L.length * (desc + 10)) / 60)} min · ~${Math.round(kcalDia(L, perfil, desc))} kcal · sin equipo`;
+  $('diaLista').innerHTML = L.map(x => `<div class="ej"><div class="fig">${icono(x.id)}</div><div><b>${EJ[x.id].n}${EJ[x.id].cam ? '<span class="tag">CÁMARA</span>' : ''}</b><small>${x.reps ? x.reps + ' repeticiones' : x.seg + ' segundos'}${EJ[x.id].prop === 'silla' ? ' · necesitás una silla' : EJ[x.id].prop === 'pared' ? ' · contra una pared' : ''}</small></div></div>`).join('');
+  ir('pDia');
+}
+$('volverPlan').addEventListener('click', () => ir('pPlan'));
+$('btnEmpezarDia').addEventListener('click', () => empezarEntreno());
+
+// ───────── SONIDO Y VOZ ─────────
+let ac = null;
+function bip(f = 880, d = .09, v = .25) { try { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = f; o.type = 'triangle'; g.gain.setValueAtTime(v, ac.currentTime); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + d); o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + d + .02); } catch (e) {} }
+let vozES = null; function elegirVoz() { try { const v = speechSynthesis.getVoices(); vozES = v.find(x => /es[-_](AR|419|US|MX)/i.test(x.lang)) || v.find(x => /^es/i.test(x.lang)) || null; } catch (e) {} }
+try { elegirVoz(); speechSynthesis.onvoiceschanged = elegirVoz; } catch (e) {}
+function decir(t) { if (!ajustes().voz) return; try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = vozES ? vozES.lang : 'es-AR'; if (vozES) u.voice = vozES; u.rate = 1.08; speechSynthesis.speak(u); } catch (e) {} }
+
+// ───────── ENTRENAMIENTO EN CURSO ─────────
+// fases: 'prep' (10 s para acomodarte), 'ej' (el ejercicio), 'desc' (descanso con el siguiente)
+const J = { i: 0, fase: 'prep', t0: 0, dur: 0, pausa: false, pausaT: 0, activoSeg: 0, kcal: 0, inicio: 0, ult: 0, raf: 0, hechos: 0 };
+function empezarEntreno() {
+  try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) {} bip(1, .01, .001);
+  Object.assign(J, { i: 0, pausa: false, activoSeg: 0, kcal: 0, inicio: performance.now(), ult: performance.now(), hechos: 0 });
+  try { navigator.wakeLock?.request('screen').catch(() => {}); } catch (e) {}
+  $('juego').hidden = false; fase('prep'); cancelAnimationFrame(J.raf); J.raf = requestAnimationFrame(cuadro);
+}
+function fase(f) {
+  const x = diaAct.lista[J.i], e = EJ[x.id], N = NIV[perfil.nivel];
+  J.fase = f; J.t0 = performance.now(); J.dicho = {};
+  $('juego').classList.toggle('descanso', f === 'desc');
+  if (f === 'prep') { J.dur = J.i === 0 ? 10 : 0; if (!J.dur) return fase('ej'); decir(`preparate. ${e.n.toLowerCase()}`); }
+  if (f === 'ej') { J.dur = x.seg || 0; decir(x.reps ? `${e.n.toLowerCase()}, ${x.reps} repeticiones` : `${e.n.toLowerCase()}, ${x.seg} segundos. ¡ya!`); bip(1100, .15); }
+  if (f === 'desc') { J.dur = Math.max(5, N.desc + ajustes().desc); const s = diaAct.lista[J.i + 1]; decir(`descanso. después: ${EJ[s.id].n.toLowerCase()}`); }
+  pintarJuego();
+}
+function pintarJuego() {
+  const L = diaAct.lista, x = J.fase === 'desc' ? L[J.i + 1] : L[J.i], e = EJ[x.id];
+  $('jPaso').textContent = J.fase === 'desc' ? 'DESCANSO' : `EJERCICIO ${J.i + 1} DE ${L.length}`;
+  $('jNom').textContent = e.n; $('jComo').textContent = e.como;
+  $('jFase').textContent = J.fase === 'prep' ? 'PREPARATE' : J.fase === 'desc' ? 'SIGUIENTE' : e.cam ? 'SE PUEDE CON CÁMARA EN LOS JUEGOS' : '';
+  $('jFase').style.display = $('jFase').textContent ? '' : 'none';
+  $('jSig').textContent = J.fase === 'ej' ? (x.reps ? 'LISTO' : 'SALTAR') : J.fase === 'desc' ? 'YA ESTOY' : 'EMPEZAR YA';
+  $('jCambiar').style.visibility = J.fase === 'desc' || !ALT[x.id] ? 'hidden' : '';
+}
+function cuadro(now) {
+  J.raf = requestAnimationFrame(cuadro);
+  const dt = Math.min(.25, (now - J.ult) / 1000); J.ult = now;
+  if (J.pausa) return;
+  const L = diaAct.lista, x = J.fase === 'desc' ? L[J.i + 1] : L[J.i], e = EJ[x.id], t = (now - J.t0) / 1000;
+  // animación del personaje (de la pose A a la B y vuelta)
+  const vel = e.g === 'estirar' || x.id === 'plancha' || x.id === 'planchaLateral' || x.id === 'pared' ? .35 : e.g === 'cardio' ? 1.6 : .8;
+  const k = (1 - Math.cos(now / 1000 * Math.PI * vel)) / 2;
+  const svg = figura(mezcla(e.A, e.B, J.fase === 'ej' ? k : .75), e.prop);
+  const fig = $('jFig'); if (fig.lastSvg !== svg) { fig.lastSvg = svg; const old = fig.querySelector('svg'); if (old) old.remove(); fig.insertAdjacentHTML('beforeend', svg); }
+  // contador
+  if (J.fase === 'ej') {
+    J.activoSeg += dt; J.kcal += kcalPorMin(e.met, perfil) * dt / 60;
+    if (x.seg) { const r = Math.max(0, x.seg - t); $('jCnt').innerHTML = `${Math.ceil(r)}<small> s</small>`; cuentaAtras(r); if (r <= 0) terminarEj(); }
+    else $('jCnt').innerHTML = `x${x.reps}<small> · ${Math.floor(t)} s</small>`;
+  } else {
+    J.kcal += kcalPorMin(1.5, perfil) * dt / 60;
+    const r = Math.max(0, J.dur - t); $('jCnt').innerHTML = `${Math.ceil(r)}<small> s</small>`; cuentaAtras(r);
+    if (r <= 0) { if (J.fase === 'desc') J.i++; fase('ej'); }
+  }
+  const tot = (now - J.inicio) / 1000; $('jReloj').textContent = Math.floor(tot / 60) + ':' + String(Math.floor(tot % 60)).padStart(2, '0');
+  $('jBar').style.width = (J.i + (J.fase === 'desc' ? 1 : 0)) / L.length * 100 + '%';
+}
+function cuentaAtras(r) { for (const s of [3, 2, 1]) if (r <= s && r > s - 1 && !J.dicho[s]) { J.dicho[s] = 1; bip(660, .08); if (J.fase !== 'ej') decir(String(s)); } }
+function terminarEj() {
+  J.hechos++; bip(1320, .2);
+  const L = diaAct.lista;
+  if (J.i >= L.length - 1) return finEntreno();
+  fase('desc');
+}
+$('jSig').addEventListener('click', () => { if (J.fase === 'ej') terminarEj(); else { if (J.fase === 'desc') J.i++; fase('ej'); } });
+$('jAtras').addEventListener('click', () => { if (J.fase === 'desc') fase('ej'); else if (J.i > 0) { J.i--; fase('ej'); } });
+$('jPausa').addEventListener('click', () => { J.pausa = !J.pausa; if (J.pausa) { J.pausaT = performance.now(); speechSynthesis.cancel(); } else { const d = performance.now() - J.pausaT; J.t0 += d; J.inicio += d; J.ult = performance.now(); } $('jPausa').textContent = J.pausa ? 'SEGUIR' : 'PAUSA'; });
+$('jCambiar').addEventListener('click', () => { const x = diaAct.lista[J.i], a = ALT[x.id]; if (!a) return; const nuevo = { id: a, reps: EJ[a].t === 'r' ? (x.reps || 12) : 0, seg: EJ[a].t === 's' ? (x.seg || 30) : 0 }; diaAct.lista[J.i] = nuevo; fase('ej'); });
+$('jSalir').addEventListener('click', () => { cancelAnimationFrame(J.raf); speechSynthesis.cancel(); if (J.activoSeg > 60) registrar(false); $('juego').hidden = true; ir('pPlan'); });
+function registrar(completo) {
+  const h = leer('rcHistorial', []);
+  h.push({ t: new Date().toISOString(), fecha: hoyStr(), tipo: 'plan', nombre: TIPOS[diaAct.tipo].n, seg: Math.round(J.activoSeg), kcal: Math.round(J.kcal), completo, ej: diaAct.lista.slice(0, J.hechos).map(x => ({ id: x.id, reps: x.reps, seg: x.seg })) });
+  guardar('rcHistorial', h);
+}
+function finEntreno() {
+  cancelAnimationFrame(J.raf); registrar(true);
+  const p = prog(), k = claveP(); p[k] = p[k] || {}; p[k][`${diaAct.semana}-${diaAct.n}`] = hoyStr(); guardar('rcProgreso', p);
+  decir('¡muy bien! día completo'); bip(880, .15); setTimeout(() => bip(1320, .3), 160);
+  $('fMin').textContent = Math.max(1, Math.round(J.activoSeg / 60)); $('fKcal').textContent = Math.round(J.kcal); $('fEj').textContent = J.hechos;
+  $('juego').hidden = true; $('mFin').hidden = false;
+}
+$('fSens').addEventListener('click', e => { const d = e.target.closest('div[data-v]'); if (!d) return; marcarSegm('fSens', d.dataset.v); });
+$('btnFinOk').addEventListener('click', () => {
+  // si fue muy fácil o muy difícil varias veces, el plan se ajusta solo
+  const s = +($('fSens').querySelector('.sel')?.dataset.v || 0), a = leer('rcSensacion', []); a.push(s); guardar('rcSensacion', a.slice(-3));
+  const ult = a.slice(-3); let msj = '';
+  if (ult.length === 3 && ult.every(x => x === -1) && perfil.nivel < 2) { perfil.nivel++; guardar('rcPerfil', perfil); guardar('rcSensacion', []); msj = 'Te resultó fácil 3 veces seguidas: te subimos a ' + NIV[perfil.nivel].n + '.'; }
+  if (ult.length === 3 && ult.every(x => x === 1) && perfil.nivel > 0) { perfil.nivel--; guardar('rcPerfil', perfil); guardar('rcSensacion', []); msj = 'Te costó 3 veces seguidas: bajamos a ' + NIV[perfil.nivel].n + ' un tiempo.'; }
+  $('mFin').hidden = true; ir('pInforme'); if (msj) setTimeout(() => alertaSuave(msj), 300);
+});
+function alertaSuave(t) { const d = document.createElement('div'); d.className = 'caja'; d.style.cssText = 'position:fixed;left:16px;right:16px;top:16px;z-index:30;font-weight:800;text-align:center'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 4000); }
+
+// ───────── INFORME ─────────
+const DSEM = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
+function lunes(d = new Date()) { const x = new Date(d); x.setHours(12, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
+function racha(h) { const f = new Set(h.map(x => x.fecha)); let n = 0; const x = new Date(); if (!f.has(hoyStr(x))) x.setDate(x.getDate() - 1); while (f.has(hoyStr(x))) { n++; x.setDate(x.getDate() - 1); } return n; }
+function pintarInforme() {
+  const h = leer('rcHistorial', []), L = lunes(), dias = Array.from({ length: 7 }, (_, i) => { const d = new Date(L); d.setDate(L.getDate() + i); return hoyStr(d); });
+  const fin = new Date(L); fin.setDate(L.getDate() + 6);
+  $('infSemana').textContent = `Semana del ${L.getDate()}/${L.getMonth() + 1} al ${fin.getDate()}/${fin.getMonth() + 1}`;
+  const sem = h.filter(x => dias.includes(x.fecha)), kc = dias.map(d => sem.filter(x => x.fecha === d).reduce((a, x) => a + x.kcal, 0));
+  const minSem = sem.reduce((a, x) => a + x.seg, 0) / 60;
+  $('iKcal').textContent = Math.round(kc.reduce((a, b) => a + b, 0)); $('iMin').textContent = Math.round(minSem); $('iSes').textContent = sem.length; $('iRacha').textContent = racha(h);
+  // barras de calorías por día
+  const max = Math.max(100, ...kc), hoy = hoyStr(); let s = '';
+  kc.forEach((v, i) => { const x = 8 + i * 46, hh = v / max * 94, y = 120 - hh;
+    s += `<rect x="${x}" y="${y}" width="36" height="${Math.max(0, hh)}" rx="6" fill="${dias[i] === hoy ? '#ffd23f' : '#ff8a3d'}" stroke="#2a2238" stroke-width="${v ? 3 : 0}"/>`;
+    if (v) s += `<text x="${x + 18}" y="${y - 5}" text-anchor="middle" font-weight="800" font-size="13" fill="#2a2238">${Math.round(v)}</text>`;
+    s += `<text x="${x + 18}" y="140" text-anchor="middle" font-weight="800" font-size="12" fill="#2a2238" opacity=".6">${DSEM[i]}</text>`; });
+  s += '<line x1="4" y1="121" x2="326" y2="121" stroke="#2a2238" stroke-width="3" stroke-linecap="round"/>';
+  $('gKcal').innerHTML = s;
+  $('iOms').textContent = `${Math.round(minSem)} de 150`; $('iOmsB').style.width = Math.min(100, minSem / 150 * 100) + '%';
+  // peso
+  const pesos = leer('rcPeso', []).slice(-12); let g = '';
+  if (pesos.length) {
+    const mn = Math.min(...pesos.map(p => p.kg)) - 1, mx = Math.max(...pesos.map(p => p.kg)) + 1, X = i => pesos.length === 1 ? 165 : 16 + i * (298 / (pesos.length - 1)), Y = kg => 14 + (mx - kg) / (mx - mn) * 86;
+    const pts = pesos.map((p, i) => `${X(i)},${Y(p.kg)}`).join(' ');
+    g += `<polyline fill="none" stroke="#2a2238" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" points="${pts}"/><polyline fill="none" stroke="#3ec8a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${pts}"/>`;
+    pesos.forEach((p, i) => g += `<circle cx="${X(i)}" cy="${Y(p.kg)}" r="${i === pesos.length - 1 || i === 0 ? 6 : 4}" fill="#ffd23f" stroke="#2a2238" stroke-width="2.5"/>`);
+    const f = p => `${p.kg.toString().replace('.', ',')} kg`, fd = p => p.fecha.slice(8, 10) + '/' + p.fecha.slice(5, 7);
+    g += `<text x="10" y="124" font-weight="800" font-size="13" fill="#2a2238">${f(pesos[0])} · ${fd(pesos[0])}</text>`;
+    if (pesos.length > 1) g += `<text x="320" y="124" text-anchor="end" font-weight="800" font-size="13" fill="#2a2238">${f(pesos[pesos.length - 1])} · ${fd(pesos[pesos.length - 1])}</text>`;
+  } else g = '<text x="165" y="70" text-anchor="middle" font-weight="800" font-size="14" fill="#2a2238" opacity=".5">Anotá tu peso para ver el gráfico</text>';
+  $('gPeso').innerHTML = g;
+  const imc = perfil.peso / Math.pow(perfil.altura / 100, 2), cat = imc < 18.5 ? 'BAJO' : imc < 25 ? 'NORMAL' : imc < 30 ? 'SOBREPESO' : 'OBESIDAD';
+  $('iImc').innerHTML = `IMC: ${imc.toFixed(1).replace('.', ',')} <span style="opacity:.6">(${cat})</span>`;
+  // calendario del mes
+  const hoyD = new Date(), pri = new Date(hoyD.getFullYear(), hoyD.getMonth(), 1), nd = new Date(hoyD.getFullYear(), hoyD.getMonth() + 1, 0).getDate(), fechas = new Set(h.map(x => x.fecha));
+  let c = DSEM.map(d => `<span class="cab">${d}</span>`).join('') + '<span></span>'.repeat((pri.getDay() + 6) % 7);
+  for (let d = 1; d <= nd; d++) { const f = hoyStr(new Date(hoyD.getFullYear(), hoyD.getMonth(), d)); c += `<span class="${fechas.has(f) ? 'si' : ''}${f === hoy ? ' hoy' : ''}">${d}</span>`; }
+  $('iCal').innerHTML = c;
+  // progreso
+  const pr = leer('rcPrueba', []), lin = [];
+  if (pr.length) lin.push(`Prueba de sentadillas (1 min): <b>${pr[0].reps}${pr.length > 1 ? ' → ' + pr[pr.length - 1].reps : ''}</b>${pr.length > 1 && pr[0].reps ? ` (${pr[pr.length - 1].reps >= pr[0].reps ? '+' : ''}${Math.round((pr[pr.length - 1].reps / pr[0].reps - 1) * 100)}%)` : ''}`);
+  const tot = {}; for (const x of h) for (const e of x.ej || []) if (e.reps) tot[e.id] = (tot[e.id] || 0) + e.reps;
+  Object.entries(tot).sort((a, b) => b[1] - a[1]).slice(0, 4).forEach(([id, n]) => lin.push(`${EJ[id] ? EJ[id].n.charAt(0) + EJ[id].n.slice(1).toLowerCase() : id}: <b>${n}</b> en total`));
+  const juegos = h.filter(x => x.tipo === 'juego'); if (juegos.length) lin.push(`Juegos y rutina con cámara: <b>${juegos.length}</b> sesiones`);
+  const pesos2 = leer('rcPeso', []); if (pesos2.length > 1) { const d = pesos2[pesos2.length - 1].kg - pesos2[0].kg; lin.push(`Peso: <b>${d > 0 ? '+' : ''}${d.toFixed(1).replace('.', ',')} kg</b> desde que empezaste`); }
+  $('iProg').innerHTML = lin.length ? lin.join('<br>') : 'Todavía no hay datos. ¡Hacé tu primer día!';
+  $('tSes').textContent = h.length; $('tMin').textContent = Math.round(h.reduce((a, x) => a + x.seg, 0) / 60); $('tKcal').textContent = Math.round(h.reduce((a, x) => a + x.kcal, 0)).toLocaleString('es-AR');
+}
+let pesoTmp = 70;
+$('btnPeso').addEventListener('click', () => { const p = leer('rcPeso', []); pesoTmp = p.length ? p[p.length - 1].kg : perfil.peso; $('pesoNum').querySelector('b').textContent = String(pesoTmp).replace('.', ','); $('mPeso').hidden = false; });
+$('pesoNum').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; pesoTmp = Math.round((pesoTmp + (b.textContent === '+' ? .1 : -.1)) * 10) / 10; $('pesoNum').querySelector('b').textContent = String(pesoTmp).replace('.', ','); });
+$('btnPesoOk').addEventListener('click', () => { const p = leer('rcPeso', []).filter(x => x.fecha !== hoyStr()); p.push({ fecha: hoyStr(), kg: pesoTmp }); guardar('rcPeso', p); perfil.peso = pesoTmp; guardar('rcPerfil', perfil); $('mPeso').hidden = true; pintarInforme(); });
+$('btnPesoNo').addEventListener('click', () => $('mPeso').hidden = true);
+
+// ───────── AJUSTES ─────────
+function pintarAjustes() {
+  const o = OBJ.find(x => x.id === perfil.objetivo);
+  $('ajResumen').innerHTML = `${perfil.edad} años · ${String(perfil.peso).replace('.', ',')} kg · ${perfil.altura} cm · ${perfil.sexo === 'M' ? 'mujer' : 'hombre'}<br>Objetivo: <b>${o.n}</b><br>Nivel: <b>${NIV[perfil.nivel].n}</b> · ${perfil.dias} días por semana<br>Metabolismo basal estimado: <b>${Math.round(bmr(perfil))} kcal/día</b>`;
+  marcarSegm('voz', ajustes().voz); marcarSegm('desc', ajustes().desc);
+}
+$('voz').addEventListener('click', e => { const d = e.target.closest('div[data-v]'); if (!d) return; guardar('rcAjustes', { ...ajustes(), voz: +d.dataset.v }); marcarSegm('voz', d.dataset.v); });
+$('desc').addEventListener('click', e => { const d = e.target.closest('div[data-v]'); if (!d) return; guardar('rcAjustes', { ...ajustes(), desc: +d.dataset.v }); marcarSegm('desc', d.dataset.v); });
+$('btnEditarPerfil').addEventListener('click', abrirPerfil);
+$('btnBorrar').addEventListener('click', () => { if (!confirm('¿Borrar tu perfil, tu progreso y tu historial?')) return; for (const k of ['rcPerfil', 'rcProgreso', 'rcHistorial', 'rcPeso', 'rcPrueba', 'rcSensacion', 'rcAjustes']) localStorage.removeItem(k); location.reload(); });
+
+// ───────── ARRANQUE ─────────
+const bor = leer('rcBorrador', null);
+if (!perfil || bor) { abrirPerfil(); if (bor) { borr = { ...borr, ...bor }; const pr = leer('rcPrueba', []).slice(-1)[0]; if (pr) borr.nivel = nivelDePrueba(pr.reps); for (const nm of document.querySelectorAll('#pPerfil .num')) nm.pinta(); marcarSegm('sexo', borr.sexo); marcarSegm('diasSem', borr.dias); marcarSegm('nivel', borr.nivel); for (const x of $('objetivos').children) x.classList.toggle('sel', x.dataset.v === borr.objetivo); } }
+else if (location.hash === '#informe') ir('pInforme');
+else ir('pPlan');
+window.__e = { EJ, armarDia, sesiones, figura, mezcla, perfil: () => perfil, J };
+</script>
+</body>
+</html>
