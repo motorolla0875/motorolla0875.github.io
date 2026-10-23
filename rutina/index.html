@@ -99,6 +99,12 @@
   </div>
 </div>
 
+<script>
+  // si algo falla al cargar (por ejemplo en un celular), se muestra en pantalla para saber qué pasó
+  window.addEventListener('error', e => { const el = document.getElementById('error'); if (el) el.textContent = 'Error: ' + (e.message || e.type) + (e.filename ? ' (' + e.filename.split('/').pop() + ')' : ''); });
+  window.addEventListener('unhandledrejection', e => { const el = document.getElementById('error'); if (el) el.textContent = 'Error: ' + (e.reason && (e.reason.message || e.reason)); });
+  setTimeout(() => { if (!window.__t) { const el = document.getElementById('error'); if (el && !el.textContent) el.textContent = 'El juego no terminó de cargar. Recargá la página.'; } }, 12000);
+</script>
 <script type="module">
 import { FilesetResolver, PoseLandmarker } from '../bateria/vision_bundle.mjs';
 const $ = id => document.getElementById(id);
