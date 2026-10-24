@@ -1,11 +1,11 @@
 'use strict';
 // ═════════ BALDES DE AGUA Y LAVA, LAVA EN LAS CUEVAS, OBSIDIANA, EXPERIENCIA Y NIVELES, BRÚJULA Y MAPA ═════════
 
-Object.assign(TX.es, { lavaQuema: '¡LAVA! ¡SAL RÁPIDO!', nivel: 'NIVEL {n}', subiNivel: '¡SUBISTE AL NIVEL {n}!', faltaNivel: 'NECESITAS NIVEL 5 PARA ENCANTAR<small>gana experiencia peleando y minando</small>', baldeAyuda: 'TOCA AGUA O LAVA CON EL BALDE VACÍO', haciaCasa: 'tu casa' });
-Object.assign(TX.en, { lavaQuema: 'LAVA! GET OUT FAST!', nivel: 'LEVEL {n}', subiNivel: 'LEVEL UP! {n}', faltaNivel: 'YOU NEED LEVEL 5 TO ENCHANT<small>earn experience by fighting and mining</small>', baldeAyuda: 'TAP WATER OR LAVA WITH THE EMPTY BUCKET', haciaCasa: 'home' });
-Object.assign(TX.pt, { lavaQuema: 'LAVA! SAIA RÁPIDO!', nivel: 'NÍVEL {n}', subiNivel: 'SUBIU PARA O NÍVEL {n}!', faltaNivel: 'VOCÊ PRECISA DO NÍVEL 5 PARA ENCANTAR<small>ganhe experiência lutando e minerando</small>', baldeAyuda: 'TOQUE ÁGUA OU LAVA COM O BALDE VAZIO', haciaCasa: 'sua casa' });
-Object.assign(NOMBRES.en, { 'Lava': 'Lava', 'Obsidiana': 'Obsidian', 'Balde': 'Bucket', 'Balde de agua': 'Water bucket', 'Balde de lava': 'Lava bucket', 'Brújula': 'Compass', 'Mapa': 'Map' });
-Object.assign(NOMBRES.pt, { 'Lava': 'Lava', 'Obsidiana': 'Obsidiana', 'Balde': 'Balde', 'Balde de agua': 'Balde de água', 'Balde de lava': 'Balde de lava', 'Brújula': 'Bússola', 'Mapa': 'Mapa' });
+Object.assign(TX.es, { palaAyuda: 'TOCA EL PASTO CON LA PALA<small>queda un camino de tierra</small>', palaYa: 'YA ES CAMINO', lavaQuema: '¡LAVA! ¡SAL RÁPIDO!', nivel: 'NIVEL {n}', subiNivel: '¡SUBISTE AL NIVEL {n}!', faltaNivel: 'NECESITAS NIVEL 5 PARA ENCANTAR<small>gana experiencia peleando y minando</small>', baldeAyuda: 'TOCA AGUA O LAVA CON EL BALDE VACÍO', haciaCasa: 'tu casa' });
+Object.assign(TX.en, { palaAyuda: 'TAP THE GRASS WITH THE SHOVEL<small>it leaves a dirt path</small>', palaYa: 'ALREADY A PATH', lavaQuema: 'LAVA! GET OUT FAST!', nivel: 'LEVEL {n}', subiNivel: 'LEVEL UP! {n}', faltaNivel: 'YOU NEED LEVEL 5 TO ENCHANT<small>earn experience by fighting and mining</small>', baldeAyuda: 'TAP WATER OR LAVA WITH THE EMPTY BUCKET', haciaCasa: 'home' });
+Object.assign(TX.pt, { palaAyuda: 'TOQUE A GRAMA COM A PÁ<small>fica um caminho de terra</small>', palaYa: 'JÁ É CAMINHO', lavaQuema: 'LAVA! SAIA RÁPIDO!', nivel: 'NÍVEL {n}', subiNivel: 'SUBIU PARA O NÍVEL {n}!', faltaNivel: 'VOCÊ PRECISA DO NÍVEL 5 PARA ENCANTAR<small>ganhe experiência lutando e minerando</small>', baldeAyuda: 'TOQUE ÁGUA OU LAVA COM O BALDE VAZIO', haciaCasa: 'sua casa' });
+Object.assign(NOMBRES.en, { 'Lava': 'Lava', 'Obsidiana': 'Obsidian', 'Balde': 'Bucket', 'Balde de agua': 'Water bucket', 'Balde de lava': 'Lava bucket', 'Brújula': 'Compass', 'Mapa': 'Map', 'Pala': 'Shovel', 'Camino de tierra': 'Dirt path' });
+Object.assign(NOMBRES.pt, { 'Lava': 'Lava', 'Obsidiana': 'Obsidiana', 'Balde': 'Balde', 'Balde de agua': 'Balde de água', 'Balde de lava': 'Balde de lava', 'Brújula': 'Bússola', 'Mapa': 'Mapa', 'Pala': 'Pá', 'Camino de tierra': 'Caminho de terra' });
 
 // ═════════ LAVA EN LAS CUEVAS HONDAS (mundos nuevos) ═════════
 { const g0 = generarExtra; generarExtra = function (S, ej) { const r = g0(S, ej);
@@ -70,7 +70,14 @@ function fluidoApuntado(dir) {
 }
 { const t0 = tocarExtra2; tocarExtra2 = function (dir) {
     const id = barra[sel] || 0;
-    if ((id === I.BALDE || id === I.BALDE_AGUA || id === I.BALDE_LAVA) && aventura()) return true;
+    if ((id === I.BALDE || id === I.BALDE_AGUA || id === I.BALDE_LAVA || id === I.PALA) && aventura()) return true;
+    // la pala pela el pasto y deja un camino de tierra
+    if (id === I.PALA) { const h = apuntar(dir); if (!h) return true;
+      if ((h.b === B.PASTO || h.b === B.TIERRA) && reemplazable(get(h.x, h.y + 1, h.z)) && get(h.x, h.y + 1, h.z) !== B.AGUA && get(h.x, h.y + 1, h.z) !== B.LAVA) {
+        accion(() => { if (get(h.x, h.y + 1, h.z)) ponerBloque(h.x, h.y + 1, h.z, B.AIRE); ponerBloque(h.x, h.y, h.z, B.CAMINO_T); });
+        polvo(h.x + .5, h.y + 1, h.z + .5, '#a87e48', 6); swing = 1; son(180, .08, 'triangle', .08); }
+      else if (h.b === B.CAMINO_T) aviso(TR('palaYa'), 1000); else aviso(TR('palaAyuda'), 1200);
+      return true; }
     if (id === I.BALDE) { const f = fluidoApuntado(dir); if (!f) { aviso(TR('baldeAyuda'), 1200); return true; }
       sacarFluido(f.x, f.y, f.z, f.b); if (!creativo()) quitarItem(I.BALDE, 1); darItem(f.b === B.AGUA ? I.BALDE_AGUA : I.BALDE_LAVA, 1); swing = 1; son(f.b === B.AGUA ? 500 : 200, .15, 'sine', .1); return true; }
     if (id === I.BALDE_AGUA || id === I.BALDE_LAVA) { const h = apuntar(dir); if (!h) return true;
