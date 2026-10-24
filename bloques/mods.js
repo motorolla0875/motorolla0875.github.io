@@ -47,6 +47,24 @@ Object.assign(TX.pt, {
   metaLlegaste: 'VOCÊ CHEGOU AO FINAL!', tiempo: 'Tempo: {t}', mejor: 'Melhor: {t}', jugarDeNuevo: 'Jogar de novo', seguirExplorando: 'Continuar explorando', control: 'PONTO DE CONTROLE',
   aventuraAyuda: 'MODO AVENTURA<small>explore e chegue ao final</small>',
 });
+Object.assign(TX.es, {
+  texturasMod: 'Texturas', texturasAyuda: 'redibuja cualquier bloque del juego; se ve así en los mundos donde actives este mod', cambiarTextura: '+ Redibujar un bloque del juego…', arriba: 'arriba', abajo: 'abajo', costado: 'costado', redibuja: 'Redibuja: {n}',
+  criaturasMod: 'Criaturas', nuevaCriatura: '+ Criatura nueva', criTitulo: 'Tu criatura', forma: 'Forma', fVaca: 'Vaca', fOveja: 'Oveja', fGallina: 'Gallina', fOjon: 'Ojón',
+  colorCuerpo: 'Color del cuerpo', colorDetalle: 'Color de los detalles', tamano: 'Tamaño', chico: 'Chico', grande: 'Grande', caracter: 'Cómo es', amistosa: 'Amistosa', ataca: 'Te ataca',
+  vidaC: 'Vida', poca: 'Poca', mucha: 'Mucha', sueltaC: 'Al morir suelta', nada: 'Nada', texturasN: '{n} texturas', criaturasN: '{n} criaturas', aparecer: 'Hacer aparecer', criaturasMundo: 'Criaturas de los mods', nombreCriatura: 'Criatura',
+});
+Object.assign(TX.en, {
+  texturasMod: 'Textures', texturasAyuda: 'redraw any block in the game; it looks like this in worlds where you turn this mod on', cambiarTextura: '+ Redraw a game block…', arriba: 'top', abajo: 'bottom', costado: 'side', redibuja: 'Redraw: {n}',
+  criaturasMod: 'Creatures', nuevaCriatura: '+ New creature', criTitulo: 'Your creature', forma: 'Shape', fVaca: 'Cow', fOveja: 'Sheep', fGallina: 'Chicken', fOjon: 'Big Eye',
+  colorCuerpo: 'Body color', colorDetalle: 'Detail color', tamano: 'Size', chico: 'Small', grande: 'Big', caracter: 'Behavior', amistosa: 'Friendly', ataca: 'Attacks you',
+  vidaC: 'Health', poca: 'Low', mucha: 'High', sueltaC: 'Drops when it dies', nada: 'Nothing', texturasN: '{n} textures', criaturasN: '{n} creatures', aparecer: 'Spawn', criaturasMundo: 'Mod creatures', nombreCriatura: 'Creature',
+});
+Object.assign(TX.pt, {
+  texturasMod: 'Texturas', texturasAyuda: 'redesenhe qualquer bloco do jogo; ele fica assim nos mundos onde você ativar este mod', cambiarTextura: '+ Redesenhar um bloco do jogo…', arriba: 'cima', abajo: 'baixo', costado: 'lado', redibuja: 'Redesenhe: {n}',
+  criaturasMod: 'Criaturas', nuevaCriatura: '+ Criatura nova', criTitulo: 'Sua criatura', forma: 'Forma', fVaca: 'Vaca', fOveja: 'Ovelha', fGallina: 'Galinha', fOjon: 'Olhão',
+  colorCuerpo: 'Cor do corpo', colorDetalle: 'Cor dos detalhes', tamano: 'Tamanho', chico: 'Pequeno', grande: 'Grande', caracter: 'Como é', amistosa: 'Amigável', ataca: 'Ataca você',
+  vidaC: 'Vida', poca: 'Pouca', mucha: 'Muita', sueltaC: 'Ao morrer solta', nada: 'Nada', texturasN: '{n} texturas', criaturasN: '{n} criaturas', aparecer: 'Fazer aparecer', criaturasMundo: 'Criaturas dos mods', nombreCriatura: 'Criatura',
+});
 Object.assign(NOMBRES.en, { 'Cartel': 'Sign', 'Meta': 'Finish', 'Punto de control': 'Checkpoint' });
 Object.assign(NOMBRES.pt, { 'Cartel': 'Placa', 'Meta': 'Chegada', 'Punto de control': 'Ponto de Controle' });
 aplicarIdioma();
@@ -74,6 +92,7 @@ const cap = (id, html, trans = true) => { const d = document.createElement('div'
 cap('modsCapa', '<div class="mVentana"><div class="vCab"><div class="vTit" data-i="misMods"></div><div class="cerrar" id="modsCerrar">X</div></div><div class="vCuerpo" id="modsLista"></div><div class="vPie" style="display:flex;gap:6px;flex-wrap:wrap"><div class="mb verde" id="bNuevoMod" data-i="nuevoMod"></div><div class="mb" id="bCargarMod" data-i="cargarArchivoBtn"></div></div></div>', false);
 cap('modEd', '<div class="mVentana"><div class="vCab"><input class="campo" id="modNombre" maxlength="30" style="flex:1"><div class="cerrar" id="modEdCerrar">X</div></div><div class="vCuerpo" id="modEdCuerpo"></div><div class="vPie" style="display:flex;gap:6px"><div class="mb verde" id="bGuardarMod" data-i="guardarMod"></div></div></div>');
 cap('pixEd', '<div class="mVentana"><div class="vCab"><div class="vTit" data-i="pixTitulo"></div><div class="cerrar" id="pixCerrar">X</div></div><div class="vCuerpo"><div class="pixWrap"><canvas id="pixGrid" width="16" height="16"></canvas><div style="flex:1;min-width:220px"><input class="campo" id="pixNombre" maxlength="24"><h4></h4><div class="opcG" id="pixHerr"></div><h4></h4><div class="paleta" id="pixPaleta"></div><div style="display:flex;gap:6px;align-items:center;margin-top:6px"><input type="color" id="pixColor" value="#3a6fd8" style="width:44px;height:30px;border:2px solid #000;padding:0"><select id="pixDesde"></select><div class="mb" id="pixLimpiar" data-i="limpiar"></div></div><h4 data-i="dureza"></h4><div class="opcG" id="pixDureza"></div><label style="display:flex;gap:6px;align-items:center;margin-top:8px;font-size:14px"><input type="checkbox" id="pixLuz"> <span data-i="brilla"></span></label></div></div></div><div class="vPie" style="display:flex;gap:6px"><div class="mb verde" id="pixListo" data-i="listo"></div></div></div>');
+cap('criEd', '<div class="mVentana"><div class="vCab"><div class="vTit" data-i="criTitulo"></div><div class="cerrar" id="criCerrar">X</div></div><div class="vCuerpo"><div class="pixWrap"><canvas id="criVista" width="220" height="220" style="width:180px;height:180px;border:3px solid #000;background:#8fc4ef;position:sticky;top:0;display:block"></canvas><div style="flex:1;min-width:230px"><input class="campo" id="criNombre" maxlength="24"><div id="criCuerpo"></div></div></div></div><div class="vPie" style="display:flex;gap:6px"><div class="mb verde" id="criListo" data-i="listo"></div></div></div>');
 cap('opcCapa', '<div class="mVentana"><div class="vCab"><div class="vTit" data-i="opcTitulo"></div><div class="cerrar" id="opcCerrar">X</div></div><div class="vCuerpo" id="opcCuerpo"></div></div>');
 cap('cartelCapa', '<div class="titulo" style="font-size:clamp(22px,4vw,32px)" data-i="cartelTitulo"></div><textarea id="cartelTxt" maxlength="200"></textarea><div class="btn" id="cartelListo" data-i="listo"></div>');
 cap('verCartel', '<div class="tablero" id="verCartelTxt"></div><div class="btn" id="verCartelOk" data-i="seguir"></div>');
@@ -91,7 +110,12 @@ function quitarModsInstalados() {
   for (let id = MOD_BASE; id < MOD_BASE + MOD_SLOTS * MOD_MAX_BLOQUES; id++) { if (DEF[id]) delete DEF[id]; delete iconos[id]; const k = TODOS.indexOf(id); if (k >= 0) TODOS.splice(k, 1); }
   for (let k = RECETAS.length - 1; k >= 0; k--) if (RECETAS[k].mod) RECETAS.splice(k, 1);
   for (let t = TILE_MOD0; t < TILE_MOD0 + 50; t++) delete tileURLs[t];
+  for (const t in tilesOrig) { ag.putImageData(tilesOrig[t], (t % 8) * 16, Math.floor(t / 8) * 16); delete tileURLs[t]; }   // texturas originales de vuelta
+  tilesOrig = {}; for (const k in iconos) delete iconos[k];
+  for (const k in TIPOS) if (TIPOS[k].mod) delete TIPOS[k];
 }
+let tilesOrig = {};
+const pixTile = (t, pix) => { const tx = t % 8, ty = Math.floor(t / 8); ag.clearRect(tx * 16, ty * 16, 16, 16); for (let k = 0; k < 256; k++) if (pix[k]) { ag.fillStyle = pix[k]; ag.fillRect(tx * 16 + k % 16, ty * 16 + (k >> 4), 1, 1); } delete tileURLs[t]; };
 const refId = (m, r) => typeof r === 'string' && r.startsWith('m:') ? MOD_BASE + m.slot * MOD_MAX_BLOQUES + (+r.slice(2)) : +r;
 function instalarMod(m) {
   m.bloques.forEach((b, k) => {
@@ -104,20 +128,54 @@ function instalarMod(m) {
     TODOS.push(id);
     if (b.receta && b.receta.ing && b.receta.ing.length) { const r = [[id, b.receta.n || 1], b.receta.ing.filter(([x]) => x !== '' && x != null).map(([x, n]) => [refId(m, x), n || 1])]; r.mod = true; if (r[1].length) RECETAS.push(r); }
   });
+  // paquete de texturas: redibuja bloques del juego
+  for (const nombre in (m.texturas || {})) { const t = TL[nombre]; if (t == null || t >= TILE_MOD0) continue; if (!tilesOrig[t]) tilesOrig[t] = ag.getImageData((t % 8) * 16, Math.floor(t / 8) * 16, 16, 16); pixTile(t, m.texturas[nombre]); }
+  // criaturas propias
+  (m.criaturas || []).forEach((c, k) => { TIPOS['c' + m.slot + '_' + k] = tipoCriatura(c, m); });
+}
+// ═════════ CRIATURAS ═════════
+const FORMA_BASE = {
+  vaca: { an: .45, al: 1.4, vel: 1.1, c1: '#7a5230', c2: '#4f3420' }, oveja: { an: .45, al: 1.3, vel: 1, c1: '#efefef', c2: '#8a8a8a' },
+  gallina: { an: .25, al: .8, vel: 1.3, c1: '#f4f4f4', c2: '#f0a020' }, ojon: { an: .45, al: 1.4, vel: 1.4, c1: '#6b3fa0', c2: '#45276b' },
+};
+const hex = c => parseInt(String(c || '#888888').slice(1), 16);
+const FORMAS = {
+  vaca(g, c1, c2) { const cu = matA(hex(c1)), os = matA(hex(c2)), bl = matA(0xf2f2f2), ne = matA(0x1a1a1a);
+    caja(g, .8, .75, 1.25, 0, .95, 0, cu); caja(g, .5, .05, .55, .1, 1.33, -.15, os); caja(g, .5, .5, .45, 0, 1.25, .8, cu); caja(g, .42, .24, .12, 0, 1.1, 1.06, os);
+    caja(g, .07, .07, .02, .13, 1.33, 1.03, ne); caja(g, .07, .07, .02, -.13, 1.33, 1.03, ne); caja(g, .08, .16, .08, .22, 1.55, .75, bl); caja(g, .08, .16, .08, -.22, 1.55, .75, bl);
+    return [[.24, .42], [-.24, -.42], [-.24, .42], [.24, -.42]].map(([x, z]) => pata(g, .22, .6, .22, x, .6, z, os)); },
+  oveja(g, c1, c2) { const la = matA(hex(c1)), ca = matA(hex(c2)), ne = matA(0x1a1a1a);
+    caja(g, .9, .8, 1.15, 0, .95, 0, la); caja(g, .42, .42, .42, 0, 1.2, .72, ca); caja(g, .46, .16, .3, 0, 1.45, .66, la); caja(g, .07, .07, .02, .11, 1.25, .94, ne); caja(g, .07, .07, .02, -.11, 1.25, .94, ne);
+    return [[.24, .38], [-.24, -.38], [-.24, .38], [.24, -.38]].map(([x, z]) => pata(g, .2, .55, .2, x, .55, z, ca)); },
+  gallina(g, c1, c2) { const bl = matA(hex(c1)), na = matA(hex(c2)), ro = matA(0xd02828), ne = matA(0x1a1a1a);
+    caja(g, .42, .42, .55, 0, .5, 0, bl); caja(g, .28, .36, .26, 0, .85, .28, bl); caja(g, .14, .08, .12, 0, .82, .47, na); caja(g, .06, .14, .14, 0, 1.08, .28, ro); caja(g, .1, .12, .04, 0, .72, .42, ro);
+    caja(g, .05, .05, .02, .08, .92, .415, ne); caja(g, .05, .05, .02, -.08, .92, .415, ne); caja(g, .06, .3, .4, .24, .52, -.02, bl); caja(g, .06, .3, .4, -.24, .52, -.02, bl);
+    return [[.1, 0], [-.1, 0]].map(([x, z]) => pata(g, .06, .3, .06, x, .3, z, na)); },
+  ojon(g, c1, c2) { const cu = matA(hex(c1)), pa = matA(hex(c2)), bl = matA(0xf2f2f2), ne = new THREE.MeshBasicMaterial({ color: 0x1a1022 });
+    caja(g, .9, 1, .9, 0, .9, 0, cu); caja(g, .52, .42, .06, 0, 1.05, .46, bl); caja(g, .22, .22, .07, 0, 1.03, .48, ne);
+    return [-1, 1].map(s => pata(g, .26, .4, .26, s * .22, .4, 0, pa)); },
+};
+const TAM = [.6, 1, 1.6], VIDAS = [4, 10, 24];
+function tipoCriatura(c, m) {
+  const f = FORMA_BASE[c.base] || FORMA_BASE.vaca, s = TAM[c.tam ?? 1];
+  return { mod: true, nombre: c.nombre, voz: c.base, vida: VIDAS[c.vida ?? 1], an: f.an * s, al: f.al * s, vel: f.vel * (c.rapida ? 1.7 : 1), peso: .36, color: c.c1 || f.c1, hostil: !!c.hostil, dano: c.tam === 2 ? 3 : 2,
+    armar(g) { const h = new THREE.Group(); h.scale.setScalar(s); g.add(h); return (FORMAS[c.base] || FORMAS.vaca)(h, c.c1 || f.c1, c.c2 || f.c2); },
+    suelta: () => c.suelta && c.suelta[0] !== '' && c.suelta[0] != null ? [[refId(m, c.suelta[0]), c.suelta[1] || 1]] : [] };
 }
 function modsCargar(x, meta) {
   quitarModsInstalados(); tileLibre = TILE_MOD0; x = x || {};
   modsMundo = (x.mods || []).filter(m => m && m.bloques); carteles = x.carteles || {}; mapa = x.mapa || {};
   REG = Object.assign({}, REG_BASE, x.reglas || {});
   for (const m of modsMundo) instalarMod(m);
-  atlasTex.needsUpdate = true;
+  atlasTex.needsUpdate = true; for (const k in iconos) delete iconos[k];
+  if (typeof mecCargar === 'function') mecCargar(x.mec);
   cronoT = 0; cronoOn = false; ultControl = -1; tieneMeta = false;
   if (meta && meta.modo === 'aventura') setTimeout(() => aviso(TR('aventuraAyuda'), 2600), 600);
 }
 function modsGuardar() {
   const c = {}; for (const i in carteles) if (mundo[+i] === B.CARTEL && carteles[i]) c[i] = carteles[i];
   const r = {}; for (const k in REG) if (REG[k] !== REG_BASE[k]) r[k] = REG[k];
-  return { mods: modsMundo, carteles: c, reglas: r, mapa };
+  return { mods: modsMundo, carteles: c, reglas: r, mapa, mec: typeof mecGuardar === 'function' ? mecGuardar() : undefined };
 }
 
 // ═════════ CARTELES ═════════
@@ -137,6 +195,7 @@ const fmtT = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart
 let metaRevT = 0;
 function modsFrame(dt) {
   if (!jugando) { $('crono').hidden = true; return; }
+  if (typeof mecFrame === 'function') mecFrame(dt);
   metaRevT -= dt; if (metaRevT <= 0) { metaRevT = 3; let hay = false; for (const [i, t] of diffs) if (t === B.META) { hay = true; break; } tieneMeta = hay; }
   $('crono').hidden = !tieneMeta || creativo();
   if (!tieneMeta || creativo() || pausado) return;
@@ -182,8 +241,10 @@ function pintarOpciones() {
   h += `<h4>${TR('modsMundo')}</h4>`;
   if (!lib.length) h += `<div class="fila"><div class="nom">${TR('sinMods')}</div></div>`;
   for (const m of lib) { const act = modsMundo.find(x => x.id === m.id);
-    h += `<div class="fila"><div class="nom">${esc(m.nombre)}<small>${TR('bloquesN', { n: m.bloques.length })}</small></div>` + (act ? (m.ver > (act.ver || 0) ? `<div class="mb verde" data-actualizar="${m.id}">${TR('actualizar')}</div>` : '') + `<div class="mb rojo" data-quitar="${m.id}">${TR('quitar')}</div>` : `<div class="mb verde" data-activar="${m.id}">${TR('activar')}</div>`) + '</div>'; }
+    h += `<div class="fila"><div class="nom">${esc(m.nombre)}<small>${resumenMod(m)}</small></div>` + (act ? (m.ver > (act.ver || 0) ? `<div class="mb verde" data-actualizar="${m.id}">${TR('actualizar')}</div>` : '') + `<div class="mb rojo" data-quitar="${m.id}">${TR('quitar')}</div>` : `<div class="mb verde" data-activar="${m.id}">${TR('activar')}</div>`) + '</div>'; }
   h += `<div class="fila"><div class="mb" id="opcMods">${TR('misMods')}</div></div>`;
+  const cri = Object.keys(TIPOS).filter(k => TIPOS[k].mod);
+  if (cri.length) { h += `<h4>${TR('criaturasMundo')}</h4>`; for (const k of cri) h += `<div class="fila"><div class="slot" style="background:${TIPOS[k].color}"></div><div class="nom">${esc(TIPOS[k].nombre)}<small>${TR(TIPOS[k].hostil ? 'ataca' : 'amistosa')}</small></div><div class="mb verde" data-aparecer="${k}">${TR('aparecer')}</div></div>`; }
   $('opcCuerpo').innerHTML = h;
 }
 $('bOpcionesMundo').onclick = () => { if (aventura()) return; cerrar('pausa'); pintarOpciones(); abrir('opcCapa'); };
@@ -196,6 +257,7 @@ $('opcCuerpo').addEventListener('click', e => {
   else if (d = q('[data-activar]')) activarMod(d.dataset.activar);
   else if (d = q('[data-actualizar]')) activarMod(d.dataset.actualizar, true);
   else if (d = q('[data-quitar]')) quitarMod(d.dataset.quitar);
+  else if (d = q('[data-aparecer]')) { const a = crearAnimal(d.dataset.aparecer, J.x + Math.sin(J.yaw + Math.PI) * 3, J.y + .3, J.z + Math.cos(J.yaw + Math.PI) * 3); a.userData.huir = 0; aviso(esc(TIPOS[d.dataset.aparecer].nombre), 900); }
   else if (q('#opcMods')) { mapa.nombre = $('opcNombre').value.trim(); cerrar('opcCapa'); abrirLibreria('opcCapa'); }
 });
 function recargarMundo() { mapa.nombre = ($('opcNombre') && $('opcNombre').value.trim()) || mapa.nombre; guardar(); const id = mundoId; cerrar('opcCapa'); cerrar('pausa'); entrarMundo(id); }
@@ -270,7 +332,7 @@ let libVolver = null;
 function abrirLibreria(volver) { libVolver = volver || null; pintarLibreria(); abrir('modsCapa'); }
 function pintarLibreria() {
   const l = leerMods();
-  $('modsLista').innerHTML = l.length ? l.map(m => `<div class="fila">${m.bloques[0] ? `<div class="slot" style="background-image:url(${pixURL(m.bloques[0].pix)})"></div>` : ''}<div class="nom">${esc(m.nombre)}<small>${TR('bloquesN', { n: m.bloques.length })}</small></div><div class="mb" data-editar="${m.id}">${TR('editar')}</div><div class="mb verde" data-compartir="${m.id}">${TR('compartir')}</div><div class="mb rojo" data-borrar="${m.id}">${TR('borrar')}</div></div>`).join('') : `<div class="fila"><div class="nom">${TR('sinMods')}</div></div>`;
+  $('modsLista').innerHTML = l.length ? l.map(m => `<div class="fila">${fotoMod(m) ? `<div class="slot" style="background-image:url(${fotoMod(m)})"></div>` : (m.criaturas || [])[0] ? `<div class="slot" style="background:${m.criaturas[0].c1}"></div>` : ''}<div class="nom">${esc(m.nombre)}<small>${resumenMod(m)}</small></div><div class="mb" data-editar="${m.id}">${TR('editar')}</div><div class="mb verde" data-compartir="${m.id}">${TR('compartir')}</div><div class="mb rojo" data-borrar="${m.id}">${TR('borrar')}</div></div>`).join('') : `<div class="fila"><div class="nom">${TR('sinMods')}</div></div>`;
 }
 $('bModsHome').onclick = () => { cerrar('inicio'); abrirLibreria('inicio'); };
 $('modsCerrar').onclick = () => { cerrar('modsCapa'); if (libVolver === 'opcCapa') { pintarOpciones(); abrir('opcCapa'); } else if (libVolver) abrir(libVolver); };
@@ -282,6 +344,8 @@ $('modsLista').addEventListener('click', async e => {
   else if (d = q('[data-compartir]')) { const m = l.find(x => x.id === d.dataset.compartir); compartirArchivo(await empacar({ formato: 'blox', tipo: 'mod', v: 1, mod: m }), nombreArchivo(m.nombre) + '.bloxmod'); }
   else if (d = q('[data-borrar]')) { if (d.dataset.seguro) { localStorage.setItem('bloxMods', JSON.stringify(l.filter(m => m.id !== d.dataset.borrar))); pintarLibreria(); } else { d.dataset.seguro = 1; d.textContent = TR('seguro'); } }
 });
+const resumenMod = m => [m.bloques.length ? TR('bloquesN', { n: m.bloques.length }) : '', Object.keys(m.texturas || {}).length ? TR('texturasN', { n: Object.keys(m.texturas).length }) : '', (m.criaturas || []).length ? TR('criaturasN', { n: m.criaturas.length }) : ''].filter(x => x).join(' · ') || TR('bloquesN', { n: 0 });
+const fotoMod = m => m.bloques[0] ? pixURL(m.bloques[0].pix) : Object.values(m.texturas || {})[0] ? pixURL(Object.values(m.texturas)[0]) : null;
 function pixURL(pixE) { const c = document.createElement('canvas'); c.width = c.height = 16; const g = c.getContext('2d'); pixE.forEach((p, k) => { if (p) { g.fillStyle = p; g.fillRect(k % 16, (k / 16) | 0, 1, 1); } }); return c.toDataURL(); }
 
 // ═════════ EDITOR DE MODS ═════════
@@ -295,6 +359,15 @@ function pintarEditorMod() {
     h += `<div class="fila"><div class="slot" style="background-image:url(${pixURL(b.pix)})"></div><div class="nom">${esc(b.nombre)}<small>${b.luz ? TR('brilla') + ' · ' : ''}${TR(['blando', 'normalD', 'duro'][b.dureza ?? 1])}</small></div><div class="mb" data-pix="${k}">${TR('editar')}</div><div class="mb rojo" data-bq="${k}">X</div></div>
       <div class="fila" style="font-size:12px">${TR('receta')}: <select data-ing="${k}:0">${opIng(r.ing[0] && r.ing[0][0])}</select><select data-ingn="${k}:0">${[1, 2, 3, 4].map(n => `<option ${r.ing[0] && r.ing[0][1] === n ? 'selected' : ''}>${n}</option>`).join('')}</select> + <select data-ing="${k}:1">${opIng(r.ing[1] && r.ing[1][0])}</select><select data-ingn="${k}:1">${[1, 2, 3, 4].map(n => `<option ${r.ing[1] && r.ing[1][1] === n ? 'selected' : ''}>${n}</option>`).join('')}</select> → ${TR('cantidad')} <select data-out="${k}">${[1, 2, 4, 8].map(n => `<option ${r.n === n ? 'selected' : ''}>${n}</option>`).join('')}</select></div>`; });
   if (m.bloques.length < MOD_MAX_BLOQUES) h += `<div class="fila"><div class="mb verde" id="bNuevoBloque">${TR('agregarBloque')}</div></div>`;
+  // texturas
+  m.texturas = m.texturas || {}; m.criaturas = m.criaturas || [];
+  h += `<h4>${TR('texturasMod')}</h4><div style="font-size:11px;margin-bottom:4px">${TR('texturasAyuda')}</div>`;
+  for (const n in m.texturas) h += `<div class="fila"><div class="slot" style="background-image:url(${pixURL(m.texturas[n])})"></div><div class="nom">${esc(nombreTile(n))}</div><div class="mb" data-tx="${n}">${TR('editar')}</div><div class="mb rojo" data-txq="${n}">X</div></div>`;
+  h += `<div class="fila"><select id="txNueva"><option value="">${TR('cambiarTextura')}</option>${listaTiles().filter(([n]) => !m.texturas[n]).map(([n, l]) => `<option value="${n}">${esc(l)}</option>`).join('')}</select></div>`;
+  // criaturas
+  h += `<h4>${TR('criaturasMod')}</h4>`;
+  m.criaturas.forEach((c, k) => { h += `<div class="fila"><div class="slot" style="background:linear-gradient(${c.c1} 60%, ${c.c2} 60%)"></div><div class="nom">${esc(c.nombre)}<small>${TR(FORMA_TXT[c.base])} · ${TR(c.hostil ? 'ataca' : 'amistosa')}</small></div><div class="mb" data-cri="${k}">${TR('editar')}</div><div class="mb rojo" data-criq="${k}">X</div></div>`; });
+  if (m.criaturas.length < 6) h += `<div class="fila"><div class="mb verde" id="bNuevaCri">${TR('nuevaCriatura')}</div></div>`;
   h += `<h4>${TR('reglas')}</h4>` + opcHTML(m.reglas, true);
   $('modEdCuerpo').innerHTML = h;
 }
@@ -303,10 +376,16 @@ $('modEdCuerpo').addEventListener('click', e => {
   if (q('#bNuevoBloque')) { if (modEd.bloques.length >= MOD_MAX_BLOQUES) return aviso(TR('maxBloques'), 1200); abrirPix(modEd.bloques.length); }
   else if (d = q('[data-pix]')) abrirPix(+d.dataset.pix);
   else if (d = q('[data-bq]')) { modEd.bloques.splice(+d.dataset.bq, 1); pintarEditorMod(); }
+  else if (d = q('[data-tx]')) abrirPix(0, d.dataset.tx);
+  else if (d = q('[data-txq]')) { delete modEd.texturas[d.dataset.txq]; pintarEditorMod(); }
+  else if (q('#bNuevaCri')) abrirCri(modEd.criaturas.length);
+  else if (d = q('[data-cri]')) abrirCri(+d.dataset.cri);
+  else if (d = q('[data-criq]')) { modEd.criaturas.splice(+d.dataset.criq, 1); pintarEditorMod(); }
   else if (d = q('[data-regla] [data-v]')) { const v = JSON.parse(d.dataset.v), k = d.parentElement.dataset.regla; if (v === null) delete modEd.reglas[k]; else modEd.reglas[k] = v; pintarEditorMod(); }
 });
 $('modEdCuerpo').addEventListener('change', e => {
   const t = e.target; let k, j;
+  if (t.id === 'txNueva') { if (t.value) abrirPix(0, t.value); return; }
   if (t.dataset.ing) { [k, j] = t.dataset.ing.split(':').map((x, i) => i ? +x : +x); const b = modEd.bloques[k]; b.receta = b.receta || { n: 1, ing: [] }; b.receta.ing[j] = [t.value, (b.receta.ing[j] && b.receta.ing[j][1]) || 1]; b.receta.ing = b.receta.ing.filter(x => x && x[0] !== ''); pintarEditorMod(); }
   else if (t.dataset.ingn) { [k, j] = t.dataset.ingn.split(':').map(Number); const b = modEd.bloques[k]; if (b.receta && b.receta.ing[j]) b.receta.ing[j][1] = +t.value; }
   else if (t.dataset.out) { const b = modEd.bloques[+t.dataset.out]; b.receta = b.receta || { n: 1, ing: [] }; b.receta.n = +t.value; }
@@ -318,9 +397,12 @@ $('modEdCerrar').onclick = () => { cerrar('modEd'); abrirLibreria(libVolver); };
 const PALETA = ['#ffffff', '#c6c6c6', '#7f7f7f', '#3f3f3f', '#000000', '#6b4a26', '#a7834f', '#d8c48a', '#ff5a4a', '#d42a2a', '#7a1414', '#f07613', '#f8c527', '#fff27a', '#6cbb40', '#2f6f22', '#3aafd9', '#3f8eec', '#35399d', '#7e2fbe', '#c58cf5', '#ff8ab8', '#f2b8a8', '#866043'];
 let pixE = { k: 0, datos: null, color: '#3f8eec', herr: 'lapiz', dureza: 1, pinta: false };
 const PIX_HERR = ['lapiz', 'goma', 'balde', 'gotero'];
-function abrirPix(k) {
+function abrirPix(k, textura) {
   const b = modEd.bloques[k] || { nombre: TR('nombreBloque').split(' ')[0] + ' ' + (k + 1), pix: Array(256).fill('#a7834f'), luz: false, dureza: 1 };
-  pixE = Object.assign(pixE, { k, datos: b.pix.slice(), dureza: b.dureza ?? 1 });
+  pixE = Object.assign(pixE, { k, datos: b.pix.slice(), dureza: b.dureza ?? 1, textura: textura || null });
+  for (const el of [$('pixNombre'), $('pixDureza'), $('pixDureza').previousElementSibling, $('pixLuz').parentElement]) el.style.display = textura ? 'none' : '';
+  $('pixEd').querySelector('.vTit').innerHTML = textura ? TR('redibuja', { n: esc(nombreTile(textura)) }) : TR('pixTitulo');
+  if (textura) pixE.datos = modEd.texturas[textura] ? modEd.texturas[textura].slice() : leerTile(TL[textura]);
   $('pixNombre').value = b.nombre; $('pixLuz').checked = !!b.luz;
   $('pixPaleta').innerHTML = PALETA.map(c => `<div data-c="${c}" style="background:${c}" class="${c === pixE.color ? 'on' : ''}"></div>`).join('');
   $('pixHerr').innerHTML = PIX_HERR.map(h => `<div data-h="${h}" class="${h === pixE.herr ? 'on' : ''}">${TR(h)}</div>`).join('');
@@ -347,12 +429,60 @@ $('pixColor').addEventListener('input', e => { pixE.color = e.target.value; if (
 $('pixHerr').addEventListener('click', e => { const d = e.target.closest('[data-h]'); if (!d) return; pixE.herr = d.dataset.h; abrirHerr(); });
 $('pixDureza').addEventListener('click', e => { const d = e.target.closest('[data-d]'); if (!d) return; pixE.dureza = +d.dataset.d; for (const x of $('pixDureza').children) x.classList.toggle('on', x === d); });
 $('pixLimpiar').onclick = () => { pixE.datos = Array(256).fill(null); dibujarPix(); };
-$('pixDesde').onchange = e => { const id = +e.target.value; if (!id || !DEF[id]) return; const t = DEF[id].tiles[2], d = ag.getImageData((t % 8) * 16, Math.floor(t / 8) * 16, 16, 16).data;
-  for (let k = 0; k < 256; k++) pixE.datos[k] = d[k * 4 + 3] < 128 ? null : '#' + [d[k * 4], d[k * 4 + 1], d[k * 4 + 2]].map(v => v.toString(16).padStart(2, '0')).join(''); dibujarPix(); e.target.value = ''; };
-$('pixListo').onclick = () => { const b = modEd.bloques[pixE.k] || {}; Object.assign(b, { nombre: $('pixNombre').value.trim() || 'Bloque', pix: pixE.datos.slice(), luz: $('pixLuz').checked, dureza: pixE.dureza }); modEd.bloques[pixE.k] = b; cerrar('pixEd'); pintarEditorMod(); abrir('modEd'); };
-$('pixCerrar').onclick = () => { cerrar('pixEd'); abrir('modEd'); };
+$('pixDesde').onchange = e => { const id = +e.target.value; if (!id || !DEF[id]) return; pixE.datos = leerTile(DEF[id].tiles[2]); dibujarPix(); e.target.value = ''; };
+// lee un dibujo del atlas (si un mod lo cambió, usa el original)
+function leerTile(t) { const d = (tilesOrig[t] || ag.getImageData((t % 8) * 16, Math.floor(t / 8) * 16, 16, 16)).data, o = [];
+  for (let k = 0; k < 256; k++) o[k] = d[k * 4 + 3] < 128 ? null : '#' + [d[k * 4], d[k * 4 + 1], d[k * 4 + 2]].map(v => v.toString(16).padStart(2, '0')).join(''); return o; }
+// lista de dibujos del juego que se pueden redibujar: "Pasto · arriba", "Piedra", "Palo"…
+function listaTiles() {
+  const vistos = new Set(), l = [];
+  for (const id of TODOS) { const d = DEF[id]; if (id >= MOD_BASE || !d) { if (ITEM[id] && !vistos.has(ITEM[id].tile)) { vistos.add(ITEM[id].tile); l.push([TILES[ITEM[id].tile], nom(id)]); } continue; }
+    const igual = d.tiles[0] === d.tiles[1] && d.tiles[1] === d.tiles[2];
+    for (const k of [2, 0, 1]) { const t = d.tiles[k]; if (vistos.has(t) || t >= TILE_MOD0) continue; vistos.add(t); l.push([TILES[t], nom(id) + (igual ? '' : ' · ' + TR(['arriba', 'abajo', 'costado'][k]))]); } }
+  for (const id in ITEM) { const t = ITEM[id].tile; if (!vistos.has(t)) { vistos.add(t); l.push([TILES[t], nom(+id)]); } }
+  return l;
+}
+const nombreTile = n => (listaTiles().find(([x]) => x === n) || [n, n])[1];
+$('pixListo').onclick = () => { if (pixE.textura) { modEd.texturas[pixE.textura] = pixE.datos.slice(); cerrar('pixEd'); pintarEditorMod(); abrir('modEd'); return; } const b = modEd.bloques[pixE.k] || {}; Object.assign(b, { nombre: $('pixNombre').value.trim() || 'Bloque', pix: pixE.datos.slice(), luz: $('pixLuz').checked, dureza: pixE.dureza }); modEd.bloques[pixE.k] = b; cerrar('pixEd'); pintarEditorMod(); abrir('modEd'); };
+$('pixCerrar').onclick = () => { cerrar('pixEd'); pintarEditorMod(); abrir('modEd'); };
+
+// ═════════ EDITOR DE CRIATURAS ═════════
+const FORMA_TXT = { vaca: 'fVaca', oveja: 'fOveja', gallina: 'fGallina', ojon: 'fOjon' };
+let criE = null, criK = 0, criVista = null;
+function abrirCri(k) {
+  criK = k; const base = 'vaca';
+  criE = JSON.parse(JSON.stringify(modEd.criaturas[k] || { nombre: TR('nombreCriatura') + ' ' + (k + 1), base, c1: '#3f8eec', c2: '#35399d', tam: 1, hostil: false, vida: 1, rapida: false, suelta: ['', 1] }));
+  $('criNombre').value = criE.nombre; pintarCri(); cerrar('modEd'); abrir('criEd'); vistaCri();
+}
+function pintarCri() {
+  const c = criE, g = (k, ops) => `<div class="opcG" data-cc="${k}">${ops.map(([v, l]) => `<div data-v='${JSON.stringify(v)}' class="${JSON.stringify(c[k]) === JSON.stringify(v) ? 'on' : ''}">${TR(l)}</div>`).join('')}</div>`;
+  const pal = k => `<div class="paleta" data-pal="${k}" style="grid-template-columns:repeat(12,20px)">${PALETA.map(x => `<div data-c="${x}" style="background:${x};width:20px;height:20px" class="${x === c[k] ? 'on' : ''}"></div>`).join('')}</div><input type="color" data-colin="${k}" value="${c[k]}" style="width:44px;height:26px;border:2px solid #000;padding:0;margin-top:3px">`;
+  const ops = [['', 'nada']].concat([B.TIERRA, B.ARENA, B.MADERA, B.TELA, I.CARNE, I.POLLO, I.MANZANA, I.PAN, I.PALO, I.CARBON, I.HIERRO, I.ORO, I.CRISTAL, I.SEMILLAS, I.TRIGO_I].map(id => [id, nom(id)])).concat(modEd.bloques.map((b, k) => ['m:' + k, b.nombre]));
+  $('criCuerpo').innerHTML = `<h4>${TR('forma')}</h4>` + g('base', Object.entries(FORMA_TXT)) + `<h4>${TR('colorCuerpo')}</h4>` + pal('c1') + `<h4>${TR('colorDetalle')}</h4>` + pal('c2') +
+    `<h4>${TR('caracter')}</h4>` + g('hostil', [[false, 'amistosa'], [true, 'ataca']]) + `<h4>${TR('tamano')}</h4>` + g('tam', [[0, 'chico'], [1, 'normalD'], [2, 'grande']]) +
+    `<h4>${TR('vidaC')}</h4>` + g('vida', [[0, 'poca'], [1, 'normalD'], [2, 'mucha']]) + `<h4>${TR('velocidad')}</h4>` + g('rapida', [[false, 'normalD'], [true, 'rapida']]) +
+    `<h4>${TR('sueltaC')}</h4><select id="criSuelta">${ops.map(([v, l]) => `<option value="${v}" ${String(c.suelta[0]) === String(v) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select> <select id="criSueltaN">${[1, 2, 3, 4].map(n => `<option ${c.suelta[1] === n ? 'selected' : ''}>${n}</option>`).join('')}</select>`;
+}
+$('criCuerpo').addEventListener('click', e => {
+  let d = e.target.closest('[data-cc] [data-v]'); if (d) { criE[d.parentElement.dataset.cc] = JSON.parse(d.dataset.v); if (d.parentElement.dataset.cc === 'base') { const f = FORMA_BASE[criE.base]; criE.c1 = f.c1; criE.c2 = f.c2; } pintarCri(); vistaCri(); return; }
+  d = e.target.closest('[data-pal] [data-c]'); if (d) { criE[d.parentElement.dataset.pal] = d.dataset.c; pintarCri(); vistaCri(); }
+});
+$('criCuerpo').addEventListener('input', e => { const k = e.target.dataset.colin; if (k) { criE[k] = e.target.value; vistaCri(); } });
+$('criCuerpo').addEventListener('change', e => { if (e.target.id === 'criSuelta') criE.suelta[0] = e.target.value; if (e.target.id === 'criSueltaN') criE.suelta[1] = +e.target.value; if (e.target.dataset.colin) pintarCri(); });
+$('criListo').onclick = () => { criE.nombre = $('criNombre').value.trim() || TR('nombreCriatura'); modEd.criaturas[criK] = criE; cerrarCri(); };
+$('criCerrar').onclick = () => cerrarCri();
+function cerrarCri() { cerrar('criEd'); if (criVista) criVista.on = false; pintarEditorMod(); abrir('modEd'); }
+// vista 3D que gira
+function vistaCri() {
+  if (!criVista) { const r = new THREE.WebGLRenderer({ canvas: $('criVista'), antialias: true, alpha: true }); r.setPixelRatio(1); const e = new THREE.Scene(); e.add(new THREE.AmbientLight(0xffffff, .65)); const l = new THREE.DirectionalLight(0xffffff, .7); l.position.set(2, 4, 3); e.add(l);
+    const cam = new THREE.PerspectiveCamera(35, 1, .1, 50); criVista = { r, e, cam, g: null, on: false }; }
+  const v = criVista; if (v.g) v.e.remove(v.g);
+  const t = tipoCriatura(criE, modEd), g = new THREE.Group(); t.armar(g); v.e.add(g); v.g = g;
+  const al = t.al, d = 2.2 + al * 1.6; v.cam.position.set(0, al * .75 + .4, d); v.cam.lookAt(0, al * .45, 0);
+  if (!v.on) { v.on = true; const giro = () => { if (!v.on) return; v.g.rotation.y += .02; v.r.render(v.e, v.cam); requestAnimationFrame(giro); }; giro(); }
+}
 
 // en aventura no se muestran las opciones del mundo
 const pausaObs = new MutationObserver(() => { $('bOpcionesMundo').style.display = aventura() ? 'none' : ''; });
 pausaObs.observe($('pausa'), { attributes: true, attributeFilter: ['hidden'] });
-window.__m = { exportarMundo, empacar, desempacar, modsMundo: () => modsMundo, activarMod, quitarMod, guardarModLib, leerMods, carteles: () => carteles, mapa: () => mapa, llegarMeta, REG: () => REG, abrirEditorMod, abrirPix, pix: () => pixE, instalarMod, tieneMeta: () => tieneMeta };
+window.__m = { abrirCri, criE: () => criE, listaTiles, exportarMundo, empacar, desempacar, modsMundo: () => modsMundo, activarMod, quitarMod, guardarModLib, leerMods, carteles: () => carteles, mapa: () => mapa, llegarMeta, REG: () => REG, abrirEditorMod, abrirPix, pix: () => pixE, instalarMod, tieneMeta: () => tieneMeta };
