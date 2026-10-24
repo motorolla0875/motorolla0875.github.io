@@ -74,3 +74,6 @@ const barraHud = (svg, v, color) => `<div class="barraHud sombra">${svg}<div cla
 pintarVida = function () { $('vida').hidden = creativo(); if (creativo()) return; $('vida').innerHTML = barraHud(SVG_CORAZON, vida, vida > 6 ? '#ff4a5f' : '#ff2a2a'); };
 pintarHambre = function () { $('hambre').hidden = creativo(); if (creativo()) return; const v = Math.ceil(hambre); if (v === hambrePintado) return; hambrePintado = v; $('hambre').innerHTML = barraHud(SVG_MANZANA, v, '#ffb02e'); };
 if (document.fonts && document.fonts.load) { document.fonts.load('800 20px "Baloo 2"'); document.fonts.load('600 20px "Baloo 2"'); }
+// ─── en los menús (fuera del juego) todas las pantallas dejan ver el mundo que gira, igual que el inicio ───
+{ const st = document.createElement('style'); st.textContent = `body.enMenu .capa:not(#grabando):not(#precarga) { background-color: rgba(10,16,48,.25) !important; background-image: none !important; }`; document.head.appendChild(st);
+  const marcar = () => document.body.classList.toggle('enMenu', !jugando); marcar(); setInterval(marcar, 150); }
