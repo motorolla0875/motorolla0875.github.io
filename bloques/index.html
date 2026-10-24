@@ -626,7 +626,7 @@ function puerta(x, y, z) {
   son(nuevo === B.PUERTA ? 240 : 320, .12, 'square', .1); revisarRefugio();
 }
 function tiempoRomper(t) {
-  const d = DEF[t]; if (d.dur < 0) return Infinity; if (creativo()) return .16;
+  const d = DEF[t]; if (d.dur < 0) return Infinity; if (creativo()) return .3;
   const p = nivelPico();
   if (d.req) return p >= d.req ? d.dur / [1, 2.5, 4, 6, 9][p] : d.dur * 3.3;
   return d.dur / (1 + p * .35);
@@ -901,16 +901,14 @@ render.domElement.addEventListener('pointermove', e => {
   const t = toques[e.pointerId]; if (!t) return;
   const dx = e.clientX - t.x, dy = e.clientY - t.y; t.x = e.clientX; t.y = e.clientY; t.movio += Math.abs(dx) + Math.abs(dy);
   if (t.izq) { let mx = (t.x - t.x0) / 50, my = (t.y - t.y0) / 50; const l = Math.hypot(mx, my); if (l > 1) { mx /= l; my /= l; } mov = { x: mx, y: my }; $('joy').firstElementChild.style.transform = `translate(${mx * 35}px,${my * 35}px)`; }
-  else { if (t.movio > 14 && !t.rompe) t.mira = true; if (t.mira || t.mouse) { J.yaw -= dx * .006; J.pitch = Math.max(-1.5, Math.min(1.5, J.pitch - dy * .006)); } }
+  else { if (t.movio > 18 && !t.rompe) t.mira = true; if (t.mira || t.mouse) { J.yaw -= dx * .006; J.pitch = Math.max(-1.5, Math.min(1.5, J.pitch - dy * .006)); } }
 });
 function soltar(e) {
   const t = toques[e.pointerId]; if (!t) return; delete toques[e.pointerId];
   if (t.izq) { mov = { x: 0, y: 0 }; $('joy').style.display = 'none'; $('joy').firstElementChild.style.transform = ''; return; }
   if (t.rompe) { rompiendo = null; return; }
-  if (t.mira || performance.now() - t.t0 > 400 || !jugando || pausado) return;
-  const dir = rayoDesde(e.clientX, e.clientY);
-  if (t.mouse && t.boton === 0) { const m = monstruoApuntado(dir), h = apuntar(dir); if (m && (!h || m.t < h.t)) golpear(m.m, dir); else if (h && creativo()) romper(h); }
-  else tocar(dir);
+  if (t.mira || !jugando || pausado) return;
+  tocar(rayoDesde(e.clientX, e.clientY));
 }
 render.domElement.addEventListener('pointerup', soltar); render.domElement.addEventListener('pointercancel', soltar);
 render.domElement.addEventListener('contextmenu', e => e.preventDefault());
@@ -946,7 +944,7 @@ function bucle(ya) {
     }
     revisarT += dt; if (revisarT > .5) { revisarT = 0; revisarRefugio(); revisarMision(); }
     // romper manteniendo apretado
-    const tq = Object.values(toques).find(t => !t.izq && !t.mira && (t.mouse ? t.boton === 0 : performance.now() - t.t0 > 220));
+    const tq = Object.values(toques).find(t => !t.izq && !t.mira && t.boton !== 2 && performance.now() - t.t0 > 450);
     if (tq) { tq.rompe = true; dirMira = rayoDesde(tq.x, tq.y); seguirRompiendo(dirMira, dt); } else rompiendo = null;
   } else if (!jugando) J.yaw += dt * .06;   // en el menú la cámara gira despacio
   cam.position.set(J.x, J.y + OJOS, J.z);
