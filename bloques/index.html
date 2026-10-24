@@ -145,10 +145,10 @@
 // ═════════ MUNDO ═════════
 const SX = 128, SY = 48, SZ = 128, CH = 16, SEA = 15, N = SX * SY * SZ;
 const NCX = SX / CH, NCZ = SZ / CH;
-const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41 /* 41..56 */ };
+const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41, /* 41..56 */ ESC_INV: 57, /* 57..72 */ LOSA_ARR: 73, /* 73..76 */ TRONCO_X: 77, TRONCO_Z: 78, VALLA: 79, PANEL: 80 };
 const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123, CARNE: 105, CARNE_A: 106, POLLO: 107, POLLO_A: 108, MANZANA: 109 };
 // dibujos (16x16) del atlas
-const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4', 'carne', 'carneAsada', 'pollo', 'polloAsado', 'manzana'];
+const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4', 'carne', 'carneAsada', 'pollo', 'polloAsado', 'manzana'];
 const TL = {}; TILES.forEach((n, i) => TL[n] = i);
 const TELAS = [['Blanca', '#e9ecec'], ['Roja', '#a12722'], ['Naranja', '#f07613'], ['Amarilla', '#f8c527'], ['Verde', '#5e7c16'], ['Celeste', '#3aafd9'], ['Azul', '#35399d'], ['Violeta', '#7e2fbe'], ['Negra', '#1d1d21']];
 // definición de bloques: dibujos [arriba, abajo, costados], dureza (segundos a mano), pico necesario, qué suelta, etc.
@@ -183,11 +183,36 @@ def(B.B_HIERRO, 'Bloque de hierro', [TL.bHierro], { dur: 5, req: 2, color: '#dcd
 def(B.LAMPARA, 'Lámpara', [TL.lampara], { dur: .5, luz: 15, color: '#f9d49c' });
 def(B.ROCA, 'Roca del fondo', [TL.roca], { dur: -1, color: '#333' });
 // medios bloques (losas) y escalones: el escalón alto queda hacia donde miras al ponerlo
-const CAJA_ESC = [[.5, .5, 0, 1, 1, 1], [0, .5, 0, .5, 1, 1], [0, .5, .5, 1, 1, 1], [0, .5, 0, 1, 1, .5]];
+const CAJA_ESC = [[.5, .5, 0, 1, 1, 1], [0, .5, 0, .5, 1, 1], [0, .5, .5, 1, 1, 1], [0, .5, 0, 1, 1, .5]], CAJA_ESC_INV = CAJA_ESC.map(c => [c[0], 0, c[2], c[3], .5, c[5]]);
 const MAT_FORMA = [[B.MADERA, 'de madera'], [B.ADOQUIN, 'de adoquín'], [B.PIEDRA, 'de piedra'], [B.LADRILLO, 'de ladrillo']];
 MAT_FORMA.forEach(([m, n], k) => { const md = DEF[m], o = { dur: md.dur * .7, req: md.req, color: md.color, base: m };
   def(B.LOSA + k, 'Losa ' + n, md.tiles.slice(), Object.assign({ forma: [[0, 0, 0, 1, .5, 1]] }, o));
-  for (let d = 0; d < 4; d++) def(B.ESCALON + k * 4 + d, 'Escalón ' + n, md.tiles.slice(), Object.assign({ forma: [[0, 0, 0, 1, .5, 1], CAJA_ESC[d]], suelta: B.ESCALON + k * 4 }, o)); });
+  def(B.LOSA_ARR + k, 'Losa ' + n, md.tiles.slice(), Object.assign({ forma: [[0, .5, 0, 1, 1, 1]], suelta: B.LOSA + k }, o));
+  for (let d = 0; d < 4; d++) {
+    def(B.ESCALON + k * 4 + d, 'Escalón ' + n, md.tiles.slice(), Object.assign({ forma: [[0, 0, 0, 1, .5, 1], CAJA_ESC[d]], suelta: B.ESCALON + k * 4 }, o));
+    def(B.ESC_INV + k * 4 + d, 'Escalón ' + n, md.tiles.slice(), Object.assign({ forma: [[0, .5, 0, 1, 1, 1], CAJA_ESC_INV[d]], suelta: B.ESCALON + k * 4 }, o)); }
+  DEF[B.LOSA + k].icono = [[0, 0, 0, 1, .5, 1]]; DEF[B.ESCALON + k * 4].icono = [[0, 0, 0, 1, .5, 1], CAJA_ESC[1]]; });
+// troncos acostados, vallas y paneles de vidrio (estos dos se unen solos con lo que tienen al lado)
+def(B.TRONCO_X, 'Tronco', [TL.troncoCostadoH], { caras: [TL.troncoCostadoH, TL.troncoCostadoH, TL.troncoArriba, TL.troncoArriba, TL.troncoCostadoH, TL.troncoCostadoH], dur: 2.2, suelta: B.TRONCO, color: '#6b5133' });
+def(B.TRONCO_Z, 'Tronco', [TL.troncoCostado], { caras: [TL.troncoCostado, TL.troncoCostado, TL.troncoCostadoH, TL.troncoCostadoH, TL.troncoArriba, TL.troncoArriba], dur: 2.2, suelta: B.TRONCO, color: '#6b5133' });
+def(B.VALLA, 'Valla', [TL.madera], { dur: 2, color: '#a7834f', conecta: true, forma: [[.375, 0, .375, .625, 1, .625]], icono: [[0, .375, .4375, 1, .5625, .5625], [.375, 0, .375, .625, 1, .625], [0, .75, .4375, 1, .9375, .5625]] });
+def(B.PANEL, 'Panel de vidrio', [TL.vidrio], { dur: .4, color: '#c9e8f5', conecta: true, forma: [[.4375, 0, .4375, .5625, 1, .5625]], icono: [[0, 0, .4375, 1, 1, .5625]] });
+function formaDe(t, x, y, z, choque) {
+  const d = DEF[t]; if (!d.conecta) return d.forma;
+  const une = (dx, dz) => { const n = get(x + dx, y, z + dz); return n === t || opaco(n) || (t === B.PANEL && n === B.VIDRIO); };
+  const px = une(1, 0), nx = une(-1, 0), pz = une(0, 1), nz = une(0, -1);
+  if (t === B.VALLA) {
+    const alto = choque ? 1.75 : 1, a = .375, b = .625, c = [[a, 0, a, b, alto, b]];
+    const brazo = (x0, z0, x1, z1) => { if (choque) c.push([x0, 0, z0, x1, alto, z1]); else c.push([x0, .375, z0, x1, .5625, z1], [x0, .75, z0, x1, .9375, z1]); };
+    const g0 = choque ? a : .4375, g1 = choque ? b : .5625;
+    if (px) brazo(b, g0, 1, g1); if (nx) brazo(0, g0, a, g1); if (pz) brazo(g0, b, g1, 1); if (nz) brazo(g0, 0, g1, a);
+    return c;
+  }
+  const a = .4375, b = .5625, c = [[a, 0, a, b, 1, b]];
+  const sinNada = !px && !nx && !pz && !nz;
+  if (px || sinNada) c.push([b, 0, a, 1, 1, b]); if (nx || sinNada) c.push([0, 0, a, a, 1, b]); if (pz) c.push([a, 0, b, b, 1, 1]); if (nz) c.push([a, 0, 0, b, 1, a]);
+  return c;
+}
 const esLosa = id => id >= B.LOSA && id < B.LOSA + 4, esEscalon = id => id >= B.ESCALON && id < B.ESCALON + 16;
 function escalonHacia(id, yaw) { const k = Math.floor((id - B.ESCALON) / 4), fx = -Math.sin(yaw), fz = -Math.cos(yaw); return B.ESCALON + k * 4 + (Math.abs(fx) > Math.abs(fz) ? (fx > 0 ? 0 : 1) : (fz > 0 ? 2 : 3)); }
 const ITEM = {};
@@ -338,6 +363,7 @@ const PINTA = {
   piedra: (x, y, r) => piedraC(r),
   arena: (x, y, r, e) => e(['#dbd3a0', '#e3dbac', '#d4cb94', '#dbd3a0', '#cfc58f']),
   troncoCostado: (x, y, r, e) => { const k = (x + Math.floor(r() * 2)) % 4; return k === 0 ? '#4d3a22' : k === 2 ? '#7a5d3b' : e(['#6b5133', '#5a4329', '#6b5133']); },
+  troncoCostadoH: (x, y, r, e) => PINTA.troncoCostado(y, x, r, e),
   troncoArriba: (x, y, r, e) => { const d = Math.max(Math.abs(x - 7.5), Math.abs(y - 7.5)); if (d > 6.5) return e(['#5a4329', '#4d3a22']); return Math.floor(d) % 2 ? '#a0814f' : '#b8955c'; },
   hojas: (x, y, r, e) => r() < .18 ? null : e(['#3f8a2e', '#2f6f22', '#4d9c37', '#357a27']),
   madera: (x, y, r, e) => { if (y % 4 === 3) return '#6e5130'; const seam = (Math.floor(y / 4) % 2 ? 4 : 11); if (x === seam) return '#7d5f37'; return e(['#a7834f', '#9d7a48', '#b08a54', '#a7834f']); },
@@ -393,7 +419,7 @@ const iconos = {};
 function icono(id) {
   if (iconos[id]) return iconos[id];
   const d = DEF[id];
-  if (d && d.base) return iconos[id] = iconoCajas(d);
+  if (d && d.icono) return iconos[id] = iconoCajas(d);
   if (!d || d.forma || id === B.ESCALERA || id === B.PUERTA) return iconos[id] = tileURL(d ? d.tiles[2] : ITEM[id].tile);
   const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d'); g.imageSmoothingEnabled = false;
   const cara = (tile, m, osc) => { g.setTransform(...m); g.drawImage(atlas, (tile % 8) * 16, Math.floor(tile / 8) * 16, 16, 16, 0, 0, 16, 16); if (osc) { g.globalCompositeOperation = 'source-atop'; g.fillStyle = `rgba(0,0,0,${osc})`; g.fillRect(0, 0, 16, 16); g.globalCompositeOperation = 'source-over'; } };
@@ -411,7 +437,7 @@ function iconoCajas(d) {
   const pat = tile => { const t = document.createElement('canvas'); t.width = t.height = 16; t.getContext('2d').drawImage(atlas, (tile % 8) * 16, Math.floor(tile / 8) * 16, 16, 16, 0, 0, 16, 16); return g.createPattern(t, 'repeat'); };
   const pa = pat(d.tiles[0]), pc = pat(d.tiles[2]), iso = (x, y, z) => [16 + (x - z) * 16, (x + z) * 8 + (1 - y) * 16];
   const cara = (pts, fill, osc) => { g.beginPath(); pts.forEach((q, i) => { const [a, b] = iso(...q); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.closePath(); g.fillStyle = fill; g.fill(); if (osc) { g.fillStyle = `rgba(0,0,0,${osc})`; g.fill(); } };
-  const cajas = d.id >= B.ESCALON ? [[0, 0, 0, 1, .5, 1], CAJA_ESC[1]] : d.forma;
+  const cajas = d.icono;
   for (const [x0, y0, z0, x1, y1, z1] of cajas) {
     cara([[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], pc, .22);
     cara([[x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]], pc, .4);
@@ -428,6 +454,7 @@ const CARAS = [
   { d: [0, 0, 1], v: [[0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1]], luz: .9, t: 2 },
   { d: [0, 0, -1], v: [[1, 0, 0], [0, 0, 0], [0, 1, 0], [1, 1, 0]], luz: .7, t: 2 },
 ];
+CARAS.forEach((f, i) => f.i = i);
 const AO = [.5, .68, .84, 1];
 const pedazos = [];
 function luzCelda(x, y, z) { const tq = dentro(x, y, z) ? luzT[idx(x, y, z)] / 15 : 0; return [cieloEn(x, y, z), tq * tq * .7 + tq * .3]; }
@@ -435,12 +462,12 @@ function armarPedazo(cx, cz) {
   const A = { P: [], UV: [], L: [], I: [], n: 0 }, W = { P: [], UV: [], L: [], I: [], n: 0 }, e = .0006;
   const x0 = cx * CH, z0 = cz * CH;
   for (let y = 0; y < SY; y++) for (let z = z0; z < z0 + CH; z++) for (let x = x0; x < x0 + CH; x++) {
-    const t = mundo[idx(x, y, z)]; if (!t) continue; const d = DEF[t], agua = t === B.AGUA, cajas = d.forma || [null];
+    const t = mundo[idx(x, y, z)]; if (!t) continue; const d = DEF[t], agua = t === B.AGUA, cajas = d.conecta ? formaDe(t, x, y, z, false) : d.forma || [null];
     for (const F of cajas) for (const f of CARAS) {
       const nx = x + f.d[0], ny = y + f.d[1], nz = z + f.d[2], v = get(nx, ny, nz);
       if (!F) { if (opaco(v)) continue; if (v === t && (d.trans || agua)) continue; if (agua && v && v !== B.AGUA && !DEF[v].trans) continue; }
       else if (opaco(v) && (f.d[0] > 0 ? F[3] === 1 : f.d[0] < 0 ? F[0] === 0 : f.d[1] > 0 ? F[4] === 1 : f.d[1] < 0 ? F[1] === 0 : f.d[2] > 0 ? F[5] === 1 : F[2] === 0)) continue;
-      const Q = agua ? W : A, tile = d.tiles[f.t], tx = tile % 8, ty = Math.floor(tile / 8);
+      const Q = agua ? W : A, tile = d.caras ? d.caras[f.i] : d.tiles[f.t], tx = tile % 8, ty = Math.floor(tile / 8);
       const [cs, ct] = F ? luzCelda(x, y, z) : luzCelda(nx, ny, nz);
       const aos = [];
       for (const p of f.v) {
@@ -496,12 +523,12 @@ grieta.visible = false; escena.add(grieta);
 const J = { x: SX / 2, y: 30, z: SZ / 2, vx: 0, vy: 0, vz: 0, yaw: 0, pitch: -.15, suelo: false };
 const ANCHO = .3, ALTO = 1.7, OJOS = 1.55;
 let modoJuego = 'creativo', volando = false, saltando = false, bajando = false, vida = 20, golpeT = 0, tiempo = 0;
+const CUBO = [[0, 0, 0, 1, 1, 1]];
 // devuelve la altura más alta con la que choca la caja (o -Infinity si no choca nada)
 function tope(x, y, z, an = ANCHO, al = ALTO) {
   let m = -Infinity;
-  for (let bx = Math.floor(x - an); bx <= Math.floor(x + an); bx++) for (let by = Math.floor(y); by <= Math.floor(y + al - .01); by++) for (let bz = Math.floor(z - an); bz <= Math.floor(z + an); bz++) {
-    const t = get(bx, by, bz); if (!solidoMov(t)) continue; const F = DEF[t].forma;
-    if (!F) { m = Math.max(m, by + 1); continue; }
+  for (let bx = Math.floor(x - an); bx <= Math.floor(x + an); bx++) for (let by = Math.floor(y) - 1; by <= Math.floor(y + al - .01); by++) for (let bz = Math.floor(z - an); bz <= Math.floor(z + an); bz++) {
+    const t = get(bx, by, bz); if (!solidoMov(t)) continue; const F = DEF[t].conecta ? formaDe(t, bx, by, bz, true) : DEF[t].forma || CUBO;
     for (const c of F) if (x + an > bx + c[0] && x - an < bx + c[3] && y + al > by + c[1] && y < by + c[4] && z + an > bz + c[2] && z - an < bz + c[5]) m = Math.max(m, by + c[4]);
   }
   return m;
@@ -560,12 +587,12 @@ function ruido(d = .15, v = .2) { try { if (!ac) ac = new (window.AudioContext |
 const $ = id => document.getElementById(id);
 let inv = {}, barra = [], sel = 0, cofres = {}, stats = { rotos: {}, hechos: {}, cofres: 0 }, mision = 0;
 const BARRA_CREATIVO = [B.MADERA, B.ADOQUIN, B.LADRILLO, B.VIDRIO, B.TRONCO, B.PUERTA, B.ANTORCHA, B.TELA + 1, B.ESCALERA];
-const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
+const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PANEL, B.VALLA, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
 const RECETAS = [
   [[B.MADERA, 4], [[B.TRONCO, 1]]], [[I.PALO, 4], [[B.MADERA, 2]]], [[B.ANTORCHA, 4], [[I.PALO, 1], [I.CARBON, 1]]],
   [[I.PICO1, 1], [[B.MADERA, 3], [I.PALO, 2]]], [[I.PICO2, 1], [[B.ADOQUIN, 3], [I.PALO, 2]]], [[I.PICO3, 1], [[I.HIERRO, 3], [I.PALO, 2]]], [[I.PICO4, 1], [[I.CRISTAL, 3], [I.PALO, 2]]],
   [[I.ESP1, 1], [[B.MADERA, 2], [I.PALO, 1]]], [[I.ESP2, 1], [[B.ADOQUIN, 2], [I.PALO, 1]]], [[I.ESP3, 1], [[I.HIERRO, 2], [I.PALO, 1]]], [[I.ESP4, 1], [[I.CRISTAL, 2], [I.PALO, 1]]],
-  [[B.PUERTA, 1], [[B.MADERA, 6]]], [[B.ESCALERA, 4], [[I.PALO, 7]]], [[B.COFRE, 1], [[B.MADERA, 8]]], [[B.ESTANTE, 1], [[B.MADERA, 6]]],
+  [[B.PUERTA, 1], [[B.MADERA, 6]]], [[B.VALLA, 3], [[B.MADERA, 4], [I.PALO, 2]]], [[B.PANEL, 8], [[B.VIDRIO, 3]]], [[B.ESCALERA, 4], [[I.PALO, 7]]], [[B.COFRE, 1], [[B.MADERA, 8]]], [[B.ESTANTE, 1], [[B.MADERA, 6]]],
   [[B.VIDRIO, 2], [[B.ARENA, 2], [I.CARBON, 1]]], [[B.PIEDRA, 2], [[B.ADOQUIN, 2], [I.CARBON, 1]]], [[B.LADRILLO, 4], [[B.TIERRA, 3], [I.CARBON, 1]]],
   [[B.LAMPARA, 1], [[B.VIDRIO, 1], [B.ANTORCHA, 2]]], [[B.B_HIERRO, 1], [[I.HIERRO, 4]]], [[B.B_ORO, 1], [[I.ORO, 4]]],
   ...MAT_FORMA.map(([m], k) => [[B.LOSA + k, 6], [[m, 3]]]), ...MAT_FORMA.map(([m], k) => [[B.ESCALON + k * 4, 4], [[m, 6]]]),
@@ -654,13 +681,19 @@ function tocar(dir) {
   if (!esBloque(id)) return;
   if (!creativo() && !(inv[id] > 0)) return;
   // dos losas iguales, una arriba de la otra, forman un bloque entero
-  if (esLosa(id) && h.b === id && h.cara[1] === 1) { ponerBloque(h.x, h.y, h.z, DEF[id].base); if (!creativo()) quitarItem(id, 1); son(520, .08, 'triangle', .14); return; }
+  if (esLosa(id) && ((h.b === id && h.cara[1] === 1) || (h.b === id - B.LOSA + B.LOSA_ARR && h.cara[1] === -1))) { ponerBloque(h.x, h.y, h.z, DEF[id].base); if (!creativo()) quitarItem(id, 1); son(520, .08, 'triangle', .14); return; }
+  // ¿tocó la mitad de arriba? entonces losas y escalones van boca abajo
+  const yToque = J.y + OJOS + dir.y * h.t - h.y, arriba = h.cara[1] === -1 || (h.cara[1] === 0 && yToque > .5);
+  let pone = id;
+  if (esLosa(id) && arriba) pone = id - B.LOSA + B.LOSA_ARR;
+  if (esEscalon(id)) pone = escalonHacia(id, J.yaw) + (arriba ? B.ESC_INV - B.ESCALON : 0);
+  if (id === B.TRONCO && h.cara[0]) pone = B.TRONCO_X; if (id === B.TRONCO && h.cara[2]) pone = B.TRONCO_Z;
   const x = h.x + h.cara[0], y = h.y + h.cara[1], z = h.z + h.cara[2];
   const ocupa = (yy) => DEF[id].solido && x + 1 > J.x - ANCHO && x < J.x + ANCHO && z + 1 > J.z - ANCHO && z < J.z + ANCHO && yy + 1 > J.y && yy < J.y + ALTO;
   const libre = (yy) => yy < SY && (get(x, yy, z) === B.AIRE || get(x, yy, z) === B.AGUA);
   if (!libre(y) || ocupa(y)) return;
   if (id === B.PUERTA) { if (!libre(y + 1) || ocupa(y + 1)) return; ponerBloque(x, y + 1, z, B.PUERTA); }
-  ponerBloque(x, y, z, esEscalon(id) ? escalonHacia(id, J.yaw) : id);
+  ponerBloque(x, y, z, pone);
   if (id === B.COFRE) cofres[idx(x, y, z)] = {};
   if (!creativo()) quitarItem(id, 1);
   son(520, .08, 'triangle', .14); revisarRefugio(); revisarMision();
