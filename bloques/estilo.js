@@ -18,6 +18,13 @@
   .btn small { color: #dfe6ff; font-weight: 600; }
   .btn:active { background: linear-gradient(#ffe14a, #f5b82a); color: #1b2a6b; text-shadow: none; transform: translateY(2px); box-shadow: 0 2px 0 #0d153d; }
   .btn.rojo { background: linear-gradient(#ff6b7d, #d8384e); }
+  /* botones con los colores del logo: cristal celeste, y dorado como las letras para lo principal */
+  .btn { background: linear-gradient(#7fe3ff 0%, #3fb4f5 45%, #1f74d0 100%); border-color: #0d1a4a; box-shadow: 0 4px 0 #0d1a4a, inset 0 2px 0 rgba(255,255,255,.55), inset 0 -3px 0 rgba(13,26,74,.25), 0 0 12px rgba(95,208,255,.35); text-shadow: 0 2px 0 #0d1a4a; }
+  .btn small { color: #eafaff; }
+  #bJugar, #bTiendaHome, #bTiendaPausa { background: linear-gradient(#fff07a 0%, #ffc93a 45%, #f08a1a 100%) !important; color: #3a1a08 !important; text-shadow: 0 1px 0 rgba(255,255,255,.45) !important; box-shadow: 0 4px 0 #0d1a4a, inset 0 2px 0 rgba(255,255,255,.7), inset 0 -3px 0 rgba(160,60,0,.3), 0 0 14px rgba(255,190,60,.45); }
+  #bJugar { font-size: 21px; }
+  .btn:active, #bJugar:active, #bTiendaHome:active, #bTiendaPausa:active { background: linear-gradient(#1f74d0, #3fb4f5) !important; color: #fff !important; transform: translateY(2px); box-shadow: 0 2px 0 #0d1a4a; }
+  .btn.rojo { background: linear-gradient(#ff6b7d, #d8384e); }
   #listaMundos { background: rgba(13,21,61,.55); border: 3px solid #0d153d; border-radius: 14px; }
   .mundoFila .info small { color: #b8c4ff; }
   #aviso { color: #ffe14a; text-shadow: 0 3px 0 #0d153d, 0 0 12px rgba(13,21,61,.6); font-weight: 800; }

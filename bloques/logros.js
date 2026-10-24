@@ -100,9 +100,9 @@ function abrirLogros(desde) {
 }
 $('logrosCerrar').onclick = () => { $('logrosCapa').hidden = true; if (logrosDesde) $(logrosDesde).hidden = false; };
 { const fila = (a, b) => { const f = document.createElement('div'); f.className = 'filaBtn'; f.append(a, b); return f; };
-  const b1 = document.createElement('div'); b1.className = 'btn'; b1.id = 'bLogrosHome'; b1.dataset.i = 'logros'; b1.style.background = 'linear-gradient(#ffd23a,#c8841a)'; b1.onclick = () => abrirLogros('inicio');
+  const b1 = document.createElement('div'); b1.className = 'btn'; b1.id = 'bLogrosHome'; b1.dataset.i = 'logros'; b1.onclick = () => abrirLogros('inicio');
   $('inicio').insertBefore(fila(b1, $('bCreditos')), null);
-  const b2 = document.createElement('div'); b2.className = 'btn'; b2.id = 'bLogrosPausa'; b2.dataset.i = 'logros'; b2.style.background = 'linear-gradient(#ffd23a,#c8841a)'; b2.onclick = () => abrirLogros('pausa');
+  const b2 = document.createElement('div'); b2.className = 'btn'; b2.id = 'bLogrosPausa'; b2.dataset.i = 'logros'; b2.onclick = () => abrirLogros('pausa');
   const v = $('bVideo'), f2 = fila(document.createElement('span'), b2); $('pausa').insertBefore(f2, v); f2.replaceChild(v, f2.firstChild);
   aplicarIdioma(); }
 
