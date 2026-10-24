@@ -76,6 +76,9 @@
   .receta .ing .slot b { font-size: 11px; }
   .receta .hacer { padding: 6px 10px; background: #5f8f3a; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; border: 3px solid #000; cursor: pointer; font-size: 13px; }
   .receta.no .hacer { background: #777; }
+  .ajFila { width: min(460px, 92vw); display: flex; align-items: center; gap: 12px; margin: 6px 0; font-size: 14px; background: rgba(0,0,0,.4); padding: 8px 10px; border: 3px solid #000; }
+  .ajFila span { flex: 1; } .ajFila input { width: 46%; accent-color: #5f8f3a; height: 26px; }
+  .ajOpc { display: flex; gap: 4px; } .ajOpc div { padding: 5px 8px; background: #7d7d7d; border: 2px solid #000; cursor: pointer; font-size: 13px; } .ajOpc div.on { background: #5f8f3a; }
   #fotoImg { max-width: min(640px, 80vw); max-height: 58vh; border: 4px solid #fff; box-shadow: 0 6px 0 rgba(0,0,0,.4); }
 </style>
 </head>
@@ -103,6 +106,7 @@
   <div class="titulo">BLOQUES</div>
   <div class="sub">¡Construye, explora y sobrevive!</div>
   <div class="btn" id="bJugar">Jugar</div>
+  <div class="btn" id="bAjustes1">Ajustes</div>
 </div>
 <div class="capa" id="mundos" hidden>
   <div class="titulo" style="font-size:clamp(28px,6vw,44px)">Mis mundos</div>
@@ -119,7 +123,16 @@
 <div class="capa trans" id="pausa" hidden>
   <div class="titulo" style="font-size:clamp(28px,6vw,44px)">Pausa</div>
   <div class="btn" id="bSeguir">Seguir jugando</div>
+  <div class="btn" id="bAjustes2">Ajustes</div>
   <div class="btn" id="bSalir">Guardar y salir</div>
+</div>
+<div class="capa trans" id="ajustes" hidden>
+  <div class="titulo" style="font-size:clamp(26px,5vw,40px)">Ajustes</div>
+  <div class="ajFila"><span>Sensibilidad para mirar</span><input type="range" id="ajSens" min="0.4" max="2.2" step="0.1"></div>
+  <div class="ajFila"><span>Distancia de vista</span><div class="ajOpc" id="ajDist"><div data-d="0">Corta</div><div data-d="1">Normal</div><div data-d="2">Lejos</div></div></div>
+  <div class="ajFila"><span>Música</span><input type="range" id="ajMus" min="0" max="1" step="0.05"></div>
+  <div class="ajFila"><span>Sonidos</span><input type="range" id="ajSon" min="0" max="1" step="0.05"></div>
+  <div class="btn" id="bAjListo">Listo</div>
 </div>
 <div class="capa trans" id="muerte" hidden>
   <div class="titulo" style="font-size:clamp(28px,6vw,44px);color:#ff6b6b">¡Te atraparon!</div>
@@ -556,7 +569,11 @@ function fisica(dt) {
   if (J.y < -5) { Object.assign(J, { x: spawn.x, y: spawn.y + 1, z: spawn.z, vy: 0 }); }
   if (J.y > SY + 8) J.y = SY + 8;
   J.x = Math.max(.4, Math.min(SX - .4, J.x)); J.z = Math.max(.4, Math.min(SZ - .4, J.z));
+  // pasos
+  const rapidez = Math.hypot(J.vx, J.vz); J.rapidez = J.suelo && !volando ? rapidez : 0;
+  if (J.rapidez > 1.2) { pasoT -= dt * rapidez / 4.6; if (pasoT <= 0) { pasoT = .42; golpe(get(Math.floor(J.x), Math.floor(J.y - .1), Math.floor(J.z)), .28); } }
 }
+let pasoT = 0;
 
 // ───── apuntar: recorre bloque por bloque ─────
 function apuntar(dir, o = new THREE.Vector3(J.x, J.y + OJOS, J.z), lejos = 6) {
@@ -579,9 +596,69 @@ const parts = [], geoP = new THREE.BoxGeometry(.16, .16, .16);
 function polvo(x, y, z, color, n = 10) { for (let i = 0; i < n; i++) { const m = new THREE.Mesh(geoP, new THREE.MeshLambertMaterial({ color })); m.position.set(x, y, z); m.userData = { vx: (Math.random() - .5) * 4, vy: Math.random() * 4 + 1, vz: (Math.random() - .5) * 4, t: 0 }; escena.add(m); parts.push(m); } }
 
 // ───── sonidos simples ─────
-let ac = null;
-function son(f, d, tipo = 'square', v = .12) { try { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.type = tipo; o.frequency.setValueAtTime(f, ac.currentTime); o.frequency.exponentialRampToValueAtTime(f * .5, ac.currentTime + d); g.gain.setValueAtTime(v, ac.currentTime); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + d); o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + d); } catch (e) {} }
-function ruido(d = .15, v = .2) { try { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); const b = ac.createBuffer(1, ac.sampleRate * d, ac.sampleRate), c = b.getChannelData(0); for (let i = 0; i < c.length; i++) c[i] = (Math.random() * 2 - 1) * (1 - i / c.length); const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = b; g.gain.value = v; s.connect(g).connect(ac.destination); s.start(); } catch (e) {} }
+// ajustes guardados en el teléfono
+const DIST = [[24, 42], [44, 80], [70, 120]];
+let AJ = { sens: 1, dist: 1, musica: .6, sonidos: .8 };
+try { Object.assign(AJ, JSON.parse(localStorage.getItem('bloquesAjustes') || '{}')); } catch (e) {}
+const AU = { ctx: null };
+function audio() {
+  if (AU.ctx) return AU.ctx;
+  try { const c = new (window.AudioContext || window.webkitAudioContext)(); AU.ctx = c;
+    AU.master = c.createGain(); AU.master.connect(c.destination);
+    AU.sfx = c.createGain(); AU.sfx.gain.value = AJ.sonidos; AU.sfx.connect(AU.master);
+    AU.mus = c.createGain(); AU.mus.gain.value = AJ.musica * .55; AU.mus.connect(AU.master);
+    // eco suave para que la música suene amplia
+    const d = c.createDelay(1), fb = c.createGain(), lp = c.createBiquadFilter(); d.delayTime.value = .34; fb.gain.value = .4; lp.type = 'lowpass'; lp.frequency.value = 2000;
+    AU.mus.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(AU.master);
+    const n = c.createBuffer(1, c.sampleRate, c.sampleRate), ch = n.getChannelData(0); for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1; AU.ruido = n;
+  } catch (e) { AU.ctx = null; }
+  return AU.ctx;
+}
+document.addEventListener('pointerdown', () => { const c = audio(); if (c && c.state === 'suspended') c.resume(); }, true);
+function son(f, d, tipo = 'square', v = .12) { const c = audio(); if (!c) return; const o = c.createOscillator(), g = c.createGain(), n = c.currentTime; o.type = tipo; o.frequency.setValueAtTime(f, n); o.frequency.exponentialRampToValueAtTime(f * .5, n + d); g.gain.setValueAtTime(v, n); g.gain.exponentialRampToValueAtTime(.001, n + d); o.connect(g).connect(AU.sfx); o.start(n); o.stop(n + d + .02); }
+function ruido(d = .15, v = .2, f = 3000) { const c = audio(); if (!c) return; const s = c.createBufferSource(), fi = c.createBiquadFilter(), g = c.createGain(), n = c.currentTime; s.buffer = AU.ruido; fi.type = 'lowpass'; fi.frequency.value = f; g.gain.setValueAtTime(v, n); g.gain.exponentialRampToValueAtTime(.001, n + d); s.connect(fi).connect(g).connect(AU.sfx); s.start(n, Math.random() * .5); s.stop(n + d + .02); }
+// sonido de cada material al romper, poner y pisar
+const SONMAT = { piedra: { f: 1500, q: 1, d: .13, v: .6, t: 'bandpass' }, madera: { f: 520, q: 1.6, d: .12, v: .75, t: 'bandpass' }, tierra: { f: 800, q: .6, d: .13, v: .5, t: 'lowpass' }, arena: { f: 2500, q: .5, d: .17, v: .35, t: 'highpass' }, vidrio: { f: 3600, q: 7, d: .22, v: .45, t: 'bandpass' }, tela: { f: 450, q: .5, d: .1, v: .4, t: 'lowpass' } };
+function matDe(t) { const d = DEF[t]; if (!d) return 'tierra'; const b = d.base || (d.suelta < 100 ? d.suelta : t) || t;
+  if ([B.MADERA, B.TRONCO, B.COFRE, B.PUERTA, B.ESCALERA, B.VALLA, B.ESTANTE].includes(b)) return 'madera';
+  if ([B.VIDRIO, B.PANEL, B.LAMPARA].includes(b)) return 'vidrio'; if ([B.ARENA, B.NIEVE].includes(b)) return 'arena';
+  if ([B.TIERRA, B.PASTO, B.HOJAS, B.CACTUS].includes(b)) return 'tierra'; if (b >= B.TELA && b < B.TELA + 9) return 'tela'; return 'piedra'; }
+function golpe(t, fuerza = 1) {
+  const c = audio(); if (!c || !t) return; const m = SONMAT[matDe(t)], n = c.currentTime;
+  const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+  s.buffer = AU.ruido; s.playbackRate.value = .75 + Math.random() * .5; f.type = m.t; f.frequency.value = m.f * (.85 + Math.random() * .3); f.Q.value = m.q;
+  g.gain.setValueAtTime(Math.min(1, m.v * fuerza), n); g.gain.exponentialRampToValueAtTime(.001, n + m.d * (fuerza > 1 ? 1.4 : 1));
+  s.connect(f).connect(g).connect(AU.sfx); s.start(n, Math.random() * .5); s.stop(n + m.d * 1.5 + .02);
+  if (matDe(t) === 'vidrio' && fuerza > 1.2) { son(2600, .25, 'triangle', .07); son(3300, .2, 'triangle', .05); }
+}
+// voces de animales y del Ojón (más bajito si están lejos)
+function voz(tipo, dist = 0) {
+  const c = audio(); if (!c) return; const v = Math.max(0, 1 - dist / 20) * .22; if (v < .01) return; const n = c.currentTime;
+  const tono = (f0, f1, d, forma, filtro, vib = 0, vibF = 0, t0 = 0) => { const o = c.createOscillator(), g = c.createGain(), fi = c.createBiquadFilter(); o.type = forma; o.frequency.setValueAtTime(f0, n + t0); o.frequency.linearRampToValueAtTime(f1, n + t0 + d);
+    if (vib) { const l = c.createOscillator(), lg = c.createGain(); l.frequency.value = vibF; lg.gain.value = vib; l.connect(lg).connect(o.frequency); l.start(n + t0); l.stop(n + t0 + d); }
+    fi.type = 'lowpass'; fi.frequency.value = filtro; g.gain.setValueAtTime(0, n + t0); g.gain.linearRampToValueAtTime(v, n + t0 + .05); g.gain.setValueAtTime(v, n + t0 + d * .7); g.gain.linearRampToValueAtTime(0, n + t0 + d);
+    o.connect(fi).connect(g).connect(AU.sfx); o.start(n + t0); o.stop(n + t0 + d + .02); };
+  if (tipo === 'vaca') tono(150, 105, 1, 'sawtooth', 650, 3, 5);
+  else if (tipo === 'oveja') tono(330, 300, .65, 'sawtooth', 1300, 22, 11);
+  else if (tipo === 'gallina') { for (let k = 0; k < 3; k++) tono(950 + k * 60, 700, .07, 'square', 2400, 0, 0, k * .1); }
+  else tono(75, 55, .9, 'sawtooth', 380, 9, 6);
+}
+// música tranquila que se arma sola, de a ratos
+function nota(f, t, d, v) { const c = AU.ctx, o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), g2 = c.createGain(); o.type = 'sine'; o2.type = 'triangle'; o.frequency.value = f; o2.frequency.value = f * 2; g2.gain.value = .12;
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .02); g.gain.exponentialRampToValueAtTime(.0008, t + d); o.connect(g); o2.connect(g2).connect(g); g.connect(AU.mus); o.start(t); o2.start(t); o.stop(t + d + .05); o2.stop(t + d + .05); }
+function tocarMusica() {
+  const c = audio(); if (!c || AJ.musica <= 0) return 30;
+  const escala = [0, 2, 4, 7, 9], base = [48, 50, 53, 55, 45][Math.floor(Math.random() * 5)], mf = m => 440 * Math.pow(2, (m - 69) / 12);
+  let t = c.currentTime + .3, grado = 4; const largo = 24 + Math.floor(Math.random() * 14);
+  for (let i = 0; i < largo; i++) {
+    if (i % 6 === 0) { nota(mf(base - 12), t, 4.5, .13); nota(mf(base - 5), t + .03, 4, .06); }
+    if (Math.random() < .82) { grado = Math.max(0, Math.min(9, grado + Math.floor(Math.random() * 5) - 2)); const m = base + 12 + 12 * Math.floor(grado / 5) + escala[grado % 5]; nota(mf(m), t, 3, .1); if (Math.random() < .2) nota(mf(m + 7), t + .25, 2.5, .04); }
+    t += [1.1, 1.5, 2.2][Math.floor(Math.random() * 3)];
+  }
+  return t - c.currentTime;
+}
+let musicaT = 20;
+function guardarAjustes() { try { localStorage.setItem('bloquesAjustes', JSON.stringify(AJ)); } catch (e) {} if (AU.ctx) { AU.sfx.gain.value = AJ.sonidos; AU.mus.gain.value = AJ.musica * .55; } }
 
 // ═════════ BOLSA, BARRA Y FABRICAR ═════════
 const $ = id => document.getElementById(id);
@@ -681,7 +758,7 @@ function tocar(dir) {
   if (!esBloque(id)) return;
   if (!creativo() && !(inv[id] > 0)) return;
   // dos losas iguales, una arriba de la otra, forman un bloque entero
-  if (esLosa(id) && ((h.b === id && h.cara[1] === 1) || (h.b === id - B.LOSA + B.LOSA_ARR && h.cara[1] === -1))) { ponerBloque(h.x, h.y, h.z, DEF[id].base); if (!creativo()) quitarItem(id, 1); son(520, .08, 'triangle', .14); return; }
+  if (esLosa(id) && ((h.b === id && h.cara[1] === 1) || (h.b === id - B.LOSA + B.LOSA_ARR && h.cara[1] === -1))) { ponerBloque(h.x, h.y, h.z, DEF[id].base); if (!creativo()) quitarItem(id, 1); golpe(id, 1); swing = 1; return; }
   // ¿tocó la mitad de arriba? entonces losas y escalones van boca abajo
   const yToque = J.y + OJOS + dir.y * h.t - h.y, arriba = h.cara[1] === -1 || (h.cara[1] === 0 && yToque > .5);
   let pone = id;
@@ -696,7 +773,7 @@ function tocar(dir) {
   ponerBloque(x, y, z, pone);
   if (id === B.COFRE) cofres[idx(x, y, z)] = {};
   if (!creativo()) quitarItem(id, 1);
-  son(520, .08, 'triangle', .14); revisarRefugio(); revisarMision();
+  golpe(pone, 1); swing = 1; revisarRefugio(); revisarMision();
 }
 function puerta(x, y, z) {
   const t = get(x, y, z), nuevo = t === B.PUERTA ? B.PUERTA_A : B.PUERTA;
@@ -715,7 +792,7 @@ function romper(h) {
   const i = idx(h.x, h.y, h.z);
   if (t === B.PUERTA || t === B.PUERTA_A) for (const yy of [h.y - 1, h.y + 1]) { const b = get(h.x, yy, h.z); if (b === B.PUERTA || b === B.PUERTA_A) ponerBloque(h.x, yy, h.z, B.AIRE); }
   ponerBloque(h.x, h.y, h.z, B.AIRE);
-  polvo(h.x + .5, h.y + .5, h.z + .5, d.color); son(180, .12, 'square', .1);
+  polvo(h.x + .5, h.y + .5, h.z + .5, d.color); golpe(t, 1.5); setTimeout(() => golpe(t, 1), 70); swing = 1;
   if (!creativo()) {
     stats.rotos[t] = (stats.rotos[t] || 0) + 1;
     if (d.req && nivelPico() < d.req) aviso('NECESITAS UN PICO ' + ['', 'DE MADERA', 'DE PIEDRA', 'DE HIERRO'][d.req] + '<small>para que suelte algo</small>', 1500);
@@ -733,7 +810,7 @@ function seguirRompiendo(dir, dt) {
   if (!rompiendo || rompiendo.x !== h.x || rompiendo.y !== h.y || rompiendo.z !== h.z) rompiendo = { x: h.x, y: h.y, z: h.z, p: 0, espera: rompiendo ? rompiendo.espera : 0 };
   if (rompiendo.espera > 0) { rompiendo.espera -= dt; return; }
   rompiendo.p += dt / tiempoRomper(h.b);
-  if (Math.random() < dt * 8) son(140 + Math.random() * 60, .05, 'square', .04);
+  rompiendo.tick = (rompiendo.tick || 0) - dt; if (rompiendo.tick <= 0) { rompiendo.tick = .24; golpe(h.b, .45); swing = Math.max(swing, .9); }
   if (rompiendo.p >= 1) { romper(h); rompiendo = { x: -1, y: -1, z: -1, p: 0, espera: creativo() ? .2 : .08 }; }
 }
 let ultimoAviso = 0;
@@ -761,7 +838,7 @@ function monstruoApuntado(dir) {
 function golpear(m, dir) {
   const u = m.userData, dano = [2, 3, 4, 6, 8][nivelEspada()];
   u.vida -= dano; u.rojo = .25; u.kx = dir.x * 7; u.kz = dir.z * 7; u.vy = 4; son(220, .1, 'sawtooth', .12);
-  if (u.animal) { u.huir = 5; son(u.animal === 'gallina' ? 1100 : u.animal === 'oveja' ? 520 : 260, .18, 'triangle', .1); if (u.vida <= 0) matarAnimal(m); return; }
+  swing = 1; if (u.animal) { u.huir = 5; voz(u.animal, 0); if (u.vida <= 0) matarAnimal(m); return; }
   if (u.vida <= 0) { quitarMonstruo(m); son(520, .25, 'triangle', .12); if (Math.random() < .5) darItem(I.CARBON); }
 }
 function chocaM(x, y, z) { return choca(x, y, z, .4, 1.4); }
@@ -785,7 +862,7 @@ function moverMonstruos(dt, noche) {
     m.rotation.y = Math.atan2(dx, dz);
     m.children[3].position.y = .2 + Math.max(0, Math.sin(u.t)) * .12; m.children[4].position.y = .2 + Math.max(0, -Math.sin(u.t)) * .12;
     u.rojo -= dt; u.mc.color.setHex(u.rojo > 0 ? 0xd04040 : 0x6b3fa0);
-    u.ataque -= dt;
+    u.ataque -= dt; u.vozT = (u.vozT ?? Math.random() * 6) - dt; if (u.vozT <= 0) { u.vozT = 6 + Math.random() * 8; voz('ojon', dist); }
     if (dist < 1.25 && Math.abs(J.y - p.y) < 1.5 && u.ataque <= 0 && vida > 0) { u.ataque = 1; lastimar(2, dx / dist, dz / dist); }
   }
 }
@@ -882,6 +959,7 @@ function moverAnimales(dt) {
     let dr = u.dir - a.rotation.y; dr = Math.atan2(Math.sin(dr), Math.cos(dr)); a.rotation.y += dr * Math.min(1, dt * 8);
     const paso = vel ? Math.sin(u.t * (u.huir > 0 ? 16 : 9)) * .55 : 0; u.patas.forEach((l, k) => l.rotation.x = k % 2 ? -paso : paso);
     u.rojo -= dt; for (const m of u.mats) m.emissive.setHex(u.rojo > 0 ? 0x990000 : 0x000000);
+    u.vozT = (u.vozT ?? 3 + Math.random() * 12) - dt; if (u.vozT <= 0) { u.vozT = 9 + Math.random() * 16; if (jugando) voz(u.animal, Math.hypot(p.x - J.x, p.z - J.z)); }
   }
 }
 
@@ -908,7 +986,7 @@ function cielo() {
   const bajo = get(Math.floor(J.x), Math.floor(J.y + OJOS), Math.floor(J.z)) === B.AGUA && jugando;
   const niebla = bajo ? C_AGUA.clone().lerp(C_NOCHE, k * .8) : c;
   render.setClearColor(niebla); escena.fog.color.copy(niebla); U.uNiebla.value.copy(niebla);
-  U.uCerca.value = bajo ? 2 : 44; U.uLejos.value = bajo ? 16 : 80; escena.fog.near = U.uCerca.value; escena.fog.far = U.uLejos.value;
+  U.uCerca.value = bajo ? 2 : DIST[AJ.dist][0]; U.uLejos.value = bajo ? 16 : DIST[AJ.dist][1]; escena.fog.near = U.uCerca.value; escena.fog.far = U.uLejos.value;
   U.uDia.value = 1 - k * .86; hemi.intensity = .75 - k * .55; sol.intensity = .55 - k * .45;
   $('bajoAgua').hidden = !bajo;
 }
@@ -984,7 +1062,7 @@ $('bRevivir').onclick = () => { $('muerte').hidden = true; vida = 20; hambre = 2
 // ═════════ FOTO ═════════
 let fotoBlob = null;
 function sacarFoto() {
-  marco.visible = false; grieta.visible = false; render.render(escena, cam);
+  marco.visible = false; grieta.visible = false; manoG.visible = false; cieloObj.estrellas.material.opacity = cieloObj.estrellas.material.opacity; render.render(escena, cam); manoG.visible = true;
   const src = render.domElement, c = document.createElement('canvas'); c.width = src.width; c.height = src.height; const g = c.getContext('2d'); g.drawImage(src, 0, 0);
   const k = c.height / 400; g.font = `bold ${Math.round(18 * k)}px "Courier New", monospace`; g.textAlign = 'right'; g.fillStyle = 'rgba(0,0,0,.5)'; g.fillText('BLOQUES', c.width - 12 * k + 2 * k, c.height - 12 * k + 2 * k); g.fillStyle = '#fff'; g.fillText('BLOQUES', c.width - 12 * k, c.height - 12 * k);
   $('fotoImg').src = c.toDataURL('image/jpeg', .92); c.toBlob(b => fotoBlob = b, 'image/jpeg', .92);
@@ -1072,7 +1150,7 @@ render.domElement.addEventListener('pointermove', e => {
   const t = toques[e.pointerId]; if (!t) return;
   const dx = e.clientX - t.x, dy = e.clientY - t.y; t.x = e.clientX; t.y = e.clientY; t.movio += Math.abs(dx) + Math.abs(dy);
   if (t.izq) { let mx = (t.x - t.x0) / 50, my = (t.y - t.y0) / 50; const l = Math.hypot(mx, my); if (l > 1) { mx /= l; my /= l; } mov = { x: mx, y: my }; $('joy').firstElementChild.style.transform = `translate(${mx * 35}px,${my * 35}px)`; }
-  else { if (t.movio > 18 && !t.rompe) t.mira = true; if (t.mira || t.mouse) { J.yaw -= dx * .006; J.pitch = Math.max(-1.5, Math.min(1.5, J.pitch - dy * .006)); } }
+  else { if (t.movio > 18 && !t.rompe) t.mira = true; if (t.mira || t.mouse) { J.yaw -= dx * .006 * AJ.sens; J.pitch = Math.max(-1.5, Math.min(1.5, J.pitch - dy * .006 * AJ.sens)); } }
 });
 function soltar(e) {
   const t = toques[e.pointerId]; if (!t) return; delete toques[e.pointerId];
@@ -1093,6 +1171,89 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { teclas[e.code] = false; if (e.code === 'Space') saltando = false; if (e.code === 'ShiftLeft') bajando = false; });
 function teclado() { if (Object.keys(toques).some(k => toques[k].izq)) return; if (!['KeyW', 'KeyA', 'KeyS', 'KeyD'].some(k => teclas[k]) && !teclado.on) return; teclado.on = ['KeyW', 'KeyA', 'KeyS', 'KeyD'].some(k => teclas[k]); mov = { x: (teclas.KeyD ? 1 : 0) - (teclas.KeyA ? 1 : 0), y: (teclas.KeyS ? 1 : 0) - (teclas.KeyW ? 1 : 0) }; }
+
+// ═════════ MANO EN PANTALLA ═════════
+escena.add(cam);
+const manoG = new THREE.Group(); cam.add(manoG);
+let manoId = -1, swing = 0, bobT = 0;
+const matManoBloque = new THREE.MeshBasicMaterial({ map: atlasTex, vertexColors: true, alphaTest: .5, depthTest: false, depthWrite: false, transparent: true });
+function geoBloque(d, tam) {
+  const P = [], UV = [], C = [], I = []; let n = 0; const e = .0006, cajas = d.icono || [[0, 0, 0, 1, 1, 1]];
+  for (const F of cajas) for (const f of CARAS) {
+    const tile = d.caras ? d.caras[f.i] : d.tiles[f.t], tx = tile % 8, ty = Math.floor(tile / 8);
+    for (const q of f.v) { const px = F[0] + q[0] * (F[3] - F[0]), py = F[1] + q[1] * (F[4] - F[1]), pz = F[2] + q[2] * (F[5] - F[2]);
+      P.push((px - .5) * tam, (py - .5) * tam, (pz - .5) * tam); C.push(f.luz, f.luz, f.luz);
+      let u, w; if (f.d[0]) { u = f.d[0] > 0 ? 1 - pz : pz; w = py; } else if (f.d[2]) { u = f.d[2] > 0 ? px : 1 - px; w = py; } else { u = px; w = pz; }
+      UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / 8); }
+    I.push(n, n + 1, n + 2, n, n + 2, n + 3); n += 4; }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(UV, 2)); g.setAttribute('color', new THREE.Float32BufferAttribute(C, 3)); g.setIndex(I); return g;
+}
+function armarMano(id) {
+  manoId = id; while (manoG.children.length) { const m = manoG.children.pop(); m.geometry.dispose(); if (m.material !== matManoBloque) { if (m.material.map) m.material.map.dispose(); m.material.dispose(); } }
+  let m; const d = DEF[id];
+  if (!id) { m = new THREE.Mesh(new THREE.BoxGeometry(.13, .13, .55), new THREE.MeshBasicMaterial({ color: 0xd8a27a, map: ruidoTex, depthTest: false, depthWrite: false, transparent: true })); m.position.set(.36, -.3, -.42); m.rotation.set(.35, -.15, 0); }
+  else if (d && (!d.forma || d.icono) && id !== B.ESCALERA && id !== B.PUERTA) { m = new THREE.Mesh(geoBloque(d, .3), matManoBloque); m.position.set(.4, -.36, -.62); m.rotation.set(.1, .7, 0); }
+  else { const tile = d ? d.tiles[2] : ITEM[id].tile, c = document.createElement('canvas'); c.width = c.height = 16; c.getContext('2d').drawImage(atlas, (tile % 8) * 16, Math.floor(tile / 8) * 16, 16, 16, 0, 0, 16, 16);
+    const tx = new THREE.CanvasTexture(c); tx.magFilter = tx.minFilter = THREE.NearestFilter; tx.generateMipmaps = false;
+    m = new THREE.Mesh(new THREE.PlaneGeometry(.42, .42), new THREE.MeshBasicMaterial({ map: tx, alphaTest: .5, side: THREE.DoubleSide, depthTest: false, depthWrite: false, transparent: true }));
+    m.position.set(.42, -.3, -.6); m.rotation.set(0, -.5, ITEM[id] && (ITEM[id].pico || ITEM[id].espada) ? .2 : 0); }
+  m.renderOrder = 999; manoG.add(m);
+}
+function moverMano(dt) {
+  const id = jugando ? (barra[sel] || 0) : -2; if (id !== manoId) { if (id === -2) { manoG.visible = false; manoId = -2; return; } manoG.visible = true; armarMano(id); }
+  swing = Math.max(0, swing - dt * 4); const sw = Math.sin(swing * Math.PI);
+  if (J.rapidez > 1) bobT += dt * J.rapidez * 1.6;
+  manoG.position.set(Math.cos(bobT) * .012, -Math.abs(Math.sin(bobT)) * .02 - sw * .06, -sw * .08);
+  manoG.rotation.set(-sw * .8, sw * .2, 0);
+  matManoBloque.color.setScalar(Math.max(.3, U.uDia.value));
+}
+
+// ═════════ SOL, LUNA, ESTRELLAS Y NUBES ═════════
+const cieloObj = {};
+{ const tex = f => { const c = document.createElement('canvas'); c.width = c.height = 16; const g = c.getContext('2d'); for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const col = f(x, y); if (col) { g.fillStyle = col; g.fillRect(x, y, 1, 1); } } const t = new THREE.CanvasTexture(c); t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false; return t; };
+  const solT = tex((x, y) => { const d = Math.max(Math.abs(x - 7.5), Math.abs(y - 7.5)); return d < 4.5 ? (d < 2.5 ? '#fffbe0' : '#fff2a0') : d < 6.5 ? '#6a5a20' : null; });
+  const lunaT = tex((x, y) => { const d = Math.max(Math.abs(x - 7.5), Math.abs(y - 7.5)); if (d >= 5) return null; return [[5, 5], [9, 8], [6, 9]].some(([a, b]) => Math.abs(x - a) + Math.abs(y - b) < 2) ? '#a8acb8' : '#e8ecf4'; });
+  const plano = (t, s) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(s, s), new THREE.MeshBasicMaterial({ map: t, transparent: true, fog: false, depthWrite: false, blending: THREE.AdditiveBlending })); escena.add(m); return m; };
+  cieloObj.sol = plano(solT, 26); cieloObj.luna = plano(lunaT, 18);
+  const pos = []; for (let i = 0; i < 600; i++) { const a = h3(i, 1, 0, 3) * 6.283, z = h3(i, 2, 0, 3) * 1.1 - .1, r = Math.sqrt(1 - Math.min(1, z * z)); pos.push(Math.cos(a) * r * 150, z * 150, Math.sin(a) * r * 150); }
+  const ge = new THREE.BufferGeometry(); ge.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  cieloObj.estrellas = new THREE.Points(ge, new THREE.PointsMaterial({ color: 0xffffff, size: 2, sizeAttenuation: false, fog: false, transparent: true, opacity: 0, depthWrite: false })); escena.add(cieloObj.estrellas);
+  // nubes cuadradas que se repiten sin cortes
+  const P = [], I = []; let n = 0; const C = 8, NC = 32, vnP = (x, z) => { const xi = Math.floor(x), zi = Math.floor(z), fx = sm(x - xi), fz = sm(z - zi), w = v => ((v % 8) + 8) % 8, hh = (a, b) => h3(w(a), 0, w(b), 77); const a = hh(xi, zi), b = hh(xi + 1, zi), c = hh(xi, zi + 1), d = hh(xi + 1, zi + 1); return a + (b - a) * fx + (c - a + (d - c - b + a) * fx) * fz; };
+  const hay = (i, j) => vnP(i / 3, j / 3) > .7;
+  const quad = (a, b, c, d) => { P.push(...a, ...b, ...c, ...d); I.push(n, n + 1, n + 2, n, n + 2, n + 3); n += 4; };
+  for (let copia = -1; copia <= 0; copia++) for (let i = 0; i < NC; i++) for (let j = 0; j < NC; j++) { if (!hay(i, j)) continue; const x0 = (copia * NC + i) * C, x1 = x0 + C, z0 = j * C - 64, z1 = z0 + C, y0 = 0, y1 = 3;
+    quad([x0, y1, z0], [x0, y1, z1], [x1, y1, z1], [x1, y1, z0]); quad([x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]);
+    if (!hay(i + 1, j)) quad([x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]); if (!hay(i - 1, j)) quad([x0, y0, z1], [x0, y1, z1], [x0, y1, z0], [x0, y0, z0]);
+    if (!hay(i, j + 1)) quad([x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]); if (!hay(i, j - 1)) quad([x1, y0, z0], [x0, y0, z0], [x0, y1, z0], [x1, y1, z0]); }
+  const gn = new THREE.BufferGeometry(); gn.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); gn.setIndex(I); gn.computeVertexNormals();
+  cieloObj.nubes = new THREE.Mesh(gn, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .78, depthWrite: false, side: THREE.DoubleSide })); cieloObj.nubes.position.y = SY + 16; cieloObj.nubes.renderOrder = 2; escena.add(cieloObj.nubes);
+}
+let nubeX = 0;
+function moverCielo(dt) {
+  // ángulo del sol según la hora del día (en creativo, siempre de mañana)
+  let a; if (creativo() || !jugando) a = 1.0; else { const t = (tiempo + 12) % CICLO; a = t < 212 ? t / 212 * Math.PI : Math.PI + (t - 212) / 88 * Math.PI; }
+  const c = cam.position, R = 150;
+  cieloObj.sol.position.set(c.x + Math.cos(a) * R, c.y + Math.sin(a) * R, c.z - 25); cieloObj.sol.lookAt(c);
+  cieloObj.luna.position.set(c.x - Math.cos(a) * R, c.y - Math.sin(a) * R, c.z + 25); cieloObj.luna.lookAt(c);
+  cieloObj.estrellas.position.copy(c); cieloObj.estrellas.material.opacity = Math.max(0, oscuridad() - .3) * 1.4;
+  nubeX = (nubeX + dt * .5) % 256; cieloObj.nubes.position.x = nubeX; cieloObj.nubes.material.color.setScalar(.18 + .82 * U.uDia.value);
+  // no dibujar pedazos que quedan detrás de la niebla
+  const lejos = DIST[AJ.dist][1] + 24; for (let k = 0; k < pedazos.length; k++) { const p = pedazos[k]; if (!p) continue; const cx = (k % NCX) * CH + 8, cz = Math.floor(k / NCX) * CH + 8, v = Math.hypot(cx - c.x, cz - c.z) < lejos; if (p.op) p.op.visible = v; if (p.ag) p.ag.visible = v; }
+}
+
+// ═════════ AJUSTES ═════════
+let ajustesDesde = null;
+function abrirAjustes(desde) { ajustesDesde = desde; $(desde).hidden = true; $('ajustes').hidden = false; $('ajSens').value = AJ.sens; $('ajMus').value = AJ.musica; $('ajSon').value = AJ.sonidos; pintarDist(); }
+function pintarDist() { for (const d of $('ajDist').children) d.classList.toggle('on', +d.dataset.d === AJ.dist); }
+$('ajSens').oninput = e => { AJ.sens = +e.target.value; guardarAjustes(); };
+$('ajMus').oninput = e => { AJ.musica = +e.target.value; guardarAjustes(); };
+$('ajSon').oninput = e => { AJ.sonidos = +e.target.value; guardarAjustes(); golpe(B.MADERA, 1); };
+$('ajDist').addEventListener('click', e => { const d = e.target.closest('[data-d]'); if (!d) return; AJ.dist = +d.dataset.d; guardarAjustes(); pintarDist(); cam.far = DIST[AJ.dist][1] + 140; cam.updateProjectionMatrix(); });
+$('bAjustes1').onclick = () => abrirAjustes('inicio');
+$('bAjustes2').onclick = () => abrirAjustes('pausa');
+$('bAjListo').onclick = () => { $('ajustes').hidden = true; $(ajustesDesde).hidden = false; };
+cam.far = DIST[AJ.dist][1] + 140; cam.updateProjectionMatrix();
 
 // ═════════ BUCLE ═════════
 let ult = performance.now(), revisarT = 0, curaT = 0;
@@ -1129,6 +1290,8 @@ function bucle(ya) {
   grieta.visible = !!(rompiendo && rompiendo.p > 0 && rompiendo.x >= 0);
   if (grieta.visible) { grieta.position.set(rompiendo.x + .5, rompiendo.y + .5, rompiendo.z + .5); grietaTex.offset.x = Math.min(3, Math.floor(rompiendo.p * 4)) * .25; }
   for (let i = parts.length - 1; i >= 0; i--) { const p = parts[i], u = p.userData; u.t += dt; u.vy -= 14 * dt; p.position.x += u.vx * dt; p.position.y += u.vy * dt; p.position.z += u.vz * dt; p.rotation.x += dt * 6; if (u.t > .7) { escena.remove(p); p.material.dispose(); parts.splice(i, 1); } }
+  moverMano(dt); moverCielo(dt);
+  if (jugando) { musicaT -= dt; if (musicaT <= 0) musicaT = tocarMusica() + 70 + Math.random() * 100; }
   render.render(escena, cam);
 }
 requestAnimationFrame(bucle);
