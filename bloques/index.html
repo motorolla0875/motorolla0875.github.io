@@ -82,6 +82,16 @@
   .ajOpc { display: flex; gap: 4px; } .ajOpc div { padding: 5px 8px; background: #7d7d7d; border: 2px solid #000; cursor: pointer; font-size: 13px; } .ajOpc div.on { background: #5f8f3a; }
   #mapaCv { position: static; width: min(78vh, 88vw); height: min(78vh, 88vw); image-rendering: pixelated; border: 4px solid #000; box-shadow: 0 6px 0 rgba(0,0,0,.4); background: #1c3f99; }
   #mapaCapa .btn { margin-top: 6px; padding: 6px 0; }
+  #herr { position: fixed; top: max(6px, env(safe-area-inset-top)); left: max(8px, env(safe-area-inset-left)); display: flex; gap: 6px; z-index: 3; }
+  #herr .bChico.off { opacity: .35; }
+  #guia { position: fixed; top: 58px; left: 50%; transform: translateX(-50%); z-index: 3; background: rgba(0,0,0,.6); padding: 6px 10px; font-size: 13px; display: flex; gap: 8px; align-items: center; white-space: nowrap; }
+  #guia .gb { background: #5f8f3a; border: 2px solid #000; padding: 5px 9px; cursor: pointer; } #guia .gb.rojo { background: #8a3a3a; } #guia .gb.gris { background: #6a6a6a; }
+  #planBar { position: fixed; left: 50%; bottom: 62px; transform: translateX(-50%); z-index: 3; background: rgba(0,0,0,.6); padding: 5px 8px; font-size: 12px; display: flex; gap: 8px; align-items: center; white-space: nowrap; }
+  #planBar .barraP { width: 110px; height: 10px; background: #333; border: 2px solid #000; } #planBar .barraP i { display: block; height: 100%; background: #6cbb40; }
+  #planBar .gb { background: #5f8f3a; border: 2px solid #000; padding: 4px 8px; cursor: pointer; } #planBar .gb.rojo { background: #8a3a3a; }
+  .plano { display: flex; align-items: center; gap: 10px; padding: 6px; border-bottom: 2px solid #aaa; cursor: pointer; } .plano .nom { flex: 1; font-size: 14px; } .plano .nom small { display: block; font-size: 11px; color: #555; }
+  .plano .hacer { padding: 6px 10px; background: #5f8f3a; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; border: 3px solid #000; font-size: 13px; }
+  #videoCaja video, #grabCaja canvas { max-height: 70vh; max-width: 80vw; border: 4px solid #fff; display: block; position: static; width: auto; height: 70vh; }
   #fotoImg { max-width: min(640px, 80vw); max-height: 58vh; border: 4px solid #fff; box-shadow: 0 6px 0 rgba(0,0,0,.4); }
 </style>
 </head>
@@ -89,6 +99,9 @@
 <div id="bajoAgua" hidden></div><div id="dano"></div><div id="flash"></div>
 <div class="hud" id="hud" hidden>
   <div id="mision" class="sombra"></div>
+  <div id="herr" hidden></div>
+  <div id="guia" class="sombra" hidden></div>
+  <div id="planBar" class="sombra" hidden></div>
   <div id="arriba"><div id="vida"></div><div id="hambre"></div><div id="dia" class="sombra"></div></div>
   <div id="botonesArriba">
     <div class="bChico" id="bBolsa" data-it="bolsaT"></div>
@@ -130,6 +143,7 @@
   <div class="titulo" style="font-size:clamp(28px,6vw,44px)" data-i="pausa"></div>
   <div class="btn" id="bSeguir" data-i="seguir"></div>
   <div class="btn" id="bAjustes2" data-i="ajustes"></div>
+  <div class="btn" id="bVideo" data-ih="videoBtn"></div>
   <div class="btn" id="bSalir" data-i="salir"></div>
 </div>
 <div class="capa trans" id="ajustes" hidden>
@@ -156,6 +170,12 @@
   <canvas id="mapaCv" width="480" height="480"></canvas>
   <div class="btn" id="bCerrarMapa" data-i="seguir"></div>
 </div>
+<div class="capa trans" id="videoCapa" hidden>
+  <div id="videoCaja"></div>
+  <div class="filaBtn"><div class="btn" id="bGuardarVideo" data-i="guardar"></div><div class="btn" id="bCompartirVideo" data-i="compartir"></div></div>
+  <div class="btn" id="bCerrarVideo" data-i="seguir"></div>
+</div>
+<div class="capa" id="grabando" hidden style="background:#111"><div id="grabCaja"></div><div class="texto" id="grabTxt" style="margin-top:8px"></div></div>
 <div class="capa trans" id="fotoCapa" hidden>
   <img id="fotoImg" alt="Foto de tu mundo">
   <div class="filaBtn"><div class="btn" id="bGuardarFoto" data-i="guardar"></div><div class="btn" id="bCompartir" data-i="compartir"></div></div>
@@ -710,8 +730,12 @@ function armarPedazo(cx, cz) {
 function armarTodo() { for (let cx = 0; cx < NCX; cx++) for (let cz = 0; cz < NCZ; cz++) armarPedazo(cx, cz); }
 function rearmarCerca(x, z, r) { const c0 = Math.max(0, Math.floor((x - r) / CH)), c1 = Math.min(NCX - 1, Math.floor((x + r) / CH)), d0 = Math.max(0, Math.floor((z - r) / CH)), d1 = Math.min(NCZ - 1, Math.floor((z + r) / CH)); for (let cx = c0; cx <= c1; cx++) for (let cz = d0; cz <= d1; cz++) armarPedazo(cx, cz); }
 // cambiar un bloque (lo que pone o rompe el jugador)
+// cada acción del jugador junta sus cambios (para deshacer y para el video)
+let grupo = null;
+function accion(fn) { grupo = []; let g; try { fn(); } finally { g = grupo; grupo = null; } if (g.length && typeof alTerminarAccion === 'function') alTerminarAccion(g); }
 function ponerBloque(x, y, z, t) {
   if (!dentro(x, y, z)) return; const i = idx(x, y, z), viejo = mundo[i]; if (viejo === t) return;
+  if (grupo) grupo.push([i, viejo, t]);
   mundo[i] = t; diffs.set(i, t); sucio = true;
   const a0 = alt[x + SX * z]; altColumna(x, z); const cambioAlt = a0 !== alt[x + SX * z];
   let luz = false;
@@ -911,7 +935,7 @@ const slotHTML = (id, n, attr = '') => `<div class="slot${n === 0 ? ' vacio' : '
 function abrirPanel(tab) { panelTab = tab; pausado = true; soltarTodo(); $('panel').hidden = false; pintarPanel(); }
 function cerrarPanel() { $('panel').hidden = true; pausado = false; cofreAbierto = null; pintarBarra(); }
 function pintarPanel() {
-  const tabs = cofreAbierto !== null ? [['cofre', TR('tabCofre')]] : creativo() ? [['bolsa', TR('tabBloques')]] : [['bolsa', TR('tabBolsa')], ['fabricar', TR('tabFabricar')]];
+  const tabs = cofreAbierto !== null ? [['cofre', TR('tabCofre')]] : creativo() ? [['bolsa', TR('tabBloques')], ['planos', TR('tabPlanos')]] : [['bolsa', TR('tabBolsa')], ['fabricar', TR('tabFabricar')], ['planos', TR('tabPlanos')]];
   $('pCab').innerHTML = tabs.map(([k, n]) => `<div class="tab${panelTab === k ? ' on' : ''}" data-tab="${k}">${n}</div>`).join('') + '<div class="vTit"></div><div class="cerrar" id="pCerrar">X</div>';
   let h = '';
   if (panelTab === 'bolsa' && creativo()) h = '<h4>' + TR('tocaBloque') + '</h4><div class="grilla">' + TODOS.map(id => slotHTML(id, 1, `data-poner="${id}"`)).join('') + '</div>';
@@ -920,6 +944,7 @@ function pintarPanel() {
     const herr = ids.filter(id => ITEM[id] && (ITEM[id].pico || ITEM[id].espada)), mats = ids.filter(id => !herr.includes(id));
     h = '<h4>' + TR('tocaBloque') + '</h4><div class="grilla">' + (mats.length ? mats.map(id => slotHTML(id, inv[id], `data-poner="${id}"`)).join('') : '<small>' + TR('nada') + '</small>') + '</div>';
     if (herr.length) h += '<h4>' + TR('herramientas') + '</h4><div class="grilla">' + herr.map(id => slotHTML(id, 1)).join('') + '</div>';
+  } else if (panelTab === 'planos') { h = planosHTML();
   } else if (panelTab === 'fabricar') {
     const rs = RECETAS.slice().sort((a, b) => puedeHacer(b) - puedeHacer(a));
     h = rs.map(r => { const k = RECETAS.indexOf(r), ok = puedeHacer(r); return `<div class="receta${ok ? '' : ' no'}">${slotHTML(r[0][0], r[0][1])}<div class="nom">${nom(r[0][0])}${r[0][1] > 1 ? ' ×' + r[0][1] : ''}<small>${r[1].map(([id, n]) => nom(id) + ' ×' + n).join(' + ')}</small></div><div class="ing">${r[1].map(([id, n]) => slotHTML(id, inv[id] || 0)).join('')}</div><div class="hacer" data-hacer="${k}">${TR('hacer')}</div></div>`; }).join('');
@@ -938,6 +963,7 @@ $('panel').addEventListener('pointerdown', e => {
   if (q('#pCerrar') || e.target === $('panel')) return cerrarPanel();
   let d;
   if (d = q('[data-tab]')) { panelTab = d.dataset.tab; pintarPanel(); }
+  else if (d = q('[data-plano]')) { cerrarPanel(); elegirPlano(d.dataset.plano); }
   else if (d = q('#pPie [data-k]')) { sel = +d.dataset.k; pintarPanel(); }
   else if (d = q('[data-poner]')) { const id = +d.dataset.poner; if (!esBloque(id) && !esComida(id) && id !== I.SEMILLAS && id !== I.TRIGO_I) { aviso(TR('noSePone'), 1100); return; } const ya = barra.indexOf(id); if (ya >= 0 && ya !== sel) barra[ya] = barra[sel] && !creativo() ? barra[sel] : 0; barra[sel] = id; sel = (sel + 1) % 9; son(520, .05, 'triangle', .08); pintarPanel(); }
   else if (d = q('[data-hacer]')) { fabricar(RECETAS[+d.dataset.hacer]); pintarPanel(); }
@@ -958,6 +984,7 @@ function abrirCofre(i) {
 
 // ═════════ PONER, ROMPER, USAR ═════════
 function tocar(dir) {
+  if (typeof herramientaTocar === 'function' && herramientaTocar(dir)) return;
   // primero: ¿le pegué a un monstruo?
   const m = monstruoApuntado(dir), h = apuntar(dir);
   if (m && (!h || m.t < h.t)) return (m.m.userData.animal && barra[sel] === I.TRIGO_I) ? alimentar(m.m) : golpear(m.m, dir);
@@ -985,6 +1012,7 @@ function tocar(dir) {
   if (!libre(y) || ocupa(y)) return;
   if (id === B.PUERTA) { if (!libre(y + 1) || ocupa(y + 1)) return; ponerBloque(x, y + 1, z, B.PUERTA); }
   ponerBloque(x, y, z, pone);
+  if (typeof espejo === 'function') espejo(x, y, z, pone);
   if (id === B.COFRE) cofres[idx(x, y, z)] = {};
   if (!creativo()) quitarItem(id, 1);
   golpe(pone, 1); swing = 1; revisarRefugio(); revisarMision();
@@ -1027,6 +1055,7 @@ function romper(h) {
   const i = idx(h.x, h.y, h.z);
   if (t === B.PUERTA || t === B.PUERTA_A) for (const yy of [h.y - 1, h.y + 1]) { const b = get(h.x, yy, h.z); if (b === B.PUERTA || b === B.PUERTA_A) ponerBloque(h.x, yy, h.z, B.AIRE); }
   ponerBloque(h.x, h.y, h.z, B.AIRE);
+  if (typeof espejo === 'function') espejo(h.x, h.y, h.z, 0);
   { const enc = get(h.x, h.y + 1, h.z); if (enc && DEF[enc].planta) ponerBloque(h.x, h.y + 1, h.z, B.AIRE); }
   polvo(h.x + .5, h.y + .5, h.z + .5, d.color); golpe(t, 1.5); setTimeout(() => golpe(t, .7), 70); swing = 1; vibrar(12);
   if (!creativo()) {
@@ -1051,7 +1080,7 @@ function seguirRompiendo(dir, dt) {
   if (rompiendo.espera > 0) { rompiendo.espera -= dt; return; }
   rompiendo.p += dt / tiempoRomper(h.b);
   rompiendo.tick = (rompiendo.tick || 0) - dt; if (rompiendo.tick <= 0) { rompiendo.tick = .24; if (!(matDe(h.b) === 'piedra' && sonar('picar', .5))) golpe(h.b, .45); swing = Math.max(swing, .9); }
-  if (rompiendo.p >= 1) { romper(h); rompiendo = { x: -1, y: -1, z: -1, p: 0, espera: creativo() ? .2 : .08 }; }
+  if (rompiendo.p >= 1) { accion(() => romper(h)); rompiendo = { x: -1, y: -1, z: -1, p: 0, espera: creativo() ? .2 : .08 }; }
 }
 let ultimoAviso = 0;
 function aviso(html, ms = 1000) { $('aviso').innerHTML = html; clearTimeout(aviso.t); aviso.t = setTimeout(() => $('aviso').innerHTML = '', ms); }
@@ -1349,7 +1378,7 @@ function guardar() {
   if (!mundoId || !jugando) return;
   try {
     const d = []; for (const [i, t] of diffs) d.push(i, t);
-    const datos = { v: 1, semilla, modo: modoJuego, d, J: { x: J.x, y: J.y, z: J.z, yaw: J.yaw, pitch: J.pitch }, inv, barra, sel, tiempo, vida, hambre, cofres, stats, mision, volando, spawnP: spawnPropio ? spawn : null, animales: animales.filter(a => a.position.y > -5).map(a => { const u = a.userData, q = a.position; return [u.animal, +q.x.toFixed(2), +q.y.toFixed(2), +q.z.toFixed(2), Math.round(u.bebe || 0)]; }) };
+    const datos = { v: 1, semilla, modo: modoJuego, d, J: { x: J.x, y: J.y, z: J.z, yaw: J.yaw, pitch: J.pitch }, inv, barra, sel, tiempo, vida, hambre, cofres, stats, mision, volando, extra: typeof herrGuardar === 'function' ? herrGuardar() : null, spawnP: spawnPropio ? spawn : null, animales: animales.filter(a => a.position.y > -5).map(a => { const u = a.userData, q = a.position; return [u.animal, +q.x.toFixed(2), +q.y.toFixed(2), +q.z.toFixed(2), Math.round(u.bebe || 0)]; }) };
     localStorage.setItem('bloquesMundo_' + mundoId, JSON.stringify(datos));
     const lista = leerLista(), m = lista.find(m => m.id === mundoId);
     if (m) { m.dia = numDia(); m.fecha = Date.now(); m.bloques = diffs.size; } localStorage.setItem('bloquesMundos', JSON.stringify(lista));
@@ -1375,6 +1404,7 @@ function entrarMundo(id) {
     Object.assign(J, datos.J); inv = datos.inv || {}; barra = datos.barra || barra; sel = datos.sel || 0; tiempo = datos.tiempo || 0; vida = datos.vida || 20; hambre = datos.hambre ?? 20; cofres = datos.cofres || {}; stats = datos.stats || stats; mision = datos.mision || 0; volando = !!datos.volando;
   }
   terminarCarga(datos && datos.animales);
+  if (typeof herrCargar === 'function') herrCargar(datos && datos.extra);
   jugando = true; pausado = false;
   for (const c of ['inicio', 'mundos', 'nuevo']) $(c).hidden = true; $('hud').hidden = false;
   pintarBarra(); pintarVida(); hambrePintado = -1; pintarHambre(); pintarVolar(); diaPintado = ''; revisarRefugio(); pintarMision(); son(440, .1, 'triangle', .1);
@@ -1398,7 +1428,7 @@ $('listaMundos').addEventListener('click', e => {
   if (bo) { if (bo.dataset.seguro) borrarMundo(bo.dataset.borrar); else { bo.dataset.seguro = 1; bo.textContent = TR('seguro'); } }
 });
 function pantallaCompleta() { try { const d = document.documentElement; (d.requestFullscreen ? d.requestFullscreen() : Promise.resolve()).then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape')).catch(() => {}); } catch (e) {} }
-function salirAlMenu() { jugando = false; mundoId = null; $('hud').hidden = true; for (const m of monstruos.slice()) quitarMonstruo(m, false); pintarMundos(); $('mundos').hidden = false; }
+function salirAlMenu() { if (typeof herrReset === 'function') herrReset(); jugando = false; mundoId = null; $('hud').hidden = true; for (const m of monstruos.slice()) quitarMonstruo(m, false); pintarMundos(); $('mundos').hidden = false; }
 $('bJugar').onclick = () => { $('inicio').hidden = true; pintarMundos(); $('mundos').hidden = false; son(440, .08, 'triangle', .1); };
 $('bNuevo').onclick = () => { $('mundos').hidden = true; $('nuevo').hidden = false; };
 $('bVolverInicio').onclick = () => { $('mundos').hidden = true; $('inicio').hidden = false; };
@@ -1429,7 +1459,7 @@ function soltar(e) {
   if (t.izq) { mov = { x: 0, y: 0 }; $('joy').style.display = 'none'; $('joy').firstElementChild.style.transform = ''; return; }
   if (t.rompe) { rompiendo = null; return; }
   if (t.mira || !jugando || pausado) return;
-  tocar(rayoDesde(e.clientX, e.clientY));
+  const dir = rayoDesde(e.clientX, e.clientY); accion(() => tocar(dir));
 }
 render.domElement.addEventListener('pointerup', soltar); render.domElement.addEventListener('pointercancel', soltar);
 render.domElement.addEventListener('contextmenu', e => e.preventDefault());
@@ -1621,10 +1651,13 @@ function bucle(ya) {
   if (faroLuz) { const on = get(ejemploFaro.x, ejemploFaro.y, ejemploFaro.z) === B.LAMPARA; faroLuz.visible = on; faroLuz.rotation.y += dt * .7; faroLuz.userData.mat.opacity = oscuridad() * .55; }
   const fovQ = corriendo && jugando && !pausado ? 78 : 70; if (Math.abs(cam.fov - fovQ) > .1) { cam.fov += (fovQ - cam.fov) * Math.min(1, dt * 8); cam.updateProjectionMatrix(); }
   if (jugando) { musicaT -= dt; if (musicaT <= 0) musicaT = tocarMusica() + 70 + Math.random() * 100; }
+  if (typeof herrFrame === 'function') herrFrame(dt);
   render.render(escena, cam);
+  if (typeof herrDespues === 'function') herrDespues();
 }
 requestAnimationFrame(bucle);
 window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMundo, crearMundo, guardar, armarTodo, monstruos: () => monstruos, crearMonstruo, animales: () => animales, crearAnimal, alimentar, usarCama, dibujarMapa, ejemploFaro: () => ejemploFaro, comer, hambre: v => v === undefined ? hambre : (hambre = v), estado: () => ({ modoJuego, inv, barra, sel, vida, tiempo, mision, stats, refugio, diffs: diffs.size, spawn, ruinas, oscuridad: oscuridad() }), setTiempo: t => tiempo = t, darItem, fabricar, RECETAS, abrirPanel, cerrarPanel, sacarFoto, U, setPausa: p => pausado = p, mundo: () => mundo, idx, ponerBloque, prepararMundo, terminarCarga };
 </script>
+<script src="construir.js"></script>
 </body>
 </html>
