@@ -8,7 +8,7 @@ Object.assign(TX.es, {
   desbloquear: 'Desbloquear', gratisHw: 'GRATIS POR HALLOWEEN', listo2: 'Desbloqueado', recibir: 'Recibir', llamar: 'Llamar', instalado: 'Está en Mis mods', usar: 'Usar', especial: 'Especial',
   pzAlas: 'Alas', pzCuernos: 'Cuernos', pzAura: 'Aura brillante', pzArmadura: 'Armadura', plata: 'Plata', oro: 'Oro', sMago: 'Mago', sBruja: 'Bruja', sVikingo: 'Vikingo', sCalabaza: 'Calabaza', pzMago: 'Sombrero de mago', pzBruja: 'Sombrero de bruja', pzVikingo: 'Casco vikingo', pzCalabaza: 'Cabeza de calabaza',
   huevoDorado: 'Dragón dorado', huevoCristal: 'Dragón de cristal', dHuevo: 'Un huevo que nace en un dragón único', dPieza: 'Para tus personajes', dPack: '3 personajes listos para usar o copiar', dTex: 'Cambia cómo se ven los bloques; actívalo en Opciones del mundo', dMascota: 'Una mascota que te sigue a todos lados',
-  packDragones: 'Pack Dragones', packZombis: 'Pack Zombis', packCaballeros: 'Pack Caballeros', packHalloween: 'Pack Halloween', packKawaii: 'Pack Kawaii', texPastel: 'Texturas Pastel', texMedieval: 'Texturas Medievales', texNeon: 'Texturas Neón', zorro: 'Zorro', panda: 'Panda',
+  packDragones: 'Pack Dragones', packZombis: 'Pack Zombis', packCaballeros: 'Pack Caballeros', packHalloween: 'Pack Halloween', packKawaii: 'Pack Kawaii', texPastel: 'Texturas Pastel', texMedieval: 'Texturas Medievales', texNeon: 'Texturas Neón', texCiudad: 'Texturas Ciudad', zorro: 'Zorro', panda: 'Panda', miniojon: 'Mini Ojón',
   anuncioPrueba: 'ANUNCIO DE PRUEBA', anuncioPruebaTxt: 'En la app acá se ve un video corto', desbloqueadoOk: '¡DESBLOQUEADO!', entraMundo: 'ENTRA A UN MUNDO PRIMERO', recibido: 'YA LO TIENES EN LA BARRA',
   sk_jinete: 'Jinete de dragón', sk_dragona: 'Dragona', sk_fuego: 'Domador de fuego', sk_zombi: 'Zombi', sk_zombiCocinero: 'Zombi cocinero', sk_cazador: 'Cazador de zombis', sk_caballero: 'Caballero', sk_vikinga: 'Vikinga', sk_rey: 'Rey',
   sk_calabaza: 'Cabeza de calabaza', sk_bruja: 'Bruja', sk_vampiro: 'Vampiro', sk_gatita: 'Gatita', sk_nube: 'Nube', sk_frutilla: 'Frutilla',
@@ -18,7 +18,7 @@ Object.assign(TX.en, {
   desbloquear: 'Unlock', gratisHw: 'FREE FOR HALLOWEEN', listo2: 'Unlocked', recibir: 'Get', llamar: 'Call', instalado: 'In My mods', usar: 'Use', especial: 'Special',
   pzAlas: 'Wings', pzCuernos: 'Horns', pzAura: 'Glowing aura', pzArmadura: 'Armor', plata: 'Silver', oro: 'Gold', sMago: 'Wizard', sBruja: 'Witch', sVikingo: 'Viking', sCalabaza: 'Pumpkin', pzMago: 'Wizard hat', pzBruja: 'Witch hat', pzVikingo: 'Viking helmet', pzCalabaza: 'Pumpkin head',
   huevoDorado: 'Golden dragon', huevoCristal: 'Crystal dragon', dHuevo: 'An egg that hatches into a unique dragon', dPieza: 'For your characters', dPack: '3 ready-to-use characters you can also copy', dTex: 'Changes how blocks look; turn it on in World options', dMascota: 'A pet that follows you everywhere',
-  packDragones: 'Dragons Pack', packZombis: 'Zombies Pack', packCaballeros: 'Knights Pack', packHalloween: 'Halloween Pack', packKawaii: 'Kawaii Pack', texPastel: 'Pastel Textures', texMedieval: 'Medieval Textures', texNeon: 'Neon Textures', zorro: 'Fox', panda: 'Panda',
+  packDragones: 'Dragons Pack', packZombis: 'Zombies Pack', packCaballeros: 'Knights Pack', packHalloween: 'Halloween Pack', packKawaii: 'Kawaii Pack', texPastel: 'Pastel Textures', texMedieval: 'Medieval Textures', texNeon: 'Neon Textures', texCiudad: 'City Textures', zorro: 'Fox', panda: 'Panda', miniojon: 'Mini Big Eye',
   anuncioPrueba: 'TEST AD', anuncioPruebaTxt: 'In the app a short video plays here', desbloqueadoOk: 'UNLOCKED!', entraMundo: 'ENTER A WORLD FIRST', recibido: "IT'S IN YOUR HOTBAR",
   sk_jinete: 'Dragon rider', sk_dragona: 'Dragon girl', sk_fuego: 'Fire tamer', sk_zombi: 'Zombie', sk_zombiCocinero: 'Zombie chef', sk_cazador: 'Zombie hunter', sk_caballero: 'Knight', sk_vikinga: 'Viking girl', sk_rey: 'King',
   sk_calabaza: 'Pumpkin head', sk_bruja: 'Witch', sk_vampiro: 'Vampire', sk_gatita: 'Kitty', sk_nube: 'Cloud', sk_frutilla: 'Strawberry',
@@ -28,7 +28,7 @@ Object.assign(TX.pt, {
   desbloquear: 'Desbloquear', gratisHw: 'GRÁTIS NO HALLOWEEN', listo2: 'Desbloqueado', recibir: 'Receber', llamar: 'Chamar', instalado: 'Está em Meus mods', usar: 'Usar', especial: 'Especial',
   pzAlas: 'Asas', pzCuernos: 'Chifres', pzAura: 'Aura brilhante', pzArmadura: 'Armadura', plata: 'Prata', oro: 'Ouro', sMago: 'Mago', sBruja: 'Bruxa', sVikingo: 'Viking', sCalabaza: 'Abóbora', pzMago: 'Chapéu de mago', pzBruja: 'Chapéu de bruxa', pzVikingo: 'Capacete viking', pzCalabaza: 'Cabeça de abóbora',
   huevoDorado: 'Dragão dourado', huevoCristal: 'Dragão de cristal', dHuevo: 'Um ovo que nasce como um dragão único', dPieza: 'Para seus personagens', dPack: '3 personagens prontos para usar ou copiar', dTex: 'Muda o visual dos blocos; ative em Opções do mundo', dMascota: 'Um bichinho que te segue por todo lado',
-  packDragones: 'Pacote Dragões', packZombis: 'Pacote Zumbis', packCaballeros: 'Pacote Cavaleiros', packHalloween: 'Pacote Halloween', packKawaii: 'Pacote Kawaii', texPastel: 'Texturas Pastel', texMedieval: 'Texturas Medievais', texNeon: 'Texturas Neon', zorro: 'Raposa', panda: 'Panda',
+  packDragones: 'Pacote Dragões', packZombis: 'Pacote Zumbis', packCaballeros: 'Pacote Cavaleiros', packHalloween: 'Pacote Halloween', packKawaii: 'Pacote Kawaii', texPastel: 'Texturas Pastel', texMedieval: 'Texturas Medievais', texNeon: 'Texturas Neon', texCiudad: 'Texturas Cidade', zorro: 'Raposa', panda: 'Panda', miniojon: 'Mini Olhão',
   anuncioPrueba: 'ANÚNCIO DE TESTE', anuncioPruebaTxt: 'No app aqui passa um vídeo curto', desbloqueadoOk: 'DESBLOQUEADO!', entraMundo: 'ENTRE EM UM MUNDO PRIMEIRO', recibido: 'JÁ ESTÁ NA SUA BARRA',
   sk_jinete: 'Cavaleiro de dragão', sk_dragona: 'Dragoa', sk_fuego: 'Domador de fogo', sk_zombi: 'Zumbi', sk_zombiCocinero: 'Zumbi cozinheiro', sk_cazador: 'Caçador de zumbis', sk_caballero: 'Cavaleiro', sk_vikinga: 'Viking', sk_rey: 'Rei',
   sk_calabaza: 'Cabeça de abóbora', sk_bruja: 'Bruxa', sk_vampiro: 'Vampiro', sk_gatita: 'Gatinha', sk_nube: 'Nuvem', sk_frutilla: 'Morango',
@@ -57,8 +57,8 @@ const CATALOGO = [
   ...['pzAlas', 'pzCuernos', 'pzAura', 'pzArmadura', 'pzMago', 'pzVikingo'].map(id => ({ id, tab: 'tPersonaje', desc: 'dPieza' })),
   { id: 'pzBruja', tab: 'tPersonaje', desc: 'dPieza', hw: 1 }, { id: 'pzCalabaza', tab: 'tPersonaje', desc: 'dPieza', hw: 1 },
   ...Object.keys(PACKS).map(id => ({ id, tab: 'tSkins', desc: 'dPack', hw: id === 'packHalloween' })),
-  ...['texPastel', 'texMedieval', 'texNeon'].map(id => ({ id, tab: 'tTexturas', desc: 'dTex' })),
-  { id: 'zorro', tab: 'tMascotas', desc: 'dMascota' }, { id: 'panda', tab: 'tMascotas', desc: 'dMascota' },
+  ...['texPastel', 'texMedieval', 'texNeon', 'texCiudad'].map(id => ({ id, tab: 'tTexturas', desc: 'dTex' })),
+  { id: 'zorro', tab: 'tMascotas', desc: 'dMascota' }, { id: 'panda', tab: 'tMascotas', desc: 'dMascota' }, { id: 'miniojon', tab: 'tMascotas', desc: 'dMascota' },
 ];
 const leerDesb = () => { try { return new Set(JSON.parse(localStorage.getItem('voxDesbloq') || '[]')); } catch (e) { return new Set(); } };
 const esHw = () => typeof esHalloween === 'function' && esHalloween();
@@ -76,7 +76,21 @@ for (const c of CATALOGO) if (desbloqueado(c.id)) alActivar(c.id);
 // ───── paquetes de texturas: se arman a partir de los dibujos del juego ─────
 const aRGB = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
 const aHex = (r, g, b) => '#' + [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+const CIUDAD = {
+  pastoArriba: (x, y) => (x % 8 === 0 || y % 8 === 0) ? '#9aa0aa' : ((x * 7 + y * 3) % 11 === 0 ? '#c4c8d0' : '#b8bcc6'),
+  pastoCostado: (x, y) => y < 3 ? '#b8bcc6' : y === 3 ? '#8a909a' : ((x * 5 + y) % 9 === 0 ? '#6a707a' : '#7c828c'),
+  tierra: (x, y) => ((x * 5 + y) % 9 === 0 ? '#6a707a' : '#7c828c'),
+  piedra: (x, y) => ((x * 13 + y * 7) % 17 === 0 ? '#5a5e66' : (x * 3 + y * 11) % 13 === 0 ? '#2a2c32' : '#3a3d44'),
+  arena: (x, y) => (x % 4 === 0 || y % 4 === 0) ? '#e8dcc0' : '#f6ecd4',
+  madera: (x, y) => y % 4 === 3 ? '#c8ccd4' : '#f4f6fa', maderaO: (x, y) => y % 4 === 3 ? '#1d1d21' : '#3a3d44', maderaC: (x, y) => y % 4 === 3 ? '#d8c8a8' : '#f0e4c8',
+  troncoCostado: (x, y) => x % 4 === 0 ? '#5a5e66' : '#9aa0aa', troncoCostadoH: (x, y) => y % 4 === 0 ? '#5a5e66' : '#9aa0aa', troncoArriba: (x, y) => (x === 0 || y === 0 || x === 15 || y === 15) ? '#5a5e66' : '#9aa0aa',
+  ladrillo: (x, y) => (y % 4 === 3 || (x + (Math.floor(y / 4) % 2 ? 4 : 0)) % 8 === 7) ? '#e8e8ec' : (x + y) % 5 ? '#b84a3a' : '#a8402f',
+  adoquin: (x, y) => (x % 8 === 0 || y % 8 === 0) ? '#2a2c32' : '#4a4e56', ladrilloP: (x, y) => (x % 16 === 0 || y % 8 === 0) ? '#5a5e66' : '#8a909a',
+  vidrio: (x, y) => (x === 0 || y === 0 || x === 15 || y === 15) ? '#3a3d44' : (x === y + 3 ? '#ffffff' : null),
+  agua: (x, y) => (y % 5 === 1 && x % 6 < 3) ? '#bff4ff' : '#35b8f0',
+};
 function paqueteTexturas(id) {
+  if (id === 'texCiudad') { const out = {}; for (const n in CIUDAD) { if (TL[n] == null) continue; const p = []; for (let k = 0; k < 256; k++) p.push(CIUDAD[n](k % 16, k >> 4)); out[n] = p; } return out; }
   const out = {}, NEON = { pasto: '#6cff5a', tierra: '#ff9a2e', piedra: '#3af0ff', arena: '#ffe14a', tronco: '#ff4adc', madera: '#ff4adc', hojas: '#6cff5a', ladrillo: '#ff4a78', agua: '#3a8aff' };
   for (const n of BISEL.concat(['hojas', 'agua'])) { const t = TL[n]; if (t == null) continue; const pix = leerTile(t), neon = NEON[Object.keys(NEON).find(k => n.toLowerCase().includes(k))] || '#c58cf5';
     out[n] = pix.map((c, k) => { if (!c) return null; const [r, g, b] = aRGB(c), x = k % 16, y = k >> 4, gris = (r + g + b) / 3;

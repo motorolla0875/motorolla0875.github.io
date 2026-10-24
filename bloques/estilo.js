@@ -8,6 +8,8 @@
   .sombra { text-shadow: 0 2px 0 rgba(13,21,61,.85); }
   .capa { background-color: #13205a; background-image: linear-gradient(#24378f, #0d153d); }
   .capa.trans { background-color: rgba(10,16,48,.62); }
+  .capa { background-size: cover; } #mundos, #nuevo { background-size: cover !important; }
+  #nuevo .titulo { font-size: clamp(22px, 4.5vw, 34px) !important; } #nuevo .btn { margin-top: 5px; padding: 5px 0 4px; } #nuevo .btn small { margin-top: 0; }
   .titulo { font-weight: 800; font-style: italic; color: #ffe14a; letter-spacing: 1px; text-shadow: 3px 3px 0 #1b2a6b, 6px 6px 0 #0d153d; line-height: 1.05; }
   .lema { font-weight: 800; font-size: clamp(16px, 2.8vw, 22px); color: #fff; letter-spacing: 3px; text-shadow: 0 3px 0 #0d153d; margin: -10px 0 2px; text-align: center; }
   .sub { color: #fff; transform: none; text-shadow: 0 2px 0 #0d153d; font-size: 15px; margin-bottom: 6px; }
