@@ -11,7 +11,7 @@ Object.assign(TX.es, {
   opcTitulo: 'Opciones del mundo', mapaNombre: 'Nombre del mapa', modoJugar: 'Quien lo cargue juega en', aventuraM: 'Aventura', supervivenciaM: 'Supervivencia', creativoM: 'Creativo',
   inicioAqui: 'Usar mi posición como inicio', inicioOk: 'INICIO GUARDADO<small>acá aparece quien cargue tu mapa</small>',
   hora: 'Hora', horaNormal: 'Normal', horaDia: 'Siempre de día', horaNoche: 'Siempre de noche', monstruos: 'Monstruos', no: 'No', muchos: 'Muchos', gravedad: 'Gravedad', baja: 'Baja', alta: 'Alta', salto: 'Salto', alto: 'Alto', super: 'Súper', velocidad: 'Velocidad', rapida: 'Rápida', danoCaida: 'Daño por caídas', hambreR: 'Hambre', si: 'Sí',
-  modsMundo: 'Mods de este mundo', activar: 'Activar', quitar: 'Quitar', actualizar: 'Actualizar', modActivado: 'MOD ACTIVADO', modQuitado: 'MOD QUITADO', maxMods: 'MÁXIMO 8 MODS POR MUNDO',
+  modsMundo: 'Mods de este mundo', activar: 'Activar', quitar: 'Quitar', actualizar: 'Actualizar', modActivado: 'MOD ACTIVADO', modQuitado: 'MOD QUITADO', maxMods: 'MÁXIMO 6 MODS POR MUNDO',
   archivoMal: 'ESE ARCHIVO NO ES DE VOXELIUM', mapaCargado: 'MAPA CARGADO', modCargado: 'MOD CARGADO<small>actívalo desde Opciones dentro de un mundo</small>', creandoArchivo: 'PREPARANDO EL ARCHIVO…',
   cartelTitulo: 'Texto del cartel', cartelVacio: '(cartel vacío)', escribeAqui: 'Escribe aquí…',
   metaLlegaste: '¡LLEGASTE A LA META!', tiempo: 'Tiempo: {t}', mejor: 'Mejor: {t}', jugarDeNuevo: 'Jugar de nuevo', seguirExplorando: 'Seguir explorando', control: 'PUNTO DE CONTROL',
@@ -26,7 +26,7 @@ Object.assign(TX.en, {
   opcTitulo: 'World options', mapaNombre: 'Map name', modoJugar: 'Whoever loads it plays in', aventuraM: 'Adventure', supervivenciaM: 'Survival', creativoM: 'Creative',
   inicioAqui: 'Use my position as the start', inicioOk: 'START SAVED<small>whoever loads your map appears here</small>',
   hora: 'Time', horaNormal: 'Normal', horaDia: 'Always day', horaNoche: 'Always night', monstruos: 'Monsters', no: 'No', muchos: 'Many', gravedad: 'Gravity', baja: 'Low', alta: 'High', salto: 'Jump', alto: 'High', super: 'Super', velocidad: 'Speed', rapida: 'Fast', danoCaida: 'Fall damage', hambreR: 'Hunger', si: 'Yes',
-  modsMundo: 'Mods in this world', activar: 'Turn on', quitar: 'Remove', actualizar: 'Update', modActivado: 'MOD TURNED ON', modQuitado: 'MOD REMOVED', maxMods: 'MAXIMUM 8 MODS PER WORLD',
+  modsMundo: 'Mods in this world', activar: 'Turn on', quitar: 'Remove', actualizar: 'Update', modActivado: 'MOD TURNED ON', modQuitado: 'MOD REMOVED', maxMods: 'MAXIMUM 6 MODS PER WORLD',
   archivoMal: "THAT FILE ISN'T A VOXELIUM FILE", mapaCargado: 'MAP LOADED', modCargado: 'MOD LOADED<small>turn it on from Options inside a world</small>', creandoArchivo: 'PREPARING THE FILE…',
   cartelTitulo: 'Sign text', cartelVacio: '(empty sign)', escribeAqui: 'Write here…',
   metaLlegaste: 'YOU REACHED THE FINISH!', tiempo: 'Time: {t}', mejor: 'Best: {t}', jugarDeNuevo: 'Play again', seguirExplorando: 'Keep exploring', control: 'CHECKPOINT',
@@ -41,7 +41,7 @@ Object.assign(TX.pt, {
   opcTitulo: 'Opções do mundo', mapaNombre: 'Nome do mapa', modoJugar: 'Quem carregar joga em', aventuraM: 'Aventura', supervivenciaM: 'Sobrevivência', creativoM: 'Criativo',
   inicioAqui: 'Usar minha posição como início', inicioOk: 'INÍCIO SALVO<small>quem carregar seu mapa aparece aqui</small>',
   hora: 'Hora', horaNormal: 'Normal', horaDia: 'Sempre dia', horaNoche: 'Sempre noite', monstruos: 'Monstros', no: 'Não', muchos: 'Muitos', gravedad: 'Gravidade', baja: 'Baixa', alta: 'Alta', salto: 'Pulo', alto: 'Alto', super: 'Super', velocidad: 'Velocidade', rapida: 'Rápida', danoCaida: 'Dano de queda', hambreR: 'Fome', si: 'Sim',
-  modsMundo: 'Mods deste mundo', activar: 'Ativar', quitar: 'Remover', actualizar: 'Atualizar', modActivado: 'MOD ATIVADO', modQuitado: 'MOD REMOVIDO', maxMods: 'MÁXIMO 8 MODS POR MUNDO',
+  modsMundo: 'Mods deste mundo', activar: 'Ativar', quitar: 'Remover', actualizar: 'Atualizar', modActivado: 'MOD ATIVADO', modQuitado: 'MOD REMOVIDO', maxMods: 'MÁXIMO 6 MODS POR MUNDO',
   archivoMal: 'ESSE ARQUIVO NÃO É DO VOXELIUM', mapaCargado: 'MAPA CARREGADO', modCargado: 'MOD CARREGADO<small>ative em Opções dentro de um mundo</small>', creandoArchivo: 'PREPARANDO O ARQUIVO…',
   cartelTitulo: 'Texto da placa', cartelVacio: '(placa vazia)', escribeAqui: 'Escreva aqui…',
   metaLlegaste: 'VOCÊ CHEGOU AO FINAL!', tiempo: 'Tempo: {t}', mejor: 'Melhor: {t}', jugarDeNuevo: 'Jogar de novo', seguirExplorando: 'Continuar explorando', control: 'PONTO DE CONTROLE',
@@ -104,7 +104,7 @@ const abrir = id => { $(id).hidden = false; }, cerrar = id => { $(id).hidden = t
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 // ═════════ ESTADO DEL MUNDO: mods activos, carteles, reglas y datos del mapa ═════════
-const MOD_BASE = 160, MOD_SLOTS = 8, MOD_MAX_BLOQUES = 10, TILE_MOD0 = TILES.length;
+const MOD_BASE = 160, MOD_SLOTS = 6, MOD_MAX_BLOQUES = 10, TILE_MOD0 = TILES.length;
 let tileLibre = TILE_MOD0, modsMundo = [], carteles = {}, mapa = {}, tieneMeta = false, cronoT = 0, cronoOn = false, ultControl = -1;
 function quitarModsInstalados() {
   for (let id = MOD_BASE; id < MOD_BASE + MOD_SLOTS * MOD_MAX_BLOQUES; id++) { if (DEF[id]) delete DEF[id]; delete iconos[id]; const k = TODOS.indexOf(id); if (k >= 0) TODOS.splice(k, 1); }
@@ -291,7 +291,7 @@ async function exportarMundo() {
   const d = Object.assign({}, datos, { J: { x: ini.x, y: ini.y, z: ini.z, yaw: ini.yaw ?? 0, pitch: -.1 }, spawnP: ini, inv: {}, stats: { rotos: {}, hechos: {}, cofres: 0 }, mision: 0, tiempo: 0, vida: 20, hambre: 20, volando: false, extra: null });
   const modo = mapa.modoJugar || (tieneMeta ? 'aventura' : meta.modo);
   if (modo === 'creativo') d.barra = BARRA_CREATIVO.slice(); else d.barra = Array(9).fill(0);
-  const obj = { formato: 'voxelium', tipo: 'mapa', v: 1, nombre: mapa.nombre || meta.nombre, modo, semilla: meta.semilla, ejemplo: !!meta.ejemplo, datos: d };
+  const obj = { formato: 'voxelium', tipo: 'mapa', v: 1, nombre: mapa.nombre || meta.nombre, modo, tam: meta.tam || 160, semilla: meta.semilla, ejemplo: !!meta.ejemplo, datos: d };
   compartirArchivo(await empacar(obj), nombreArchivo(obj.nombre) + '.voxel');
 }
 $('bCompartirMundo').onclick = () => exportarMundo();
@@ -305,7 +305,7 @@ archivoIn.onchange = async () => {
   if (o.tipo === 'mod' && o.mod) { guardarModLib(Object.assign(o.mod, { id: o.mod.id || 'm' + Date.now().toString(36) })); aviso(TR('modCargado'), 2400); if (!$('modsCapa').hidden) pintarLibreria(); return; }
   if (o.tipo === 'mapa' && o.datos) {
     const lista = leerLista(), id = Date.now().toString(36), modo = ['aventura', 'supervivencia', 'creativo'].includes(o.modo) ? o.modo : 'aventura';
-    lista.unshift({ id, nombre: String(o.nombre || 'Mapa').slice(0, 30), num: lista.length + 1, modo, ejemplo: !!o.ejemplo, importado: true, semilla: +o.semilla || 1, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0 });
+    lista.unshift({ id, nombre: String(o.nombre || 'Mapa').slice(0, 30), num: lista.length + 1, modo, tam: +o.tam || 160, ejemplo: !!o.ejemplo, importado: true, semilla: +o.semilla || 1, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0 });
     localStorage.setItem('bloquesMundos', JSON.stringify(lista)); localStorage.setItem('bloquesMundo_' + id, JSON.stringify(o.datos));
     aviso(TR('mapaCargado'), 1400); for (const c of ['inicio', 'mundos', 'nuevo', 'modsCapa']) $(c).hidden = true; pantallaCompleta(); entrarMundo(id); return;
   }

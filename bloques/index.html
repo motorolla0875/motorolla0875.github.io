@@ -201,12 +201,14 @@
 <script>
 'use strict';
 // ═════════ MUNDO ═════════
-const SX = 160, SY = 48, SZ = 160, CH = 16, SEA = 15, N = SX * SY * SZ;
-const NCX = SX / CH, NCZ = SZ / CH;
-const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41, /* 41..56 */ ESC_INV: 57, /* 57..72 */ LOSA_ARR: 73, /* 73..76 */ TRONCO_X: 77, TRONCO_Z: 78, VALLA: 79, PANEL: 80, PASTO_ALTO: 81, FLOR_R: 82, FLOR_A: 83, ARADA: 84, TRIGO: 85, /* 85..88 */ BOTON: 89, PALANCA: 90, PALANCA_ON: 91, PLACA: 92, TNT: 93, TNT_G: 94, CALABAZA: 95, CALABAZA_F: 96, TELARANA: 97, LAPIDA: 98, SILLA: 99, CAMA: 140, ALFOMBRA: 141, /* 141..149 */ FAROL: 150, LADRILLO_P: 151, MADERA_O: 152, MADERA_C: 153, MARMOL: 154, CARTEL: 155, META: 156, CONTROL: 157, MESA: 158, SOFA: 159, /* 160..239: bloques de mods */ LAMPARA_P: 240, CUADRO: 241, TELE: 242, HUEVO: 243 /* 243..247 huevos de dragón */ };
-const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123, CARNE: 105, CARNE_A: 106, POLLO: 107, POLLO_A: 108, MANZANA: 109, SEMILLAS: 130, TRIGO_I: 131, PAN: 132, HUESO: 114, PESCADO: 115, MONTURA: 116, ARMADURA_D: 117 };
+let SX = 160, SZ = 160, N = SX * 48 * SZ; const SY = 48, CH = 16, SEA = 15;
+let NCX = SX / CH, NCZ = SZ / CH;
+const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41, /* 41..56 */ ESC_INV: 57, /* 57..72 */ LOSA_ARR: 73, /* 73..76 */ TRONCO_X: 77, TRONCO_Z: 78, VALLA: 79, PANEL: 80, PASTO_ALTO: 81, FLOR_R: 82, FLOR_A: 83, ARADA: 84, TRIGO: 85, /* 85..88 */ BOTON: 89, PALANCA: 90, PALANCA_ON: 91, PLACA: 92, TNT: 93, TNT_G: 94, CALABAZA: 95, CALABAZA_F: 96, TELARANA: 97, LAPIDA: 98, SILLA: 99, CAMA: 140, ALFOMBRA: 141, /* 141..149 */ FAROL: 150, LADRILLO_P: 151, MADERA_O: 152, MADERA_C: 153, MARMOL: 154, CARTEL: 155, META: 156, CONTROL: 157, MESA: 158, SOFA: 159, /* 160..239: bloques de mods */ LAMPARA_P: 240, CUADRO: 241, TELE: 242, HUEVO: 243 /* 243..247 huevos de dragón */, HOJAS_SELVA: 220, HOJAS_PINO: 221, ENREDADERA: 222, HIELO: 223, NENUFAR: 224, ARBUSTO_SECO: 225, HENO: 226, PIEDRA_ABISMO: 227, MAGMA: 228, PORTAL: 229, CRISTAL_OSC_M: 230, MESA_ENC: 231, ZANAHORIA: 248, /* 248..251 */ PAPA: 252 /* 252..255 */ };
+const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123, CARNE: 105, CARNE_A: 106, POLLO: 107, POLLO_A: 108, MANZANA: 109, SEMILLAS: 130, TRIGO_I: 131, PAN: 132, HUESO: 114, PESCADO: 115, MONTURA: 116, ARMADURA_D: 117, ARM: 300, /* 300..315: tela, hierro, oro, cristal × casco, pechera, pantalón, botas */ ARCO: 316, FLECHA: 317, PICO_E: 318, ESP_E: 319, CANA: 320, ZANAHORIA_I: 321, PAPA_I: 322, PAPA_A: 323, POCION: 324, /* 324..327 */ CORONA: 329 };
 // dibujos (16x16) del atlas
 const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4', 'carne', 'carneAsada', 'pollo', 'polloAsado', 'manzana', 'pastoAlto', 'florRoja', 'florAmarilla', 'aradaArriba', 'trigo0', 'trigo1', 'trigo2', 'trigo3', 'semillas', 'trigoItem', 'pan', 'camaArriba', 'camaCostado', 'farol', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control', 'boton', 'palanca', 'palancaOn', 'placa', 'tntCostado', 'tntArriba', 'tntGCostado', 'calabazaCostado', 'calabazaArriba', 'calabazaCara', 'calabazaFarol', 'telarana', 'lapida', 'pantalla', 'cuadro', 'teleFrente', 'teleCostado', 'huevo0', 'huevo1', 'huevo2', 'huevo3', 'huevo4', 'hueso', 'pescado', 'montura', 'armaduraD'];
+TILES.push('hojasSelva', 'hojasPino', 'enredadera', 'hielo', 'nenufar', 'arbustoSeco', 'henoCostado', 'henoArriba', 'piedraAbismo', 'magma', 'portal', 'cristalOscM', 'mesaEncCostado', 'mesaEncArriba', 'zanahoria0', 'zanahoria1', 'zanahoria2', 'zanahoria3', 'papa0', 'papa1', 'papa2', 'papa3',
+  ...Array.from({ length: 16 }, (_, k) => 'arm' + k), 'arco', 'flecha', 'picoE', 'espE', 'cana', 'zanahoriaI', 'papaI', 'papaA', 'pocion0', 'pocion1', 'pocion2', 'pocion3', 'corona');
 const TL = {}; TILES.forEach((n, i) => TL[n] = i);
 const TELAS = [['Blanca', '#e9ecec'], ['Roja', '#a12722'], ['Naranja', '#f07613'], ['Amarilla', '#f8c527'], ['Verde', '#5e7c16'], ['Celeste', '#3aafd9'], ['Azul', '#35399d'], ['Violeta', '#7e2fbe'], ['Negra', '#1d1d21']];
 // definición de bloques: dibujos [arriba, abajo, costados], dureza (segundos a mano), pico necesario, qué suelta, etc.
@@ -289,6 +291,21 @@ def(B.TELE, 'Televisor', [TL.teleCostado], { caras: [TL.teleCostado, TL.teleCost
 for (const id of [B.SILLA, B.MESA, B.SOFA, B.LAMPARA_P, B.LAPIDA, B.TELE]) DEF[id].icono = DEF[id].forma;
 ['Huevo de dragón', 'Huevo de dragón de fuego', 'Huevo de dragón de hielo', 'Huevo de dragón dorado', 'Huevo de dragón de cristal'].forEach((n, k) => def(B.HUEVO + k, n, [TL['huevo' + k]], { dur: .6, trans: true, solido: false, planta: true, color: ['#36c95a', '#e03a2a', '#8fdcff', '#ffd23a', '#d8a8ff'][k], huevo: k }));
 
+// biomas, aldeas, abismo y cultivos nuevos
+def(B.HOJAS_SELVA, 'Hojas de selva', [TL.hojasSelva], { dur: .3, trans: true, color: '#3fd06a', suelta: 0 });
+def(B.HOJAS_PINO, 'Hojas de pino', [TL.hojasPino], { dur: .3, trans: true, color: '#1f6a4a', suelta: 0 });
+def(B.ENREDADERA, 'Enredadera', [TL.enredadera], { dur: .2, trans: true, solido: false, planta: true, trepar: true, color: '#2f9a3a', suelta: 0 });
+def(B.HIELO, 'Hielo', [TL.hielo], { dur: .5, color: '#9ad8f4' });
+def(B.NENUFAR, 'Nenúfar', [TL.nenufar], { dur: .1, trans: true, forma: [[0, 0, 0, 1, 1 / 16, 1]], icono: [[0, 0, 0, 1, .12, 1]], color: '#2f9a3a' });
+def(B.ARBUSTO_SECO, 'Arbusto seco', [TL.arbustoSeco], { dur: .05, trans: true, solido: false, planta: true, color: '#8a5a2a', suelta: I.PALO });
+def(B.HENO, 'Fardo de heno', [TL.henoArriba, TL.henoArriba, TL.henoCostado], { dur: .5, color: '#e8c850' });
+def(B.PIEDRA_ABISMO, 'Piedra del abismo', [TL.piedraAbismo], { dur: 3, req: 1, color: '#2a2032' });
+def(B.MAGMA, 'Magma', [TL.magma], { dur: 1, req: 1, luz: 12, color: '#ff7a1a' });
+def(B.PORTAL, 'Portal al Abismo', [TL.portal], { dur: 2, luz: 15, color: '#c58cf5' });
+def(B.CRISTAL_OSC_M, 'Cristal del abismo', [TL.cristalOscM], { dur: 4, req: 3, suelta: I.CRISTAL, luz: 6, color: '#ff4adc' });
+def(B.MESA_ENC, 'Mesa de encantar', [TL.mesaEncArriba, TL.piedraAbismo, TL.mesaEncCostado], { dur: 3, trans: true, forma: [[0, 0, 0, 1, 12 / 16, 1]], icono: [[0, 0, 0, 1, 12 / 16, 1]], luz: 7, color: '#7e2fbe' });
+for (let k = 0; k < 4; k++) { def(B.ZANAHORIA + k, 'Zanahoria', [TL['zanahoria' + k]], { dur: .05, trans: true, solido: false, planta: true, suelta: I.ZANAHORIA_I, cultivo: k, color: '#ff8a1a' }); def(B.PAPA + k, 'Papa', [TL['papa' + k]], { dur: .05, trans: true, solido: false, planta: true, suelta: I.PAPA_I, cultivo: k, color: '#c8a060' }); }
+
 // mecanismos: botón, palanca y placa de presión (se conectan a puertas, bloques, teletransporte o mensajes)
 def(B.BOTON, 'Botón', [TL.boton], { dur: .3, trans: true, solido: false, forma: [[4 / 16, 0, 4 / 16, 12 / 16, 5 / 16, 12 / 16]], icono: [[3 / 16, 0, 3 / 16, 13 / 16, 7 / 16, 13 / 16]], color: '#d42a2a', mec: 'boton' });
 def(B.PALANCA, 'Palanca', [TL.palanca], { dur: .3, trans: true, solido: false, forma: [[3 / 16, 0, 5 / 16, 13 / 16, 3 / 16, 11 / 16], [4 / 16, 3 / 16, 7 / 16, 6 / 16, 12 / 16, 9 / 16]], icono: [[2 / 16, 0, 5 / 16, 14 / 16, 3 / 16, 11 / 16], [5 / 16, 3 / 16, 7 / 16, 8 / 16, 15 / 16, 9 / 16]], color: '#8d6a3f', mec: 'palanca' });
@@ -318,6 +335,10 @@ function item(id, nombre, tile, o = {}) { ITEM[id] = Object.assign({ id, nombre,
 item(I.PALO, 'Palo', TL.palo); item(I.CARBON, 'Carbón', TL.carbon); item(I.HIERRO, 'Hierro', TL.hierro); item(I.ORO, 'Oro', TL.oro); item(I.CRISTAL, 'Cristal', TL.cristal);
 item(I.CARNE, 'Carne cruda', TL.carne, { comida: 3 }); item(I.CARNE_A, 'Carne asada', TL.carneAsada, { comida: 8 }); item(I.POLLO, 'Pollo crudo', TL.pollo, { comida: 2 }); item(I.POLLO_A, 'Pollo asado', TL.polloAsado, { comida: 6 }); item(I.MANZANA, 'Manzana', TL.manzana, { comida: 4 });
 item(I.HUESO, 'Hueso', TL.hueso); item(I.PESCADO, 'Pescado', TL.pescado, { comida: 2 }); item(I.MONTURA, 'Montura', TL.montura); item(I.ARMADURA_D, 'Armadura de dragón', TL.armaduraD);
+['Gorro de tela', 'Saco de tela', 'Pantalón de tela', 'Botas de tela', 'Casco de hierro', 'Pechera de hierro', 'Grebas de hierro', 'Botas de hierro', 'Casco de oro', 'Pechera de oro', 'Grebas de oro', 'Botas de oro', 'Casco de cristal', 'Pechera de cristal', 'Grebas de cristal', 'Botas de cristal'].forEach((n, k) => item(I.ARM + k, n, TL['arm' + k], { armadura: k % 4, material: k >> 2 }));
+item(I.ARCO, 'Arco', TL.arco); item(I.FLECHA, 'Flecha', TL.flecha); item(I.PICO_E, 'Pico encantado', TL.picoE); item(I.ESP_E, 'Espada encantada', TL.espE); item(I.CANA, 'Caña de pescar', TL.cana);
+item(I.ZANAHORIA_I, 'Zanahoria', TL.zanahoriaI, { comida: 3, siembra: B.ZANAHORIA }); item(I.PAPA_I, 'Papa', TL.papaI, { comida: 1, siembra: B.PAPA }); item(I.PAPA_A, 'Papa asada', TL.papaA, { comida: 6 }); item(I.CORONA, 'Corona del Ojón Rey', TL.corona);
+['Poción de velocidad', 'Poción de salto', 'Poción de curación', 'Poción de fuerza'].forEach((n, k) => item(I.POCION + k, n, TL['pocion' + k], { pocion: k }));
 item(I.SEMILLAS, 'Semillas', TL.semillas); item(I.TRIGO_I, 'Trigo', TL.trigoItem); item(I.PAN, 'Pan', TL.pan, { comida: 5 });
 const esComida = id => !!(ITEM[id] && ITEM[id].comida);
 ['de madera', 'de piedra', 'de hierro', 'de cristal'].forEach((m, k) => { item(I.PICO1 + k, 'Pico ' + m, TL['pico' + (k + 1)], { pico: k + 1 }); item(I.ESP1 + k, 'Espada ' + m, TL['esp' + (k + 1)], { espada: k + 1 }); });
@@ -328,6 +349,9 @@ const opaco = t => t > 0 && !DEF[t].trans && !DEF[t].forma;
 const solidoMov = t => t > 0 && DEF[t].solido;
 
 let mundo = new Uint8Array(N), alt = new Uint8Array(SX * SZ), luzT = new Uint8Array(N), fuentes = new Set(), diffs = new Map();
+// tamaño del mundo: 160 (normal), 256 (grande) o 352 (enorme)
+function ponerTamano(t) { t = t || 160; if (t === SX) return; for (const p of pedazos) if (p) for (const m of [p.op, p.ag]) if (m) { escena.remove(m); m.geometry.dispose(); } pedazos.length = 0;
+  SX = SZ = t; N = SX * SY * SZ; NCX = SX / CH; NCZ = SZ / CH; mundo = new Uint8Array(N); alt = new Uint8Array(SX * SZ); luzT = new Uint8Array(N); }
 const idx = (x, y, z) => x + SX * (z + SZ * y);
 const dentro = (x, y, z) => x >= 0 && y >= 0 && z >= 0 && x < SX && y < SY && z < SZ;
 const get = (x, y, z) => dentro(x, y, z) ? mundo[idx(x, y, z)] : (y < 0 ? B.ROCA : B.AIRE);
@@ -342,28 +366,34 @@ function vn3(x, y, z, s) { const xi = Math.floor(x), yi = Math.floor(y), zi = Ma
 const fbm2 = (x, z, s) => (vn2(x, z, s) * .6 + vn2(x * 2.1, z * 2.1, s + 1) * .3 + vn2(x * 4.3, z * 4.3, s + 2) * .1);
 const sstep = (a, b, t) => { const k = Math.max(0, Math.min(1, (t - a) / (b - a))); return k * k * (3 - 2 * k); };
 
-let semilla = 1, spawn = { x: SX / 2, y: 30, z: SZ / 2 }, ruinas = [];
+let semilla = 1, spawn = { x: SX / 2, y: 30, z: SZ / 2 }, ruinas = [], aldeas = [], biomaDe = null;
 let ejemploFaro = null, animalesIniciales = null;
 function generar(S, ejemplo) {
-  semilla = S; mundo = new Uint8Array(N); ruinas = []; ejemploFaro = null; animalesIniciales = null;
-  const H = new Int16Array(SX * SZ), des = new Uint8Array(SX * SZ);
+  semilla = S; mundo = new Uint8Array(N); ruinas = []; aldeas = []; ejemploFaro = null; animalesIniciales = null;
+  const H = new Int16Array(SX * SZ), des = new Uint8Array(SX * SZ), BIO = new Uint8Array(SX * SZ); biomaDe = (x, z) => BIO[Math.max(0, Math.min(SX - 1, x)) + SX * Math.max(0, Math.min(SZ - 1, z))];
   const put = (x, y, z, t) => { if (dentro(x, y, z)) mundo[idx(x, y, z)] = t; };
   // archipiélago: una isla grande y tres islitas en las esquinas
-  const ISLAS = [{ x: SX / 2 + (h3(1, 2, 3, S) - .5) * 8, z: SZ / 2 + (h3(4, 5, 6, S) - .5) * 8, r: 45, k: 1 }];
+  const F = SX / 160, F2 = F * F;
+  const ISLAS = [{ x: SX / 2 + (h3(1, 2, 3, S) - .5) * 8, z: SZ / 2 + (h3(4, 5, 6, S) - .5) * 8, r: 45 * F, k: 1 }];
   [[1, 1], [1, -1], [-1, 1], [-1, -1]].sort((a, b) => h3(a[0] + 2, a[1] + 2, 1, S) - h3(b[0] + 2, b[1] + 2, 1, S)).slice(0, 3)
-    .forEach(([sx, sz]) => ISLAS.push({ x: SX / 2 + sx * (41 + h3(sx + 3, 1, sz + 3, S) * 5), z: SZ / 2 + sz * (41 + h3(sx + 5, 2, sz + 5, S) * 5), r: 14 + h3(sx + 7, 3, sz + 7, S) * 5, k: .8 }));
+    .forEach(([sx, sz]) => ISLAS.push({ x: SX / 2 + sx * (41 + h3(sx + 3, 1, sz + 3, S) * 5) * F, z: SZ / 2 + sz * (41 + h3(sx + 5, 2, sz + 5, S) * 5) * F, r: (14 + h3(sx + 7, 3, sz + 7, S) * 5) * (F > 1 ? 1.6 : 1), k: .8 }));
+  for (let k = 0; k < Math.round((F2 - 1) * 7); k++) { const r = 14 + h3(k, 41, 2, S + 400) * 18; ISLAS.push({ x: r + 6 + h3(k, 42, 3, S + 401) * (SX - 2 * r - 12), z: r + 6 + h3(k, 43, 4, S + 402) * (SZ - 2 * r - 12), r, k: .75 + h3(k, 44, 5, S + 403) * .2 }); }
   for (let x = 0; x < SX; x++) for (let z = 0; z < SZ; z++) {
     const borde = (vn2(x / 10, z / 10, S + 5) - .5) * 10;
     let isla = 0; for (const I2 of ISLAS) isla = Math.max(isla, I2.k * (1 - sstep(I2.r * .45, I2.r, Math.hypot(x - I2.x, z - I2.z) + borde)));
     const e = fbm2(x / 42, z / 42, S), m = vn2(x / 11, z / 11, S + 7), mont = Math.max(0, vn2(x / 30, z / 30, S + 3) - .55) * 2.2;
-    const h = Math.round(Math.min(SY - 7, SEA - 7 + isla * (9 + e * 14 + m * 3 + mont * mont * 22)));
-    const i = x + SX * z; H[i] = h; des[i] = vn2(x / 36 + 50, z / 36 + 50, S + 11) > .7 && h < SEA + 12 ? 1 : 0;
-    const playa = h <= SEA + 1;
+    let h = Math.round(Math.min(SY - 7, SEA - 7 + isla * (9 + e * 14 + m * 3 + mont * mont * 22)));
+    // biomas: 0 pradera, 1 desierto, 2 bosque nevado, 3 selva, 4 pantano
+    const temp = vn2(x / 64 + 7, z / 64 + 3, S + 300), hum = vn2(x / 64 + 40, z / 64 + 40, S + 301);
+    const bio = temp < .24 ? 2 : (temp > .7 && hum < .6) ? 1 : hum > .64 ? (temp > .5 ? 3 : 4) : 0;
+    if (bio === 4 && h > SEA - 1 && h < SEA + 7) h = vn2(x / 5, z / 5, S + 302) > .42 ? SEA + 1 : SEA - 1;
+    const i = x + SX * z; H[i] = h; BIO[i] = bio; des[i] = (bio === 1 && h > SEA) || (vn2(x / 36 + 50, z / 36 + 50, S + 11) > .78 && h < SEA + 12) ? 1 : 0;
+    const playa = h <= SEA + 1 && bio !== 4;
     for (let y = 0; y <= Math.max(h, SEA); y++) {
       let t;
       if (y === 0) t = B.ROCA;
-      else if (y <= h) t = y === h ? (playa || des[i] ? B.ARENA : h >= SEA + 19 ? B.NIEVE : B.PASTO) : y > h - 4 ? (playa || des[i] ? B.ARENA : B.TIERRA) : B.PIEDRA;
-      else t = B.AGUA;
+      else if (y <= h) t = y === h ? (playa || des[i] ? B.ARENA : (h >= SEA + 19 || bio === 2) ? B.NIEVE : B.PASTO) : y > h - 4 ? (playa || des[i] ? B.ARENA : B.TIERRA) : B.PIEDRA;
+      else t = (bio === 2 && y === SEA) ? B.HIELO : B.AGUA;
       put(x, y, z, t);
     }
   }
@@ -384,14 +414,26 @@ function generar(S, ejemplo) {
     else if (r > .009 && r < .016) veta(x, y, z, B.CARBON_M, 5, S + 63); }
   // árboles y cactus
   for (let x = 3; x < SX - 3; x++) for (let z = 3; z < SZ - 3; z++) { const h = H[x + SX * z], top = get(x, h, z), r = h3(x, 9, z, S + 66);
-    if (top === B.PASTO && r < .022 && get(x, h + 1, z) === B.AIRE) { const alto = 4 + Math.floor(h3(x, 1, z, S) * 3);
+    const bio = BIO[x + SX * z], libre = (a, y, b) => get(a, y, b) === B.AIRE;
+    if (bio === 3 && top === B.PASTO && r < .055 && libre(x, h + 1, z)) { // árbol de selva, alto, con enredaderas
+      const alto = 7 + Math.floor(h3(x, 1, z, S) * 5); for (let k = 1; k <= alto; k++) put(x, h + k, z, B.TRONCO);
+      for (let a = -3; a <= 3; a++) for (let b = -3; b <= 3; b++) for (let c = alto - 2; c <= alto + 1; c++) { const d = Math.abs(a) + Math.abs(b) + Math.max(0, c - alto + 1) * 2; if (d < 5 && libre(x + a, h + c, z + b)) { put(x + a, h + c, z + b, B.HOJAS_SELVA);
+        if (c === alto - 2 && d >= 3 && h3(x + a, c, z + b, S + 67) < .35) for (let k = 1; k <= 1 + Math.floor(h3(a, b, c, S + 68) * 4); k++) if (libre(x + a, h + c - k, z + b)) put(x + a, h + c - k, z + b, B.ENREDADERA); else break; } } }
+    else if (bio === 2 && top === B.NIEVE && r < .03 && libre(x, h + 1, z) && h > SEA) { // pino
+      const alto = 5 + Math.floor(h3(x, 1, z, S) * 4); for (let k = 1; k <= alto; k++) put(x, h + k, z, B.TRONCO);
+      for (let c = 2; c <= alto + 1; c++) { const rr = Math.max(0, Math.round((alto + 1 - c) / 2.2)) - (c % 2 ? 0 : 0); for (let a = -rr; a <= rr; a++) for (let b = -rr; b <= rr; b++) if (Math.abs(a) + Math.abs(b) <= rr + (c % 2) && libre(x + a, h + c, z + b)) put(x + a, h + c, z + b, B.HOJAS_PINO); }
+      put(x, h + alto + 1, z, B.HOJAS_PINO); put(x, h + alto + 2, z, B.HOJAS_PINO); }
+    else if (top === B.PASTO && r < (bio === 4 ? .02 : .022) && libre(x, h + 1, z)) { const alto = 4 + Math.floor(h3(x, 1, z, S) * 3);
       for (let k = 1; k <= alto; k++) put(x, h + k, z, B.TRONCO);
-      for (let a = -2; a <= 2; a++) for (let b = -2; b <= 2; b++) for (let c = alto - 1; c <= alto + 1; c++) if (Math.abs(a) + Math.abs(b) + Math.max(0, c - alto) * 2 < 4 && get(x + a, h + c, z + b) === B.AIRE) put(x + a, h + c, z + b, B.HOJAS);
+      for (let a = -2; a <= 2; a++) for (let b = -2; b <= 2; b++) for (let c = alto - 1; c <= alto + 1; c++) if (Math.abs(a) + Math.abs(b) + Math.max(0, c - alto) * 2 < 4 && libre(x + a, h + c, z + b)) { put(x + a, h + c, z + b, B.HOJAS);
+        if (bio === 4 && c === alto - 1 && Math.abs(a) + Math.abs(b) === 3 && h3(a, x, b, S + 69) < .5) for (let k = 1; k <= 2 + Math.floor(h3(a, b, z, S + 70) * 3); k++) if (libre(x + a, h + c - k, z + b)) put(x + a, h + c - k, z + b, B.ENREDADERA); else break; }
       put(x, h + alto + 1, z, B.HOJAS); }
+    else if (h < SEA && get(x, SEA, z) === B.AGUA && bio === 4 && h3(x, 8, z, S + 71) < .12 && get(x, SEA + 1, z) === B.AIRE) put(x, SEA + 1, z, B.NENUFAR);
+    else if (top === B.ARENA && des[x + SX * z] && h > SEA + 1 && r >= .012 && r < .02 && libre(x, h + 1, z)) put(x, h + 1, z, B.ARBUSTO_SECO);
     else if (top === B.ARENA && des[x + SX * z] && h > SEA + 1 && r < .012) { const alto = 1 + Math.floor(h3(x, 2, z, S) * 3); for (let k = 1; k <= alto; k++) put(x, h + k, z, B.CACTUS); } }
   // cabañas con huerta y muelle, mirando al agua
   const cabanas = [], hh = (x, z) => H[Math.max(0, Math.min(SX - 1, x)) + SX * Math.max(0, Math.min(SZ - 1, z))];
-  for (let n = 0; n < 500 && cabanas.length < 2; n++) {
+  for (let n = 0; n < 500 * F2 && cabanas.length < Math.round(2 * F2); n++) {
     const x = 10 + Math.floor(h3(n, 11, 2, S + 95) * (SX - 20)), z = 10 + Math.floor(h3(n, 13, 4, S + 96) * (SZ - 20)), h0 = H[x + SX * z];
     if (h0 <= SEA + 1 || h0 > SEA + 9 || cabanas.some(c => Math.abs(c.x - x) + Math.abs(c.z - z) < 30)) continue;
     let plano = true; for (let a = -5; a <= 5 && plano; a++) for (let b = -5; b <= 5; b++) if (Math.abs(hh(x + a, z + b) - h0) > 4) { plano = false; break; }
@@ -421,8 +463,35 @@ function generar(S, ejemplo) {
     { const [a, b] = L(-2, mejor.v + 5), [c, d] = L(1, mejor.v + 5); if (hh(a, b) < SEA) { put(a, SEA + 1, b, B.VALLA); put(a, SEA + 2, b, B.ANTORCHA); } if (hh(c, d) < SEA) put(c, SEA + 1, d, B.VALLA); }
     cabanas.push({ x, z, h0, L });
   }
+  // aldeas con casas, pozo, huerta y faroles
+  for (let n = 0; n < 3000 * F2 && aldeas.length < Math.max(1, Math.round(F2 * .9)); n++) { const flojo = n > 1200 * F2, cualquiera = n > 2200 * F2;
+    const x = 16 + Math.floor(h3(n, 51, 2, S + 500) * (SX - 32)), z = 16 + Math.floor(h3(n, 53, 4, S + 501) * (SZ - 32)), h0 = H[x + SX * z], bio = BIO[x + SX * z];
+    if (h0 <= SEA + 1 || h0 > SEA + (cualquiera ? 18 : 13) || (!flojo && bio !== 0 && bio !== 1 && bio !== 3) || aldeas.some(a => Math.hypot(a.x - x, a.z - z) < 50) || cabanas.some(c => Math.hypot(c.x - x, c.z - z) < 22)) continue;
+    let ok = true; for (let a = -13; a <= 13 && ok; a += 2) for (let b = -13; b <= 13; b += 2) { const hc = hh(x + a, z + b); if (hc < SEA || (!cualquiera && Math.abs(hc - h0) > (flojo ? 7 : 5))) { ok = false; break; } }
+    if (!ok) continue;
+    const desierto = bio === 1, PARED = desierto ? B.MARMOL : B.MADERA, ESQ = desierto ? B.LADRILLO_P : B.TRONCO, SUELO = desierto ? B.ARENA : B.PASTO, CAMINO = desierto ? B.LADRILLO_P : B.ADOQUIN;
+    for (let a = -13; a <= 13; a++) for (let b = -13; b <= 13; b++) { const X = x + a, Z = z + b; for (let y = h0 - 4; y < h0; y++) put(X, y, Z, desierto ? B.ARENA : B.TIERRA); put(X, h0, Z, SUELO); for (let y = h0 + 1; y <= h0 + 14; y++) put(X, y, Z, B.AIRE); }
+    for (let k = -12; k <= 12; k++) for (let w = -1; w <= 1; w++) { put(x + k, h0, z + w, CAMINO); put(x + w, h0, z + k, CAMINO); }
+    // pozo
+    for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) { put(x + a, h0, z + b, a || b ? B.ADOQUIN : B.AGUA); if (a || b) put(x + a, h0 + 1, z + b, B.ADOQUIN); }
+    put(x, h0 - 1, z, B.AGUA); for (const [a, b] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { put(x + a, h0 + 2, z + b, B.VALLA); put(x + a, h0 + 3, z + b, B.VALLA); } for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) put(x + a, h0 + 4, z + b, B.LOSA);
+    // casas en tres esquinas y la huerta en la cuarta
+    const esquinas = [[1, 1], [-1, 1], [1, -1], [-1, -1]].sort((p, q) => h3(p[0] + 3, p[1] + 3, n, S + 502) - h3(q[0] + 3, q[1] + 3, n, S + 502));
+    esquinas.forEach(([sx, sz], k) => { const cx = x + sx * 7, cz = z + sz * 7;
+      if (k === 3) { // huerta
+        for (let a = -3; a <= 3; a++) for (let b = -3; b <= 3; b++) { const X = cx + a, Z = cz + b; if (Math.abs(a) === 3 || Math.abs(b) === 3) { put(X, h0 + 1, Z, B.VALLA); continue; } if (a === 0) { put(X, h0, Z, B.AGUA); continue; } put(X, h0, Z, B.ARADA); put(X, h0 + 1, Z, (b < -1 ? B.TRIGO : b < 1 ? B.ZANAHORIA : B.PAPA) + 1 + Math.floor(h3(X, 7, Z, S) * 3)); }
+        put(cx - sx * 3, h0 + 1, cz, B.AIRE); put(cx + sx * 4, h0 + 1, cz + sz * 2, B.HENO); put(cx + sx * 4, h0 + 1, cz + sz * 3, B.HENO); put(cx + sx * 4, h0 + 2, cz + sz * 3, B.HENO); return; }
+      for (let a = -2; a <= 2; a++) for (let b = -2; b <= 2; b++) { const X = cx + a, Z = cz + b, borde = Math.abs(a) === 2 || Math.abs(b) === 2, esq = Math.abs(a) === 2 && Math.abs(b) === 2; put(X, h0, Z, B.MADERA_C);
+        if (borde) for (let y = 1; y <= 3; y++) put(X, h0 + y, Z, esq ? ESQ : PARED); put(X, h0 + 4, Z, B.MADERA_O); if (borde) put(X, h0 + 5, Z, B.LOSA + 1); }
+      // puerta mirando al camino, ventanas, cama, cofre y antorcha
+      const dx = -sx, dz = -sz, porX = Math.abs(sx) ? cx + dx * 2 : cx, porZ = cz + dz * 2; put(cx, h0 + 1, porZ, B.PUERTA); put(cx, h0 + 2, porZ, B.PUERTA);
+      put(cx + sx * 2, h0 + 2, cz, B.PANEL); put(cx - sx * 2, h0 + 2, cz, B.PANEL); put(cx + 1, h0 + 2, cz + sz * 2, B.PANEL);
+      put(cx - 1, h0 + 1, cz + sz, B.CAMA); put(cx + 1, h0 + 1, cz + sz, k === 1 ? B.ESTANTE : B.COFRE); put(cx + 1, h0 + 3, cz - sz, B.ANTORCHA); });
+    for (const [a, b] of [[12, 2], [-12, -2], [2, -12], [-2, 12]]) { put(x + a, h0 + 1, z + b, B.VALLA); put(x + a, h0 + 2, z + b, B.VALLA); put(x + a, h0 + 3, z + b, B.FAROL); }
+    aldeas.push({ x: x + .5, y: h0 + 1, z: z + .5, desierto });
+  }
   // arcos de piedra sobre el mar
-  let arcos = 0; for (let n = 0; n < 400 && arcos < 2; n++) {
+  let arcos = 0; for (let n = 0; n < 400 * F2 && arcos < Math.round(2 * F2); n++) {
     const a = h3(n, 21, 3, S + 97) * 6.283, I0 = ISLAS[0], r0 = I0.r * (.55 + h3(n, 22, 4, S + 97) * .4), x0 = Math.round(I0.x + Math.cos(a) * r0), z0 = Math.round(I0.z + Math.sin(a) * r0);
     if (x0 < 3 || z0 < 3 || x0 >= SX - 3 || z0 >= SZ - 3 || hh(x0, z0) <= SEA + 1) continue;
     const ux = Math.cos(a), uz = Math.sin(a), largo = 11, x1 = Math.round(x0 + ux * largo), z1 = Math.round(z0 + uz * largo);
@@ -436,7 +505,7 @@ function generar(S, ejemplo) {
     arcos++;
   }
   // cascadas en las montañas
-  let cascadas = 0; for (let n = 0; n < 4000 && cascadas < 2; n++) {
+  let cascadas = 0; for (let n = 0; n < 4000 * F2 && cascadas < Math.round(2 * F2); n++) {
     const x = 4 + Math.floor(h3(n, 31, 5, S + 98) * (SX - 8)), z = 4 + Math.floor(h3(n, 32, 6, S + 98) * (SZ - 8)), h0 = H[x + SX * z];
     if (h0 < SEA + 8 || get(x, h0, z) === B.AGUA) continue;
     for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const h1 = hh(x + dx, z + dz); if (h1 > h0 - 4 || h1 <= SEA) continue;
@@ -446,7 +515,7 @@ function generar(S, ejemplo) {
       put(x + dx, h1, z + dz, B.AGUA); cascadas++; break; }
   }
   // ruinas con cofre en la superficie
-  for (let n = 0; n < 300 && ruinas.length < 7; n++) {
+  for (let n = 0; n < 300 * F2 && ruinas.length < Math.round(7 * F2); n++) {
     const x = 8 + Math.floor(h3(n, 1, 2, S + 70) * (SX - 16)), z = 8 + Math.floor(h3(n, 3, 4, S + 71) * (SZ - 16)), h0 = H[x + SX * z];
     if (h0 <= SEA + 1 || ruinas.some(r => Math.abs(r.x - x) + Math.abs(r.z - z) < 24)) continue;
     let plano = true; for (let a = -3; a <= 3 && plano; a++) for (let b = -3; b <= 3; b++) if (Math.abs(H[x + a + SX * (z + b)] - h0) > 1) { plano = false; break; }
@@ -456,7 +525,7 @@ function generar(S, ejemplo) {
     put(x, h0 + 1, z, B.COFRE); put(x + 2, h0 + 1, z + 2, B.ANTORCHA); ruinas.push({ x, y: h0 + 1, z });
   }
   // cofres escondidos en las cuevas
-  let cc = 0; for (let n = 0; n < 3000 && cc < 14; n++) { const x = 2 + Math.floor(h3(n, 5, 6, S + 80) * (SX - 4)), z = 2 + Math.floor(h3(n, 7, 8, S + 81) * (SZ - 4)), y = 3 + Math.floor(h3(n, 9, 1, S + 82) * 22);
+  let cc = 0; for (let n = 0; n < 3000 * F2 && cc < Math.round(14 * F2); n++) { const x = 2 + Math.floor(h3(n, 5, 6, S + 80) * (SX - 4)), z = 2 + Math.floor(h3(n, 7, 8, S + 81) * (SZ - 4)), y = 3 + Math.floor(h3(n, 9, 1, S + 82) * 22);
     if (y < H[x + SX * z] - 5 && get(x, y, z) === B.AIRE && get(x, y + 1, z) === B.AIRE && opaco(get(x, y - 1, z))) { put(x, y, z, B.COFRE); cc++; } }
   window.__gen = { cabanas: cabanas.length, arcos, cascadas };
   // pasto alto y flores
@@ -465,7 +534,7 @@ function generar(S, ejemplo) {
     if (r < .18) put(x, y + 1, z, B.PASTO_ALTO); else if (r < .2) put(x, y + 1, z, B.FLOR_R); else if (r < .22) put(x, y + 1, z, B.FLOR_A); }
   // punto de partida: tierra firme cerca del centro
   spawn = { x: SX / 2 + .5, y: 40, z: SZ / 2 + .5 };
-  for (let r = 0; r < 60; r++) { let ok = false; for (let a = 0; a < 16 && !ok; a++) { const x = Math.round(SX / 2 + Math.cos(a / 16 * 6.283) * r), z = Math.round(SZ / 2 + Math.sin(a / 16 * 6.283) * r), h = H[x + SX * z];
+  for (let r = 0; r < 60 * F; r++) { let ok = false; for (let a = 0; a < 16 && !ok; a++) { const x = Math.round(SX / 2 + Math.cos(a / 16 * 6.283) * r), z = Math.round(SZ / 2 + Math.sin(a / 16 * 6.283) * r), h = H[x + SX * z];
     if (h > SEA + 1 && [1, 2, 3, 4, 5, 6].every(k => !solidoMov(get(x, h + k, z)) && get(x, h + k, z) !== B.AGUA) && get(x, h, z) === B.PASTO) { spawn = { x: x + .5, y: h + 1, z: z + .5 }; ok = true; } } if (ok) break; }
   // si hay cabaña, empezar mirando su huerta
   if (cabanas.length) { const c = cabanas[0], [a, b] = c.L(0, 1); spawn = { x: a + .5, y: c.h0 + 1, z: b + .5 }; }
@@ -684,9 +753,38 @@ const PINTA = {
   pico1: pico(0), pico2: pico(1), pico3: pico(2), pico4: pico(3), esp1: espada(0), esp2: espada(1), esp3: espada(2), esp4: espada(3),
 };
 TELAS.forEach(([n, c], k) => PINTA['tela' + k] = tela(c));
+// ───── dibujos de biomas, cultivos, abismo, armaduras, arco, pociones ─────
+{ const hojasDe = (a, b, c) => (x, y, r, e) => r() < .14 ? null : (x % 4 === 1 && y % 4 === 1) ? c : e([a, b, a]);
+  const cultivo = (tallo, fruta) => k => (x, y) => { const alto = [4, 7, 10, 12][k]; if (y < 16 - alto) return null; if (x % 4 === 1 || x % 4 === 2) { if (k === 3 && y >= 13 && (x % 8 === 1 || x % 8 === 2)) return fruta; return (y + x) % 3 ? tallo : '#4c962d'; } return null; };
+  Object.assign(PINTA, {
+    hojasSelva: hojasDe('#3fd06a', '#36c460', '#a8ff7a'), hojasPino: hojasDe('#1f6a4a', '#1a5e40', '#3a8a62'),
+    enredadera: (x, y) => ((x * 7 + y * 3) % 5 === 0 || (x + Math.floor(y / 3)) % 6 === 0) ? ((x + y) % 3 ? '#2f9a3a' : '#4cbf4a') : null,
+    hielo: (x, y, r, e) => (x === y || x === y + 1 || (x + y) % 11 === 0) ? '#e8f8ff' : e(['#9ad8f4', '#a4def6', '#90d0ee']),
+    nenufar: (x, y) => { const d = Math.hypot(x - 7.5, y - 7.5); if (d > 7.3 || (x > 7 && Math.abs(y - 7.5) < x - 7.5 && y < 9)) return null; return (x + y) % 5 === 0 ? '#5fd068' : '#2f9a3a'; },
+    arbustoSeco: (x, y) => enLista([...linea(7, 15, 7, 8), ...linea(7, 10, 3, 5), ...linea(7, 11, 12, 4), ...linea(7, 9, 10, 2), ...linea(5, 8, 2, 9)], x, y) ? '#8a5a2a' : null,
+    henoCostado: (x, y, r, e) => (y === 3 || y === 12) ? '#8a5a1a' : e(['#e8c850', '#d8b840', '#f0d460']), henoArriba: (x, y, r, e) => (x === 3 || x === 12) ? '#8a5a1a' : e(['#e8c850', '#d8b840']),
+    piedraAbismo: (x, y, r, e) => ((x * 5 + y * 3) % 13 === 0) ? '#5a2a7a' : e(['#2a2032', '#241c2c', '#30263a']),
+    magma: (x, y, r, e) => { const v = Math.sin(x * .9 + y * .4) + Math.cos(y * .8 - x * .3); return v > .9 ? '#ffe14a' : v > .2 ? '#ff7a1a' : e(['#c8341a', '#a82a14']); },
+    portal: (x, y) => { const a = Math.atan2(y - 7.5, x - 7.5), d = Math.hypot(x - 7.5, y - 7.5); return (Math.sin(a * 3 + d * .9) > .2) ? (d < 4 ? '#f0d8ff' : '#c58cf5') : '#5a1a9a'; },
+    cristalOscM: (x, y, r, e) => ((Math.abs(x - 5) + Math.abs(y - 5) < 3) || (Math.abs(x - 11) + Math.abs(y - 10) < 3)) ? e(['#ff4adc', '#c03aff']) : e(['#2a2032', '#241c2c', '#30263a']),
+    mesaEncCostado: (x, y, r, e) => y < 4 ? (y === 0 ? '#3a1a5a' : '#7e2fbe') : y === 4 ? '#1d1d21' : e(['#3a3a3a', '#333333', '#404040']),
+    mesaEncArriba: (x, y, r, e) => (x > 3 && x < 12 && y > 3 && y < 12) ? ((x === 4 || x === 11 || y === 4 || y === 11) ? '#5a2a1a' : (y % 2 ? '#f0e8d0' : '#d8c8a0')) : e(['#7e2fbe', '#6a2aa8']),
+    picoE: (x, y, r) => { const c = PINTA.pico4(x, y, r); return c && (x + y) % 3 === 0 ? '#ff8aff' : c; }, espE: (x, y, r) => { const c = PINTA.esp4(x, y, r); return c && (x + y) % 3 === 0 ? '#ff8aff' : c; },
+    arco: (x, y) => { const d = Math.hypot(x - 2, y - 2); if (d > 10.5 && d < 12.3 && x > 1 && y > 1) return (x + y) % 3 ? '#8a5a2a' : '#6b4a26'; if (Math.abs(x - y) < .8 && x > 2 && x < 13) return '#e8e8e8'; return null; },
+    flecha: (x, y) => (enLista(linea(3, 12, 12, 3), x, y)) ? '#8a5a2a' : ([[12, 3], [11, 3], [12, 4], [13, 2], [10, 2], [13, 5]].some(([a, b]) => a === x && b === y)) ? '#c8c8c8' : ([[3, 12], [2, 12], [3, 13], [2, 11], [4, 13]].some(([a, b]) => a === x && b === y)) ? '#f4f4f4' : null,
+    cana: (x, y) => enLista(linea(3, 14, 13, 2), x, y) ? '#8a5a2a' : (x === 13 && y > 2 && y < 12) ? '#e8e8e8' : (x === 13 && y === 12) ? '#c8c8c8' : null,
+    zanahoriaI: (x, y) => { if (y < 5 && (x === 9 || x === 10 || x === 11 && y < 3)) return '#3f8a2e'; return (y >= 4 && Math.abs(x - 9) < (14 - y) * .38) ? (y % 3 ? '#ff8a1a' : '#e07010') : null; },
+    papaI: (x, y) => Math.hypot((x - 7.5) / 1.2, y - 8) < 4.6 ? ((x * 3 + y) % 7 === 0 ? '#8a6a3a' : '#c8a060') : null, papaA: (x, y) => Math.hypot((x - 7.5) / 1.2, y - 8) < 4.6 ? ((x * 3 + y) % 7 === 0 ? '#ffe9a0' : '#e0a040') : null,
+    corona: (x, y) => (y >= 9 && y <= 12 && x >= 2 && x <= 13) || (y >= 4 && y < 9 && [2, 3, 7, 8, 12, 13].includes(x) && y > (x === 7 || x === 8 ? 3 : 5)) ? ((x + y) % 4 ? '#ffd23a' : '#b8860b') : (y === 10 && (x === 5 || x === 10)) ? '#e03a2a' : null,
+  });
+  for (let k = 0; k < 4; k++) { PINTA['zanahoria' + k] = cultivo('#5fae38', '#ff8a1a')(k); PINTA['papa' + k] = cultivo('#4c9a3a', '#c8a060')(k); }
+  ['#e03a3a', '#5aa8ff', '#ffd23a', '#ff4a78'].forEach((c, k) => PINTA['pocion' + k] = (x, y) => { if (y < 3 && x >= 6 && x <= 9) return y === 0 ? '#8a5a2a' : '#c9e8f5'; const d = Math.hypot(x - 7.5, y - 9.5); return d < 5 ? (d < 4.2 && y > 6 ? (x < 6 && y < 10 ? '#ffffff' : c) : '#c9e8f5') : (y >= 3 && y < 6 && x >= 6 && x <= 9 ? '#c9e8f5' : null); });
+  const ARM_C = [['#a8754a', '#6b4a26'], ['#dfe5f2', '#8a93ad'], ['#ffd23a', '#b8860b'], ['#c58cf5', '#6a2fae']];
+  const FORMA_ARM = [(x, y) => (y >= 3 && y <= 10 && x >= 3 && x <= 12) && !(y > 6 && x > 5 && x < 10), (x, y) => (y >= 2 && y <= 13 && x >= 2 && x <= 13) && !(y < 5 && x > 5 && x < 10) && !(y > 6 && (x < 4 || x > 11)), (x, y) => (y >= 2 && y <= 13 && x >= 3 && x <= 12) && !(y > 4 && x > 6 && x < 9), (x, y) => (y >= 7 && y <= 12) && ((x >= 2 && x <= 6) || (x >= 9 && x <= 13)) && !(y < 10 && (x === 2 || x === 13))];
+  for (let m = 0; m < 4; m++) for (let p = 0; p < 4; p++) PINTA['arm' + (m * 4 + p)] = (x, y) => FORMA_ARM[p](x, y) ? ((x + y) % 5 === 0 || y === 2 || y === 3 && p === 0 ? ARM_C[m][1] : ARM_C[m][0]) : null; }
 TILES.forEach((n, i) => dibujarTile(i, PINTA[n]));
 // estilo propio: cada bloque entero lleva un bisel (luz arriba-izquierda, sombra abajo-derecha), como una pieza de juguete
-const BISEL = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'madera', 'ladrillo', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cofreArriba', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'aradaArriba', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control', 'camaArriba', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8'];
+const BISEL = ['henoCostado', 'henoArriba', 'piedraAbismo', 'hielo', 'mesaEncCostado', 'pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'madera', 'ladrillo', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cofreArriba', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'aradaArriba', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control', 'camaArriba', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8'];
 function biselar(n) { const tx = n % 8, ty = Math.floor(n / 8), im = ag.getImageData(tx * 16, ty * 16, 16, 16), d = im.data;
   for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const k = (y * 16 + x) * 4; if (d[k + 3] < 128) continue; let f = 0;
     if (x + y < 3) f = .4; else if (x === 0 || y === 0) f = .26; else if (x === 15 || y === 15) f = -.3; else if (x === 1 || y === 1) f = .1; else if (x === 14 || y === 14) f = -.12;
@@ -846,15 +944,15 @@ let REG = Object.assign({}, REG_BASE);
 let corriendo = false;
 function fisica(dt) {
   const fx = Math.floor(J.x), fz = Math.floor(J.z);
-  const enAgua = get(fx, Math.floor(J.y + .4), fz) === B.AGUA, enEsc = get(fx, Math.floor(J.y), fz) === B.ESCALERA || get(fx, Math.floor(J.y + 1), fz) === B.ESCALERA;
+  const enAgua = get(fx, Math.floor(J.y + .4), fz) === B.AGUA, enEsc = [get(fx, Math.floor(J.y), fz), get(fx, Math.floor(J.y + 1), fz)].some(t => t === B.ESCALERA || (DEF[t] && DEF[t].trepar));
   corriendo = !volando && !enAgua && (teclas.ControlLeft || Math.hypot(mov.x, mov.y) > .97) && mov.y < -.4;
-  const vel = (volando ? 8 * (J.velVuelo || 1) : enAgua ? 2.8 : corriendo ? 6.6 : 4.6) * (volando ? 1 : REG.vel), f = -mov.y, l = mov.x, s = Math.sin(J.yaw), c = Math.cos(J.yaw);
+  const vel = (volando ? 8 * (J.velVuelo || 1) : enAgua ? 2.8 : corriendo ? 6.6 : 4.6) * (volando ? 1 : REG.vel * (J.velPocion || 1)), f = -mov.y, l = mov.x, s = Math.sin(J.yaw), c = Math.cos(J.yaw);
   const tx = (-s * f + c * l) * vel, tz = (-c * f - s * l) * vel;
   J.vx += (tx - J.vx) * Math.min(1, dt * 12); J.vz += (tz - J.vz) * Math.min(1, dt * 12);
   if (volando) J.vy += (((saltando ? 7 : 0) - (bajando ? 7 : 0)) - J.vy) * Math.min(1, dt * 10);
   else if (enEsc) J.vy = (saltando || mov.y < -.3) ? 3.2 : -2;
   else if (enAgua) { J.vy -= 9 * dt; if (J.vy < -2.5) J.vy = -2.5; if (saltando) J.vy = 3.4; }
-  else { J.vy -= 26 * REG.grav * dt; if (J.vy < -30) J.vy = -30; if (saltando && J.suelo) { J.vy = 8.6 * Math.sqrt(REG.salto * REG.grav); J.suelo = false; } }
+  else { J.vy -= 26 * REG.grav * dt; if (J.vy < -30) J.vy = -30; if (saltando && J.suelo) { J.vy = 8.6 * Math.sqrt(REG.salto * REG.grav) * (J.saltoPocion || 1); J.suelo = false; } }
   const sube = J.suelo && !volando;
   // sube solo escalones de medio bloque o de un bloque
   const subir = (ax, az) => { if (!sube) return false; for (const h of [.55, 1.05]) if (!choca(ax, J.y + h, az) && !choca(J.x, J.y + h, J.z)) { J.y += h; return true; } return false; };
@@ -947,6 +1045,7 @@ function voz(tipo, dist = 0) {
   if (tipo === 'maullido') { tono(620, 900, .18, 'triangle', 2600, 6, 7); tono(900, 560, .3, 'triangle', 2600, 6, 7, .18); return; }
   if (tipo === 'rugido') { tono(120, 70, 1.2, 'sawtooth', 500, 14, 5); tono(240, 140, 1, 'square', 700, 0, 0, .05); return; }
   if (tipo === 'zombi') { tono(110, 80, .9, 'sawtooth', 420, 4, 3); return; }
+  if (tipo === 'aldeano') { tono(230, 190, .22, 'triangle', 1000, 8, 6); tono(200, 250, .22, 'triangle', 1000, 8, 6, .26); return; }
   if (tipo === 'vaca') tono(150, 105, 1, 'sawtooth', 650, 3, 5);
   else if (tipo === 'oveja') tono(330, 300, .65, 'sawtooth', 1300, 22, 11);
   else if (tipo === 'gallina') { for (let k = 0; k < 3; k++) tono(950 + k * 60, 700, .07, 'square', 2400, 0, 0, k * .1); }
@@ -975,7 +1074,7 @@ function guardarAjustes() { try { localStorage.setItem('bloquesAjustes', JSON.st
 const $ = id => document.getElementById(id);
 let inv = {}, barra = [], sel = 0, cofres = {}, stats = { rotos: {}, hechos: {}, cofres: 0 }, mision = 0;
 const BARRA_CREATIVO = [B.MADERA, B.ADOQUIN, B.LADRILLO, B.VIDRIO, B.TRONCO, B.PUERTA, B.ANTORCHA, B.TELA + 1, B.ESCALERA];
-const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PANEL, B.VALLA, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, B.CAMA, B.FAROL, B.CARTEL, B.META, B.CONTROL, B.BOTON, B.PALANCA, B.PLACA, B.TNT, B.TNT_G, B.SILLA, B.MESA, B.SOFA, B.LAMPARA_P, B.CUADRO, B.TELE, B.CALABAZA, B.CALABAZA_F, B.TELARANA, B.LAPIDA, B.HUEVO, B.HUEVO + 1, B.HUEVO + 2, I.HUESO, I.PESCADO, I.MONTURA, I.ARMADURA_D, B.LADRILLO_P, B.MADERA_O, B.MADERA_C, B.MARMOL, ...TELAS.map((t, k) => B.ALFOMBRA + k), B.PASTO_ALTO, B.FLOR_R, B.FLOR_A, I.SEMILLAS, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
+const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PANEL, B.VALLA, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, B.CAMA, B.FAROL, B.CARTEL, B.META, B.CONTROL, B.BOTON, B.PALANCA, B.PLACA, B.TNT, B.TNT_G, B.SILLA, B.MESA, B.SOFA, B.LAMPARA_P, B.CUADRO, B.TELE, B.CALABAZA, B.CALABAZA_F, B.TELARANA, B.LAPIDA, B.HUEVO, B.HUEVO + 1, B.HUEVO + 2, I.HUESO, I.PESCADO, I.MONTURA, I.ARMADURA_D, B.HOJAS_SELVA, B.HOJAS_PINO, B.ENREDADERA, B.HIELO, B.NENUFAR, B.ARBUSTO_SECO, B.HENO, B.MESA_ENC, B.PORTAL, B.PIEDRA_ABISMO, B.MAGMA, B.CRISTAL_OSC_M, I.ZANAHORIA_I, I.PAPA_I, I.PAPA_A, I.ARCO, I.FLECHA, I.CANA, ...Array.from({ length: 16 }, (_, k) => I.ARM + k), I.POCION, I.POCION + 1, I.POCION + 2, I.POCION + 3, I.PICO_E, I.ESP_E, B.LADRILLO_P, B.MADERA_O, B.MADERA_C, B.MARMOL, ...TELAS.map((t, k) => B.ALFOMBRA + k), B.PASTO_ALTO, B.FLOR_R, B.FLOR_A, I.SEMILLAS, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
 const RECETAS = [
   [[B.MADERA, 4], [[B.TRONCO, 1]]], [[I.PALO, 4], [[B.MADERA, 2]]], [[B.ANTORCHA, 4], [[I.PALO, 1], [I.CARBON, 1]]],
   [[I.PICO1, 1], [[B.MADERA, 3], [I.PALO, 2]]], [[I.PICO2, 1], [[B.ADOQUIN, 3], [I.PALO, 2]]], [[I.PICO3, 1], [[I.HIERRO, 3], [I.PALO, 2]]], [[I.PICO4, 1], [[I.CRISTAL, 3], [I.PALO, 2]]],
@@ -984,14 +1083,14 @@ const RECETAS = [
   [[B.VIDRIO, 2], [[B.ARENA, 2], [I.CARBON, 1]]], [[B.PIEDRA, 2], [[B.ADOQUIN, 2], [I.CARBON, 1]]], [[B.LADRILLO, 4], [[B.TIERRA, 3], [I.CARBON, 1]]],
   [[B.LAMPARA, 1], [[B.VIDRIO, 1], [B.ANTORCHA, 2]]], [[B.B_HIERRO, 1], [[I.HIERRO, 4]]], [[B.B_ORO, 1], [[I.ORO, 4]]],
   ...MAT_FORMA.map(([m], k) => [[B.LOSA + k, 6], [[m, 3]]]), ...MAT_FORMA.map(([m], k) => [[B.ESCALON + k * 4, 4], [[m, 6]]]),
-  [[I.PAN, 1], [[I.TRIGO_I, 3]]], [[B.CAMA, 1], [[B.TELA, 3], [B.MADERA, 3]]], [[B.BOTON, 1], [[B.ADOQUIN, 1]]], [[B.PALANCA, 1], [[I.PALO, 1], [B.ADOQUIN, 1]]], [[B.PLACA, 1], [[B.ADOQUIN, 2]]], [[B.TNT, 1], [[B.ARENA, 4], [I.CARBON, 2]]], [[B.TNT_G, 1], [[B.TNT, 4]]], [[B.SILLA, 1], [[B.MADERA, 3]]], [[B.MESA, 1], [[B.MADERA, 4]]], [[B.SOFA, 1], [[B.TELA + 1, 3], [B.MADERA, 2]]], [[B.LAMPARA_P, 1], [[I.PALO, 2], [B.ANTORCHA, 1]]], [[B.CUADRO, 1], [[I.PALO, 4], [B.TELA, 1]]], [[B.TELE, 1], [[I.HIERRO, 2], [B.VIDRIO, 1]]], [[B.CALABAZA_F, 1], [[B.CALABAZA, 1], [B.ANTORCHA, 1]]], [[I.MONTURA, 1], [[B.TELA, 3], [I.HIERRO, 1]]], [[I.ARMADURA_D, 1], [[I.HIERRO, 6], [I.ORO, 2]]], [[B.FAROL, 1], [[I.HIERRO, 1], [B.ANTORCHA, 1]]],
+  [[I.PAN, 1], [[I.TRIGO_I, 3]]], [[B.CAMA, 1], [[B.TELA, 3], [B.MADERA, 3]]], [[B.BOTON, 1], [[B.ADOQUIN, 1]]], [[B.PALANCA, 1], [[I.PALO, 1], [B.ADOQUIN, 1]]], [[B.PLACA, 1], [[B.ADOQUIN, 2]]], [[B.TNT, 1], [[B.ARENA, 4], [I.CARBON, 2]]], [[B.TNT_G, 1], [[B.TNT, 4]]], [[B.SILLA, 1], [[B.MADERA, 3]]], [[B.MESA, 1], [[B.MADERA, 4]]], [[B.SOFA, 1], [[B.TELA + 1, 3], [B.MADERA, 2]]], [[B.LAMPARA_P, 1], [[I.PALO, 2], [B.ANTORCHA, 1]]], [[B.CUADRO, 1], [[I.PALO, 4], [B.TELA, 1]]], [[B.TELE, 1], [[I.HIERRO, 2], [B.VIDRIO, 1]]], [[B.CALABAZA_F, 1], [[B.CALABAZA, 1], [B.ANTORCHA, 1]]], [[I.MONTURA, 1], [[B.TELA, 3], [I.HIERRO, 1]]], [[I.ARMADURA_D, 1], [[I.HIERRO, 6], [I.ORO, 2]]], ...[B.TELA, I.HIERRO, I.ORO, I.CRISTAL].flatMap((mat, m) => [5, 8, 7, 4].map((n, p) => [[I.ARM + m * 4 + p, 1], [[mat, n]]])), [[I.ARCO, 1], [[I.PALO, 3], [B.TELA, 2]]], [[I.FLECHA, 4], [[I.PALO, 1], [B.ADOQUIN, 1]]], [[I.CANA, 1], [[I.PALO, 3], [B.TELA, 1]]], [[I.PAPA_A, 2], [[I.PAPA_I, 2], [I.CARBON, 1]]], [[B.HENO, 1], [[I.TRIGO_I, 9]]], [[I.POCION, 1], [[B.VIDRIO, 1], [I.TRIGO_I, 3]]], [[I.POCION + 1, 1], [[B.VIDRIO, 1], [I.POLLO, 1]]], [[I.POCION + 2, 1], [[B.VIDRIO, 1], [I.MANZANA, 1], [I.ORO, 1]]], [[I.POCION + 3, 1], [[B.VIDRIO, 1], [I.CARNE, 1], [I.CRISTAL, 1]]], [[B.MESA_ENC, 1], [[I.CRISTAL, 2], [I.ORO, 2], [B.ESTANTE, 1]]], [[B.PORTAL, 1], [[I.CRISTAL, 4], [I.ORO, 4], [B.TNT, 1]]], [[B.FAROL, 1], [[I.HIERRO, 1], [B.ANTORCHA, 1]]],
   [[B.LADRILLO_P, 4], [[B.PIEDRA, 4]]], [[B.MADERA_O, 4], [[B.TRONCO, 1], [I.CARBON, 1]]], [[B.MADERA_C, 4], [[B.TRONCO, 1], [B.ARENA, 1]]], [[B.MARMOL, 2], [[B.ARENA, 2], [B.PIEDRA, 2]]],
   ...TELAS.map((t, k) => [[B.ALFOMBRA + k, 3], [[B.TELA + k, 2]]]), [[I.CARNE_A, 2], [[I.CARNE, 2], [I.CARBON, 1]]], [[I.POLLO_A, 2], [[I.POLLO, 2], [I.CARBON, 1]]],
   [[B.TELA, 2], [[B.HOJAS, 4]]], ...TELAS.slice(1).map((t, k) => [[B.TELA + k + 1, 1], [[B.TELA, 1]]]),
 ];
 const creativo = () => modoJuego === 'creativo';
-const nivelPico = () => creativo() ? 4 : Math.max(0, ...[1, 2, 3, 4].filter(k => inv[I.PICO1 + k - 1] > 0));
-const nivelEspada = () => Math.max(0, ...[1, 2, 3, 4].filter(k => inv[I.ESP1 + k - 1] > 0));
+const nivelPico = () => creativo() ? 5 : inv[I.PICO_E] > 0 ? 5 : Math.max(0, ...[1, 2, 3, 4].filter(k => inv[I.PICO1 + k - 1] > 0));
+const nivelEspada = () => inv[I.ESP_E] > 0 ? 5 : Math.max(0, ...[1, 2, 3, 4].filter(k => inv[I.ESP1 + k - 1] > 0));
 function darItem(id, n = 1, silencio = false) {
   inv[id] = (inv[id] || 0) + n; sucio = true;
   if ((esBloque(id) || esComida(id) || id === I.SEMILLAS || id === I.TRIGO_I) && !barra.includes(id)) { const k = barra.indexOf(0); if (k >= 0) barra[k] = id; }
@@ -1064,6 +1163,7 @@ function tocar(dir) {
   if (typeof herramientaTocar === 'function' && herramientaTocar(dir)) return;
   if (typeof mecTocar === 'function' && mecTocar(dir)) return;
   if (typeof tocarExtra === 'function' && tocarExtra(dir)) return;
+  if (typeof tocarExtra2 === 'function' && tocarExtra2(dir)) return;
   // primero: ¿le pegué a un monstruo?
   const m = monstruoApuntado(dir), h = apuntar(dir);
   if (m && (!h || m.t < h.t) && m.m.userData.animal && typeof tocarAnimal === 'function' && tocarAnimal(m.m, dir)) return;
@@ -1132,7 +1232,7 @@ function puerta(x, y, z) {
 function tiempoRomper(t) {
   const d = DEF[t]; if (d.dur < 0) return Infinity; if (creativo()) return .3;
   const p = nivelPico();
-  if (d.req) return p >= d.req ? d.dur / [1, 2.5, 4, 6, 9][p] : d.dur * 3.3;
+  if (d.req) return p >= d.req ? d.dur / [1, 2.5, 4, 6, 9, 13][p] : d.dur * 3.3;
   return d.dur / (1 + p * .35);
 }
 function romper(h) {
@@ -1148,7 +1248,8 @@ function romper(h) {
     if (d.req && nivelPico() < d.req) aviso(TR('necPico', { p: nom(I.PICO1 + d.req - 1).toUpperCase() }), 1500);
     else if (t === B.HOJAS) { if (Math.random() < .35) darItem(B.HOJAS); if (Math.random() < .12) darItem(I.PALO); if (Math.random() < .07) darItem(I.MANZANA); }
     else if (t === B.VIDRIO) { if (Math.random() < .5) darItem(B.VIDRIO); }
-    else if (t === B.PASTO_ALTO) { if (Math.random() < .2) darItem(I.SEMILLAS); }
+    else if (t === B.PASTO_ALTO) { const r = Math.random(); if (r < .2) darItem(I.SEMILLAS); else if (r < .23) darItem(I.ZANAHORIA_I); else if (r < .26) darItem(I.PAPA_I); }
+    else if (d.cultivo === 3) { darItem(d.suelta, 2 + Math.floor(Math.random() * 3)); }
     else if (t === B.TRIGO + 3) { darItem(I.TRIGO_I); darItem(I.SEMILLAS, 1 + (Math.random() < .5 ? 1 : 0)); }
     else if (esCultivo(t)) darItem(I.SEMILLAS);
     else darItem(d.suelta === B.PUERTA_A ? B.PUERTA : d.suelta);
@@ -1191,7 +1292,7 @@ function monstruoApuntado(dir) {
   return mejor;
 }
 function golpear(m, dir) {
-  const u = m.userData, dano = [2, 3, 4, 6, 8][nivelEspada()];
+  const u = m.userData, dano = [2, 3, 4, 6, 8, 11][nivelEspada()] * (J.fuerza || 1);
   u.vida -= dano; u.rojo = .25; u.kx = dir.x * 7; u.kz = dir.z * 7; u.vy = 4; sonar('golpe', .7) || son(220, .1, 'sawtooth', .12);
   swing = 1; if (u.animal) { u.huir = 5; voz(u.animal, 0); if (u.vida <= 0) matarAnimal(m); return; }
   if (u.vida <= 0) { quitarMonstruo(m); son(520, .25, 'triangle', .12); if (Math.random() < .5) darItem(I.CARBON); }
@@ -1485,7 +1586,7 @@ function guardar() {
 }
 setInterval(() => { if (sucio && jugando) guardar(); }, 8000);
 addEventListener('pagehide', guardar); document.addEventListener('visibilitychange', () => { if (document.hidden) guardar(); });
-function prepararMundo(S, ejemplo) { generar(S, ejemplo); if (typeof generarExtra === 'function') generarExtra(S, ejemplo); diffs = new Map(); spawnPropio = false; }
+function prepararMundo(S, ejemplo) { if (window.mundoTipo === 'abismo' && typeof generarAbismo === 'function') generarAbismo(S); else { generar(S, ejemplo); if (typeof generarExtra === 'function') generarExtra(S, ejemplo); } diffs = new Map(); spawnPropio = false; }
 function terminarCarga(guardados) { cultivos = new Set(); for (let i = 0; i < N; i++) if (mundo[i] >= B.TRIGO && mundo[i] <= B.TRIGO + 2) cultivos.add(i); altTodo(); buscarFuentes(); calcLuz(); for (const m of monstruos.slice()) quitarMonstruo(m, false); for (const a of animales.slice()) quitarAnimal(a); armarTodo();
   const lista = guardados || animalesIniciales; if (lista) for (const [t, x, y, z, bebe, ex] of lista) { if (!TIPOS[t]) continue; const a = crearAnimal(t, x, y, z); if (ex) a.userData.extra = ex; if (TIPOS[t].cargar) TIPOS[t].cargar(a); if (bebe) { a.userData.bebe = bebe; a.scale.setScalar(.5 + .5 * (1 - bebe / 180)); } } else poblarAnimales(22, false);
   armarFaroLuz(); }
@@ -1494,6 +1595,7 @@ function entrarMundo(id) {
   const meta = leerLista().find(m => m.id === id); if (!meta) return;
   mundoId = id; mundoNombre = meta.nombre; modoJuego = meta.modo;
   REG = Object.assign({}, REG_BASE); if (typeof modsCargar === 'function') modsCargar(datos && datos.extra2, meta);
+  ponerTamano(meta.tam || 160); window.mundoTipo = meta.tipo || '';
   prepararMundo(meta.semilla, meta.ejemplo);
   inv = {}; barra = modoJuego === 'creativo' ? BARRA_CREATIVO.slice() : Array(9).fill(0); sel = 0; cofres = {}; stats = { rotos: {}, hechos: {}, cofres: 0 }; mision = 0; tiempo = 0; vida = 20; hambre = 20; volando = false;
   Object.assign(J, { x: spawn.x, y: spawn.y, z: spawn.z, vx: 0, vy: 0, vz: 0, yaw: spawn.yaw ?? .6, pitch: -.15 });
@@ -1512,7 +1614,7 @@ function entrarMundo(id) {
 const SEMILLA_EJEMPLO = 20261024;
 function crearMundo(modo, ejemplo = false) {
   const lista = leerLista(), id = Date.now().toString(36), n = lista.length + 1;
-  lista.unshift({ id, nombre: 'Mundo ' + n, num: n, modo, ejemplo, semilla: ejemplo ? SEMILLA_EJEMPLO : (Math.random() * 2147483647) | 0, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0 });
+  lista.unshift({ id, nombre: 'Mundo ' + n, num: n, modo, ejemplo, tam: ejemplo ? 160 : (window.tamNuevo || 160), semilla: ejemplo ? SEMILLA_EJEMPLO : (Math.random() * 2147483647) | 0, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0 });
   localStorage.setItem('bloquesMundos', JSON.stringify(lista));
   pantallaCompleta(); entrarMundo(id);
 }
@@ -1753,6 +1855,8 @@ function bucle(ya) {
   if (typeof modsFrame === 'function') modsFrame(dt);
   if (typeof pjFrame === 'function') pjFrame(dt);
   if (typeof contenidoFrame === 'function') contenidoFrame(dt);
+  if (typeof supervivenciaFrame === 'function') supervivenciaFrame(dt);
+  if (typeof abismoFrame === 'function') abismoFrame(dt);
   render.render(escena, cam);
   if (typeof herrDespues === 'function') herrDespues();
 }
@@ -1766,5 +1870,7 @@ window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMun
 <script src="personaje.js"></script>
 <script src="contenido.js"></script>
 <script src="tienda.js"></script>
+<script src="supervivencia.js"></script>
+<script src="abismo.js"></script>
 </body>
 </html>
