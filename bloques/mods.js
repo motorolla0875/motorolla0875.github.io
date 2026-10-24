@@ -291,7 +291,7 @@ async function exportarMundo() {
   const d = Object.assign({}, datos, { J: { x: ini.x, y: ini.y, z: ini.z, yaw: ini.yaw ?? 0, pitch: -.1 }, spawnP: ini, inv: {}, stats: { rotos: {}, hechos: {}, cofres: 0 }, mision: 0, tiempo: 0, vida: 20, hambre: 20, volando: false, extra: null });
   const modo = mapa.modoJugar || (tieneMeta ? 'aventura' : meta.modo);
   if (modo === 'creativo') d.barra = BARRA_CREATIVO.slice(); else d.barra = Array(9).fill(0);
-  const obj = { formato: 'voxelium', tipo: 'mapa', v: 1, nombre: mapa.nombre || meta.nombre, modo, tam: meta.tam || 160, semilla: meta.semilla, ejemplo: !!meta.ejemplo, datos: d };
+  const obj = { formato: 'voxelium', tipo: 'mapa', v: 1, nombre: mapa.nombre || meta.nombre, modo, tam: meta.tam || 160, semilla: meta.semilla, gen: meta.gen || 1, ejemplo: !!meta.ejemplo, datos: d };
   compartirArchivo(await empacar(obj), nombreArchivo(obj.nombre) + '.voxel');
 }
 $('bCompartirMundo').onclick = () => exportarMundo();
@@ -305,7 +305,7 @@ archivoIn.onchange = async () => {
   if (o.tipo === 'mod' && o.mod) { guardarModLib(Object.assign(o.mod, { id: o.mod.id || 'm' + Date.now().toString(36) })); aviso(TR('modCargado'), 2400); if (!$('modsCapa').hidden) pintarLibreria(); return; }
   if (o.tipo === 'mapa' && o.datos) {
     const lista = leerLista(), id = Date.now().toString(36), modo = ['aventura', 'supervivencia', 'creativo'].includes(o.modo) ? o.modo : 'aventura';
-    lista.unshift({ id, nombre: String(o.nombre || 'Mapa').slice(0, 30), num: lista.length + 1, modo, tam: +o.tam || 160, ejemplo: !!o.ejemplo, importado: true, semilla: +o.semilla || 1, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0 });
+    lista.unshift({ id, nombre: String(o.nombre || 'Mapa').slice(0, 30), num: lista.length + 1, modo, tam: +o.tam || 160, gen: +o.gen || 1, ejemplo: !!o.ejemplo, importado: true, semilla: +o.semilla || 1, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0 });
     localStorage.setItem('bloquesMundos', JSON.stringify(lista)); localStorage.setItem('bloquesMundo_' + id, JSON.stringify(o.datos));
     aviso(TR('mapaCargado'), 1400); for (const c of ['inicio', 'mundos', 'nuevo', 'modsCapa']) $(c).hidden = true; pantallaCompleta(); entrarMundo(id); return;
   }

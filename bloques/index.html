@@ -262,12 +262,14 @@
 // ═════════ MUNDO ═════════
 let SX = 160, SZ = 160, N = SX * 48 * SZ; const SY = 48, CH = 16, SEA = 15;
 let NCX = SX / CH, NCZ = SZ / CH;
-const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41, /* 41..56 */ ESC_INV: 57, /* 57..72 */ LOSA_ARR: 73, /* 73..76 */ TRONCO_X: 77, TRONCO_Z: 78, VALLA: 79, PANEL: 80, PASTO_ALTO: 81, FLOR_R: 82, FLOR_A: 83, ARADA: 84, TRIGO: 85, /* 85..88 */ BOTON: 89, PALANCA: 90, PALANCA_ON: 91, PLACA: 92, TNT: 93, TNT_G: 94, CALABAZA: 95, CALABAZA_F: 96, TELARANA: 97, LAPIDA: 98, SILLA: 99, CAMA: 140, ALFOMBRA: 141, /* 141..149 */ FAROL: 150, LADRILLO_P: 151, MADERA_O: 152, MADERA_C: 153, MARMOL: 154, CARTEL: 155, META: 156, CONTROL: 157, MESA: 158, SOFA: 159, /* 160..239: bloques de mods */ LAMPARA_P: 240, CUADRO: 241, TELE: 242, HUEVO: 243 /* 243..247 huevos de dragón */, HOJAS_SELVA: 220, HOJAS_PINO: 221, ENREDADERA: 222, HIELO: 223, NENUFAR: 224, ARBUSTO_SECO: 225, HENO: 226, PIEDRA_ABISMO: 227, MAGMA: 228, PORTAL: 229, CRISTAL_OSC_M: 230, MESA_ENC: 231, BROTE: 232, GENERADOR: 233, ZANAHORIA: 248, /* 248..251 */ PAPA: 252 /* 252..255 */ };
-const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123, CARNE: 105, CARNE_A: 106, POLLO: 107, POLLO_A: 108, MANZANA: 109, SEMILLAS: 130, TRIGO_I: 131, PAN: 132, HUESO: 114, PESCADO: 115, MONTURA: 116, ARMADURA_D: 117, ARM: 300, /* 300..315: tela, hierro, oro, cristal × casco, pechera, pantalón, botas */ ARCO: 316, FLECHA: 317, PICO_E: 318, ESP_E: 319, CANA: 320, ZANAHORIA_I: 321, PAPA_I: 322, PAPA_A: 323, POCION: 324, /* 324..327 */ CORONA: 329 };
+const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41, /* 41..56 */ ESC_INV: 57, /* 57..72 */ LOSA_ARR: 73, /* 73..76 */ TRONCO_X: 77, TRONCO_Z: 78, VALLA: 79, PANEL: 80, PASTO_ALTO: 81, FLOR_R: 82, FLOR_A: 83, ARADA: 84, TRIGO: 85, /* 85..88 */ BOTON: 89, PALANCA: 90, PALANCA_ON: 91, PLACA: 92, TNT: 93, TNT_G: 94, CALABAZA: 95, CALABAZA_F: 96, TELARANA: 97, LAPIDA: 98, SILLA: 99, CAMA: 140, ALFOMBRA: 141, /* 141..149 */ FAROL: 150, LADRILLO_P: 151, MADERA_O: 152, MADERA_C: 153, MARMOL: 154, CARTEL: 155, META: 156, CONTROL: 157, MESA: 158, SOFA: 159, /* 160..239: bloques de mods */ LAMPARA_P: 240, CUADRO: 241, TELE: 242, HUEVO: 243 /* 243..247 huevos de dragón */, HOJAS_SELVA: 220, HOJAS_PINO: 221, ENREDADERA: 222, HIELO: 223, NENUFAR: 224, ARBUSTO_SECO: 225, HENO: 226, PIEDRA_ABISMO: 227, MAGMA: 228, PORTAL: 229, CRISTAL_OSC_M: 230, MESA_ENC: 231, BROTE: 232, GENERADOR: 233, CORAL: 234 /* 234..236 */, HORNO: 237, COLMENA: 238, RIEL: 239, RIEL_X: 124, TOCADISCOS: 118, HUEVO_TORTUGA: 119, ZANAHORIA: 248, /* 248..251 */ PAPA: 252 /* 252..255 */ };
+const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123, CARNE: 105, CARNE_A: 106, POLLO: 107, POLLO_A: 108, MANZANA: 109, SEMILLAS: 130, TRIGO_I: 131, PAN: 132, HUESO: 114, PESCADO: 115, MONTURA: 116, ARMADURA_D: 117, ARM: 300, /* 300..315: tela, hierro, oro, cristal × casco, pechera, pantalón, botas */ ARCO: 316, FLECHA: 317, PICO_E: 318, ESP_E: 319, CANA: 320, ZANAHORIA_I: 321, PAPA_I: 322, PAPA_A: 323, POCION: 324, /* 324..327 */ CORONA: 329, TINTA: 330, MIEL: 331, BOTE: 332, VAGONETA: 333, COHETE: 334, DISCO: 335 /* 335..337 */, CHULETA: 338, CHULETA_A: 339, PESCADO_A: 340, PEZ_T: 341 };
 // dibujos (16x16) del atlas
 const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4', 'carne', 'carneAsada', 'pollo', 'polloAsado', 'manzana', 'pastoAlto', 'florRoja', 'florAmarilla', 'aradaArriba', 'trigo0', 'trigo1', 'trigo2', 'trigo3', 'semillas', 'trigoItem', 'pan', 'camaArriba', 'camaCostado', 'farol', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control', 'boton', 'palanca', 'palancaOn', 'placa', 'tntCostado', 'tntArriba', 'tntGCostado', 'calabazaCostado', 'calabazaArriba', 'calabazaCara', 'calabazaFarol', 'telarana', 'lapida', 'pantalla', 'cuadro', 'teleFrente', 'teleCostado', 'huevo0', 'huevo1', 'huevo2', 'huevo3', 'huevo4', 'hueso', 'pescado', 'montura', 'armaduraD'];
 TILES.push('hojasSelva', 'hojasPino', 'enredadera', 'hielo', 'nenufar', 'arbustoSeco', 'henoCostado', 'henoArriba', 'piedraAbismo', 'magma', 'portal', 'cristalOscM', 'mesaEncCostado', 'mesaEncArriba', 'zanahoria0', 'zanahoria1', 'zanahoria2', 'zanahoria3', 'papa0', 'papa1', 'papa2', 'papa3',
-  ...Array.from({ length: 16 }, (_, k) => 'arm' + k), 'arco', 'flecha', 'picoE', 'espE', 'cana', 'zanahoriaI', 'papaI', 'papaA', 'pocion0', 'pocion1', 'pocion2', 'pocion3', 'corona', 'brote', 'generadorCostado', 'generadorArriba');
+  ...Array.from({ length: 16 }, (_, k) => 'arm' + k), 'arco', 'flecha', 'picoE', 'espE', 'cana', 'zanahoriaI', 'papaI', 'papaA', 'pocion0', 'pocion1', 'pocion2', 'pocion3', 'corona', 'brote', 'generadorCostado', 'generadorArriba',
+  'coral0', 'coral1', 'coral2', 'hornoFrente', 'hornoCostado', 'hornoArriba', 'colmenaCostado', 'colmenaArriba', 'riel', 'rielX', 'tocadiscosCostado', 'tocadiscosArriba', 'huevoTortuga', 'alga', 'pastoMarino', 'abanico0', 'abanico1', 'abanico2',
+  'tinta', 'miel', 'bote', 'vagoneta', 'cohete', 'disco0', 'disco1', 'disco2', 'chuleta', 'chuletaA', 'pescadoA', 'pezT');
 const TL = {}; TILES.forEach((n, i) => TL[n] = i);
 const TELAS = [['Blanca', '#e9ecec'], ['Roja', '#a12722'], ['Naranja', '#f07613'], ['Amarilla', '#f8c527'], ['Verde', '#5e7c16'], ['Celeste', '#3aafd9'], ['Azul', '#35399d'], ['Violeta', '#7e2fbe'], ['Negra', '#1d1d21']];
 // definición de bloques: dibujos [arriba, abajo, costados], dureza (segundos a mano), pico necesario, qué suelta, etc.
@@ -364,6 +366,13 @@ def(B.PORTAL, 'Portal al Abismo', [TL.portal], { dur: 2, luz: 15, color: '#c58cf
 def(B.CRISTAL_OSC_M, 'Cristal del abismo', [TL.cristalOscM], { dur: 4, req: 3, suelta: I.CRISTAL, luz: 6, color: '#ff4adc' });
 def(B.BROTE, 'Brote de árbol', [TL.brote], { dur: .05, trans: true, solido: false, planta: true, color: '#3fae3a' });
 def(B.GENERADOR, 'Generador de piedra', [TL.generadorArriba, TL.generadorCostado, TL.generadorCostado], { dur: 2, req: 1, luz: 6, color: '#ffb02e' });
+for (let k = 0; k < 3; k++) def(B.CORAL + k, ['Coral rosa', 'Coral amarillo', 'Coral violeta'][k], [TL['coral' + k]], { dur: .6, color: ['#ff5a8a', '#ffd23a', '#7a5aff'][k] });
+def(B.HORNO, 'Horno', [TL.hornoArriba, TL.hornoArriba, TL.hornoFrente], { dur: 2, req: 1, color: '#8a93ad' });
+def(B.COLMENA, 'Colmena', [TL.colmenaArriba, TL.colmenaArriba, TL.colmenaCostado], { dur: .6, color: '#e8b84a' });
+def(B.RIEL, 'Riel', [TL.riel], { dur: .3, trans: true, solido: false, forma: [[0, 0, 0, 1, 1 / 16, 1]], icono: [[0, 0, 0, 1, .1, 1]], color: '#9aa3b8' });
+def(B.RIEL_X, 'Riel', [TL.rielX], { dur: .3, trans: true, solido: false, forma: [[0, 0, 0, 1, 1 / 16, 1]], icono: [[0, 0, 0, 1, .1, 1]], color: '#9aa3b8', suelta: B.RIEL });
+def(B.TOCADISCOS, 'Tocadiscos', [TL.tocadiscosArriba, TL.tocadiscosCostado, TL.tocadiscosCostado], { dur: 1, color: '#8a5a2a' });
+def(B.HUEVO_TORTUGA, 'Huevos de tortuga', [TL.huevoTortuga], { dur: .1, trans: true, solido: false, planta: true, suelta: 0, color: '#f4f0d8' });
 def(B.MESA_ENC, 'Mesa de encantar', [TL.mesaEncArriba, TL.piedraAbismo, TL.mesaEncCostado], { dur: 3, trans: true, forma: [[0, 0, 0, 1, 12 / 16, 1]], icono: [[0, 0, 0, 1, 12 / 16, 1]], luz: 7, color: '#7e2fbe' });
 for (let k = 0; k < 4; k++) { def(B.ZANAHORIA + k, 'Zanahoria', [TL['zanahoria' + k]], { dur: .05, trans: true, solido: false, planta: true, suelta: I.ZANAHORIA_I, cultivo: k, color: '#ff8a1a' }); def(B.PAPA + k, 'Papa', [TL['papa' + k]], { dur: .05, trans: true, solido: false, planta: true, suelta: I.PAPA_I, cultivo: k, color: '#c8a060' }); }
 
@@ -395,6 +404,9 @@ const ITEM = {};
 function item(id, nombre, tile, o = {}) { ITEM[id] = Object.assign({ id, nombre, tile }, o); }
 item(I.PALO, 'Palo', TL.palo); item(I.CARBON, 'Carbón', TL.carbon); item(I.HIERRO, 'Hierro', TL.hierro); item(I.ORO, 'Oro', TL.oro); item(I.CRISTAL, 'Cristal', TL.cristal);
 item(I.CARNE, 'Carne cruda', TL.carne, { comida: 3 }); item(I.CARNE_A, 'Carne asada', TL.carneAsada, { comida: 8 }); item(I.POLLO, 'Pollo crudo', TL.pollo, { comida: 2 }); item(I.POLLO_A, 'Pollo asado', TL.polloAsado, { comida: 6 }); item(I.MANZANA, 'Manzana', TL.manzana, { comida: 4 });
+item(I.TINTA, 'Tinta de calamar', TL.tinta); item(I.MIEL, 'Frasco de miel', TL.miel, { comida: 6 }); item(I.BOTE, 'Bote', TL.bote); item(I.VAGONETA, 'Vagoneta', TL.vagoneta); item(I.COHETE, 'Fuegos artificiales', TL.cohete);
+for (let k = 0; k < 3; k++) item(I.DISCO + k, ['Disco: Pradera', 'Disco: Océano', 'Disco: Cuevas'][k], TL['disco' + k]);
+item(I.CHULETA, 'Chuleta cruda', TL.chuleta, { comida: 3 }); item(I.CHULETA_A, 'Chuleta asada', TL.chuletaA, { comida: 8 }); item(I.PESCADO_A, 'Pescado cocido', TL.pescadoA, { comida: 6 }); item(I.PEZ_T, 'Pez tropical', TL.pezT, { comida: 1 });
 item(I.HUESO, 'Hueso', TL.hueso); item(I.PESCADO, 'Pescado', TL.pescado, { comida: 2 }); item(I.MONTURA, 'Montura', TL.montura); item(I.ARMADURA_D, 'Armadura de dragón', TL.armaduraD);
 ['Gorro de tela', 'Saco de tela', 'Pantalón de tela', 'Botas de tela', 'Casco de hierro', 'Pechera de hierro', 'Grebas de hierro', 'Botas de hierro', 'Casco de oro', 'Pechera de oro', 'Grebas de oro', 'Botas de oro', 'Casco de cristal', 'Pechera de cristal', 'Grebas de cristal', 'Botas de cristal'].forEach((n, k) => item(I.ARM + k, n, TL['arm' + k], { armadura: k % 4, material: k >> 2 }));
 item(I.ARCO, 'Arco', TL.arco); item(I.FLECHA, 'Flecha', TL.flecha); item(I.PICO_E, 'Pico encantado', TL.picoE); item(I.ESP_E, 'Espada encantada', TL.espE); item(I.CANA, 'Caña de pescar', TL.cana);
@@ -839,6 +851,36 @@ TELAS.forEach(([n, c], k) => PINTA['tela' + k] = tela(c));
     brote: (x, y) => enLista([...linea(7, 15, 7, 6), ...linea(8, 15, 8, 9)], x, y) ? '#6b4a2a' : (Math.hypot(x - 7.5, y - 5.5) < 4.2 && (x * 3 + y * 5) % 7 > 1) ? ((x + y) % 3 ? '#3fae3a' : '#2a8a2a') : (Math.hypot(x - 4, y - 9) < 2.2 || Math.hypot(x - 11, y - 8) < 2.2) ? '#4fc04a' : null,
     generadorCostado: (x, y, r, e) => (x === 0 || x === 15 || y === 0 || y === 15) ? '#3f465c' : (y >= 5 && y <= 10 && x >= 3 && x <= 12) ? ((x % 3 === 0) ? '#2a2f40' : (y < 8 ? (Math.sin(x * 1.3) > 0 ? '#ffb02e' : '#ff7a1a') : '#3fa8f0')) : e(['#8a93ad', '#7a839d', '#969fb8']),
     generadorArriba: (x, y, r, e) => (x === 0 || x === 15 || y === 0 || y === 15) ? '#3f465c' : (Math.abs(x - 7.5) < 3 && Math.abs(y - 7.5) < 3) ? ((x + y) % 2 ? '#ffb02e' : '#3fa8f0') : e(['#8a93ad', '#7a839d', '#969fb8']),
+    coral0: (x, y, r, e) => ((x * 7 + y * 3) % 5 === 0) ? '#ffd0dc' : ((x + y * 2) % 4 === 0) ? '#c83a6a' : e(['#ff5a8a', '#f04a7a', '#ff6a9a']),
+    coral1: (x, y, r, e) => ((x * 5 + y * 3) % 5 === 0) ? '#fff6b0' : ((x * 2 + y) % 4 === 0) ? '#c89a1a' : e(['#ffd23a', '#f5c22a', '#ffdc4a']),
+    coral2: (x, y, r, e) => ((x * 3 + y * 7) % 5 === 0) ? '#e0d0ff' : ((x + y) % 4 === 0) ? '#4a3ab0' : e(['#7a5aff', '#6a4af0', '#8a6aff']),
+    hornoFrente: (x, y, r, e) => (y >= 8 && y <= 12 && x >= 4 && x <= 11) ? ((y === 8 || x === 4 || x === 11) ? '#2a2f40' : (y >= 11 ? (x % 2 ? '#ff9a2e' : '#ffd23a') : '#1d1d21')) : (y >= 3 && y <= 5 && x >= 5 && x <= 10) ? '#4a5268' : (x === 0 || x === 15 || y === 0 || y === 15) ? '#3f465c' : e(['#8a93ad', '#7a839d', '#969fb8']),
+    hornoCostado: (x, y, r, e) => (x === 0 || x === 15 || y === 0 || y === 15) ? '#3f465c' : e(['#8a93ad', '#7a839d', '#969fb8']),
+    hornoArriba: (x, y, r, e) => (x === 0 || x === 15 || y === 0 || y === 15 || (x > 5 && x < 10 && y > 5 && y < 10)) ? '#3f465c' : e(['#8a93ad', '#7a839d', '#969fb8']),
+    colmenaCostado: (x, y, r, e) => (y % 4 === 0) ? '#b07a2a' : (x >= 6 && x <= 9 && y >= 9 && y <= 11) ? '#3a2410' : e(['#e8b84a', '#dca83a', '#f0c45a']),
+    colmenaArriba: (x, y, r, e) => (Math.abs(x - 7.5) < 3 && Math.abs(y - 7.5) < 3) ? '#ffb02e' : (x % 4 === 0 || y % 4 === 0) ? '#b07a2a' : e(['#e8b84a', '#dca83a']),
+    riel: (x, y) => (x === 3 || x === 12) ? ((y % 4 === 0) ? '#e8e8e8' : '#9aa3b8') : (y % 4 === 1 || y % 4 === 2) ? '#8a5a2a' : null,
+    rielX: (x, y) => (y === 3 || y === 12) ? ((x % 4 === 0) ? '#e8e8e8' : '#9aa3b8') : (x % 4 === 1 || x % 4 === 2) ? '#8a5a2a' : null,
+    tocadiscosCostado: (x, y, r, e) => (x === 0 || x === 15 || y === 0 || y === 15) ? '#4a2a14' : (y === 5 || y === 10) ? '#5a3418' : e(['#8a5a2a', '#7a4a20', '#946030']),
+    tocadiscosArriba: (x, y, r, e) => { const d = Math.hypot(x - 7.5, y - 7.5); return d < 5.5 ? (d < 1.5 ? '#ff4a5f' : d < 2 ? '#1d1d21' : (Math.round(d) % 2 ? '#2a2a32' : '#1d1d21')) : (x === 0 || x === 15 || y === 0 || y === 15) ? '#4a2a14' : e(['#8a5a2a', '#7a4a20']); },
+    huevoTortuga: (x, y) => { const h = [[4, 10, 2.2], [10, 11, 2.5], [8, 6, 2]].find(([a, b, rr]) => Math.hypot(x - a, (y - b) * .9) < rr); return h ? (((x + y) % 3 === 0) ? '#7ac85a' : '#f4f0d8') : null; },
+    alga: (x, y) => { const c = 7 + Math.round(Math.sin(y * .7) * 2); return (x === c || x === c + 1) ? '#2f7a2a' : ((y % 4 === 1) && (x === c - 1 || x === c + 2)) ? '#4a9a3a' : null; },
+    pastoMarino: (x, y) => ([2, 5, 8, 11, 13].some((c, k) => Math.abs(x - c - Math.round(Math.sin(y * .5 + k) * 1)) < 1 && y > 3 + k % 3 * 2)) ? (y < 9 ? '#5ab84a' : '#2f8a2a') : null,
+    abanico0: (x, y) => { const d = Math.hypot(x - 7.5, (y - 14) * 1.1); return (d < 8 && y < 15 && (Math.atan2(y - 14, x - 7.5) * 6 | 0) % 2 === 0) || (x >= 7 && x <= 8 && y > 10) ? '#ff5a8a' : null; },
+    abanico1: (x, y) => { const d = Math.hypot(x - 7.5, (y - 14) * 1.1); return (d < 8 && y < 15 && (Math.atan2(y - 14, x - 7.5) * 6 | 0) % 2 === 0) || (x >= 7 && x <= 8 && y > 10) ? '#ffd23a' : null; },
+    abanico2: (x, y) => { const d = Math.hypot(x - 7.5, (y - 14) * 1.1); return (d < 8 && y < 15 && (Math.atan2(y - 14, x - 7.5) * 6 | 0) % 2 === 0) || (x >= 7 && x <= 8 && y > 10) ? '#7a5aff' : null; },
+    tinta: (x, y) => { const d = Math.hypot(x - 7.5, (y - 9) * .9); return d < 5 ? (d < 2 && y < 9 ? '#5a5a7a' : '#1d1d2a') : (x >= 6 && x <= 9 && y >= 2 && y <= 4) ? '#c8a060' : null; },
+    miel: (x, y) => (x >= 5 && x <= 10 && y >= 2 && y <= 3) ? '#c8a060' : (x >= 4 && x <= 11 && y >= 4 && y <= 14) ? ((x === 4 || x === 11 || y === 14) ? '#d8f0ff' : (y < 7 ? '#ffe9a0' : '#ffb02e')) : null,
+    bote: (x, y) => (y >= 8 && y <= 12 && x >= 1 + (y - 8) && x <= 14 - (y - 8)) ? (y === 8 ? '#5a3418' : (y % 2 ? '#a06a32' : '#8a5a2a')) : (x === 7 && y >= 2 && y < 8) ? '#5a3418' : null,
+    vagoneta: (x, y) => (y >= 5 && y <= 11 && x >= 2 && x <= 13) ? ((y === 5 || x === 2 || x === 13) ? '#5a6278' : '#9aa3b8') : ((y === 12 || y === 13) && (x === 4 || x === 5 || x === 10 || x === 11)) ? '#2a2a32' : null,
+    cohete: (x, y) => (x >= 6 && x <= 9 && y >= 4 && y <= 11) ? (y < 6 ? '#ff4a5f' : (y % 3 === 0 ? '#ffd23a' : '#e8e8e8')) : (y >= 1 && y <= 3 && Math.abs(x - 7.5) < (y - .5)) ? '#ff4a5f' : (x >= 7 && x <= 8 && y >= 12) ? '#8a5a2a' : null,
+    disco0: (x, y) => { const d = Math.hypot(x - 7.5, y - 7.5); return d < 7 ? (d < 1.3 ? '#1d1d21' : d < 2.8 ? '#ff4a5f' : (Math.round(d * 1.3) % 2 ? '#2a2a32' : '#16161c')) : null; },
+    disco1: (x, y) => { const d = Math.hypot(x - 7.5, y - 7.5); return d < 7 ? (d < 1.3 ? '#1d1d21' : d < 2.8 ? '#3fb4f5' : (Math.round(d * 1.3) % 2 ? '#2a2a32' : '#16161c')) : null; },
+    disco2: (x, y) => { const d = Math.hypot(x - 7.5, y - 7.5); return d < 7 ? (d < 1.3 ? '#1d1d21' : d < 2.8 ? '#ffd23a' : (Math.round(d * 1.3) % 2 ? '#2a2a32' : '#16161c')) : null; },
+    chuleta: (x, y) => { const d = Math.hypot((x - 7) / 1.2, (y - 8) / .9); return d < 5 ? (d > 4 ? '#f4f0e0' : ((x + y) % 4 === 0 ? '#ffd0d8' : '#f07a8a')) : (x >= 11 && x <= 13 && y >= 9 && y <= 10) ? '#f4f0e0' : null; },
+    chuletaA: (x, y) => { const d = Math.hypot((x - 7) / 1.2, (y - 8) / .9); return d < 5 ? (d > 4 ? '#e8d8b0' : ((x + y) % 4 === 0 ? '#e0a050' : '#a0581a')) : (x >= 11 && x <= 13 && y >= 9 && y <= 10) ? '#e8d8b0' : null; },
+    pescadoA: (x, y) => { const d = Math.hypot((x - 7) / 1.6, y - 8); if (x > 11 && Math.abs(y - 8) < x - 10) return '#8a5a2a'; if (x === 4 && y === 7) return '#1d1d21'; return d < 3.2 ? (y < 8 ? '#c8803a' : '#e8b060') : null; },
+    pezT: (x, y) => { const d = Math.hypot((x - 7) / 1.5, (y - 8) * 1.1); if (x > 11 && Math.abs(y - 8) < x - 10) return '#ffd23a'; if (x === 4 && y === 7) return '#1d1d21'; return d < 3.4 ? ((x === 6 || x === 9) ? '#ffffff' : '#ff8a2e') : null; },
     corona: (x, y) => (y >= 9 && y <= 12 && x >= 2 && x <= 13) || (y >= 4 && y < 9 && [2, 3, 7, 8, 12, 13].includes(x) && y > (x === 7 || x === 8 ? 3 : 5)) ? ((x + y) % 4 ? '#ffd23a' : '#b8860b') : (y === 10 && (x === 5 || x === 10)) ? '#e03a2a' : null,
   });
   for (let k = 0; k < 4; k++) { PINTA['zanahoria' + k] = cultivo('#5fae38', '#ff8a1a')(k); PINTA['papa' + k] = cultivo('#4c9a3a', '#c8a060')(k); }
@@ -848,7 +890,7 @@ TELAS.forEach(([n, c], k) => PINTA['tela' + k] = tela(c));
   for (let m = 0; m < 4; m++) for (let p = 0; p < 4; p++) PINTA['arm' + (m * 4 + p)] = (x, y) => FORMA_ARM[p](x, y) ? ((x + y) % 5 === 0 || y === 2 || y === 3 && p === 0 ? ARM_C[m][1] : ARM_C[m][0]) : null; }
 TILES.forEach((n, i) => dibujarTile(i, PINTA[n]));
 // estilo propio: cada bloque entero lleva un bisel (luz arriba-izquierda, sombra abajo-derecha), como una pieza de juguete
-const BISEL = ['generadorCostado', 'generadorArriba', 'henoCostado', 'henoArriba', 'piedraAbismo', 'hielo', 'mesaEncCostado', 'pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'madera', 'ladrillo', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cofreArriba', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'aradaArriba', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control', 'camaArriba', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8'];
+const BISEL = ['coral0', 'coral1', 'coral2', 'hornoCostado', 'hornoArriba', 'colmenaCostado', 'tocadiscosCostado', 'generadorCostado', 'generadorArriba', 'henoCostado', 'henoArriba', 'piedraAbismo', 'hielo', 'mesaEncCostado', 'pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'madera', 'ladrillo', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cofreArriba', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'aradaArriba', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control', 'camaArriba', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8'];
 function biselar(n) { const tx = n % 8, ty = Math.floor(n / 8), im = ag.getImageData(tx * 16, ty * 16, 16, 16), d = im.data;
   for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const k = (y * 16 + x) * 4; if (d[k + 3] < 128) continue; let f = 0;
     if (x + y < 3) f = .4; else if (x === 0 || y === 0) f = .26; else if (x === 15 || y === 15) f = -.3; else if (x === 1 || y === 1) f = .1; else if (x === 14 || y === 14) f = -.12;
@@ -1010,7 +1052,7 @@ function fisica(dt) {
   const fx = Math.floor(J.x), fz = Math.floor(J.z);
   const enAgua = get(fx, Math.floor(J.y + .4), fz) === B.AGUA, enEsc = [get(fx, Math.floor(J.y), fz), get(fx, Math.floor(J.y + 1), fz)].some(t => t === B.ESCALERA || (DEF[t] && DEF[t].trepar));
   corriendo = !volando && !enAgua && (teclas.ControlLeft || Math.hypot(mov.x, mov.y) > .97) && mov.y < -.4;
-  const vel = (volando ? 8 * (J.velVuelo || 1) : enAgua ? 2.8 : corriendo ? 6.6 : 4.6) * (volando ? 1 : REG.vel * (J.velPocion || 1)), f = -mov.y, l = mov.x, s = Math.sin(J.yaw), c = Math.cos(J.yaw);
+  const vel = (volando ? 8 * (J.velVuelo || 1) : enAgua ? 2.8 * (J.nado || 1) : (corriendo ? 6.6 : 4.6) * (J.velMonta || 1)) * (volando ? 1 : REG.vel * (J.velPocion || 1)), f = -mov.y, l = mov.x, s = Math.sin(J.yaw), c = Math.cos(J.yaw);
   const tx = (-s * f + c * l) * vel, tz = (-c * f - s * l) * vel;
   J.vx += (tx - J.vx) * Math.min(1, dt * 12); J.vz += (tz - J.vz) * Math.min(1, dt * 12);
   if (volando) J.vy += (((saltando ? 7 : 0) - (bajando ? 7 : 0)) - J.vy) * Math.min(1, dt * 10);
@@ -1138,7 +1180,7 @@ function guardarAjustes() { try { localStorage.setItem('bloquesAjustes', JSON.st
 const $ = id => document.getElementById(id);
 let inv = {}, barra = [], sel = 0, cofres = {}, stats = { rotos: {}, hechos: {}, cofres: 0 }, mision = 0;
 const BARRA_CREATIVO = [B.MADERA, B.ADOQUIN, B.LADRILLO, B.VIDRIO, B.TRONCO, B.PUERTA, B.ANTORCHA, B.TELA + 1, B.ESCALERA];
-const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PANEL, B.VALLA, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, B.CAMA, B.FAROL, B.CARTEL, B.META, B.CONTROL, B.BOTON, B.PALANCA, B.PLACA, B.TNT, B.TNT_G, B.SILLA, B.MESA, B.SOFA, B.LAMPARA_P, B.CUADRO, B.TELE, B.CALABAZA, B.CALABAZA_F, B.TELARANA, B.LAPIDA, B.HUEVO, B.HUEVO + 1, B.HUEVO + 2, I.HUESO, I.PESCADO, I.MONTURA, I.ARMADURA_D, B.HOJAS_SELVA, B.HOJAS_PINO, B.ENREDADERA, B.HIELO, B.NENUFAR, B.ARBUSTO_SECO, B.HENO, B.MESA_ENC, B.BROTE, B.GENERADOR, B.PORTAL, B.PIEDRA_ABISMO, B.MAGMA, B.CRISTAL_OSC_M, I.ZANAHORIA_I, I.PAPA_I, I.PAPA_A, I.ARCO, I.FLECHA, I.CANA, ...Array.from({ length: 16 }, (_, k) => I.ARM + k), I.POCION, I.POCION + 1, I.POCION + 2, I.POCION + 3, I.PICO_E, I.ESP_E, B.LADRILLO_P, B.MADERA_O, B.MADERA_C, B.MARMOL, ...TELAS.map((t, k) => B.ALFOMBRA + k), B.PASTO_ALTO, B.FLOR_R, B.FLOR_A, I.SEMILLAS, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
+const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PANEL, B.VALLA, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, B.CAMA, B.FAROL, B.CARTEL, B.META, B.CONTROL, B.BOTON, B.PALANCA, B.PLACA, B.TNT, B.TNT_G, B.SILLA, B.MESA, B.SOFA, B.LAMPARA_P, B.CUADRO, B.TELE, B.CALABAZA, B.CALABAZA_F, B.TELARANA, B.LAPIDA, B.HUEVO, B.HUEVO + 1, B.HUEVO + 2, I.HUESO, I.PESCADO, I.MONTURA, I.ARMADURA_D, B.HOJAS_SELVA, B.HOJAS_PINO, B.ENREDADERA, B.HIELO, B.NENUFAR, B.ARBUSTO_SECO, B.HENO, B.MESA_ENC, B.BROTE, B.GENERADOR, B.CORAL, B.CORAL + 1, B.CORAL + 2, B.HORNO, B.COLMENA, B.RIEL, B.TOCADISCOS, I.BOTE, I.VAGONETA, I.COHETE, I.DISCO, I.DISCO + 1, I.DISCO + 2, I.TINTA, I.MIEL, I.CHULETA, I.CHULETA_A, I.PESCADO_A, I.PEZ_T, B.PORTAL, B.PIEDRA_ABISMO, B.MAGMA, B.CRISTAL_OSC_M, I.ZANAHORIA_I, I.PAPA_I, I.PAPA_A, I.ARCO, I.FLECHA, I.CANA, ...Array.from({ length: 16 }, (_, k) => I.ARM + k), I.POCION, I.POCION + 1, I.POCION + 2, I.POCION + 3, I.PICO_E, I.ESP_E, B.LADRILLO_P, B.MADERA_O, B.MADERA_C, B.MARMOL, ...TELAS.map((t, k) => B.ALFOMBRA + k), B.PASTO_ALTO, B.FLOR_R, B.FLOR_A, I.SEMILLAS, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
 const RECETAS = [
   [[B.MADERA, 4], [[B.TRONCO, 1]]], [[I.PALO, 4], [[B.MADERA, 2]]], [[B.ANTORCHA, 4], [[I.PALO, 1], [I.CARBON, 1]]],
   [[I.PICO1, 1], [[B.MADERA, 3], [I.PALO, 2]]], [[I.PICO2, 1], [[B.ADOQUIN, 3], [I.PALO, 2]]], [[I.PICO3, 1], [[I.HIERRO, 3], [I.PALO, 2]]], [[I.PICO4, 1], [[I.CRISTAL, 3], [I.PALO, 2]]],
@@ -1150,6 +1192,8 @@ const RECETAS = [
   [[I.PAN, 1], [[I.TRIGO_I, 3]]], [[B.CAMA, 1], [[B.TELA, 3], [B.MADERA, 3]]], [[B.BOTON, 1], [[B.ADOQUIN, 1]]], [[B.PALANCA, 1], [[I.PALO, 1], [B.ADOQUIN, 1]]], [[B.PLACA, 1], [[B.ADOQUIN, 2]]], [[B.TNT, 1], [[B.ARENA, 4], [I.CARBON, 2]]], [[B.TNT_G, 1], [[B.TNT, 4]]], [[B.SILLA, 1], [[B.MADERA, 3]]], [[B.MESA, 1], [[B.MADERA, 4]]], [[B.SOFA, 1], [[B.TELA + 1, 3], [B.MADERA, 2]]], [[B.LAMPARA_P, 1], [[I.PALO, 2], [B.ANTORCHA, 1]]], [[B.CUADRO, 1], [[I.PALO, 4], [B.TELA, 1]]], [[B.TELE, 1], [[I.HIERRO, 2], [B.VIDRIO, 1]]], [[B.CALABAZA_F, 1], [[B.CALABAZA, 1], [B.ANTORCHA, 1]]], [[I.MONTURA, 1], [[B.TELA, 3], [I.HIERRO, 1]]], [[I.ARMADURA_D, 1], [[I.HIERRO, 6], [I.ORO, 2]]], ...[B.TELA, I.HIERRO, I.ORO, I.CRISTAL].flatMap((mat, m) => [5, 8, 7, 4].map((n, p) => [[I.ARM + m * 4 + p, 1], [[mat, n]]])), [[I.ARCO, 1], [[I.PALO, 3], [B.TELA, 2]]], [[I.FLECHA, 4], [[I.PALO, 1], [B.ADOQUIN, 1]]], [[I.CANA, 1], [[I.PALO, 3], [B.TELA, 1]]], [[I.PAPA_A, 2], [[I.PAPA_I, 2], [I.CARBON, 1]]], [[B.HENO, 1], [[I.TRIGO_I, 9]]], [[I.POCION, 1], [[B.VIDRIO, 1], [I.TRIGO_I, 3]]], [[I.POCION + 1, 1], [[B.VIDRIO, 1], [I.POLLO, 1]]], [[I.POCION + 2, 1], [[B.VIDRIO, 1], [I.MANZANA, 1], [I.ORO, 1]]], [[I.POCION + 3, 1], [[B.VIDRIO, 1], [I.CARNE, 1], [I.CRISTAL, 1]]], [[B.MESA_ENC, 1], [[I.CRISTAL, 2], [I.ORO, 2], [B.ESTANTE, 1]]], [[B.PORTAL, 1], [[I.CRISTAL, 4], [I.ORO, 4], [B.TNT, 1]]], [[B.FAROL, 1], [[I.HIERRO, 1], [B.ANTORCHA, 1]]],
   [[B.LADRILLO_P, 4], [[B.PIEDRA, 4]]], [[B.MADERA_O, 4], [[B.TRONCO, 1], [I.CARBON, 1]]], [[B.MADERA_C, 4], [[B.TRONCO, 1], [B.ARENA, 1]]], [[B.MARMOL, 2], [[B.ARENA, 2], [B.PIEDRA, 2]]],
   ...TELAS.map((t, k) => [[B.ALFOMBRA + k, 3], [[B.TELA + k, 2]]]), [[I.CARNE_A, 2], [[I.CARNE, 2], [I.CARBON, 1]]], [[I.POLLO_A, 2], [[I.POLLO, 2], [I.CARBON, 1]]],
+  [[I.CHULETA_A, 2], [[I.CHULETA, 2], [I.CARBON, 1]]], [[I.PESCADO_A, 2], [[I.PESCADO, 2], [I.CARBON, 1]]], [[B.HORNO, 1], [[B.ADOQUIN, 8]]], [[I.BOTE, 1], [[B.MADERA, 5]]], [[B.RIEL, 16], [[I.HIERRO, 6], [I.PALO, 1]]], [[I.VAGONETA, 1], [[I.HIERRO, 5]]],
+  [[B.TOCADISCOS, 1], [[B.MADERA, 8], [I.CRISTAL, 1]]], [[I.COHETE, 3], [[I.CARBON, 1], [I.PALO, 1]]], [[B.TELA + 8, 1], [[B.TELA, 1], [I.TINTA, 1]]],
   [[B.TELA, 2], [[B.HOJAS, 4]]], ...TELAS.slice(1).map((t, k) => [[B.TELA + k + 1, 1], [[B.TELA, 1]]]),
 ];
 const creativo = () => modoJuego === 'creativo';
@@ -1538,12 +1582,13 @@ domo.renderOrder = -1; escena.add(domo);
 function cielo() {
   const k = oscuridad(), c = k < .5 ? C_DIA.clone().lerp(C_TARDE, k * 2) : C_TARDE.clone().lerp(C_NOCHE, (k - .5) * 2);
   const bajo = get(Math.floor(J.x), Math.floor(J.y + OJOS), Math.floor(J.z)) === B.AGUA && jugando;
-  const niebla = bajo ? C_AGUA.clone().lerp(C_NOCHE, k * .8) : c;
+  const cl = window.climaLuz || 1, gris = new THREE.Color('#6a7488');
+  const niebla = bajo ? C_AGUA.clone().lerp(C_NOCHE, k * .8) : (cl < 1 ? c.clone().lerp(gris.clone().lerp(C_NOCHE, k), (1 - cl) * 1.6) : c);
   render.setClearColor(niebla); escena.fog.color.copy(niebla); U.uNiebla.value.copy(niebla);
-  const arriba = bajo ? niebla : (k < .5 ? A_DIA.clone().lerp(A_TARDE, k * 2) : A_TARDE.clone().lerp(A_NOCHE, (k - .5) * 2));
+  let arriba = bajo ? niebla : (k < .5 ? A_DIA.clone().lerp(A_TARDE, k * 2) : A_TARDE.clone().lerp(A_NOCHE, (k - .5) * 2)); if (cl < 1 && !bajo) arriba = arriba.clone().lerp(niebla, (1 - cl) * 1.8);
   domo.material.uniforms.uArriba.value.copy(arriba); domo.material.uniforms.uHorizonte.value.copy(niebla); domo.position.copy(cam.position);
-  U.uCerca.value = bajo ? 2 : DIST[AJ.dist][0]; U.uLejos.value = bajo ? 16 : DIST[AJ.dist][1]; escena.fog.near = U.uCerca.value; escena.fog.far = U.uLejos.value;
-  U.uDia.value = 1 - k * .86; hemi.intensity = .75 - k * .55; sol.intensity = .55 - k * .45;
+  U.uCerca.value = bajo ? 2 : DIST[AJ.dist][0]; U.uLejos.value = bajo ? 16 : DIST[AJ.dist][1] * (cl < 1 ? .55 + cl * .45 : 1); escena.fog.near = U.uCerca.value; escena.fog.far = U.uLejos.value;
+  U.uDia.value = (1 - k * .86) * cl; hemi.intensity = (.75 - k * .55) * cl; sol.intensity = (.55 - k * .45) * cl;
   $('bajoAgua').hidden = !bajo;
 }
 
@@ -1659,7 +1704,7 @@ function entrarMundo(id) {
   const meta = leerLista().find(m => m.id === id); if (!meta) return;
   mundoId = id; mundoNombre = meta.nombre; modoJuego = meta.modo;
   REG = Object.assign({}, REG_BASE); if (typeof modsCargar === 'function') modsCargar(datos && datos.extra2, meta);
-  ponerTamano(meta.tam || 160); window.mundoTipo = meta.tipo || '';
+  ponerTamano(meta.tam || 160); window.mundoTipo = meta.tipo || ''; window.genVersion = meta.gen || 1;
   prepararMundo(meta.semilla, meta.ejemplo);
   inv = {}; barra = modoJuego === 'creativo' ? BARRA_CREATIVO.slice() : Array(9).fill(0); sel = 0; cofres = {}; stats = { rotos: {}, hechos: {}, cofres: 0 }; mision = 0; tiempo = 0; vida = 20; hambre = 20; volando = false;
   Object.assign(J, { x: spawn.x, y: spawn.y, z: spawn.z, vx: 0, vy: 0, vz: 0, yaw: spawn.yaw ?? .6, pitch: -.15 });
@@ -1678,7 +1723,7 @@ function entrarMundo(id) {
 const SEMILLA_EJEMPLO = 20261024;
 function crearMundo(modo, ejemplo = false) {
   const lista = leerLista(), id = Date.now().toString(36), n = lista.length + 1;
-  lista.unshift({ id, nombre: 'Mundo ' + n, num: n, modo, ejemplo, tam: ejemplo ? 160 : (window.tamNuevo || 160), semilla: ejemplo ? SEMILLA_EJEMPLO : (Math.random() * 2147483647) | 0, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0 });
+  lista.unshift({ id, nombre: 'Mundo ' + n, num: n, modo, ejemplo, tam: ejemplo ? 160 : (window.tamNuevo || 160), semilla: ejemplo ? SEMILLA_EJEMPLO : (Math.random() * 2147483647) | 0, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0, gen: 2 });
   localStorage.setItem('bloquesMundos', JSON.stringify(lista));
   pantallaCompleta(); entrarMundo(id);
 }
@@ -1942,6 +1987,10 @@ window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMun
 <script src="copia.js"></script>
 <script src="logros.js"></script>
 <script src="multijugador.js"></script>
+<script src="mar.js"></script>
+<script src="granja.js"></script>
+<script src="transporte.js"></script>
+<script src="clima.js"></script>
 <script src="nativo.js"></script>
 </body>
 </html>

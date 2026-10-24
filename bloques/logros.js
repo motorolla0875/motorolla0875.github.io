@@ -118,4 +118,4 @@ $('logrosCerrar').onclick = () => { $('logrosCapa').hidden = true; if (logrosDes
 { const f = crecerArbol; crecerArbol = function (i) { const r = f(i); if (r) lgSumar('arbol'); return r; }; }
 setInterval(() => { if (jugando && mapa.oleadas && typeof ola !== 'undefined' && ola.n > lgCuenta('ola')) { LG.c.ola = ola.n; guardarLG(); revisarLogros(); } }, 1000);
 $('tratoLista').addEventListener('click', () => { const antes = JSON.stringify(inv); setTimeout(() => { if (JSON.stringify(inv) !== antes) lgSumar('trato'); }, 0); }, true);
-window.__lg = { LOGROS, LG, abrirLogros, revisarLogros, lgSumar };
+window.__lg = { LOGROS, LG, abrirLogros, revisarLogros, sumar: lgSumar };

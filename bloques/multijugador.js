@@ -172,7 +172,7 @@ function recibir(m) {
     case 'b': return aplicarBloques(m.c || []);
     case 'f': return fraseDe(m.id, m.k);
     case 'm': return bichosDelDueno(m.l || []);
-    case 'h': if (MP.invitado) { tiempo = m.tiempo; REG.hora = m.hora || REG.hora; } return;
+    case 'h': if (MP.invitado) { tiempo = m.tiempo; REG.hora = m.hora || REG.hora; window.climaRemoto = m.clima || 'sol'; } return;
     case 'g': if (MP.dueno) golpeDeInvitado(m); return;
     case 'uno': if (m.tipo === 'drop' && Array.isArray(m.items)) for (const [id, n] of m.items) darItem(id, n); return;
     case 'skin': { const j = MP.jug.get(m.id); if (j) { j.skin = m.skin; rearmarAvatar(j); } return; }
@@ -184,7 +184,7 @@ function mandarMundo(para) {
   guardar(); let datos = null; try { datos = JSON.parse(localStorage.getItem('bloquesMundo_' + mundoId)); } catch (e) {}
   const meta = leerLista().find(x => x.id === mundoId); if (!datos || !meta) return;
   datos.animales = []; datos.inv = {}; datos.barra = null; datos.cofres = {}; datos.stats = null; datos.mision = 0; datos.extra = null;
-  mpEnviar({ t: 'mundo', para, meta: { tam: meta.tam || 160, semilla: meta.semilla, tipo: meta.tipo || '', modo: meta.modo, ejemplo: !!meta.ejemplo, nombre: TR('mundoDe', { n: miNombre }) }, datos, pos: { x: J.x + 1.2, y: J.y + .2, z: J.z + 1.2, yaw: J.yaw }, permiso: MP.permiso, dueno: miNombre });
+  mpEnviar({ t: 'mundo', para, meta: { tam: meta.tam || 160, semilla: meta.semilla, gen: meta.gen || 1, tipo: meta.tipo || '', modo: meta.modo, ejemplo: !!meta.ejemplo, nombre: TR('mundoDe', { n: miNombre }) }, datos, pos: { x: J.x + 1.2, y: J.y + .2, z: J.z + 1.2, yaw: J.yaw }, permiso: MP.permiso, dueno: miNombre });
 }
 // ─── el invitado entra ───
 function empezarVisita(m) {
@@ -200,7 +200,7 @@ function cargarMundoRemoto(m) {
   let visita = {}; try { visita = JSON.parse(localStorage.getItem(MP.clave) || '{}') || {}; } catch (e) {}
   const datos = m.datos; Object.assign(datos, { J: m.pos, inv: visita.inv || {}, barra: visita.barra || null, sel: 0, vida: visita.vida || 20, hambre: visita.hambre ?? 20, volando: false, cofres: {}, stats: { rotos: {}, hechos: {}, cofres: 0 } });
   const lista = leerLista().filter(x => x.id !== 'enlinea');
-  lista.push({ id: 'enlinea', enLinea: true, nombre: m.meta.nombre, num: 0, modo: MP.permiso ? m.meta.modo : 'aventura', tipo: m.meta.tipo, tam: m.meta.tam, semilla: m.meta.semilla, ejemplo: m.meta.ejemplo, importado: true, creado: Date.now(), fecha: 0, dia: 1, bloques: 0 });
+  lista.push({ id: 'enlinea', enLinea: true, nombre: m.meta.nombre, num: 0, modo: MP.permiso ? m.meta.modo : 'aventura', tipo: m.meta.tipo, tam: m.meta.tam, semilla: m.meta.semilla, gen: m.meta.gen || 1, ejemplo: m.meta.ejemplo, importado: true, creado: Date.now(), fecha: 0, dia: 1, bloques: 0 });
   try { localStorage.setItem('bloquesMundos', JSON.stringify(lista)); localStorage.setItem('bloquesMundo_enlinea', JSON.stringify(datos)); } catch (e) { aviso(TR('noGuardar'), 2000); return; }
   for (const c of ['inicio', 'mundos', 'nuevo', 'mpCapa', 'copiaCapa', 'logrosCapa']) if ($(c)) $(c).hidden = true;
   pantallaCompleta(); entrarMundo('enlinea');
@@ -363,7 +363,7 @@ function mpFrame(dt) {
     if (k !== ultEnvio || Math.random() < .05) { ultEnvio = k; mpEnviar(e); } }
   if (MP.dueno && jugando) {
     mpBichT -= dt; if (mpBichT <= 0) { mpBichT = .2; if (MP.jug.size) mpEnviar({ t: 'm', l: fotoBichos() }); }
-    mpHoraT -= dt; if (mpHoraT <= 0) { mpHoraT = 2; if (MP.jug.size) mpEnviar({ t: 'h', tiempo, hora: REG.hora }); }
+    mpHoraT -= dt; if (mpHoraT <= 0) { mpHoraT = 2; if (MP.jug.size) mpEnviar({ t: 'h', tiempo, hora: REG.hora, clima: window.climaTipo || 'sol' }); }
     mpColaT -= dt; if (mpColaT <= 0) { mpColaT = .15; if (MP.cola.length) { mpEnviar({ t: 'b', c: MP.cola }); MP.cola = []; } }
   }
   // mover suave a los demás jugadores
