@@ -9,7 +9,8 @@
   .capa { background-color: #13205a; background-image: linear-gradient(#24378f, #0d153d); }
   .capa.trans { background-color: rgba(10,16,48,.62); }
   .titulo { font-weight: 800; font-style: italic; color: #ffe14a; letter-spacing: 1px; text-shadow: 3px 3px 0 #1b2a6b, 6px 6px 0 #0d153d; line-height: 1.05; }
-  .sub { color: #fff; transform: none; text-shadow: 0 2px 0 #0d153d; font-size: 16px; }
+  .lema { font-weight: 800; font-size: clamp(16px, 2.8vw, 22px); color: #fff; letter-spacing: 3px; text-shadow: 0 3px 0 #0d153d; margin: -10px 0 2px; text-align: center; }
+  .sub { color: #fff; transform: none; text-shadow: 0 2px 0 #0d153d; font-size: 15px; margin-bottom: 6px; }
   .texto { color: #e8ecff; text-shadow: 0 2px 0 #0d153d; font-size: 14px; }
   .btn { font: 800 18px 'Baloo 2', 'Trebuchet MS', sans-serif; border-radius: 12px; border: 3px solid #0d153d; background: linear-gradient(#4a7cff, #2a4fd0); box-shadow: 0 4px 0 #0d153d, inset 0 2px 0 rgba(255,255,255,.35); text-shadow: 0 2px 0 #0d153d; padding: 8px 0 6px; }
   .btn small { color: #dfe6ff; font-weight: 600; }
