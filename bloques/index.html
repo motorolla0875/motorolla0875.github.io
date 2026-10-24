@@ -124,12 +124,14 @@
   <div class="sub" data-i="sub"></div>
   <div class="btn" id="bJugar" data-i="jugar"></div>
   <div class="btn" id="bAjustes1" data-i="ajustes"></div>
+  <div class="btn" id="bModsHome" data-i="modsBtn"></div>
   <div class="btn" id="bCreditos" data-i="creditos"></div>
 </div>
 <div class="capa" id="mundos" hidden>
   <div class="titulo" style="font-size:clamp(28px,6vw,44px)" data-i="misMundos"></div>
   <div id="listaMundos"></div>
   <div class="btn" id="bNuevo" data-i="crearMundo"></div>
+  <div class="btn" id="bCargarArchivo" data-ih="cargarArchivoBtn"></div>
   <div class="btn" id="bVolverInicio" data-i="volver"></div>
 </div>
 <div class="capa" id="nuevo" hidden>
@@ -144,6 +146,7 @@
   <div class="btn" id="bSeguir" data-i="seguir"></div>
   <div class="btn" id="bAjustes2" data-i="ajustes"></div>
   <div class="btn" id="bVideo" data-ih="videoBtn"></div>
+  <div class="filaBtn"><div class="btn" id="bCompartirMundo" data-i="compartirMundo"></div><div class="btn" id="bOpcionesMundo" data-i="opcionesMundo"></div></div>
   <div class="btn" id="bSalir" data-i="salir"></div>
 </div>
 <div class="capa trans" id="ajustes" hidden>
@@ -196,10 +199,10 @@
 // ═════════ MUNDO ═════════
 const SX = 160, SY = 48, SZ = 160, CH = 16, SEA = 15, N = SX * SY * SZ;
 const NCX = SX / CH, NCZ = SZ / CH;
-const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41, /* 41..56 */ ESC_INV: 57, /* 57..72 */ LOSA_ARR: 73, /* 73..76 */ TRONCO_X: 77, TRONCO_Z: 78, VALLA: 79, PANEL: 80, PASTO_ALTO: 81, FLOR_R: 82, FLOR_A: 83, ARADA: 84, TRIGO: 85, /* 85..88 */ CAMA: 140, ALFOMBRA: 141, /* 141..149 */ FAROL: 150, LADRILLO_P: 151, MADERA_O: 152, MADERA_C: 153, MARMOL: 154 };
+const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41, /* 41..56 */ ESC_INV: 57, /* 57..72 */ LOSA_ARR: 73, /* 73..76 */ TRONCO_X: 77, TRONCO_Z: 78, VALLA: 79, PANEL: 80, PASTO_ALTO: 81, FLOR_R: 82, FLOR_A: 83, ARADA: 84, TRIGO: 85, /* 85..88 */ CAMA: 140, ALFOMBRA: 141, /* 141..149 */ FAROL: 150, LADRILLO_P: 151, MADERA_O: 152, MADERA_C: 153, MARMOL: 154, CARTEL: 155, META: 156, CONTROL: 157 /* 160..239: bloques de mods */ };
 const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123, CARNE: 105, CARNE_A: 106, POLLO: 107, POLLO_A: 108, MANZANA: 109, SEMILLAS: 130, TRIGO_I: 131, PAN: 132 };
 // dibujos (16x16) del atlas
-const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4', 'carne', 'carneAsada', 'pollo', 'polloAsado', 'manzana', 'pastoAlto', 'florRoja', 'florAmarilla', 'aradaArriba', 'trigo0', 'trigo1', 'trigo2', 'trigo3', 'semillas', 'trigoItem', 'pan', 'camaArriba', 'camaCostado', 'farol', 'ladrilloP', 'maderaO', 'maderaC', 'marmol'];
+const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4', 'carne', 'carneAsada', 'pollo', 'polloAsado', 'manzana', 'pastoAlto', 'florRoja', 'florAmarilla', 'aradaArriba', 'trigo0', 'trigo1', 'trigo2', 'trigo3', 'semillas', 'trigoItem', 'pan', 'camaArriba', 'camaCostado', 'farol', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control'];
 const TL = {}; TILES.forEach((n, i) => TL[n] = i);
 const TELAS = [['Blanca', '#e9ecec'], ['Roja', '#a12722'], ['Naranja', '#f07613'], ['Amarilla', '#f8c527'], ['Verde', '#5e7c16'], ['Celeste', '#3aafd9'], ['Azul', '#35399d'], ['Violeta', '#7e2fbe'], ['Negra', '#1d1d21']];
 // definición de bloques: dibujos [arriba, abajo, costados], dureza (segundos a mano), pico necesario, qué suelta, etc.
@@ -262,6 +265,10 @@ def(B.LADRILLO_P, 'Ladrillo de piedra', [TL.ladrilloP], { dur: 4, req: 1, color:
 def(B.MADERA_O, 'Madera oscura', [TL.maderaO], { dur: 2, color: '#5a3a1e' });
 def(B.MADERA_C, 'Madera clara', [TL.maderaC], { dur: 2, color: '#d8c48a' });
 def(B.MARMOL, 'Mármol', [TL.marmol], { dur: 3, req: 1, color: '#eeeae4' });
+// para crear mapas: cartel con texto, meta (fin del mapa) y punto de control
+def(B.CARTEL, 'Cartel', [TL.madera], { dur: .6, trans: true, forma: [[0, .35, .4375, 1, 1, .5625], [.4375, 0, .4375, .5625, .35, .5625]], icono: [[0, .35, .4375, 1, 1, .5625], [.4375, 0, .4375, .5625, .35, .5625]], color: '#a7834f' });
+def(B.META, 'Meta', [TL.meta], { dur: .5, luz: 10, color: '#fcee4b' });
+def(B.CONTROL, 'Punto de control', [TL.control], { dur: .5, luz: 6, color: '#5fd068' });
 const esCultivo = t => t >= B.TRIGO && t <= B.TRIGO + 3, reemplazable = t => t === B.AIRE || t === B.AGUA || (t > 0 && DEF[t].planta && !esCultivo(t));
 function formaDe(t, x, y, z, choque) {
   const d = DEF[t]; if (!d.conecta) return d.forma;
@@ -609,6 +616,8 @@ const PINTA = {
   maderaO: (x, y, r, e) => { if (y % 4 === 3) return '#2e1d0e'; if (x === (Math.floor(y / 4) % 2 ? 4 : 11)) return '#3d2814'; return e(['#5a3a1e', '#52351b', '#623f21']); },
   maderaC: (x, y, r, e) => { if (y % 4 === 3) return '#a8925a'; if (x === (Math.floor(y / 4) % 2 ? 4 : 11)) return '#bfa86c'; return e(['#d8c48a', '#d0bb80', '#e0cc94']); },
   marmol: (x, y, r, e) => (Math.abs((x * 2 + y * 3) % 23 - 11) < 1 && r() < .8) ? '#cfc8c0' : e(['#f2eee8', '#eeeae4', '#f6f3ee', '#e8e3dc']),
+  meta: (x, y) => (x === 0 || y === 0 || x === 15 || y === 15) ? '#c49a1c' : (Math.floor(x / 4) + Math.floor(y / 4)) % 2 ? '#1d1d21' : '#f4f4f4',
+  control: (x, y, r) => { const d = Math.hypot(x - 7.5, y - 7.5); return d < 2.2 ? '#b8ffb0' : d < 4.6 ? '#3fbf4a' : d < 5.6 ? '#2a8a33' : piedraC(r); },
   pastoAlto: (x, y) => { const alto = 5 + Math.floor(h3(x, 1, 0, 21) * 10); return h3(x, 2, 0, 21) < .72 && y >= 16 - alto ? (y < 16 - alto + 2 ? '#8ad458' : (x + y) % 3 ? '#5fae38' : '#4c962d') : null; },
   florRoja: (x, y) => { if ((x === 7 || x === 8) && y >= 8) return '#3f8a2e'; if (y === 11 && (x === 5 || x === 6 || x === 9 || x === 10)) return '#4cae38'; const d = Math.hypot(x - 7.5, y - 5); return d < 1.3 ? '#ffd84a' : d < 3.3 ? (x < 7 ? '#ff5a4a' : '#d42a2a') : null; },
   florAmarilla: (x, y) => { if ((x === 7 || x === 8) && y >= 8) return '#3f8a2e'; if (y === 12 && (x === 5 || x === 6 || x === 9 || x === 10)) return '#4cae38'; const d = Math.hypot(x - 7.5, y - 5.5); return d < 1.2 ? '#e8902a' : d < 3.2 ? (y < 5 ? '#fff27a' : '#f5d020') : null; },
@@ -771,18 +780,21 @@ function tope(x, y, z, an = ANCHO, al = ALTO) {
 }
 const choca = (x, y, z, an = ANCHO, al = ALTO) => tope(x, y, z, an, al) > -Infinity;
 const teclas = {}; let mov = { x: 0, y: 0 };
+// reglas del mundo (las cambian las opciones del mapa y los mods)
+const REG_BASE = { grav: 1, salto: 1, vel: 1, monstruos: 1, hora: 'normal', caida: true, hambre: true };
+let REG = Object.assign({}, REG_BASE);
 let corriendo = false;
 function fisica(dt) {
   const fx = Math.floor(J.x), fz = Math.floor(J.z);
   const enAgua = get(fx, Math.floor(J.y + .4), fz) === B.AGUA, enEsc = get(fx, Math.floor(J.y), fz) === B.ESCALERA || get(fx, Math.floor(J.y + 1), fz) === B.ESCALERA;
   corriendo = !volando && !enAgua && (teclas.ControlLeft || Math.hypot(mov.x, mov.y) > .97) && mov.y < -.4;
-  const vel = volando ? 8 : enAgua ? 2.8 : corriendo ? 6.6 : 4.6, f = -mov.y, l = mov.x, s = Math.sin(J.yaw), c = Math.cos(J.yaw);
+  const vel = (volando ? 8 : enAgua ? 2.8 : corriendo ? 6.6 : 4.6) * (volando ? 1 : REG.vel), f = -mov.y, l = mov.x, s = Math.sin(J.yaw), c = Math.cos(J.yaw);
   const tx = (-s * f + c * l) * vel, tz = (-c * f - s * l) * vel;
   J.vx += (tx - J.vx) * Math.min(1, dt * 12); J.vz += (tz - J.vz) * Math.min(1, dt * 12);
   if (volando) J.vy += (((saltando ? 7 : 0) - (bajando ? 7 : 0)) - J.vy) * Math.min(1, dt * 10);
   else if (enEsc) J.vy = (saltando || mov.y < -.3) ? 3.2 : -2;
   else if (enAgua) { J.vy -= 9 * dt; if (J.vy < -2.5) J.vy = -2.5; if (saltando) J.vy = 3.4; }
-  else { J.vy -= 26 * dt; if (J.vy < -30) J.vy = -30; if (saltando && J.suelo) { J.vy = 8.6; J.suelo = false; } }
+  else { J.vy -= 26 * REG.grav * dt; if (J.vy < -30) J.vy = -30; if (saltando && J.suelo) { J.vy = 8.6 * Math.sqrt(REG.salto * REG.grav); J.suelo = false; } }
   const sube = J.suelo && !volando;
   // sube solo escalones de medio bloque o de un bloque
   const subir = (ax, az) => { if (!sube) return false; for (const h of [.55, 1.05]) if (!choca(ax, J.y + h, az) && !choca(J.x, J.y + h, J.z)) { J.y += h; return true; } return false; };
@@ -790,7 +802,7 @@ function fisica(dt) {
   let nz = J.z + J.vz * dt; if (!choca(J.x, J.y, nz) || subir(J.x, nz)) J.z = nz; else J.vz = 0;
   let ny = J.y + J.vy * dt; J.suelo = false;
   const tp = tope(J.x, ny, J.z);
-  if (tp === -Infinity) J.y = ny; else { if (J.vy < 0) { if (J.vy < -15 && !creativo() && !enAgua && jugando && !enEsc) lastimar(Math.round((-J.vy - 13) / 2.2), 0, 0, false); J.suelo = true; J.y = Math.max(ny, Math.min(J.y, tp)); } J.vy = 0; }
+  if (tp === -Infinity) J.y = ny; else { if (J.vy < 0) { if (J.vy < -15 * Math.sqrt(REG.salto * REG.grav) && REG.caida && !creativo() && !enAgua && jugando && !enEsc) lastimar(Math.round((-J.vy - 13) / 2.2), 0, 0, false); J.suelo = true; J.y = Math.max(ny, Math.min(J.y, tp)); } J.vy = 0; }
   if (J.y < -5) { Object.assign(J, { x: spawn.x, y: spawn.y + 1, z: spawn.z, vy: 0 }); }
   if (J.y > SY + 8) J.y = SY + 8;
   J.x = Math.max(.4, Math.min(SX - .4, J.x)); J.z = Math.max(.4, Math.min(SZ - .4, J.z));
@@ -898,7 +910,7 @@ function guardarAjustes() { try { localStorage.setItem('bloquesAjustes', JSON.st
 const $ = id => document.getElementById(id);
 let inv = {}, barra = [], sel = 0, cofres = {}, stats = { rotos: {}, hechos: {}, cofres: 0 }, mision = 0;
 const BARRA_CREATIVO = [B.MADERA, B.ADOQUIN, B.LADRILLO, B.VIDRIO, B.TRONCO, B.PUERTA, B.ANTORCHA, B.TELA + 1, B.ESCALERA];
-const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PANEL, B.VALLA, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, B.CAMA, B.FAROL, B.LADRILLO_P, B.MADERA_O, B.MADERA_C, B.MARMOL, ...TELAS.map((t, k) => B.ALFOMBRA + k), B.PASTO_ALTO, B.FLOR_R, B.FLOR_A, I.SEMILLAS, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
+const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PANEL, B.VALLA, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, B.CAMA, B.FAROL, B.CARTEL, B.META, B.CONTROL, B.LADRILLO_P, B.MADERA_O, B.MADERA_C, B.MARMOL, ...TELAS.map((t, k) => B.ALFOMBRA + k), B.PASTO_ALTO, B.FLOR_R, B.FLOR_A, I.SEMILLAS, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
 const RECETAS = [
   [[B.MADERA, 4], [[B.TRONCO, 1]]], [[I.PALO, 4], [[B.MADERA, 2]]], [[B.ANTORCHA, 4], [[I.PALO, 1], [I.CARBON, 1]]],
   [[I.PICO1, 1], [[B.MADERA, 3], [I.PALO, 2]]], [[I.PICO2, 1], [[B.ADOQUIN, 3], [I.PALO, 2]]], [[I.PICO3, 1], [[I.HIERRO, 3], [I.PALO, 2]]], [[I.PICO4, 1], [[I.CRISTAL, 3], [I.PALO, 2]]],
@@ -935,7 +947,7 @@ const slotHTML = (id, n, attr = '') => `<div class="slot${n === 0 ? ' vacio' : '
 function abrirPanel(tab) { panelTab = tab; pausado = true; soltarTodo(); $('panel').hidden = false; pintarPanel(); }
 function cerrarPanel() { $('panel').hidden = true; pausado = false; cofreAbierto = null; pintarBarra(); }
 function pintarPanel() {
-  const tabs = cofreAbierto !== null ? [['cofre', TR('tabCofre')]] : creativo() ? [['bolsa', TR('tabBloques')], ['planos', TR('tabPlanos')]] : [['bolsa', TR('tabBolsa')], ['fabricar', TR('tabFabricar')], ['planos', TR('tabPlanos')]];
+  const tabs = cofreAbierto !== null ? [['cofre', TR('tabCofre')]] : aventura() ? [['bolsa', TR('tabBolsa')]] : creativo() ? [['bolsa', TR('tabBloques')], ['planos', TR('tabPlanos')]] : [['bolsa', TR('tabBolsa')], ['fabricar', TR('tabFabricar')], ['planos', TR('tabPlanos')]];
   $('pCab').innerHTML = tabs.map(([k, n]) => `<div class="tab${panelTab === k ? ' on' : ''}" data-tab="${k}">${n}</div>`).join('') + '<div class="vTit"></div><div class="cerrar" id="pCerrar">X</div>';
   let h = '';
   if (panelTab === 'bolsa' && creativo()) h = '<h4>' + TR('tocaBloque') + '</h4><div class="grilla">' + TODOS.map(id => slotHTML(id, 1, `data-poner="${id}"`)).join('') + '</div>';
@@ -993,6 +1005,8 @@ function tocar(dir) {
   if (h && (h.b === B.PUERTA || h.b === B.PUERTA_A)) return puerta(h.x, h.y, h.z);
   const id = barra[sel];
   if (esComida(id)) return comer(id);
+  if (aventura()) { if (h && h.b === B.CARTEL && typeof verCartel === 'function') verCartel(h); return; }
+  if (h && h.b === B.CARTEL && typeof verCartel === 'function' && id !== B.CARTEL) return verCartel(h);
   if (!h) return;
   if (id === I.SEMILLAS) return plantar(h);
   if (!id) return aviso(TR('elige'), 900);
@@ -1014,6 +1028,7 @@ function tocar(dir) {
   ponerBloque(x, y, z, pone);
   if (typeof espejo === 'function') espejo(x, y, z, pone);
   if (id === B.COFRE) cofres[idx(x, y, z)] = {};
+  if (id === B.CARTEL && typeof escribirCartel === 'function') escribirCartel(idx(x, y, z));
   if (!creativo()) quitarItem(id, 1);
   golpe(pone, 1); swing = 1; revisarRefugio(); revisarMision();
 }
@@ -1075,6 +1090,7 @@ function romper(h) {
 }
 let rompiendo = null;   // { x, y, z, p }
 function seguirRompiendo(dir, dt) {
+  if (aventura()) { rompiendo = null; return; }
   const h = apuntar(dir); if (!h) { rompiendo = null; return; }
   if (!rompiendo || rompiendo.x !== h.x || rompiendo.y !== h.y || rompiendo.z !== h.z) rompiendo = { x: h.x, y: h.y, z: h.z, p: 0, espera: rompiendo ? rompiendo.espera : 0 };
   if (rompiendo.espera > 0) { rompiendo.espera -= dt; return; }
@@ -1143,7 +1159,7 @@ function lastimar(n, kx = 0, kz = 0, salto = true) {
 }
 let spawnT = 0;
 function aparecerMonstruos(dt) {
-  spawnT -= dt; if (spawnT > 0 || monstruos.length >= 7) return; spawnT = 2.5;
+  spawnT -= dt; if (!REG.monstruos || spawnT > 0 || monstruos.length >= 7 * REG.monstruos) return; spawnT = 2.5 / REG.monstruos;
   for (let n = 0; n < 8; n++) {
     const a = Math.random() * 6.283, d = 13 + Math.random() * 10, x = Math.floor(J.x + Math.cos(a) * d), z = Math.floor(J.z + Math.sin(a) * d);
     if (x < 1 || z < 1 || x >= SX - 1 || z >= SZ - 1) continue;
@@ -1267,7 +1283,7 @@ function comer(id) {
 
 // ═════════ DÍA Y NOCHE ═════════
 const CICLO = 300;   // segundos que dura un día entero
-function oscuridad() { if (creativo()) return 0; const t = tiempo % CICLO; return t < 190 ? 0 : t < 210 ? (t - 190) / 20 : t < 288 ? 1 : 1 - (t - 288) / 12; }
+function oscuridad() { if (creativo() || REG.hora === 'dia') return 0; if (REG.hora === 'noche') return 1; const t = tiempo % CICLO; return t < 190 ? 0 : t < 210 ? (t - 190) / 20 : t < 288 ? 1 : 1 - (t - 288) / 12; }
 const numDia = () => Math.floor(tiempo / CICLO) + 1;
 const C_DIA = new THREE.Color('#93c0f6'), C_TARDE = new THREE.Color('#f0a062'), C_NOCHE = new THREE.Color('#111735'), C_AGUA = new THREE.Color('#1c4fa9');
 const A_DIA = new THREE.Color('#3a7be8'), A_TARDE = new THREE.Color('#5c5aa8'), A_NOCHE = new THREE.Color('#03040c');
@@ -1315,15 +1331,16 @@ const MISIONES = [
   { t: 'Duerme en una cama', ok: () => stats.durmio },
   { t: 'Cría un animal', ok: () => (stats.criados || 0) >= 1 },
 ];
+const aventura = () => modoJuego === 'aventura';
 function revisarMision() {
-  if (creativo()) return;
+  if (creativo() || aventura()) return;
   let avanzo = false;
   while (mision < MISIONES.length && MISIONES[mision].ok()) { mision++; avanzo = true; sucio = true; }
   if (avanzo) { aviso(mision < MISIONES.length ? TR('misionOk') + '<small>' + TR('m' + mision + 't') + '</small>' : TR('todasT'), 2000); if (!sonar(mision >= MISIONES.length ? 'final' : 'mision', .7)) { son(660, .12, 'triangle', .14); setTimeout(() => son(880, .2, 'triangle', .14), 120); } }
   pintarMision();
 }
 function pintarMision() {
-  if (creativo()) { $('mision').hidden = true; return; }
+  if (creativo() || aventura()) { $('mision').hidden = true; return; }
   $('mision').hidden = false;
   if (mision >= MISIONES.length) { $('mision').innerHTML = TR('todasHud'); return; }
   const m = MISIONES[mision];
@@ -1378,7 +1395,7 @@ function guardar() {
   if (!mundoId || !jugando) return;
   try {
     const d = []; for (const [i, t] of diffs) d.push(i, t);
-    const datos = { v: 1, semilla, modo: modoJuego, d, J: { x: J.x, y: J.y, z: J.z, yaw: J.yaw, pitch: J.pitch }, inv, barra, sel, tiempo, vida, hambre, cofres, stats, mision, volando, extra: typeof herrGuardar === 'function' ? herrGuardar() : null, spawnP: spawnPropio ? spawn : null, animales: animales.filter(a => a.position.y > -5).map(a => { const u = a.userData, q = a.position; return [u.animal, +q.x.toFixed(2), +q.y.toFixed(2), +q.z.toFixed(2), Math.round(u.bebe || 0)]; }) };
+    const datos = { v: 1, semilla, modo: modoJuego, d, J: { x: J.x, y: J.y, z: J.z, yaw: J.yaw, pitch: J.pitch }, inv, barra, sel, tiempo, vida, hambre, cofres, stats, mision, volando, extra2: typeof modsGuardar === 'function' ? modsGuardar() : null, extra: typeof herrGuardar === 'function' ? herrGuardar() : null, spawnP: spawnPropio ? spawn : null, animales: animales.filter(a => a.position.y > -5).map(a => { const u = a.userData, q = a.position; return [u.animal, +q.x.toFixed(2), +q.y.toFixed(2), +q.z.toFixed(2), Math.round(u.bebe || 0)]; }) };
     localStorage.setItem('bloquesMundo_' + mundoId, JSON.stringify(datos));
     const lista = leerLista(), m = lista.find(m => m.id === mundoId);
     if (m) { m.dia = numDia(); m.fecha = Date.now(); m.bloques = diffs.size; } localStorage.setItem('bloquesMundos', JSON.stringify(lista));
@@ -1395,6 +1412,7 @@ function entrarMundo(id) {
   let datos; try { datos = JSON.parse(localStorage.getItem('bloquesMundo_' + id)); } catch (e) {}
   const meta = leerLista().find(m => m.id === id); if (!meta) return;
   mundoId = id; mundoNombre = meta.nombre; modoJuego = meta.modo;
+  REG = Object.assign({}, REG_BASE); if (typeof modsCargar === 'function') modsCargar(datos && datos.extra2, meta);
   prepararMundo(meta.semilla, meta.ejemplo);
   inv = {}; barra = modoJuego === 'creativo' ? BARRA_CREATIVO.slice() : Array(9).fill(0); sel = 0; cofres = {}; stats = { rotos: {}, hechos: {}, cofres: 0 }; mision = 0; tiempo = 0; vida = 20; hambre = 20; volando = false;
   Object.assign(J, { x: spawn.x, y: spawn.y, z: spawn.z, vx: 0, vy: 0, vz: 0, yaw: spawn.yaw ?? .6, pitch: -.15 });
@@ -1625,9 +1643,9 @@ function bucle(ya) {
       const t = tiempo % CICLO; if (t > 170 && t < 171 && ya - ultimoAviso > 2000) { ultimoAviso = ya; aviso(TR('vieneNoche'), 2000); }
       if (noche) aparecerMonstruos(dt);
       moverMonstruos(dt, oscuridad() > .2);
-      golpeT += dt; if (corriendo) hambre = Math.max(0, hambre - dt / 60);
+      golpeT += dt; if (corriendo && REG.hambre) hambre = Math.max(0, hambre - dt / 60);
       if (golpeT > 5 && vida < 20 && hambre >= 12) { curaT += dt; if (curaT > 3) { curaT = 0; vida++; hambre -= .5; pintarVida(); } }
-      hambre = Math.max(0, hambre - dt / 45); pintarHambre();
+      if (REG.hambre) hambre = Math.max(0, hambre - dt / 45); pintarHambre();
       if (hambre <= 0) { hambreT += dt; if (hambreT > 5) { hambreT = 0; if (vida > 2) { vida--; $('dano').style.background = 'rgba(200,0,0,.3)'; setTimeout(() => $('dano').style.background = 'rgba(200,0,0,0)', 120); pintarVida(); aviso(TR('hambre'), 1200); } } }
       pintarDia();
     }
@@ -1652,6 +1670,7 @@ function bucle(ya) {
   const fovQ = corriendo && jugando && !pausado ? 78 : 70; if (Math.abs(cam.fov - fovQ) > .1) { cam.fov += (fovQ - cam.fov) * Math.min(1, dt * 8); cam.updateProjectionMatrix(); }
   if (jugando) { musicaT -= dt; if (musicaT <= 0) musicaT = tocarMusica() + 70 + Math.random() * 100; }
   if (typeof herrFrame === 'function') herrFrame(dt);
+  if (typeof modsFrame === 'function') modsFrame(dt);
   render.render(escena, cam);
   if (typeof herrDespues === 'function') herrDespues();
 }
@@ -1659,5 +1678,6 @@ requestAnimationFrame(bucle);
 window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMundo, crearMundo, guardar, armarTodo, monstruos: () => monstruos, crearMonstruo, animales: () => animales, crearAnimal, alimentar, usarCama, dibujarMapa, ejemploFaro: () => ejemploFaro, comer, hambre: v => v === undefined ? hambre : (hambre = v), estado: () => ({ modoJuego, inv, barra, sel, vida, tiempo, mision, stats, refugio, diffs: diffs.size, spawn, ruinas, oscuridad: oscuridad() }), setTiempo: t => tiempo = t, darItem, fabricar, RECETAS, abrirPanel, cerrarPanel, sacarFoto, U, setPausa: p => pausado = p, mundo: () => mundo, idx, ponerBloque, prepararMundo, terminarCarga };
 </script>
 <script src="construir.js"></script>
+<script src="mods.js"></script>
 </body>
 </html>
