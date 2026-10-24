@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Bloques · prototipo</title>
+<style>
+  @font-face { font-family: 'Baloo 2'; font-weight: 600; src: url(fonts/baloo-2-latin-600-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Baloo 2'; font-weight: 800; src: url(fonts/baloo-2-latin-800-normal.woff2) format('woff2'); }
+  :root { --tinta: #2a2238; --crema: #fff8ec; --amarillo: #ffd23f; --rojo: #ff4d6d; --verde: #3ec8a0; --azul: #4f8fff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; background: #8fd3ff; font-family: 'Baloo 2', system-ui, sans-serif; color: var(--tinta); user-select: none; -webkit-user-select: none; touch-action: none; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  .pill { background: var(--crema); border: 3px solid var(--tinta); border-radius: 14px; box-shadow: 0 3px 0 var(--tinta); padding: 2px 12px 0; font-weight: 800; }
+  #mision { position: fixed; top: max(8px, env(safe-area-inset-top)); left: 8px; right: 8px; display: flex; gap: 8px; align-items: flex-start; pointer-events: none; z-index: 3; }
+  #mision .pill { font-size: 14px; line-height: 1.25; }
+  #misTxt { flex: 1; } #misTxt small { display: block; font-size: 12px; opacity: .7; font-weight: 700; }
+  #reloj { display: flex; align-items: center; gap: 6px; font-size: 18px; }
+  #reloj svg { width: 22px; height: 22px; }
+  #mira { position: fixed; left: 50%; top: 50%; width: 22px; height: 22px; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; }
+  #mira::before, #mira::after { content: ''; position: absolute; background: #fff; box-shadow: 0 0 0 2px var(--tinta); border-radius: 2px; }
+  #mira::before { left: 9px; top: 0; width: 4px; height: 22px; } #mira::after { top: 9px; left: 0; width: 22px; height: 4px; }
+  #barra { position: fixed; left: 50%; bottom: max(10px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; gap: 5px; z-index: 3; background: rgba(42,34,56,.55); padding: 5px; border-radius: 14px; }
+  #barra div { width: 42px; height: 42px; border: 3px solid var(--tinta); border-radius: 10px; cursor: pointer; position: relative; box-shadow: inset 0 -6px 0 rgba(0,0,0,.18); }
+  #barra div.sel { outline: 4px solid var(--amarillo); outline-offset: 1px; transform: translateY(-4px); }
+  .boton { position: fixed; z-index: 3; width: 68px; height: 68px; border-radius: 50%; border: 4px solid var(--tinta); box-shadow: 0 4px 0 var(--tinta); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; text-align: center; line-height: 1; cursor: pointer; }
+  #bSaltar { right: 16px; bottom: calc(max(10px, env(safe-area-inset-bottom)) + 66px); background: var(--crema); }
+  #bModo { right: 92px; bottom: calc(max(10px, env(safe-area-inset-bottom)) + 66px); background: var(--amarillo); width: 60px; height: 60px; }
+  #bModo.romper { background: var(--rojo); color: #fff; }
+  #joy { position: fixed; z-index: 3; width: 120px; height: 120px; border-radius: 50%; border: 3px solid rgba(255,255,255,.7); background: rgba(42,34,56,.18); display: none; pointer-events: none; }
+  #joy i { position: absolute; left: 50%; top: 50%; width: 50px; height: 50px; margin: -25px 0 0 -25px; border-radius: 50%; background: var(--crema); border: 3px solid var(--tinta); }
+  .capa { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(42,34,56,.55); }
+  .capa[hidden] { display: none; }
+  .cartel { width: min(420px, 100%); background: var(--crema); border: 4px solid var(--tinta); border-radius: 22px; box-shadow: 0 7px 0 var(--tinta); padding: 16px 18px; text-align: center; }
+  .cartel h1 { font-size: 40px; line-height: .92; font-weight: 800; color: var(--verde); -webkit-text-stroke: 1.5px var(--tinta); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--tinta); }
+  .cartel h1 span { color: var(--amarillo); display: block; }
+  .cartel p { font-weight: 700; font-size: 15px; margin: 10px 0; line-height: 1.3; }
+  .cartel ul { text-align: left; font-weight: 700; font-size: 14px; margin: 6px 0 4px 20px; line-height: 1.35; }
+  .btn { display: block; margin-top: 12px; font: 800 22px/1 'Baloo 2'; color: #fff; background: var(--verde); border: 4px solid var(--tinta); border-radius: 16px; box-shadow: 0 5px 0 var(--tinta); padding: 12px 0 8px; cursor: pointer; }
+  .btn.sec { background: #fff; color: var(--tinta); font-size: 17px; }
+  #aviso { position: fixed; left: 50%; top: 30%; transform: translate(-50%, -50%); z-index: 4; font-weight: 800; font-size: 40px; color: var(--amarillo); -webkit-text-stroke: 2px var(--tinta); paint-order: stroke fill; text-shadow: 3px 4px 0 var(--tinta); text-align: center; pointer-events: none; width: 92vw; line-height: 1; }
+  #aviso small { display: block; font-size: 20px; color: var(--crema); -webkit-text-stroke: 1px var(--tinta); margin-top: 6px; }
+</style>
+</head>
+<body>
+<div id="mision"><div class="pill" id="misTxt"></div><div class="pill" id="reloj"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="#ffd23f" stroke="#2a2238" stroke-width="2.5"/></svg><span id="relojT">2:30</span></div></div>
+<div id="mira"></div>
+<div id="barra"></div>
+<div class="boton" id="bSaltar">SALTAR</div>
+<div class="boton" id="bModo">PONER</div>
+<div id="joy"><i></i></div>
+<div id="aviso"></div>
+
+<div class="capa" id="inicio"><div class="cartel">
+  <h1>BLOQUES<span>COMIC</span></h1>
+  <p>Prototipo de juego de construcción con bloques.</p>
+  <ul>
+    <li>Mové al personaje con el círculo de la izquierda (o W A S D).</li>
+    <li>Arrastrá a la derecha para mirar.</li>
+    <li>Tocá un bloque para <b>ponerlo</b> o <b>romperlo</b> (botón amarillo / rojo).</li>
+    <li>Elegí el bloque en la barra de abajo.</li>
+  </ul>
+  <p><b>MISIÓN 1:</b> construí un refugio con techo y paredes antes de que caiga la noche. ¡De noche salen los monstruos!</p>
+  <div class="btn" id="bEmpezar">JUGAR</div>
+</div></div>
+<div class="capa" id="fin" hidden><div class="cartel">
+  <h1 id="finT"></h1>
+  <p id="finP"></p>
+  <div class="btn" id="bOtra">OTRA VEZ</div>
+  <div class="btn sec" id="bLibre">SEGUIR CONSTRUYENDO</div>
+</div></div>
+
+<script src="three.min.js"></script>
+<script>
+// ───────── MUNDO DE BLOQUES ─────────
+const SX = 40, SY = 24, SZ = 40;
+const T = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9 };
+// colores en estilo cómic (top / costados)
+const COL = { 1: ['#7ed957', '#a5794f'], 2: ['#a5794f', '#a5794f'], 3: ['#9aa3b5', '#9aa3b5'], 4: ['#f6dd8f', '#f6dd8f'], 5: ['#c9935a', '#8a5a33'], 6: ['#4fbf6b', '#4fbf6b'], 7: ['#e3a75c', '#e3a75c'], 8: ['#e5674f', '#e5674f'], 9: ['#cfefff', '#cfefff'] };
+const NOMBRE = { 1: 'Pasto', 2: 'Tierra', 3: 'Piedra', 4: 'Arena', 5: 'Tronco', 6: 'Hojas', 7: 'Madera', 8: 'Ladrillo', 9: 'Vidrio' };
+const transparente = t => t === T.VIDRIO || t === T.HOJAS;
+let mundo = new Uint8Array(SX * SY * SZ);
+const idx = (x, y, z) => x + SX * (z + SZ * y);
+const get = (x, y, z) => (x < 0 || y < 0 || z < 0 || x >= SX || y >= SY || z >= SZ) ? (y < 0 ? T.PIEDRA : T.AIRE) : mundo[idx(x, y, z)];
+const set = (x, y, z, t) => { if (x < 0 || y < 0 || z < 0 || x >= SX || y >= SY || z >= SZ) return; mundo[idx(x, y, z)] = t; };
+const solido = t => t !== T.AIRE;
+
+// ruido suave para el terreno
+function ruido2(seed) { const r = []; let s = seed; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647; for (let i = 0; i < 64 * 64; i++) r.push(rnd()); return (x, z) => { const xi = Math.floor(x), zi = Math.floor(z), fx = x - xi, fz = z - zi, g = (a, b) => r[((a & 63) + (b & 63) * 64)], sm = t => t * t * (3 - 2 * t); const a = g(xi, zi), b = g(xi + 1, zi), c = g(xi, zi + 1), d = g(xi + 1, zi + 1); return (a + (b - a) * sm(fx)) + ((c + (d - c) * sm(fx)) - (a + (b - a) * sm(fx))) * sm(fz); }; }
+function generar() {
+  mundo = new Uint8Array(SX * SY * SZ);
+  const n1 = ruido2(1234), n2 = ruido2(777);
+  for (let x = 0; x < SX; x++) for (let z = 0; z < SZ; z++) {
+    const dx = (x - SX / 2) / (SX / 2), dz = (z - SZ / 2) / (SZ / 2), borde = Math.max(0, Math.hypot(dx, dz) - .7) * 10;
+    const h = Math.round(6 + n1(x / 8, z / 8) * 5 + n2(x / 3, z / 3) * 1.5 - borde);
+    for (let y = 0; y <= Math.max(1, h); y++) set(x, y, z, y === h ? (h <= 5 ? T.ARENA : T.PASTO) : y > h - 3 ? T.TIERRA : T.PIEDRA);
+  }
+  // árboles
+  let s = 99; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 14; i++) {
+    const x = 3 + Math.floor(rnd() * (SX - 6)), z = 3 + Math.floor(rnd() * (SZ - 6));
+    if (Math.abs(x - SX / 2) < 4 && Math.abs(z - SZ / 2) < 4) continue;
+    let y = SY - 1; while (y > 0 && !solido(get(x, y, z))) y--;
+    if (get(x, y, z) !== T.PASTO) continue;
+    const alto = 4 + Math.floor(rnd() * 2);
+    for (let k = 1; k <= alto; k++) set(x, y + k, z, T.TRONCO);
+    for (let a = -2; a <= 2; a++) for (let b = -2; b <= 2; b++) for (let c = alto - 1; c <= alto + 1; c++) if (Math.abs(a) + Math.abs(b) + Math.max(0, c - alto) < 4 && !solido(get(x + a, y + c, z + b))) set(x + a, y + c, z + b, T.HOJAS);
+  }
+}
+
+// ───────── GRÁFICOS ─────────
+const render = new THREE.WebGLRenderer({ antialias: true });
+render.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+document.body.prepend(render.domElement);
+const escena = new THREE.Scene();
+const cam = new THREE.PerspectiveCamera(70, 1, .05, 200);
+const hemi = new THREE.HemisphereLight(0xffffff, 0x8a7a66, .75); escena.add(hemi);
+const sol = new THREE.DirectionalLight(0xffffff, .55); sol.position.set(20, 40, 10); escena.add(sol);
+escena.fog = new THREE.Fog(0x8fd3ff, 28, 60);
+function medir() { render.setSize(innerWidth, innerHeight); cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix(); }
+addEventListener('resize', medir); medir();
+
+// textura de cómic: borde oscuro y un brillo, se multiplica por el color de cada bloque
+function texturaComic() {
+  const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+  g.fillStyle = '#fff'; g.fillRect(0, 0, 64, 64);
+  g.fillStyle = 'rgba(0,0,0,.08)'; for (let i = 0; i < 18; i++) g.fillRect(6 + Math.random() * 50, 6 + Math.random() * 50, 4, 4);
+  g.fillStyle = 'rgba(255,255,255,.0)';
+  g.strokeStyle = 'rgba(42,34,56,.85)'; g.lineWidth = 3; g.strokeRect(1.5, 1.5, 61, 61);
+  g.strokeStyle = 'rgba(255,255,255,.55)'; g.lineWidth = 3; g.beginPath(); g.moveTo(8, 56); g.lineTo(8, 8); g.lineTo(56, 8); g.stroke();
+  const t = new THREE.CanvasTexture(c); t.magFilter = THREE.LinearFilter; t.anisotropy = 4; return t;
+}
+const mat = new THREE.MeshLambertMaterial({ map: texturaComic(), vertexColors: true });
+const matVidrio = new THREE.MeshLambertMaterial({ map: mat.map, vertexColors: true, transparent: true, opacity: .45, depthWrite: false });
+let malla = null, mallaV = null;
+const CARAS = [
+  { d: [0, 1, 0], v: [[0, 1, 1], [1, 1, 1], [1, 1, 0], [0, 1, 0]], luz: 1, top: true },
+  { d: [0, -1, 0], v: [[0, 0, 0], [1, 0, 0], [1, 0, 1], [0, 0, 1]], luz: .55 },
+  { d: [1, 0, 0], v: [[1, 0, 1], [1, 0, 0], [1, 1, 0], [1, 1, 1]], luz: .8 },
+  { d: [-1, 0, 0], v: [[0, 0, 0], [0, 0, 1], [0, 1, 1], [0, 1, 0]], luz: .8 },
+  { d: [0, 0, 1], v: [[0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1]], luz: .9 },
+  { d: [0, 0, -1], v: [[1, 0, 0], [0, 0, 0], [0, 1, 0], [1, 1, 0]], luz: .7 },
+];
+const colorObj = {}; for (const k in COL) colorObj[k] = COL[k].map(c => new THREE.Color(c));
+function construirMalla() {
+  const P = [[], []], C = [[], []], U = [[], []], I = [[], []], n = [0, 0];
+  for (let y = 0; y < SY; y++) for (let z = 0; z < SZ; z++) for (let x = 0; x < SX; x++) {
+    const t = mundo[idx(x, y, z)]; if (!t) continue;
+    const q = t === T.VIDRIO ? 1 : 0;
+    const var_ = ((x * 73 + z * 37 + y * 19) % 7) / 100 - .03;
+    for (const f of CARAS) {
+      const v = get(x + f.d[0], y + f.d[1], z + f.d[2]);
+      if (v && !(transparente(v) && v !== t)) continue;
+      if (v === t && transparente(t) && t === T.VIDRIO) continue;
+      const base = colorObj[t][f.top ? 0 : (t === T.PASTO && f.d[1] === -1 ? 1 : 1)], col = (t === T.PASTO && !f.top) ? colorObj[t][1] : f.top ? colorObj[t][0] : base;
+      const k = f.luz + var_;
+      for (const p of f.v) { P[q].push(x + p[0], y + p[1], z + p[2]); C[q].push(col.r * k, col.g * k, col.b * k); }
+      U[q].push(0, 0, 1, 0, 1, 1, 0, 1);
+      const b = n[q]; I[q].push(b, b + 1, b + 2, b, b + 2, b + 3); n[q] += 4;
+    }
+  }
+  for (const [q, m] of [[0, mat], [1, matVidrio]]) {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(P[q], 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(C[q], 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(U[q], 2)); g.setIndex(I[q]); g.computeVertexNormals();
+    const vieja = q ? mallaV : malla; if (vieja) { escena.remove(vieja); vieja.geometry.dispose(); }
+    const nueva = new THREE.Mesh(g, m); escena.add(nueva); if (q) mallaV = nueva; else malla = nueva;
+  }
+}
+// marco del bloque apuntado
+const marco = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.02, 1.02, 1.02)), new THREE.LineBasicMaterial({ color: 0xffffff }));
+marco.visible = false; escena.add(marco);
+
+// ───────── JUGADOR ─────────
+const J = { x: SX / 2, y: 20, z: SZ / 2, vx: 0, vy: 0, vz: 0, yaw: 0, pitch: -.15, suelo: false };
+const ANCHO = .3, ALTO = 1.7, OJOS = 1.55;
+function choca(x, y, z) {
+  for (let bx = Math.floor(x - ANCHO); bx <= Math.floor(x + ANCHO); bx++) for (let by = Math.floor(y); by <= Math.floor(y + ALTO - .01); by++) for (let bz = Math.floor(z - ANCHO); bz <= Math.floor(z + ANCHO); bz++) if (solido(get(bx, by, bz))) return true;
+  return false;
+}
+const teclas = {}; let mov = { x: 0, y: 0 };
+function fisica(dt) {
+  const vel = 4.6, f = -mov.y, l = mov.x, s = Math.sin(J.yaw), c = Math.cos(J.yaw);
+  const tx = (-s * f + c * l) * vel, tz = (-c * f - s * l) * vel;
+  J.vx += (tx - J.vx) * Math.min(1, dt * 12); J.vz += (tz - J.vz) * Math.min(1, dt * 12);
+  J.vy -= 26 * dt; if (J.vy < -30) J.vy = -30;
+  let nx = J.x + J.vx * dt; if (!choca(nx, J.y, J.z)) J.x = nx; else if (J.suelo && !choca(nx, J.y + 1.05, J.z) && !choca(J.x, J.y + 1.05, J.z)) { J.y += 1.05; J.x = nx; } else J.vx = 0;   // sube escalones de un bloque solo
+  let nz = J.z + J.vz * dt; if (!choca(J.x, J.y, nz)) J.z = nz; else if (J.suelo && !choca(J.x, J.y + 1.05, nz) && !choca(J.x, J.y + 1.05, J.z)) { J.y += 1.05; J.z = nz; } else J.vz = 0;
+  let ny = J.y + J.vy * dt; J.suelo = false;
+  if (!choca(J.x, ny, J.z)) J.y = ny; else { if (J.vy < 0) { J.suelo = true; J.y = Math.floor(ny) + 1; if (choca(J.x, J.y, J.z)) J.y = Math.max(J.y, Math.floor(J.y) + 0); } J.vy = 0; }
+  if (J.y < -10) { J.x = SX / 2; J.z = SZ / 2; J.y = 20; J.vy = 0; }
+  J.x = Math.max(.4, Math.min(SX - .4, J.x)); J.z = Math.max(.4, Math.min(SZ - .4, J.z));
+}
+function saltar() { if (J.suelo) { J.vy = 8.6; J.suelo = false; } }
+
+// ───────── APUNTAR (recorrido por bloques) ─────────
+function apuntar(dir) {
+  const o = new THREE.Vector3(J.x, J.y + OJOS, J.z);
+  let x = Math.floor(o.x), y = Math.floor(o.y), z = Math.floor(o.z);
+  const st = [Math.sign(dir.x), Math.sign(dir.y), Math.sign(dir.z)];
+  const td = [Math.abs(1 / dir.x), Math.abs(1 / dir.y), Math.abs(1 / dir.z)];
+  const fr = (p, s) => s > 0 ? (Math.floor(p) + 1 - p) : (p - Math.floor(p));
+  let tm = [fr(o.x, st[0]) * td[0], fr(o.y, st[1]) * td[1], fr(o.z, st[2]) * td[2]], cara = [0, 0, 0], t = 0;
+  while (t < 6) {
+    if (solido(get(x, y, z)) && y >= 0) return { x, y, z, cara };
+    const a = tm[0] < tm[1] ? (tm[0] < tm[2] ? 0 : 2) : (tm[1] < tm[2] ? 1 : 2);
+    t = tm[a]; tm[a] += td[a];
+    if (a === 0) { x += st[0]; cara = [-st[0], 0, 0]; } else if (a === 1) { y += st[1]; cara = [0, -st[1], 0]; } else { z += st[2]; cara = [0, 0, -st[2]]; }
+  }
+  return null;
+}
+function rayoDesde(px, py) { const v = new THREE.Vector3((px / innerWidth) * 2 - 1, -(py / innerHeight) * 2 + 1, .5); v.unproject(cam); return v.sub(cam.position).normalize(); }
+
+// ───────── PARTÍCULAS (al romper) ─────────
+const parts = [];
+const geoP = new THREE.BoxGeometry(.18, .18, .18);
+function romperFx(x, y, z, t) { for (let i = 0; i < 10; i++) { const m = new THREE.Mesh(geoP, new THREE.MeshLambertMaterial({ color: COL[t][1] })); m.position.set(x + .5, y + .5, z + .5); m.userData = { vx: (Math.random() - .5) * 4, vy: Math.random() * 4 + 1, vz: (Math.random() - .5) * 4, t: 0 }; escena.add(m); parts.push(m); } }
+
+// ───────── SONIDOS simples ─────────
+let ac = null;
+function son(f, d, tipo = 'square', v = .12) { try { if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.type = tipo; o.frequency.setValueAtTime(f, ac.currentTime); o.frequency.exponentialRampToValueAtTime(f * .5, ac.currentTime + d); g.gain.setValueAtTime(v, ac.currentTime); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + d); o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + d); } catch (e) {} }
+
+// ───────── ACCIONES ─────────
+const BARRA = [T.MADERA, T.LADRILLO, T.PIEDRA, T.TIERRA, T.VIDRIO, T.TRONCO, T.HOJAS, T.ARENA];
+let bloqueSel = T.MADERA, modo = 'poner';
+const $ = id => document.getElementById(id);
+$('barra').innerHTML = BARRA.map(t => `<div data-t="${t}" style="background:${COL[t][t === T.TRONCO ? 1 : 0]}" title="${NOMBRE[t]}"></div>`).join('');
+function marcarBarra() { for (const d of $('barra').children) d.classList.toggle('sel', +d.dataset.t === bloqueSel); }
+$('barra').addEventListener('pointerdown', e => { e.stopPropagation(); const d = e.target.closest('div[data-t]'); if (!d) return; bloqueSel = +d.dataset.t; modo = 'poner'; pintarModo(); marcarBarra(); aviso(NOMBRE[bloqueSel].toUpperCase(), 600); });
+marcarBarra();
+function pintarModo() { $('bModo').textContent = modo === 'poner' ? 'PONER' : 'ROMPER'; $('bModo').classList.toggle('romper', modo === 'romper'); }
+$('bModo').addEventListener('pointerdown', e => { e.stopPropagation(); modo = modo === 'poner' ? 'romper' : 'poner'; pintarModo(); });
+$('bSaltar').addEventListener('pointerdown', e => { e.stopPropagation(); saltar(); });
+function accion(dir, m = modo) {
+  const h = apuntar(dir); if (!h) return;
+  if (m === 'romper') { if (h.y <= 0) return; const t = get(h.x, h.y, h.z); set(h.x, h.y, h.z, T.AIRE); romperFx(h.x, h.y, h.z, t); son(180, .12, 'square', .1); }
+  else {
+    const x = h.x + h.cara[0], y = h.y + h.cara[1], z = h.z + h.cara[2];
+    if (y >= SY || get(x, y, z)) return;
+    // no poner un bloque donde está el personaje
+    if (x + 1 > J.x - ANCHO && x < J.x + ANCHO && z + 1 > J.z - ANCHO && z < J.z + ANCHO && y + 1 > J.y && y < J.y + ALTO) return;
+    set(x, y, z, bloqueSel); son(520, .08, 'triangle', .14);
+  }
+  construirMalla(); revisarRefugio();
+}
+let ultimoAviso = 0;
+function aviso(html, ms = 1000) { $('aviso').innerHTML = html; clearTimeout(aviso.t); aviso.t = setTimeout(() => $('aviso').innerHTML = '', ms); }
+
+// ───────── TOQUES: joystick a la izquierda, mirar y tocar a la derecha ─────────
+const toques = {};
+render.domElement.addEventListener('pointerdown', e => {
+  render.domElement.setPointerCapture(e.pointerId);
+  const izq = e.clientX < innerWidth * .42 && e.pointerType !== 'mouse';
+  toques[e.pointerId] = { izq, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t0: performance.now(), movio: 0, boton: e.button };
+  if (izq) { const j = $('joy'); j.style.display = 'block'; j.style.left = e.clientX - 60 + 'px'; j.style.top = e.clientY - 60 + 'px'; }
+});
+render.domElement.addEventListener('pointermove', e => {
+  const t = toques[e.pointerId]; if (!t) return;
+  const dx = e.clientX - t.x, dy = e.clientY - t.y; t.x = e.clientX; t.y = e.clientY; t.movio += Math.abs(dx) + Math.abs(dy);
+  if (t.izq) { let mx = (t.x - t.x0) / 50, my = (t.y - t.y0) / 50; const l = Math.hypot(mx, my); if (l > 1) { mx /= l; my /= l; } mov = { x: mx, y: my }; $('joy').firstElementChild.style.transform = `translate(${mx * 35}px,${my * 35}px)`; }
+  else { J.yaw -= dx * .006; J.pitch = Math.max(-1.5, Math.min(1.5, J.pitch - dy * .006)); }
+});
+function soltar(e) {
+  const t = toques[e.pointerId]; if (!t) return; delete toques[e.pointerId];
+  if (t.izq) { mov = { x: 0, y: 0 }; $('joy').style.display = 'none'; $('joy').firstElementChild.style.transform = ''; return; }
+  if (t.movio < 12 && performance.now() - t.t0 < 400 && jugando) accion(rayoDesde(e.clientX, e.clientY), t.boton === 2 ? 'poner' : t.boton === 0 && e.pointerType === 'mouse' ? 'romper' : modo);
+}
+render.domElement.addEventListener('pointerup', soltar); render.domElement.addEventListener('pointercancel', soltar);
+render.domElement.addEventListener('contextmenu', e => e.preventDefault());
+addEventListener('keydown', e => { teclas[e.code] = true; if (e.code === 'Space') saltar(); const n = parseInt(e.key); if (n >= 1 && n <= BARRA.length) { bloqueSel = BARRA[n - 1]; marcarBarra(); } });
+addEventListener('keyup', e => { teclas[e.code] = false; });
+function teclado() { if (Object.keys(toques).some(k => toques[k].izq)) return; mov = { x: (teclas.KeyD ? 1 : 0) - (teclas.KeyA ? 1 : 0), y: (teclas.KeyS ? 1 : 0) - (teclas.KeyW ? 1 : 0) }; }
+
+// ───────── MISIÓN: un refugio antes de la noche ─────────
+const DIA = 150;   // segundos de día
+let tiempo = 0, jugando = false, noche = false, libre = false, refugio = { techo: false, paredes: 0 }, monstruos = [];
+function revisarRefugio() {
+  const x = Math.floor(J.x), y = Math.floor(J.y), z = Math.floor(J.z);
+  let techo = false; for (let k = 2; k <= 5; k++) if (solido(get(x, y + k, z))) { techo = true; break; }
+  let paredes = 0;
+  for (const [dx, dz] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { let ok = false; for (let k = 1; k <= 5; k++) if (solido(get(x + dx * k, y, z + dz * k)) && solido(get(x + dx * k, y + 1, z + dz * k))) { ok = true; break; } if (ok) paredes++; }
+  refugio = { techo, paredes };
+  pintarMision();
+}
+function pintarMision() {
+  if (libre) { $('misTxt').innerHTML = 'MODO LIBRE<small>construí lo que quieras</small>'; return; }
+  const ok = refugio.techo && refugio.paredes === 4;
+  $('misTxt').innerHTML = `MISIÓN: REFUGIO ANTES DE LA NOCHE<small>Techo: ${refugio.techo ? 'listo' : 'falta'} · Paredes: ${refugio.paredes}/4${ok ? ' · ¡Estás a salvo!' : ''}</small>`;
+}
+function cielo() {
+  // de día celeste; al final de la tarde naranja; de noche azul oscuro
+  const k = libre ? 0 : Math.max(0, Math.min(1, (tiempo - (DIA - 25)) / 25)), dia = new THREE.Color('#8fd3ff'), tarde = new THREE.Color('#ffb36b'), nocheC = new THREE.Color('#1b1f4a');
+  const c = k < .5 ? dia.clone().lerp(tarde, k * 2) : tarde.clone().lerp(nocheC, (k - .5) * 2);
+  render.setClearColor(c); escena.fog.color.copy(c);
+  hemi.intensity = .75 - k * .45; sol.intensity = .55 - k * .45;
+}
+function crearMonstruo(x, z) {
+  const g = new THREE.Group();
+  const cuerpo = new THREE.Mesh(new THREE.BoxGeometry(.9, .8, .9), new THREE.MeshLambertMaterial({ color: 0x6fdc5a })); cuerpo.position.y = .4; g.add(cuerpo);
+  for (const s of [-1, 1]) { const o = new THREE.Mesh(new THREE.BoxGeometry(.2, .22, .05), new THREE.MeshBasicMaterial({ color: 0x2a2238 })); o.position.set(s * .2, .55, .46); g.add(o); }
+  let y = SY - 1; while (y > 0 && !solido(get(Math.floor(x), y, Math.floor(z)))) y--;
+  g.position.set(x, y + 1, z); g.userData = { t: Math.random() * 6 }; escena.add(g); monstruos.push(g);
+}
+function llegaLaNoche() {
+  noche = true; revisarRefugio();
+  for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; crearMonstruo(Math.max(1, Math.min(SX - 2, J.x + Math.cos(a) * 9)), Math.max(1, Math.min(SZ - 2, J.z + Math.sin(a) * 9))); }
+  aviso('¡LLEGÓ LA NOCHE!<small>salen los monstruos</small>', 2200); son(110, .8, 'sawtooth', .12);
+  setTimeout(() => {
+    jugando = false; revisarRefugio();
+    const ok = refugio.techo && refugio.paredes === 4;
+    $('finT').innerHTML = ok ? '¡SOBREVIVISTE<span>LA NOCHE!</span>' : 'TE ATRAPARON<span>LOS MONSTRUOS</span>';
+    $('finP').textContent = ok ? 'Tu refugio aguantó. En el juego completo vendrían nuevas misiones: un puente, una torre, un pueblo…' : `Te faltó ${!refugio.techo ? 'el techo' : ''}${!refugio.techo && refugio.paredes < 4 ? ' y ' : ''}${refugio.paredes < 4 ? (4 - refugio.paredes) + ' pared(es)' : ''}. Quedate adentro del refugio cuando caiga la noche.`;
+    $('fin').hidden = false; son(ok ? 660 : 140, .6, 'triangle', .16);
+  }, 5000);
+}
+function empezar(modoLibre = false) {
+  generar(); construirMalla();
+  for (const m of monstruos) escena.remove(m); monstruos = [];
+  Object.assign(J, { x: SX / 2 + .5, y: 20, z: SZ / 2 + .5, vx: 0, vy: 0, vz: 0, yaw: .6, pitch: -.2 });
+  tiempo = 0; noche = false; libre = modoLibre; jugando = true;
+  $('inicio').hidden = true; $('fin').hidden = true; $('reloj').style.display = libre ? 'none' : '';
+  revisarRefugio(); son(440, .1, 'triangle', .1);
+}
+$('bEmpezar').onclick = () => empezar(false);
+$('bOtra').onclick = () => empezar(false);
+$('bLibre').onclick = () => { $('fin').hidden = true; libre = true; jugando = true; noche = false; for (const m of monstruos) escena.remove(m); monstruos = []; $('reloj').style.display = 'none'; pintarMision(); };
+
+// ───────── BUCLE ─────────
+let ult = performance.now(), revisarT = 0;
+generar(); construirMalla();
+function bucle(ya) {
+  requestAnimationFrame(bucle);
+  const dt = Math.min(.05, (ya - ult) / 1000); ult = ya;
+  teclado();
+  if (jugando) {
+    fisica(dt);
+    if (!libre && !noche) { tiempo += dt; const r = Math.max(0, DIA - tiempo); $('relojT').textContent = Math.floor(r / 60) + ':' + String(Math.floor(r % 60)).padStart(2, '0'); if (r <= 0) llegaLaNoche(); else if (r < 30 && Math.floor(r) % 10 === 0 && ya - ultimoAviso > 1500) { ultimoAviso = ya; aviso(`¡${Math.floor(r)} SEGUNDOS!<small>se viene la noche</small>`, 1200); } }
+    revisarT += dt; if (revisarT > .5) { revisarT = 0; revisarRefugio(); }
+  } else J.yaw += dt * (document.getElementById('inicio').hidden ? 0 : .08);   // en el menú la cámara gira despacio
+  // cámara
+  cam.position.set(J.x, J.y + OJOS, J.z);
+  cam.rotation.order = 'YXZ'; cam.rotation.y = J.yaw; cam.rotation.x = J.pitch;
+  cielo();
+  // marco del bloque al que mirás
+  const d = new THREE.Vector3(0, 0, -1).applyEuler(cam.rotation), h = jugando ? apuntar(d) : null;
+  marco.visible = !!h; if (h) marco.position.set(h.x + .5, h.y + .5, h.z + .5);
+  // partículas
+  for (let i = parts.length - 1; i >= 0; i--) { const p = parts[i], u = p.userData; u.t += dt; u.vy -= 14 * dt; p.position.x += u.vx * dt; p.position.y += u.vy * dt; p.position.z += u.vz * dt; p.rotation.x += dt * 6; if (u.t > .7) { escena.remove(p); parts.splice(i, 1); } }
+  // monstruos: saltan hacia vos (si estás a salvo, chocan contra las paredes)
+  for (const m of monstruos) { const u = m.userData; u.t += dt * 3; const dx = J.x - m.position.x, dz = J.z - m.position.z, l = Math.hypot(dx, dz) || 1;
+    const nx = m.position.x + dx / l * dt * 1.6, nz = m.position.z + dz / l * dt * 1.6;
+    if (!solido(get(Math.floor(nx), Math.floor(m.position.y), Math.floor(nz)))) { m.position.x = nx; m.position.z = nz; }
+    m.children[0].position.y = .4 + Math.abs(Math.sin(u.t)) * .5; m.rotation.y = Math.atan2(dx, dz); }
+  render.render(escena, cam);
+}
+requestAnimationFrame(bucle);
+window.__b = { J, get, set, T, apuntar, accion, empezar, revisarRefugio, refugio: () => refugio, construirMalla };
+</script>
+</body>
+</html>
