@@ -29,7 +29,7 @@ const leerSkins = () => { try { return JSON.parse(localStorage.getItem('voxSkins
 const guardarSkins = l => { try { localStorage.setItem('voxSkins', JSON.stringify(l)); } catch (e) { aviso(TR('noGuardar'), 1500); } };
 let skinSel = leerLS('voxSkin', null) || ('b' + Math.min(2, Math.max(0, +leerLS('voxPersonaje', 0) || 0)));
 let modoCam = Math.min(2, Math.max(0, +leerLS('voxVista', 0) || 0));
-const todasSkins = () => PJS.concat(leerSkins());
+const todasSkins = () => PJS.concat(typeof skinsTienda === 'function' ? skinsTienda() : [], leerSkins());
 const skinDe = id => todasSkins().find(x => x.id === id) || PJS[0];
 const skinActual = () => skinDe(skinSel);
 const nombreSkin = k => k.base ? TR(k.base) : (k.nombre || TR('nombrePj'));
@@ -66,7 +66,18 @@ function armarPersonaje(P) {
   if (P.sombrero === 'gorra') { caja(cab, .68, .16, .62, 0, 1.57 + Y, 0, sc); caja(cab, .52, .04, .26, 0, 1.51 + Y, .4, sc); }
   if (P.sombrero === 'corona') { const o = colM('#ffd23a'); caja(cab, .64, .1, .58, 0, 1.6 + Y, 0, o); for (const [x, z] of [[-.27, -.24], [.27, -.24], [-.27, .24], [.27, .24], [0, .24], [0, -.24]]) caja(cab, .1, .14, .1, x, 1.71 + Y, z, o); caja(cab, .08, .08, .02, 0, 1.6 + Y, .3, sc); }
   if (P.sombrero === 'orejas') for (const s of [-1, 1]) { caja(cab, .16, .18, .08, s * .2, 1.6 + Y, 0, sc); caja(cab, .08, .1, .02, s * .2, 1.59 + Y, .045, colM('#ff9ab8')); }
-  g.userData = { piernas, brazos, cab, capa, fase: 0, item: null, itemId: -1 };
+  // ───── piezas especiales (tienda) ─────
+  if (P.sombrero === 'mago') { const m = colM(P.sombreroC || '#35399d'); caja(cab, .78, .06, .72, 0, 1.53 + Y, 0, m); [[.5, .14], [.38, .14], [.26, .14], [.14, .14]].forEach(([w, h], i) => caja(cab, w, h, w, i * .02, 1.63 + i * .14 + Y, -i * .03, m)); for (const [x, y] of [[.1, 1.7], [-.12, 1.82], [.06, 1.96]]) caja(cab, .05, .05, .02, x, y + Y, .25 - (y - 1.7) * .4, colM('#ffe14a')); }
+  if (P.sombrero === 'bruja') { const m = colM('#1d1d21'); caja(cab, .86, .05, .8, 0, 1.53 + Y, 0, m); caja(cab, .64, .06, .58, 0, 1.6 + Y, 0, colM(P.sombreroC || '#7e2fbe')); [[.5, .16], [.36, .16], [.22, .16], [.1, .14]].forEach(([w, h], i) => caja(cab, w, h, w, 0, 1.7 + i * .15 + Y, -i * .05, m)); }
+  if (P.sombrero === 'vikingo') { const m = colM('#9aa3b8'); caja(cab, .7, .2, .64, 0, 1.58 + Y, 0, m); caja(cab, .1, .1, .66, 0, 1.7 + Y, 0, colM('#c8a060')); for (const s of [-1, 1]) { caja(cab, .1, .1, .1, s * .38, 1.6 + Y, 0, colM('#f4efe0')); caja(cab, .08, .2, .08, s * .44, 1.72 + Y, 0, colM('#f4efe0')); } caja(cab, .06, .22, .04, 0, 1.4 + Y, .31, m); }
+  if (P.sombrero === 'calabaza') { const m = colM('#ff9a2e'), n = colM('#3a1a0a'); caja(cab, .7, .66, .64, 0, 1.22 + Y, 0, m); caja(cab, .1, .1, .1, 0, 1.6 + Y, 0, colM('#3f8a2e')); for (const s of [-1, 1]) caja(cab, .14, .12, .02, s * .15, 1.3 + Y, .325, n); caja(cab, .36, .08, .02, 0, 1.08 + Y, .325, n); }
+  if (P.cuernos) for (const s of [-1, 1]) { const m = colM(P.cuernos); caja(cab, .1, .1, .1, s * .22, 1.6 + Y, .05, m); caja(cab, .08, .14, .08, s * .28, 1.7 + Y, .02, m); caja(cab, .06, .1, .06, s * .33, 1.8 + Y, -.02, m); }
+  if (P.armadura) { const m = colM(P.armadura === 'oro' ? '#ffd23a' : '#c8d0e0'), b = colM(P.armadura === 'oro' ? '#b8860b' : '#7c86ad');
+    caja(g, .54, .3, .34, 0, .76, 0, m); caja(g, .3, .06, .02, 0, .8, .175, b); for (const q of brazos) caja(q, .2, .14, .22, 0, -.04, 0, m); for (const q of piernas) caja(q, .23, .16, .25, 0, -.08, 0, m); }
+  let alas = null; if (P.alas) { const m = new THREE.MeshLambertMaterial({ color: parseInt(P.alas.slice(1), 16), transparent: true, opacity: .92 }), b = colM(P.alas);
+    alas = [-1, 1].map(s => { const q = parte(s * .1, .86, -.2); const w = new THREE.Mesh(new THREE.BoxGeometry(.7, .5, .03), m); w.position.set(s * .38, .02, -.04); q.add(w); const w2 = new THREE.Mesh(new THREE.BoxGeometry(.4, .3, .03), m); w2.position.set(s * .32, -.32, -.04); q.add(w2); caja(q, .72, .05, .05, s * .38, .26, -.04, b); q.rotation.y = s * -.35; return q; }); }
+  let aura = null; if (P.aura) { aura = parte(0, .1, 0); const m = new THREE.MeshBasicMaterial({ color: parseInt(P.aura.slice(1), 16), transparent: true, opacity: .8 }); for (let k = 0; k < 10; k++) { const c = new THREE.Mesh(new THREE.BoxGeometry(.08, .08, .08), m), a = k / 10 * 6.283; c.position.set(Math.cos(a) * .55, (k % 3) * .3, Math.sin(a) * .55); aura.add(c); } }
+  g.userData = { piernas, brazos, cab, capa, alas, aura, fase: 0, item: null, itemId: -1 };
   return g;
 }
 
@@ -121,6 +132,8 @@ function pjFrame(dt) {
   if (swing > 0) u.brazos[0].rotation.x = -.4 - Math.sin(swing * Math.PI) * 1.3;
   if (volando) { u.brazos[0].rotation.z = .5; u.brazos[1].rotation.z = -.5; } else { u.brazos[0].rotation.z = 0; u.brazos[1].rotation.z = 0; }
   u.cab.rotation.x = -J.pitch * .6;
+  if (u.alas) { u.aleteo = (u.aleteo || 0) + dt * (aire || volando ? 14 : 2.5); const v = Math.sin(u.aleteo) * (aire || volando ? .5 : .12); u.alas[0].rotation.y = -.35 - v; u.alas[1].rotation.y = .35 + v; }
+  if (u.aura) { u.aura.rotation.y += dt * 1.8; u.aura.children.forEach((c, k) => c.position.y = ((k % 3) * .3 + U.uT.value * .6) % .9); }
   if (window.montando || window.sentado) { u.piernas[0].rotation.x = u.piernas[1].rotation.x = -1.4; if (window.montando) { u.brazos[1].rotation.x = -.3; } }
   if (u.capa) u.capa.rotation.x = -.08 - Math.min(.7, vel * .12) - (aire ? .3 : 0) + Math.sin(u.fase * 2) * .04 * amp;
   // cámara detrás o delante (sin meterse dentro de los bloques)
@@ -136,6 +149,8 @@ window.__pj = { armarPersonaje, PJS, modo: v => { if (v != null) modoCam = v; re
 // ═════════ EDITOR DE PERSONAJES (skins) ═════════
 cap('skinCapa', '<div class="mVentana" style="width:min(820px,96vw)"><div class="vCab"><div class="vTit" data-i="personaje"></div><div class="cerrar" id="skinCerrar">X</div></div><div class="vCuerpo"><div class="pixWrap"><canvas id="skinVista" width="240" height="300" style="width:170px;height:212px;border:3px solid #0d153d;border-radius:12px;background:linear-gradient(#8fc4ef,#cfe8ff);position:sticky;top:0;display:block"></canvas><div style="flex:1;min-width:250px" id="skinCuerpo"></div></div></div><div class="vPie" style="display:flex;gap:6px;flex-wrap:wrap" id="skinPie"></div></div>');
 aplicarIdioma();
+const CANDADO = '<svg viewBox="0 0 10 12" style="width:10px;height:12px;vertical-align:-1px"><rect x="1" y="5" width="8" height="7" rx="1" fill="currentColor"/><path d="M3 5V3.5a2 2 0 0 1 4 0V5" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>';
+const TILDE = '<svg viewBox="0 0 12 10" style="width:11px;height:9px"><path d="M1 5l3.5 3.5L11 1" stroke="currentColor" stroke-width="2.2" fill="none"/></svg>';
 const TONOS = ['#ffe0c4', '#f2c9a0', '#e0ac80', '#c98a5a', '#a86a40', '#8a5232', '#5e3a22', '#3e2616'];
 let skinVer = null, skinVolver = null, skinVista = null;
 function abrirSkins(volver) { skinVolver = volver; skinVer = skinSel; pintarSkins(); if (volver) cerrar(volver); abrir('skinCapa'); vistaSkin(); }
@@ -143,7 +158,7 @@ $('ajPjCambiar').onclick = () => abrirSkins('ajustes');
 const pintarNomPj = () => { $('ajPjNom').textContent = nombreSkin(skinActual()); }; pintarNomPj();
 function pintarSkins() {
   const lista = todasSkins(), k = skinDe(skinVer), propia = !k.base;
-  let h = `<h4>${TR('misPj')}</h4><div class="opcG">` + lista.map(x => `<div data-ver="${x.id}" class="${x.id === skinVer ? 'on' : ''}">${esc(nombreSkin(x))}${x.id === skinSel ? ' ✓' : ''}</div>`).join('') + `<div data-nuevo="1" style="background:#2fb65a">${TR('nuevoPj')}</div></div>`;
+  let h = `<h4>${TR('misPj')}</h4><div class="opcG">` + lista.map(x => `<div data-ver="${x.id}" class="${x.id === skinVer ? 'on' : ''}">${esc(nombreSkin(x))}${x.id === skinSel ? ' ' + TILDE : ''}</div>`).join('') + `<div data-nuevo="1" style="background:#2fb65a">${TR('nuevoPj')}</div></div>`;
   if (!propia) h += `<div style="font-size:13px;margin-top:10px">${TR('baseAyuda')}</div>`;
   else {
     const pal = (campo, colores, conNada) => `<div class="paleta" data-campo="${campo}" style="grid-template-columns:repeat(12,22px)">${conNada ? `<div data-c="" title="${TR('ninguno')}" class="${!k[campo] ? 'on' : ''}" style="background:repeating-linear-gradient(45deg,#fff 0 4px,#e0475a 4px 6px);width:22px;height:22px"></div>` : ''}${colores.map(c => `<div data-c="${c}" style="background:${c};width:22px;height:22px" class="${k[campo] === c ? 'on' : ''}"></div>`).join('')}</div>`;
@@ -154,7 +169,12 @@ function pintarSkins() {
     h += `<h4>${TR('peloC')}</h4>` + pal('pelo', ['#2a1a10', '#5a3418', '#8a5232', '#e05a2a', '#f5d36a', '#f2f2f2', '#7f7f7f', '#3f8eec', '#ff8ab8', '#7e2fbe', '#2fb65a', '#d42a2a']);
     h += `<h4>${TR('remeraC')}</h4>` + pal('remera', PALETA) + `<h4>${TR('pantalonC')}</h4>` + pal('pantalon', PALETA) + `<div style="margin-top:4px">` + ops('overol', [[1, 'overolC'], [0, 'no']]) + '</div>';
     h += `<h4>${TR('zapatosC')}</h4>` + pal('zapatos', PALETA);
-    h += `<h4>${TR('sombreroC')}</h4>` + ops('sombrero', [[null, 'ninguno'], ['casco', 'sCasco'], ['gorra', 'sGorra'], ['corona', 'sCorona'], ['orejas', 'sOrejas']]) + (k.sombrero && k.sombrero !== 'corona' ? pal('sombreroC', PALETA) : '');
+    const lk = id => typeof desbloqueado === 'function' && !desbloqueado(id) ? ' ' + CANDADO : '';
+    h += `<h4>${TR('sombreroC')}</h4><div class="opcG" data-op="sombrero">` + [[null, 'ninguno'], ['casco', 'sCasco'], ['gorra', 'sGorra'], ['corona', 'sCorona'], ['orejas', 'sOrejas'], ['mago', 'sMago', 'pzMago'], ['bruja', 'sBruja', 'pzBruja'], ['vikingo', 'sVikingo', 'pzVikingo'], ['calabaza', 'sCalabaza', 'pzCalabaza']].map(([v, l, t]) => `<div data-v='${JSON.stringify(v)}' ${t ? `data-tienda="${t}"` : ''} class="${JSON.stringify(k.sombrero ?? null) === JSON.stringify(v) ? 'on' : ''}">${TR(l)}${t ? lk(t) : ''}</div>`).join('') + '</div>' + (k.sombrero && !['corona', 'calabaza', 'vikingo'].includes(k.sombrero) ? pal('sombreroC', PALETA) : '');
+    h += `<h4>${TR('especial')}</h4>`;
+    for (const [campo, t, cols] of [['alas', 'pzAlas', ['#ffffff', '#8fdcff', '#ff8ab8', '#1d1d21', '#ffd23a', '#36c95a', '#e03a2a', '#c58cf5']], ['cuernos', 'pzCuernos', ['#f4efe0', '#1d1d21', '#e03a2a', '#ffd23a', '#c58cf5']], ['aura', 'pzAura', ['#ffe14a', '#8fdcff', '#ff4a78', '#6cff5a', '#c58cf5', '#ffffff']]])
+      h += `<div style="font-size:13px;margin:6px 0 2px">${TR(t)}${lk(t)}</div>` + (lk(t) ? `<div class="opcG"><div data-tienda="${t}" style="background:#f5b82a">${TR('desbloquear')}</div></div>` : pal(campo, cols, true));
+    h += `<div style="font-size:13px;margin:6px 0 2px">${TR('pzArmadura')}${lk('pzArmadura')}</div>` + (lk('pzArmadura') ? `<div class="opcG"><div data-tienda="pzArmadura" style="background:#f5b82a">${TR('desbloquear')}</div></div>` : ops('armadura', [[null, 'ninguno'], ['plata', 'plata'], ['oro', 'oro']]));
     h += `<h4>${TR('lentesC')}</h4>` + pal('lentes', ['#14142a', '#3a3a3a', '#d42a2a', '#3f8eec', '#ff8ab8', '#ffd23a'], true);
     h += `<h4>${TR('mochilaC')}</h4>` + pal('mochila', PALETA, true) + `<h4>${TR('bufandaC')}</h4>` + pal('bufanda', PALETA, true) + `<h4>${TR('capaC')}</h4>` + pal('capa', PALETA, true);
     h += `<h4>${TR('mejillasC')}</h4>` + ops('mejillas', [[1, 'si'], [0, 'no']]);
@@ -167,6 +187,7 @@ $('skinCuerpo').addEventListener('click', e => {
   let d = e.target.closest('[data-ver]'); if (d) { skinVer = d.dataset.ver; pintarSkins(); vistaSkin(); return; }
   if (e.target.closest('[data-nuevo]')) { const base = skinDe(skinVer), n = Object.assign({}, base, { id: 's' + Date.now().toString(36), nombre: TR('nombrePj') + ' ' + (leerSkins().length + 1) }); delete n.base; const l = leerSkins(); l.push(n); guardarSkins(l); skinVer = n.id; pintarSkins(); vistaSkin(); return; }
   d = e.target.closest('[data-campo] [data-c]'); if (d) { const campo = d.parentElement.dataset.campo; cambiarSkin(k => { k[campo] = d.dataset.c || null; }); return; }
+  d = e.target.closest('[data-tienda]'); if (d && typeof desbloqueado === 'function' && !desbloqueado(d.dataset.tienda)) { abrirTienda(d.dataset.tienda, 'skinCapa'); return; }
   d = e.target.closest('[data-op] [data-v]'); if (d) { const campo = d.parentElement.dataset.op; cambiarSkin(k => { k[campo] = JSON.parse(d.dataset.v); }); }
 });
 $('skinCuerpo').addEventListener('change', e => { if (e.target.id === 'skinNombre') cambiarSkin(k => { k.nombre = e.target.value.trim().slice(0, 20) || TR('nombrePj'); }); });
@@ -186,6 +207,6 @@ function vistaSkin() {
     const c = new THREE.PerspectiveCamera(30, 240 / 300, .1, 50); c.position.set(0, 1.05, 4); c.lookAt(0, .82, 0); skinVista = { r, e, c, g: null, on: false, t: 0 }; }
   const v = skinVista; if (v.g) v.e.remove(v.g); v.g = armarPersonaje(skinDe(skinVer)); v.e.add(v.g);
   if (!v.on) { v.on = true; const giro = () => { if (!v.on || $('skinCapa').hidden) { v.on = false; return; } v.t += .016; const u = v.g.userData, s = Math.sin(v.t * 6) * .5;
-    v.g.rotation.y = Math.sin(v.t * .6) * 1.1; u.piernas[0].rotation.x = s; u.piernas[1].rotation.x = -s; u.brazos[0].rotation.x = -s * .9; u.brazos[1].rotation.x = s * .9; if (u.capa) u.capa.rotation.x = -.35 + Math.sin(v.t * 12) * .05;
+    v.g.rotation.y = Math.sin(v.t * .6) * 1.1; u.piernas[0].rotation.x = s; u.piernas[1].rotation.x = -s; u.brazos[0].rotation.x = -s * .9; u.brazos[1].rotation.x = s * .9; if (u.capa) u.capa.rotation.x = -.35 + Math.sin(v.t * 12) * .05; if (u.alas) { const w = Math.sin(v.t * 3) * .25; u.alas[0].rotation.y = -.35 - w; u.alas[1].rotation.y = .35 + w; } if (u.aura) { u.aura.rotation.y += .03; u.aura.children.forEach((c, k) => c.position.y = ((k % 3) * .3 + v.t * .6) % .9); }
     v.r.render(v.e, v.c); requestAnimationFrame(giro); }; giro(); }
 }
