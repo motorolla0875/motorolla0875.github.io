@@ -109,7 +109,7 @@ let tileLibre = TILE_MOD0, modsMundo = [], carteles = {}, mapa = {}, tieneMeta =
 function quitarModsInstalados() {
   for (let id = MOD_BASE; id < MOD_BASE + MOD_SLOTS * MOD_MAX_BLOQUES; id++) { if (DEF[id]) delete DEF[id]; delete iconos[id]; const k = TODOS.indexOf(id); if (k >= 0) TODOS.splice(k, 1); }
   for (let k = RECETAS.length - 1; k >= 0; k--) if (RECETAS[k].mod) RECETAS.splice(k, 1);
-  for (let t = TILE_MOD0; t < TILE_MOD0 + 50; t++) delete tileURLs[t];
+  for (let t = TILE_MOD0; t < 256; t++) delete tileURLs[t];
   for (const t in tilesOrig) { ag.putImageData(tilesOrig[t], (t % 8) * 16, Math.floor(t / 8) * 16); delete tileURLs[t]; }   // texturas originales de vuelta
   tilesOrig = {}; for (const k in iconos) delete iconos[k];
   for (const k in TIPOS) if (TIPOS[k].mod) delete TIPOS[k];
@@ -119,7 +119,7 @@ const pixTile = (t, pix) => { const tx = t % 8, ty = Math.floor(t / 8); ag.clear
 const refId = (m, r) => typeof r === 'string' && r.startsWith('m:') ? MOD_BASE + m.slot * MOD_MAX_BLOQUES + (+r.slice(2)) : +r;
 function instalarMod(m) {
   m.bloques.forEach((b, k) => {
-    const id = MOD_BASE + m.slot * MOD_MAX_BLOQUES + k, t = tileLibre < 128 ? tileLibre++ : TILE_MOD0 + (tileLibre++ % (128 - TILE_MOD0));   // cada bloque de mod usa un casillero libre del atlas
+    const id = MOD_BASE + m.slot * MOD_MAX_BLOQUES + k, t = tileLibre < 256 ? tileLibre++ : TILE_MOD0 + (tileLibre++ % (256 - TILE_MOD0));   // cada bloque de mod usa un casillero libre del atlas
     const tx = t % 8, ty = Math.floor(t / 8); ag.clearRect(tx * 16, ty * 16, 16, 16);
     let trans = false; for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const c = b.pix[y * 16 + x]; if (!c) { trans = true; continue; } ag.fillStyle = c; ag.fillRect(tx * 16 + x, ty * 16 + y, 1, 1); }
     delete tileURLs[t];

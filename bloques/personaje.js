@@ -121,6 +121,7 @@ function pjFrame(dt) {
   if (swing > 0) u.brazos[0].rotation.x = -.4 - Math.sin(swing * Math.PI) * 1.3;
   if (volando) { u.brazos[0].rotation.z = .5; u.brazos[1].rotation.z = -.5; } else { u.brazos[0].rotation.z = 0; u.brazos[1].rotation.z = 0; }
   u.cab.rotation.x = -J.pitch * .6;
+  if (window.montando || window.sentado) { u.piernas[0].rotation.x = u.piernas[1].rotation.x = -1.4; if (window.montando) { u.brazos[1].rotation.x = -.3; } }
   if (u.capa) u.capa.rotation.x = -.08 - Math.min(.7, vel * .12) - (aire ? .3 : 0) + Math.sin(u.fase * 2) * .04 * amp;
   // cámara detrás o delante (sin meterse dentro de los bloques)
   const ojo = new THREE.Vector3(J.x, J.y + OJOS, J.z), cp = Math.cos(J.pitch), f = new THREE.Vector3(-Math.sin(J.yaw) * cp, Math.sin(J.pitch), -Math.cos(J.yaw) * cp);

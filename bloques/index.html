@@ -203,10 +203,10 @@
 // ═════════ MUNDO ═════════
 const SX = 160, SY = 48, SZ = 160, CH = 16, SEA = 15, N = SX * SY * SZ;
 const NCX = SX / CH, NCZ = SZ / CH;
-const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41, /* 41..56 */ ESC_INV: 57, /* 57..72 */ LOSA_ARR: 73, /* 73..76 */ TRONCO_X: 77, TRONCO_Z: 78, VALLA: 79, PANEL: 80, PASTO_ALTO: 81, FLOR_R: 82, FLOR_A: 83, ARADA: 84, TRIGO: 85, /* 85..88 */ BOTON: 89, PALANCA: 90, PALANCA_ON: 91, PLACA: 92, CAMA: 140, ALFOMBRA: 141, /* 141..149 */ FAROL: 150, LADRILLO_P: 151, MADERA_O: 152, MADERA_C: 153, MARMOL: 154, CARTEL: 155, META: 156, CONTROL: 157 /* 160..239: bloques de mods */ };
-const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123, CARNE: 105, CARNE_A: 106, POLLO: 107, POLLO_A: 108, MANZANA: 109, SEMILLAS: 130, TRIGO_I: 131, PAN: 132 };
+const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41, /* 41..56 */ ESC_INV: 57, /* 57..72 */ LOSA_ARR: 73, /* 73..76 */ TRONCO_X: 77, TRONCO_Z: 78, VALLA: 79, PANEL: 80, PASTO_ALTO: 81, FLOR_R: 82, FLOR_A: 83, ARADA: 84, TRIGO: 85, /* 85..88 */ BOTON: 89, PALANCA: 90, PALANCA_ON: 91, PLACA: 92, TNT: 93, TNT_G: 94, CALABAZA: 95, CALABAZA_F: 96, TELARANA: 97, LAPIDA: 98, SILLA: 99, CAMA: 140, ALFOMBRA: 141, /* 141..149 */ FAROL: 150, LADRILLO_P: 151, MADERA_O: 152, MADERA_C: 153, MARMOL: 154, CARTEL: 155, META: 156, CONTROL: 157, MESA: 158, SOFA: 159, /* 160..239: bloques de mods */ LAMPARA_P: 240, CUADRO: 241, TELE: 242, HUEVO: 243 /* 243..247 huevos de dragón */ };
+const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123, CARNE: 105, CARNE_A: 106, POLLO: 107, POLLO_A: 108, MANZANA: 109, SEMILLAS: 130, TRIGO_I: 131, PAN: 132, HUESO: 114, PESCADO: 115, MONTURA: 116 };
 // dibujos (16x16) del atlas
-const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4', 'carne', 'carneAsada', 'pollo', 'polloAsado', 'manzana', 'pastoAlto', 'florRoja', 'florAmarilla', 'aradaArriba', 'trigo0', 'trigo1', 'trigo2', 'trigo3', 'semillas', 'trigoItem', 'pan', 'camaArriba', 'camaCostado', 'farol', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control', 'boton', 'palanca', 'palancaOn', 'placa'];
+const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4', 'carne', 'carneAsada', 'pollo', 'polloAsado', 'manzana', 'pastoAlto', 'florRoja', 'florAmarilla', 'aradaArriba', 'trigo0', 'trigo1', 'trigo2', 'trigo3', 'semillas', 'trigoItem', 'pan', 'camaArriba', 'camaCostado', 'farol', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control', 'boton', 'palanca', 'palancaOn', 'placa', 'tntCostado', 'tntArriba', 'tntGCostado', 'calabazaCostado', 'calabazaArriba', 'calabazaCara', 'calabazaFarol', 'telarana', 'lapida', 'pantalla', 'cuadro', 'teleFrente', 'teleCostado', 'huevo0', 'huevo1', 'huevo2', 'huevo3', 'huevo4', 'hueso', 'pescado', 'montura'];
 const TL = {}; TILES.forEach((n, i) => TL[n] = i);
 const TELAS = [['Blanca', '#e9ecec'], ['Roja', '#a12722'], ['Naranja', '#f07613'], ['Amarilla', '#f8c527'], ['Verde', '#5e7c16'], ['Celeste', '#3aafd9'], ['Azul', '#35399d'], ['Violeta', '#7e2fbe'], ['Negra', '#1d1d21']];
 // definición de bloques: dibujos [arriba, abajo, costados], dureza (segundos a mano), pico necesario, qué suelta, etc.
@@ -273,12 +273,28 @@ def(B.MARMOL, 'Mármol', [TL.marmol], { dur: 3, req: 1, color: '#eeeae4' });
 def(B.CARTEL, 'Cartel', [TL.madera], { dur: .6, trans: true, forma: [[0, .35, .4375, 1, 1, .5625], [.4375, 0, .4375, .5625, .35, .5625]], icono: [[0, .35, .4375, 1, 1, .5625], [.4375, 0, .4375, .5625, .35, .5625]], color: '#a7834f' });
 def(B.META, 'Meta', [TL.meta], { dur: .5, luz: 10, color: '#fcee4b' });
 def(B.CONTROL, 'Punto de control', [TL.control], { dur: .5, luz: 6, color: '#5fd068' });
+// TNT, Halloween, muebles y huevos de dragón (la lógica está en contenido.js)
+def(B.TNT, 'TNT', [TL.tntArriba, TL.tntArriba, TL.tntCostado], { dur: .2, color: '#e03a3a' });
+def(B.TNT_G, 'TNT gigante', [TL.tntArriba, TL.tntArriba, TL.tntGCostado], { dur: .2, color: '#8a3fd0' });
+def(B.CALABAZA, 'Calabaza', [TL.calabazaArriba, TL.calabazaArriba, TL.calabazaCostado], { caras: [TL.calabazaArriba, TL.calabazaArriba, TL.calabazaCostado, TL.calabazaCostado, TL.calabazaCara, TL.calabazaCostado], dur: .9, color: '#ff9a2e' });
+def(B.CALABAZA_F, 'Farol de calabaza', [TL.calabazaArriba, TL.calabazaArriba, TL.calabazaCostado], { caras: [TL.calabazaArriba, TL.calabazaArriba, TL.calabazaCostado, TL.calabazaCostado, TL.calabazaFarol, TL.calabazaCostado], dur: .9, luz: 15, color: '#ffb02e' });
+def(B.TELARANA, 'Telaraña', [TL.telarana], { dur: .4, trans: true, solido: false, planta: true, color: '#f0f0fa' });
+def(B.LAPIDA, 'Lápida', [TL.lapida], { dur: 1.5, trans: true, forma: [[3 / 16, 0, 6 / 16, 13 / 16, 2 / 16, 11 / 16], [4 / 16, 2 / 16, 7 / 16, 12 / 16, 13 / 16, 10 / 16]], color: '#a8b0c4' });
+def(B.SILLA, 'Silla', [TL.madera], { dur: .8, trans: true, forma: [[3 / 16, 0, 3 / 16, 5 / 16, 7 / 16, 5 / 16], [11 / 16, 0, 3 / 16, 13 / 16, 7 / 16, 5 / 16], [3 / 16, 0, 11 / 16, 5 / 16, 7 / 16, 13 / 16], [11 / 16, 0, 11 / 16, 13 / 16, 7 / 16, 13 / 16], [3 / 16, 7 / 16, 3 / 16, 13 / 16, 9 / 16, 13 / 16], [3 / 16, 9 / 16, 11 / 16, 13 / 16, 1, 13 / 16]], color: '#e08a3a', sentar: .56 });
+def(B.MESA, 'Mesa', [TL.madera], { dur: .8, trans: true, forma: [[0, 13 / 16, 0, 1, 1, 1], [6 / 16, 0, 6 / 16, 10 / 16, 13 / 16, 10 / 16], [4 / 16, 0, 4 / 16, 12 / 16, 1 / 16, 12 / 16]], color: '#e08a3a' });
+def(B.SOFA, 'Sofá', [TL.tela1], { dur: .6, trans: true, forma: [[0, 0, 0, 1, 7 / 16, 1], [0, 7 / 16, 12 / 16, 1, 1, 1], [0, 7 / 16, 0, 3 / 16, 11 / 16, 12 / 16], [13 / 16, 7 / 16, 0, 1, 11 / 16, 12 / 16]], color: '#a12722', sentar: .5 });
+def(B.LAMPARA_P, 'Lámpara de pie', [TL.pantalla, TL.madera, TL.pantalla], { dur: .3, trans: true, solido: false, forma: [[7 / 16, 0, 7 / 16, 9 / 16, 10 / 16, 9 / 16], [4 / 16, 0, 4 / 16, 12 / 16, 1 / 16, 12 / 16], [3 / 16, 10 / 16, 3 / 16, 13 / 16, 1, 13 / 16]], luz: 14, color: '#fff1c0' });
+def(B.CUADRO, 'Cuadro', [TL.cuadro], { dur: .2, trans: true, solido: false, forma: [[1 / 16, 2 / 16, 15 / 16, 15 / 16, 14 / 16, 1]], icono: [[1 / 16, 2 / 16, 7 / 16, 15 / 16, 14 / 16, 9 / 16]], color: '#8fd0ff' });
+def(B.TELE, 'Televisor', [TL.teleCostado], { caras: [TL.teleCostado, TL.teleCostado, TL.teleCostado, TL.teleCostado, TL.teleFrente, TL.teleCostado], dur: .6, trans: true, forma: [[1 / 16, 3 / 16, 6 / 16, 15 / 16, 13 / 16, 10 / 16], [6 / 16, 0, 6 / 16, 10 / 16, 3 / 16, 10 / 16]], luz: 6, color: '#2a50c0' });
+for (const id of [B.SILLA, B.MESA, B.SOFA, B.LAMPARA_P, B.LAPIDA, B.TELE]) DEF[id].icono = DEF[id].forma;
+['Huevo de dragón', 'Huevo de dragón de fuego', 'Huevo de dragón de hielo', 'Huevo de dragón dorado', 'Huevo de dragón de cristal'].forEach((n, k) => def(B.HUEVO + k, n, [TL['huevo' + k]], { dur: .6, trans: true, solido: false, planta: true, color: ['#36c95a', '#e03a2a', '#8fdcff', '#ffd23a', '#d8a8ff'][k], huevo: k }));
+
 // mecanismos: botón, palanca y placa de presión (se conectan a puertas, bloques, teletransporte o mensajes)
 def(B.BOTON, 'Botón', [TL.boton], { dur: .3, trans: true, solido: false, forma: [[4 / 16, 0, 4 / 16, 12 / 16, 5 / 16, 12 / 16]], icono: [[3 / 16, 0, 3 / 16, 13 / 16, 7 / 16, 13 / 16]], color: '#d42a2a', mec: 'boton' });
 def(B.PALANCA, 'Palanca', [TL.palanca], { dur: .3, trans: true, solido: false, forma: [[3 / 16, 0, 5 / 16, 13 / 16, 3 / 16, 11 / 16], [4 / 16, 3 / 16, 7 / 16, 6 / 16, 12 / 16, 9 / 16]], icono: [[2 / 16, 0, 5 / 16, 14 / 16, 3 / 16, 11 / 16], [5 / 16, 3 / 16, 7 / 16, 8 / 16, 15 / 16, 9 / 16]], color: '#8d6a3f', mec: 'palanca' });
 def(B.PALANCA_ON, 'Palanca', [TL.palancaOn], { dur: .3, trans: true, solido: false, forma: [[3 / 16, 0, 5 / 16, 13 / 16, 3 / 16, 11 / 16], [10 / 16, 3 / 16, 7 / 16, 12 / 16, 12 / 16, 9 / 16]], suelta: B.PALANCA, color: '#8d6a3f', mec: 'palanca', luz: 4 });
 def(B.PLACA, 'Placa de presión', [TL.placa], { dur: .3, trans: true, solido: false, forma: [[1 / 16, 0, 1 / 16, 15 / 16, 1 / 16, 15 / 16]], icono: [[1 / 16, 0, 1 / 16, 15 / 16, 3 / 16, 15 / 16]], color: '#a0a0a0', mec: 'placa' });
-const esCultivo = t => t >= B.TRIGO && t <= B.TRIGO + 3, reemplazable = t => t === B.AIRE || t === B.AGUA || (t > 0 && DEF[t].planta && !esCultivo(t));
+const esCultivo = t => t >= B.TRIGO && t <= B.TRIGO + 3, reemplazable = t => t === B.AIRE || t === B.AGUA || (t > 0 && DEF[t].planta && !esCultivo(t) && DEF[t].huevo == null);
 function formaDe(t, x, y, z, choque) {
   const d = DEF[t]; if (!d.conecta) return d.forma;
   const une = (dx, dz) => { const n = get(x + dx, y, z + dz); return n === t || opaco(n) || (t === B.PANEL && n === B.VIDRIO); };
@@ -301,6 +317,7 @@ const ITEM = {};
 function item(id, nombre, tile, o = {}) { ITEM[id] = Object.assign({ id, nombre, tile }, o); }
 item(I.PALO, 'Palo', TL.palo); item(I.CARBON, 'Carbón', TL.carbon); item(I.HIERRO, 'Hierro', TL.hierro); item(I.ORO, 'Oro', TL.oro); item(I.CRISTAL, 'Cristal', TL.cristal);
 item(I.CARNE, 'Carne cruda', TL.carne, { comida: 3 }); item(I.CARNE_A, 'Carne asada', TL.carneAsada, { comida: 8 }); item(I.POLLO, 'Pollo crudo', TL.pollo, { comida: 2 }); item(I.POLLO_A, 'Pollo asado', TL.polloAsado, { comida: 6 }); item(I.MANZANA, 'Manzana', TL.manzana, { comida: 4 });
+item(I.HUESO, 'Hueso', TL.hueso); item(I.PESCADO, 'Pescado', TL.pescado, { comida: 2 }); item(I.MONTURA, 'Montura', TL.montura);
 item(I.SEMILLAS, 'Semillas', TL.semillas); item(I.TRIGO_I, 'Trigo', TL.trigoItem); item(I.PAN, 'Pan', TL.pan, { comida: 5 });
 const esComida = id => !!(ITEM[id] && ITEM[id].comida);
 ['de madera', 'de piedra', 'de hierro', 'de cristal'].forEach((m, k) => { item(I.PICO1 + k, 'Pico ' + m, TL['pico' + (k + 1)], { pico: k + 1 }); item(I.ESP1 + k, 'Espada ' + m, TL['esp' + (k + 1)], { espada: k + 1 }); });
@@ -554,7 +571,7 @@ function medir() { render.setSize(innerWidth, innerHeight); cam.aspect = innerWi
 addEventListener('resize', medir); medir();
 
 // ───── texturas pixeladas hechas con código ─────
-const atlas = document.createElement('canvas'); atlas.width = 128; atlas.height = 256;
+const atlas = document.createElement('canvas'); atlas.width = 128; atlas.height = 512;   // 8 columnas × 32 filas de dibujos de 16×16
 const ag = atlas.getContext('2d');
 function dibujarTile(n, f) {
   const tx = n % 8, ty = Math.floor(n / 8); let s = 1000 + n * 97;
@@ -630,6 +647,27 @@ const PINTA = {
   palanca: (x, y, r, e) => (x === 7 || x === 8) && y < 10 ? (y < 3 ? '#d42a2a' : '#8d6a3f') : e(['#7f7f7f', '#8a8a8a', '#747474']),
   palancaOn: (x, y, r, e) => (x === 7 || x === 8) && y < 10 ? (y < 3 ? '#6cff5a' : '#8d6a3f') : e(['#7f7f7f', '#8a8a8a', '#747474']),
   placa: (x, y, r, e) => (x === 0 || y === 0 || x === 15 || y === 15) ? '#5a5a5a' : e(['#a0a0a0', '#9a9a9a', '#a8a8a8']),
+  tntCostado: (x, y, r, e) => (y >= 5 && y <= 10) ? ((y === 5 || y === 10) ? '#f2f2f2' : (x > 2 && x < 13 && (x % 3 !== 0)) ? '#1d1d21' : '#f2f2f2') : (x % 4 === 0 ? '#a82020' : e(['#e03a3a', '#d83434', '#e84040'])),
+  tntArriba: (x, y, r, e) => Math.hypot(x - 7.5, y - 7.5) < 2.5 ? '#1d1d21' : (x === 7 && y < 6) ? '#c8c8c8' : e(['#e03a3a', '#d83434']),
+  tntGCostado: (x, y, r, e) => (y >= 4 && y <= 11) ? ((y === 4 || y === 11) ? '#ffe14a' : (x > 1 && x < 14 && (x % 3 !== 0)) ? '#1d1d21' : '#ffe14a') : (x % 4 === 0 ? '#5a1a8a' : e(['#8a3fd0', '#7e36c4', '#9446dc'])),
+  calabazaCostado: (x, y, r, e) => x % 4 === 0 ? '#c8641a' : e(['#ff9a2e', '#f8922a', '#ffa236']),
+  calabazaArriba: (x, y, r, e) => Math.hypot(x - 7.5, y - 7.5) < 2 ? '#3f8a2e' : Math.hypot(x - 7.5, y - 7.5) < 7 ? e(['#ff9a2e', '#f8922a']) : '#c8641a',
+  calabazaCara: (x, y, r, e) => { const ojo = (y >= 4 && y <= 6) && ((x >= 3 && x <= 5) || (x >= 10 && x <= 12)), boca = (y === 10 && x >= 3 && x <= 12) || (y === 11 && x >= 4 && x <= 11 && x % 2 === 0); return ojo || boca ? '#3a1a0a' : x % 4 === 0 ? '#c8641a' : e(['#ff9a2e', '#f8922a']); },
+  calabazaFarol: (x, y, r, e) => { const ojo = (y >= 4 && y <= 6) && ((x >= 3 && x <= 5) || (x >= 10 && x <= 12)), boca = (y === 10 && x >= 3 && x <= 12) || (y === 11 && x >= 4 && x <= 11 && x % 2 === 0); return ojo || boca ? '#fff27a' : x % 4 === 0 ? '#c8641a' : e(['#ff9a2e', '#f8922a']); },
+  telarana: (x, y) => (x === y || x === 15 - y || x === 7 || y === 7 || (Math.round(Math.hypot(x - 7.5, y - 7.5)) % 4 === 0 && Math.hypot(x - 7.5, y - 7.5) < 8)) ? 'rgba(240,240,250,.9)' : null,
+  lapida: (x, y, r, e) => (x === 7 || x === 8) && y >= 3 && y <= 9 ? '#5a6278' : (y === 5 && x >= 5 && x <= 10) ? '#5a6278' : e(['#a8b0c4', '#9aa2b8', '#b0b8cc']),
+  pantalla: (x, y, r, e) => y % 5 === 0 ? '#e8b860' : e(['#fff1c0', '#ffe9a8', '#fff6d0']),
+  cuadro: (x, y) => { if (x === 0 || y === 0 || x === 15 || y === 15) return '#8a4f1e'; if (x === 1 || y === 1 || x === 14 || y === 14) return '#e0b060'; if (y > 9) return (x + y) % 3 ? '#36c95a' : '#2fb65a'; if (Math.hypot(x - 10, y - 5) < 2.2) return '#ffe14a'; return y > 7 && Math.abs(x - 5) < y - 7 ? '#5a8a3a' : '#8fd0ff'; },
+  teleFrente: (x, y) => (x === 0 || y === 0 || x === 15 || y === 15 || y === 14) ? '#1d1d21' : (y === 13 ? '#2a2a30' : (x + y) % 9 === 0 ? '#5a8aff' : y < 6 ? '#3a6ae0' : '#2a50c0'),
+  teleCostado: (x, y, r, e) => e(['#2a2a30', '#25252b', '#303036']),
+  huevo0: (x, y, r) => { const d = Math.hypot((x - 7.5) / 1, (y - 8.5) / 1.25); return d < 6.5 ? ((x * 3 + y * 5) % 7 === 0 ? '#ffe14a' : d > 5.5 ? '#1f8a3a' : '#36c95a') : null; },
+  huevo1: (x, y, r) => { const d = Math.hypot((x - 7.5) / 1, (y - 8.5) / 1.25); return d < 6.5 ? ((x * 3 + y * 5) % 7 === 0 ? '#ffe14a' : d > 5.5 ? '#8a1414' : '#e03a2a') : null; },
+  huevo2: (x, y, r) => { const d = Math.hypot((x - 7.5) / 1, (y - 8.5) / 1.25); return d < 6.5 ? ((x * 3 + y * 5) % 7 === 0 ? '#ffffff' : d > 5.5 ? '#2a7ab8' : '#8fdcff') : null; },
+  huevo3: (x, y, r) => { const d = Math.hypot((x - 7.5) / 1, (y - 8.5) / 1.25); return d < 6.5 ? ((x * 3 + y * 5) % 7 === 0 ? '#fff8c0' : d > 5.5 ? '#b8860b' : '#ffd23a') : null; },
+  huevo4: (x, y, r) => { const d = Math.hypot((x - 7.5) / 1, (y - 8.5) / 1.25); return d < 6.5 ? ((x * 3 + y * 5) % 7 === 0 ? '#ffffff' : d > 5.5 ? '#6a2fae' : '#d8a8ff') : null; },
+  hueso: (x, y) => enLista([...linea(4, 11, 11, 4), ...linea(5, 11, 12, 4)], x, y) || [[3, 10], [3, 12], [5, 12], [10, 3], [12, 3], [12, 5]].some(([a, b]) => Math.abs(x - a) + Math.abs(y - b) < 2) ? '#f2eee0' : null,
+  pescado: (x, y) => { const d = Math.hypot((x - 7) / 1.6, y - 8); if (x > 11 && Math.abs(y - 8) < x - 10) return '#3f8eec'; if (x === 4 && y === 7) return '#1d1d21'; return d < 3.2 ? (y < 8 ? '#5aa8ff' : '#c8e0ff') : null; },
+  montura: (x, y) => { if (y >= 5 && y <= 10 && x >= 2 && x <= 13) return y === 5 ? '#8a4f1e' : (x === 2 || x === 13) ? '#5a3418' : '#b8682a'; if (y > 10 && (x === 4 || x === 11)) return '#3a3a3a'; if (y === 13 && (x >= 3 && x <= 5 || x >= 10 && x <= 12)) return '#c8c8c8'; return null; },
   control: (x, y, r) => { const d = Math.hypot(x - 7.5, y - 7.5); return d < 2.2 ? '#b8ffb0' : d < 4.6 ? '#3fbf4a' : d < 5.6 ? '#2a8a33' : piedraC(r); },
   pastoAlto: (x, y) => { const alto = 5 + Math.floor(h3(x, 1, 0, 21) * 10); return h3(x, 2, 0, 21) < .72 && y >= 16 - alto ? (y < 16 - alto + 2 ? '#8ad458' : (x + y) % 3 ? '#5fae38' : '#4c962d') : null; },
   florRoja: (x, y) => { if ((x === 7 || x === 8) && y >= 8) return '#3f8a2e'; if (y === 11 && (x === 5 || x === 6 || x === 9 || x === 10)) return '#4cae38'; const d = Math.hypot(x - 7.5, y - 5); return d < 1.3 ? '#ffd84a' : d < 3.3 ? (x < 7 ? '#ff5a4a' : '#d42a2a') : null; },
@@ -719,7 +757,7 @@ function armarPedazo(cx, cz) {
   const x0 = cx * CH, z0 = cz * CH;
   for (let y = 0; y < SY; y++) for (let z = z0; z < z0 + CH; z++) for (let x = x0; x < x0 + CH; x++) {
     const t = mundo[idx(x, y, z)]; if (!t) continue; const d = DEF[t], agua = t === B.AGUA, cajas = d.conecta ? formaDe(t, x, y, z, false) : d.forma || [null];
-    if (d.planta) { const tile = d.tiles[0], tx = tile % 8, ty = Math.floor(tile / 8), [cs, ct] = luzCelda(x, y, z), u0 = (tx + e) / 8, u1 = (tx + 1 - e) / 8, w0 = 1 - (ty + 1 - e) / 16, w1 = 1 - (ty + e) / 16, al = .95;
+    if (d.planta) { const tile = d.tiles[0], tx = tile % 8, ty = Math.floor(tile / 8), [cs, ct] = luzCelda(x, y, z), u0 = (tx + e) / 8, u1 = (tx + 1 - e) / 8, w0 = 1 - (ty + 1 - e) / 32, w1 = 1 - (ty + e) / 32, al = .95;
       for (const [a0, b0, a1, b1] of [[.15, .15, .85, .85], [.15, .85, .85, .15]]) for (const lado of [0, 1]) { const p = lado ? [[a1, b1], [a0, b0]] : [[a0, b0], [a1, b1]];
         A.P.push(x + p[0][0], y, z + p[0][1], x + p[1][0], y, z + p[1][1], x + p[1][0], y + al, z + p[1][1], x + p[0][0], y + al, z + p[0][1]);
         A.UV.push(...(lado ? [u1, w0, u0, w0, u0, w1, u1, w1] : [u0, w0, u1, w0, u1, w1, u0, w1])); for (let k = 0; k < 4; k++) A.L.push(.92, cs, ct);
@@ -739,7 +777,7 @@ function armarPedazo(cx, cz) {
         Q.P.push(x + px, y + py, z + pz);
         // coordenadas del dibujo según la cara
         let u, w; if (f.d[0]) { u = f.d[0] > 0 ? 1 - pz : pz; w = py; } else if (f.d[2]) { u = f.d[2] > 0 ? px : 1 - px; w = py; } else { u = px; w = pz; }
-        Q.UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / 16);
+        Q.UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / 32);
         // sombra en las esquinas (oclusión ambiental)
         let ao = 3;
         if (!F && !agua) { const ax = [], s = []; for (let k = 0; k < 3; k++) if (!f.d[k]) { ax.push(k); s.push(p[k] ? 1 : -1); }
@@ -809,7 +847,7 @@ function fisica(dt) {
   const fx = Math.floor(J.x), fz = Math.floor(J.z);
   const enAgua = get(fx, Math.floor(J.y + .4), fz) === B.AGUA, enEsc = get(fx, Math.floor(J.y), fz) === B.ESCALERA || get(fx, Math.floor(J.y + 1), fz) === B.ESCALERA;
   corriendo = !volando && !enAgua && (teclas.ControlLeft || Math.hypot(mov.x, mov.y) > .97) && mov.y < -.4;
-  const vel = (volando ? 8 : enAgua ? 2.8 : corriendo ? 6.6 : 4.6) * (volando ? 1 : REG.vel), f = -mov.y, l = mov.x, s = Math.sin(J.yaw), c = Math.cos(J.yaw);
+  const vel = (volando ? 8 * (J.velVuelo || 1) : enAgua ? 2.8 : corriendo ? 6.6 : 4.6) * (volando ? 1 : REG.vel), f = -mov.y, l = mov.x, s = Math.sin(J.yaw), c = Math.cos(J.yaw);
   const tx = (-s * f + c * l) * vel, tz = (-c * f - s * l) * vel;
   J.vx += (tx - J.vx) * Math.min(1, dt * 12); J.vz += (tz - J.vz) * Math.min(1, dt * 12);
   if (volando) J.vy += (((saltando ? 7 : 0) - (bajando ? 7 : 0)) - J.vy) * Math.min(1, dt * 10);
@@ -904,6 +942,10 @@ function voz(tipo, dist = 0) {
     if (vib) { const l = c.createOscillator(), lg = c.createGain(); l.frequency.value = vibF; lg.gain.value = vib; l.connect(lg).connect(o.frequency); l.start(n + t0); l.stop(n + t0 + d); }
     fi.type = 'lowpass'; fi.frequency.value = filtro; g.gain.setValueAtTime(0, n + t0); g.gain.linearRampToValueAtTime(v, n + t0 + .05); g.gain.setValueAtTime(v, n + t0 + d * .7); g.gain.linearRampToValueAtTime(0, n + t0 + d);
     o.connect(fi).connect(g).connect(AU.sfx); o.start(n + t0); o.stop(n + t0 + d + .02); };
+  if (tipo === 'ladrido') { tono(520, 360, .11, 'square', 1700); tono(500, 340, .11, 'square', 1700, 0, 0, .2); return; }
+  if (tipo === 'maullido') { tono(620, 900, .18, 'triangle', 2600, 6, 7); tono(900, 560, .3, 'triangle', 2600, 6, 7, .18); return; }
+  if (tipo === 'rugido') { tono(120, 70, 1.2, 'sawtooth', 500, 14, 5); tono(240, 140, 1, 'square', 700, 0, 0, .05); return; }
+  if (tipo === 'zombi') { tono(110, 80, .9, 'sawtooth', 420, 4, 3); return; }
   if (tipo === 'vaca') tono(150, 105, 1, 'sawtooth', 650, 3, 5);
   else if (tipo === 'oveja') tono(330, 300, .65, 'sawtooth', 1300, 22, 11);
   else if (tipo === 'gallina') { for (let k = 0; k < 3; k++) tono(950 + k * 60, 700, .07, 'square', 2400, 0, 0, k * .1); }
@@ -932,7 +974,7 @@ function guardarAjustes() { try { localStorage.setItem('bloquesAjustes', JSON.st
 const $ = id => document.getElementById(id);
 let inv = {}, barra = [], sel = 0, cofres = {}, stats = { rotos: {}, hechos: {}, cofres: 0 }, mision = 0;
 const BARRA_CREATIVO = [B.MADERA, B.ADOQUIN, B.LADRILLO, B.VIDRIO, B.TRONCO, B.PUERTA, B.ANTORCHA, B.TELA + 1, B.ESCALERA];
-const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PANEL, B.VALLA, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, B.CAMA, B.FAROL, B.CARTEL, B.META, B.CONTROL, B.BOTON, B.PALANCA, B.PLACA, B.LADRILLO_P, B.MADERA_O, B.MADERA_C, B.MARMOL, ...TELAS.map((t, k) => B.ALFOMBRA + k), B.PASTO_ALTO, B.FLOR_R, B.FLOR_A, I.SEMILLAS, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
+const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PANEL, B.VALLA, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, B.CAMA, B.FAROL, B.CARTEL, B.META, B.CONTROL, B.BOTON, B.PALANCA, B.PLACA, B.TNT, B.TNT_G, B.SILLA, B.MESA, B.SOFA, B.LAMPARA_P, B.CUADRO, B.TELE, B.CALABAZA, B.CALABAZA_F, B.TELARANA, B.LAPIDA, B.HUEVO, B.HUEVO + 1, B.HUEVO + 2, I.HUESO, I.PESCADO, I.MONTURA, B.LADRILLO_P, B.MADERA_O, B.MADERA_C, B.MARMOL, ...TELAS.map((t, k) => B.ALFOMBRA + k), B.PASTO_ALTO, B.FLOR_R, B.FLOR_A, I.SEMILLAS, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
 const RECETAS = [
   [[B.MADERA, 4], [[B.TRONCO, 1]]], [[I.PALO, 4], [[B.MADERA, 2]]], [[B.ANTORCHA, 4], [[I.PALO, 1], [I.CARBON, 1]]],
   [[I.PICO1, 1], [[B.MADERA, 3], [I.PALO, 2]]], [[I.PICO2, 1], [[B.ADOQUIN, 3], [I.PALO, 2]]], [[I.PICO3, 1], [[I.HIERRO, 3], [I.PALO, 2]]], [[I.PICO4, 1], [[I.CRISTAL, 3], [I.PALO, 2]]],
@@ -941,7 +983,7 @@ const RECETAS = [
   [[B.VIDRIO, 2], [[B.ARENA, 2], [I.CARBON, 1]]], [[B.PIEDRA, 2], [[B.ADOQUIN, 2], [I.CARBON, 1]]], [[B.LADRILLO, 4], [[B.TIERRA, 3], [I.CARBON, 1]]],
   [[B.LAMPARA, 1], [[B.VIDRIO, 1], [B.ANTORCHA, 2]]], [[B.B_HIERRO, 1], [[I.HIERRO, 4]]], [[B.B_ORO, 1], [[I.ORO, 4]]],
   ...MAT_FORMA.map(([m], k) => [[B.LOSA + k, 6], [[m, 3]]]), ...MAT_FORMA.map(([m], k) => [[B.ESCALON + k * 4, 4], [[m, 6]]]),
-  [[I.PAN, 1], [[I.TRIGO_I, 3]]], [[B.CAMA, 1], [[B.TELA, 3], [B.MADERA, 3]]], [[B.BOTON, 1], [[B.ADOQUIN, 1]]], [[B.PALANCA, 1], [[I.PALO, 1], [B.ADOQUIN, 1]]], [[B.PLACA, 1], [[B.ADOQUIN, 2]]], [[B.FAROL, 1], [[I.HIERRO, 1], [B.ANTORCHA, 1]]],
+  [[I.PAN, 1], [[I.TRIGO_I, 3]]], [[B.CAMA, 1], [[B.TELA, 3], [B.MADERA, 3]]], [[B.BOTON, 1], [[B.ADOQUIN, 1]]], [[B.PALANCA, 1], [[I.PALO, 1], [B.ADOQUIN, 1]]], [[B.PLACA, 1], [[B.ADOQUIN, 2]]], [[B.TNT, 1], [[B.ARENA, 4], [I.CARBON, 2]]], [[B.TNT_G, 1], [[B.TNT, 4]]], [[B.SILLA, 1], [[B.MADERA, 3]]], [[B.MESA, 1], [[B.MADERA, 4]]], [[B.SOFA, 1], [[B.TELA + 1, 3], [B.MADERA, 2]]], [[B.LAMPARA_P, 1], [[I.PALO, 2], [B.ANTORCHA, 1]]], [[B.CUADRO, 1], [[I.PALO, 4], [B.TELA, 1]]], [[B.TELE, 1], [[I.HIERRO, 2], [B.VIDRIO, 1]]], [[B.CALABAZA_F, 1], [[B.CALABAZA, 1], [B.ANTORCHA, 1]]], [[I.MONTURA, 1], [[B.TELA, 3], [I.HIERRO, 1]]], [[B.FAROL, 1], [[I.HIERRO, 1], [B.ANTORCHA, 1]]],
   [[B.LADRILLO_P, 4], [[B.PIEDRA, 4]]], [[B.MADERA_O, 4], [[B.TRONCO, 1], [I.CARBON, 1]]], [[B.MADERA_C, 4], [[B.TRONCO, 1], [B.ARENA, 1]]], [[B.MARMOL, 2], [[B.ARENA, 2], [B.PIEDRA, 2]]],
   ...TELAS.map((t, k) => [[B.ALFOMBRA + k, 3], [[B.TELA + k, 2]]]), [[I.CARNE_A, 2], [[I.CARNE, 2], [I.CARBON, 1]]], [[I.POLLO_A, 2], [[I.POLLO, 2], [I.CARBON, 1]]],
   [[B.TELA, 2], [[B.HOJAS, 4]]], ...TELAS.slice(1).map((t, k) => [[B.TELA + k + 1, 1], [[B.TELA, 1]]]),
@@ -1020,8 +1062,10 @@ function abrirCofre(i) {
 function tocar(dir) {
   if (typeof herramientaTocar === 'function' && herramientaTocar(dir)) return;
   if (typeof mecTocar === 'function' && mecTocar(dir)) return;
+  if (typeof tocarExtra === 'function' && tocarExtra(dir)) return;
   // primero: ¿le pegué a un monstruo?
   const m = monstruoApuntado(dir), h = apuntar(dir);
+  if (m && (!h || m.t < h.t) && m.m.userData.animal && typeof tocarAnimal === 'function' && tocarAnimal(m.m, dir)) return;
   if (m && (!h || m.t < h.t)) return (m.m.userData.animal && barra[sel] === I.TRIGO_I) ? alimentar(m.m) : golpear(m.m, dir);
   if (h && h.b === B.CAMA) return usarCama(h);
   if (h && h.b === B.COFRE) return abrirCofre(idx(h.x, h.y, h.z));
@@ -1053,6 +1097,7 @@ function tocar(dir) {
   if (id === B.COFRE) cofres[idx(x, y, z)] = {};
   if (id === B.CARTEL && typeof escribirCartel === 'function') escribirCartel(idx(x, y, z));
   if (DEF[id].mec && typeof mecPuesto === 'function') mecPuesto(idx(x, y, z));
+  if (DEF[id].huevo != null && typeof ponerHuevo === 'function') ponerHuevo(idx(x, y, z));
   if (!creativo()) quitarItem(id, 1);
   golpe(pone, 1); swing = 1; revisarRefugio(); revisarMision();
 }
@@ -1263,7 +1308,9 @@ function moverAnimales(dt) {
   animalT -= dt; if (animalT <= 0) { animalT = 6; if (animales.length < 16) poblarAnimales(1, true); }
   for (const a of animales.slice()) {
     const u = a.userData, p = a.position; u.t += dt;
+    if (u.montado) continue;
     let vel = 0, guiado = false;
+    { const T = TIPOS[u.animal], ov = T && T.guiar ? T.guiar(a, dt) : null; if (ov) { guiado = true; u.dir = ov.dir ?? u.dir; vel = ov.vel || 0; } }
     u.amorCD = Math.max(0, (u.amorCD || 0) - dt);
     if (u.bebe > 0) { u.bebe -= dt; a.scale.setScalar(u.bebe > 0 ? .5 + .5 * (1 - u.bebe / 180) : 1); }
     const dJ = Math.hypot(J.x - p.x, J.z - p.z);
@@ -1428,7 +1475,7 @@ function guardar() {
   if (!mundoId || !jugando) return;
   try {
     const d = []; for (const [i, t] of diffs) d.push(i, t);
-    const datos = { v: 1, semilla, modo: modoJuego, d, J: { x: J.x, y: J.y, z: J.z, yaw: J.yaw, pitch: J.pitch }, inv, barra, sel, tiempo, vida, hambre, cofres, stats, mision, volando, extra2: typeof modsGuardar === 'function' ? modsGuardar() : null, extra: typeof herrGuardar === 'function' ? herrGuardar() : null, spawnP: spawnPropio ? spawn : null, animales: animales.filter(a => a.position.y > -5).map(a => { const u = a.userData, q = a.position; return [u.animal, +q.x.toFixed(2), +q.y.toFixed(2), +q.z.toFixed(2), Math.round(u.bebe || 0)]; }) };
+    const datos = { v: 1, semilla, modo: modoJuego, d, J: { x: J.x, y: J.y, z: J.z, yaw: J.yaw, pitch: J.pitch }, inv, barra, sel, tiempo, vida, hambre, cofres, stats, mision, volando, extra2: typeof modsGuardar === 'function' ? modsGuardar() : null, extra: typeof herrGuardar === 'function' ? herrGuardar() : null, spawnP: spawnPropio ? spawn : null, animales: animales.filter(a => a.position.y > -5).map(a => { const u = a.userData, q = a.position; return [u.animal, +q.x.toFixed(2), +q.y.toFixed(2), +q.z.toFixed(2), Math.round(u.bebe || 0), u.extra || 0]; }) };
     localStorage.setItem('bloquesMundo_' + mundoId, JSON.stringify(datos));
     const lista = leerLista(), m = lista.find(m => m.id === mundoId);
     if (m) { m.dia = numDia(); m.fecha = Date.now(); m.bloques = diffs.size; } localStorage.setItem('bloquesMundos', JSON.stringify(lista));
@@ -1437,9 +1484,9 @@ function guardar() {
 }
 setInterval(() => { if (sucio && jugando) guardar(); }, 8000);
 addEventListener('pagehide', guardar); document.addEventListener('visibilitychange', () => { if (document.hidden) guardar(); });
-function prepararMundo(S, ejemplo) { generar(S, ejemplo); diffs = new Map(); spawnPropio = false; }
+function prepararMundo(S, ejemplo) { generar(S, ejemplo); if (typeof generarExtra === 'function') generarExtra(S, ejemplo); diffs = new Map(); spawnPropio = false; }
 function terminarCarga(guardados) { cultivos = new Set(); for (let i = 0; i < N; i++) if (mundo[i] >= B.TRIGO && mundo[i] <= B.TRIGO + 2) cultivos.add(i); altTodo(); buscarFuentes(); calcLuz(); for (const m of monstruos.slice()) quitarMonstruo(m, false); for (const a of animales.slice()) quitarAnimal(a); armarTodo();
-  const lista = guardados || animalesIniciales; if (lista) for (const [t, x, y, z, bebe] of lista) { if (!TIPOS[t]) continue; const a = crearAnimal(t, x, y, z); if (bebe) { a.userData.bebe = bebe; a.scale.setScalar(.5 + .5 * (1 - bebe / 180)); } } else poblarAnimales(22, false);
+  const lista = guardados || animalesIniciales; if (lista) for (const [t, x, y, z, bebe, ex] of lista) { if (!TIPOS[t]) continue; const a = crearAnimal(t, x, y, z); if (ex) a.userData.extra = ex; if (TIPOS[t].cargar) TIPOS[t].cargar(a); if (bebe) { a.userData.bebe = bebe; a.scale.setScalar(.5 + .5 * (1 - bebe / 180)); } } else poblarAnimales(22, false);
   armarFaroLuz(); }
 function entrarMundo(id) {
   let datos; try { datos = JSON.parse(localStorage.getItem('bloquesMundo_' + id)); } catch (e) {}
@@ -1538,7 +1585,7 @@ function geoBloque(d, tam) {
     for (const q of f.v) { const px = F[0] + q[0] * (F[3] - F[0]), py = F[1] + q[1] * (F[4] - F[1]), pz = F[2] + q[2] * (F[5] - F[2]);
       P.push((px - .5) * tam, (py - .5) * tam, (pz - .5) * tam); C.push(f.luz, f.luz, f.luz);
       let u, w; if (f.d[0]) { u = f.d[0] > 0 ? 1 - pz : pz; w = py; } else if (f.d[2]) { u = f.d[2] > 0 ? px : 1 - px; w = py; } else { u = px; w = pz; }
-      UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / 16); }
+      UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / 32); }
     I.push(n, n + 1, n + 2, n, n + 2, n + 3); n += 4; }
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(UV, 2)); g.setAttribute('color', new THREE.Float32BufferAttribute(C, 3)); g.setIndex(I); return g;
 }
@@ -1704,6 +1751,7 @@ function bucle(ya) {
   if (typeof herrFrame === 'function') herrFrame(dt);
   if (typeof modsFrame === 'function') modsFrame(dt);
   if (typeof pjFrame === 'function') pjFrame(dt);
+  if (typeof contenidoFrame === 'function') contenidoFrame(dt);
   render.render(escena, cam);
   if (typeof herrDespues === 'function') herrDespues();
 }
@@ -1715,5 +1763,6 @@ window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMun
 <script src="mecanismos.js"></script>
 <script src="estilo.js"></script>
 <script src="personaje.js"></script>
+<script src="contenido.js"></script>
 </body>
 </html>
