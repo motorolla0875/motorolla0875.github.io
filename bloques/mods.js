@@ -98,7 +98,7 @@ cap('cartelCapa', '<div class="titulo" style="font-size:clamp(22px,4vw,32px)" da
 cap('verCartel', '<div class="tablero" id="verCartelTxt"></div><div class="btn" id="verCartelOk" data-i="seguir"></div>');
 cap('metaCapa', '<div class="titulo" style="font-size:clamp(24px,5vw,40px);color:#ffe14a" data-i="metaLlegaste"></div><div class="texto" id="metaTxt" style="font-size:18px"></div><div class="btn" id="metaOtra" data-i="jugarDeNuevo"></div><div class="btn" id="metaSeguir" data-i="seguirExplorando"></div>');
 { const c = document.createElement('div'); c.id = 'crono'; c.className = 'sombra'; c.hidden = true; $('hud').appendChild(c); }
-const archivoIn = document.createElement('input'); archivoIn.type = 'file'; archivoIn.accept = '.voxel,.voxelmod,.blox,.bloxmod,application/octet-stream,application/json,application/gzip'; archivoIn.style.display = 'none'; document.body.appendChild(archivoIn);
+const archivoIn = document.createElement('input'); archivoIn.type = 'file'; archivoIn.accept = '.voxel,.voxelmod,.voxelskin,.blox,.bloxmod,application/octet-stream,application/json,application/gzip'; archivoIn.style.display = 'none'; document.body.appendChild(archivoIn);
 aplicarIdioma();
 const abrir = id => { $(id).hidden = false; }, cerrar = id => { $(id).hidden = true; };
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -301,6 +301,7 @@ archivoIn.onchange = async () => {
   const f = archivoIn.files[0]; if (!f) return; let o;
   try { o = await desempacar(f); } catch (e) { return aviso(TR('archivoMal'), 1800); }
   if (!o || (o.formato !== 'voxelium' && o.formato !== 'blox')) return aviso(TR('archivoMal'), 1800);
+  if (o.tipo === 'skin' && o.skin && typeof skinImportar === 'function') return skinImportar(o.skin);
   if (o.tipo === 'mod' && o.mod) { guardarModLib(Object.assign(o.mod, { id: o.mod.id || 'm' + Date.now().toString(36) })); aviso(TR('modCargado'), 2400); if (!$('modsCapa').hidden) pintarLibreria(); return; }
   if (o.tipo === 'mapa' && o.datos) {
     const lista = leerLista(), id = Date.now().toString(36), modo = ['aventura', 'supervivencia', 'creativo'].includes(o.modo) ? o.modo : 'aventura';
