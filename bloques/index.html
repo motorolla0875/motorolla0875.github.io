@@ -1703,6 +1703,7 @@ function bucle(ya) {
   if (jugando) { musicaT -= dt; if (musicaT <= 0) musicaT = tocarMusica() + 70 + Math.random() * 100; }
   if (typeof herrFrame === 'function') herrFrame(dt);
   if (typeof modsFrame === 'function') modsFrame(dt);
+  if (typeof pjFrame === 'function') pjFrame(dt);
   render.render(escena, cam);
   if (typeof herrDespues === 'function') herrDespues();
 }
@@ -1713,5 +1714,6 @@ window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMun
 <script src="mods.js"></script>
 <script src="mecanismos.js"></script>
 <script src="estilo.js"></script>
+<script src="personaje.js"></script>
 </body>
 </html>
