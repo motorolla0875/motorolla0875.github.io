@@ -27,7 +27,7 @@ Object.assign(NOMBRES.pt, { 'Botón': 'Botão', 'Palanca': 'Alavanca', 'Placa de
   #mecBar { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 6; background: rgba(0,0,0,.72); border: 3px solid #000; padding: 8px 10px; display: flex; gap: 8px; align-items: center; max-width: 94vw; font-size: 14px; color: #fff; }
   #mecBar small { display: block; font-size: 11px; color: #ffff55; }
   #mecOps .mb { display: block; margin: 6px 0; text-align: center; font-size: 15px; padding: 10px; }
-  #mecMsg { width: 100%; min-height: 70px; font: 700 15px 'Courier New', monospace; padding: 8px; border: 3px solid #000; }
+  #mecMsg { width: 100%; min-height: 70px; font: 700 15px 'Baloo 2', 'Trebuchet MS', sans-serif; padding: 8px; border: 3px solid #000; }
 `; document.head.appendChild(st); }
 cap('mecCapa', '<div class="mVentana" style="width:min(460px,94vw)"><div class="vCab"><div class="vTit" data-i="mecTitulo"></div><div class="cerrar" id="mecCerrar">X</div></div><div class="vCuerpo"><div style="font-size:12px;margin-bottom:6px" data-i="mecAyuda"></div><div id="mecOps"></div><div id="mecMsgCaja" hidden><textarea id="mecMsg" maxlength="160"></textarea><div class="mb verde" id="mecMsgOk" style="text-align:center;margin-top:6px" data-i="listo"></div></div></div></div>');
 { const d = document.createElement('div'); d.id = 'mecBar'; d.className = 'sombra'; d.hidden = true; d.innerHTML = '<div id="mecBarTxt" style="flex:1"></div><div class="mb verde" id="mecBarOk" data-i="listo"></div><div class="mb rojo" id="mecBarNo" data-i="cancelar"></div>'; document.body.appendChild(d); }

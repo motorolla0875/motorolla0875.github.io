@@ -71,7 +71,7 @@ aplicarIdioma();
 
 // ───── estilos de esta parte ─────
 { const st = document.createElement('style'); st.textContent = `
-  .campo { width: 100%; font: 700 15px 'Courier New', monospace; padding: 8px; border: 3px solid #000; background: #fff; color: #222; }
+  .campo { width: 100%; font: 700 15px 'Baloo 2', 'Trebuchet MS', sans-serif; padding: 8px; border: 3px solid #000; background: #fff; color: #222; }
   .mVentana { background: #c6c6c6; border: 3px solid #000; box-shadow: inset 3px 3px 0 #fff, inset -3px -3px 0 #555; color: #3f3f3f; width: min(720px, 96vw); max-height: 94vh; display: flex; flex-direction: column; }
   .mVentana .vCuerpo { overflow: auto; padding: 8px 10px; }
   .mVentana h4 { font-size: 13px; margin: 8px 0 4px; }
@@ -80,11 +80,11 @@ aplicarIdioma();
   .mb { padding: 6px 10px; background: #7d7d7d; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; border: 3px solid #000; cursor: pointer; font-size: 13px; white-space: nowrap; }
   .mb.verde { background: #5f8f3a; } .mb.rojo { background: #8a3a3a; } .mb.on { background: #3a6fd8; }
   .opcG { display: flex; gap: 3px; flex-wrap: wrap; } .opcG div { padding: 5px 8px; background: #8b8b8b; color: #fff; border: 2px solid #000; cursor: pointer; font-size: 12px; } .opcG div.on { background: #5f8f3a; }
-  .ventana select, .mVentana select { font: 700 12px 'Courier New', monospace; padding: 4px; border: 2px solid #000; }
+  .ventana select, .mVentana select { font: 700 12px 'Baloo 2', 'Trebuchet MS', sans-serif; padding: 4px; border: 2px solid #000; }
   #pixGrid { width: min(320px, 46vh, 70vw); height: min(320px, 46vh, 70vw); image-rendering: pixelated; border: 3px solid #000; background: repeating-conic-gradient(#ddd 0 25%, #fff 0 50%) 0 0 / 20px 20px; touch-action: none; position: static; display: block; }
   .pixWrap { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
   .paleta { display: grid; grid-template-columns: repeat(8, 26px); gap: 3px; } .paleta div { width: 26px; height: 26px; border: 2px solid #000; cursor: pointer; } .paleta div.on { outline: 3px solid #fff; }
-  #cartelTxt { width: min(520px, 90vw); min-height: 90px; font: 700 16px 'Courier New', monospace; padding: 10px; border: 3px solid #000; }
+  #cartelTxt { width: min(520px, 90vw); min-height: 90px; font: 700 16px 'Baloo 2', 'Trebuchet MS', sans-serif; padding: 10px; border: 3px solid #000; }
   #verCartel .tablero { background: #a7834f; border: 6px solid #5e4426; padding: 18px; max-width: 560px; font-size: 18px; line-height: 1.4; color: #2a1c0e; text-shadow: none; white-space: pre-wrap; text-align: center; }
   #crono { position: fixed; top: 66px; left: 50%; transform: translateX(-50%); z-index: 3; font-size: 15px; background: rgba(0,0,0,.45); padding: 2px 10px; pointer-events: none; }
 `; document.head.appendChild(st); }
@@ -135,22 +135,12 @@ function instalarMod(m) {
 }
 // ═════════ CRIATURAS ═════════
 const FORMA_BASE = {
-  vaca: { an: .45, al: 1.4, vel: 1.1, c1: '#7a5230', c2: '#4f3420' }, oveja: { an: .45, al: 1.3, vel: 1, c1: '#efefef', c2: '#8a8a8a' },
-  gallina: { an: .25, al: .8, vel: 1.3, c1: '#f4f4f4', c2: '#f0a020' }, ojon: { an: .45, al: 1.4, vel: 1.4, c1: '#6b3fa0', c2: '#45276b' },
+  vaca: { an: .45, al: 1.5, vel: 1.1, c1: '#f6ead2', c2: '#7a4a2a' }, oveja: { an: .45, al: 1.45, vel: 1, c1: '#fbf6ee', c2: '#5a4a5e' },
+  gallina: { an: .25, al: 1.1, vel: 1.3, c1: '#fff3c4', c2: '#ff9a2e' }, ojon: { an: .45, al: 1.4, vel: 1.4, c1: '#6b3fa0', c2: '#45276b' },
 };
 const hex = c => parseInt(String(c || '#888888').slice(1), 16);
 const FORMAS = {
-  vaca(g, c1, c2) { const cu = matA(hex(c1)), os = matA(hex(c2)), bl = matA(0xf2f2f2), ne = matA(0x1a1a1a);
-    caja(g, .8, .75, 1.25, 0, .95, 0, cu); caja(g, .5, .05, .55, .1, 1.33, -.15, os); caja(g, .5, .5, .45, 0, 1.25, .8, cu); caja(g, .42, .24, .12, 0, 1.1, 1.06, os);
-    caja(g, .07, .07, .02, .13, 1.33, 1.03, ne); caja(g, .07, .07, .02, -.13, 1.33, 1.03, ne); caja(g, .08, .16, .08, .22, 1.55, .75, bl); caja(g, .08, .16, .08, -.22, 1.55, .75, bl);
-    return [[.24, .42], [-.24, -.42], [-.24, .42], [.24, -.42]].map(([x, z]) => pata(g, .22, .6, .22, x, .6, z, os)); },
-  oveja(g, c1, c2) { const la = matA(hex(c1)), ca = matA(hex(c2)), ne = matA(0x1a1a1a);
-    caja(g, .9, .8, 1.15, 0, .95, 0, la); caja(g, .42, .42, .42, 0, 1.2, .72, ca); caja(g, .46, .16, .3, 0, 1.45, .66, la); caja(g, .07, .07, .02, .11, 1.25, .94, ne); caja(g, .07, .07, .02, -.11, 1.25, .94, ne);
-    return [[.24, .38], [-.24, -.38], [-.24, .38], [.24, -.38]].map(([x, z]) => pata(g, .2, .55, .2, x, .55, z, ca)); },
-  gallina(g, c1, c2) { const bl = matA(hex(c1)), na = matA(hex(c2)), ro = matA(0xd02828), ne = matA(0x1a1a1a);
-    caja(g, .42, .42, .55, 0, .5, 0, bl); caja(g, .28, .36, .26, 0, .85, .28, bl); caja(g, .14, .08, .12, 0, .82, .47, na); caja(g, .06, .14, .14, 0, 1.08, .28, ro); caja(g, .1, .12, .04, 0, .72, .42, ro);
-    caja(g, .05, .05, .02, .08, .92, .415, ne); caja(g, .05, .05, .02, -.08, .92, .415, ne); caja(g, .06, .3, .4, .24, .52, -.02, bl); caja(g, .06, .3, .4, -.24, .52, -.02, bl);
-    return [[.1, 0], [-.1, 0]].map(([x, z]) => pata(g, .06, .3, .06, x, .3, z, na)); },
+  vaca: FORMA_ANIMAL.vaca, oveja: FORMA_ANIMAL.oveja, gallina: FORMA_ANIMAL.gallina,
   ojon(g, c1, c2) { const cu = matA(hex(c1)), pa = matA(hex(c2)), bl = matA(0xf2f2f2), ne = new THREE.MeshBasicMaterial({ color: 0x1a1022 });
     caja(g, .9, 1, .9, 0, .9, 0, cu); caja(g, .52, .42, .06, 0, 1.05, .46, bl); caja(g, .22, .22, .07, 0, 1.03, .48, ne);
     return [-1, 1].map(s => pata(g, .26, .4, .26, s * .22, .4, 0, pa)); },

@@ -6,7 +6,7 @@
 <title>Blox: Building Block Crafting</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; overflow: hidden; background: #79a6ff; font-family: 'Courier New', ui-monospace, monospace; font-weight: 700; color: #fff; user-select: none; -webkit-user-select: none; touch-action: none; image-rendering: pixelated; }
+  html, body { height: 100%; overflow: hidden; background: #79a6ff; font-family: 'Baloo 2', 'Trebuchet MS', sans-serif; font-weight: 700; color: #fff; user-select: none; -webkit-user-select: none; touch-action: none; image-rendering: pixelated; }
   canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
   .sombra { text-shadow: 2px 2px 0 #3f3f3f; }
   .hud[hidden], [hidden] { display: none !important; }
@@ -40,7 +40,7 @@
   .titulo { font-size: clamp(40px, 9vw, 72px); letter-spacing: 4px; color: #c6c6c6; text-shadow: 4px 4px 0 #3f3f3f, -2px -2px 0 #fff; margin-bottom: 4px; text-align: center; }
   .sub { color: #ffff55; font-size: 15px; text-shadow: 2px 2px 0 #3f3f3f; margin-bottom: 14px; text-align: center; transform: rotate(-4deg); }
   .texto { max-width: 560px; font-size: 13px; line-height: 1.45; text-align: center; text-shadow: 2px 2px 0 #3f3f3f; margin-bottom: 10px; color: #e0e0e0; }
-  .btn { width: min(380px, 90vw); margin-top: 8px; padding: 10px 0 9px; text-align: center; font: 700 17px 'Courier New', monospace; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; background: #7d7d7d; border: 3px solid #000; box-shadow: inset 3px 3px 0 #aaa, inset -3px -3px 0 #555; cursor: pointer; }
+  .btn { width: min(380px, 90vw); margin-top: 8px; padding: 10px 0 9px; text-align: center; font: 700 17px 'Baloo 2', 'Trebuchet MS', sans-serif; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; background: #7d7d7d; border: 3px solid #000; box-shadow: inset 3px 3px 0 #aaa, inset -3px -3px 0 #555; cursor: pointer; }
   .btn small { display: block; font-size: 12px; color: #e0e0e0; margin-top: 3px; padding: 0 8px; }
   .btn:active { background: #8b9dff; } .btn.rojo { background: #8a3a3a; }
   .filaBtn { display: flex; gap: 8px; width: min(380px, 90vw); } .filaBtn .btn { flex: 1; width: auto; }
@@ -558,9 +558,9 @@ function dibujarTile(n, f) {
   const e = a => a[Math.floor(rnd() * a.length)];
   for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const c = f(x, y, rnd, e); if (c) { ag.fillStyle = c; ag.fillRect(tx * 16 + x, ty * 16 + y, 1, 1); } }
 }
-const TIERRA_C = ['#866043', '#866043', '#79553a', '#966c4a', '#6c4b30', '#866043'];
-const PASTO_C = ['#5aa634', '#6cbb40', '#4e962d', '#7dcc4c', '#6cbb40'];
-const piedraC = r => { const v = r(); return v < .12 ? '#686868' : v < .3 ? '#8c8c8c' : v < .45 ? '#747474' : '#7f7f7f'; };
+const TIERRA_C = ['#a8653a', '#a25f36', '#ad6a3f', '#a8653a'];
+const PASTO_C = ['#36c95a', '#3ccf60', '#32c255', '#36c95a'];
+const piedraC = r => { const v = r(); return v < .1 ? '#717a94' : v < .25 ? '#8790aa' : '#7d86a0'; };
 const MANCHAS = [[3, 3], [11, 4], [6, 10], [12, 12], [2, 13]];
 const mineral = (a, b) => (x, y, r, e) => MANCHAS.some(([mx, my]) => Math.abs(x - mx) + Math.abs(y - my) < 2 || (x === mx + 1 && y === my + 1)) ? e([a, b, a]) : piedraC(r);
 const tela = c => (x, y, r, e) => { const k = r(); return k < .25 ? sombra(c, -.12) : k < .35 ? sombra(c, .08) : (x + y) % 4 === 0 ? sombra(c, -.06) : c; };
@@ -575,30 +575,30 @@ const PICOS_C = [['#a7834f', '#7d5f37'], ['#8c8c8c', '#6a6a6a'], ['#e6e6e6', '#b
 const pico = k => (x, y) => enLista(PICO_CAB, x, y) ? PICOS_C[k][(x + y) % 3 ? 0 : 1] : enLista(PICO_MANGO, x, y) ? (y % 3 ? '#6b5133' : '#4d3a22') : null;
 const espada = k => (x, y) => enLista(ESP_HOJA, x, y) ? PICOS_C[k][(x + y) % 4 ? 0 : 1] : enLista(ESP_GUARDA, x, y) ? '#4d3a22' : enLista(ESP_MANGO, x, y) ? '#6b5133' : null;
 const PINTA = {
-  pastoArriba: (x, y, r, e) => e(PASTO_C),
-  pastoCostado: (x, y, r, e) => { const borde = 3 + ((x * 7 + 3) % 3 === 0 ? 1 : 0) + (x % 5 === 2 ? 1 : 0); return y < borde ? e(PASTO_C) : e(TIERRA_C); },
-  tierra: (x, y, r, e) => e(TIERRA_C),
-  piedra: (x, y, r) => piedraC(r),
-  arena: (x, y, r, e) => e(['#dbd3a0', '#e3dbac', '#d4cb94', '#dbd3a0', '#cfc58f']),
-  troncoCostado: (x, y, r, e) => { const k = (x + Math.floor(r() * 2)) % 4; return k === 0 ? '#4d3a22' : k === 2 ? '#7a5d3b' : e(['#6b5133', '#5a4329', '#6b5133']); },
+  pastoArriba: (x, y, r, e) => (x * 3 + y * 5) % 13 === 0 ? '#6fe08a' : e(PASTO_C),
+  pastoCostado: (x, y, r, e) => y < 6 ? e(PASTO_C) : y === 6 ? '#1f8a3a' : (x * 5 + y * 3) % 11 === 0 ? '#8e5230' : e(TIERRA_C),
+  tierra: (x, y, r, e) => (x * 5 + y * 3) % 11 === 0 ? '#8e5230' : e(TIERRA_C),
+  piedra: (x, y, r) => (((x - 4) ** 2 + (y - 5) ** 2 < 5) || ((x - 11) ** 2 + (y - 11) ** 2 < 4)) ? '#6c7590' : piedraC(r),
+  arena: (x, y, r, e) => (x * 7 + y * 3) % 13 === 0 ? '#f0bf55' : e(['#ffd36e', '#fcd06a', '#ffd775']),
+  troncoCostado: (x, y, r, e) => x % 4 === 0 ? '#5a3418' : e(['#8a5228', '#844e25', '#8f562b']),
   troncoCostadoH: (x, y, r, e) => PINTA.troncoCostado(y, x, r, e),
-  troncoArriba: (x, y, r, e) => { const d = Math.max(Math.abs(x - 7.5), Math.abs(y - 7.5)); if (d > 6.5) return e(['#5a4329', '#4d3a22']); return Math.floor(d) % 2 ? '#a0814f' : '#b8955c'; },
-  hojas: (x, y, r, e) => r() < .18 ? null : e(['#3c9a2c', '#2c7d22', '#4cb038', '#358b28']),
-  madera: (x, y, r, e) => { if (y % 4 === 3) return '#6e5130'; const seam = (Math.floor(y / 4) % 2 ? 4 : 11); if (x === seam) return '#7d5f37'; return e(['#a7834f', '#9d7a48', '#b08a54', '#a7834f']); },
-  ladrillo: (x, y, r, e) => { if (y % 4 === 3) return '#b9b1a5'; const off = Math.floor(y / 4) % 2 ? 4 : 0; if ((x + off) % 8 === 7) return '#b9b1a5'; return e(['#9b4b3a', '#8e4433', '#a85441', '#9b4b3a']); },
+  troncoArriba: (x, y) => { const d = Math.max(Math.abs(x - 7.5), Math.abs(y - 7.5)); return d > 6 ? '#5a3418' : d % 2 < 1 ? '#f0b060' : '#d89848'; },
+  hojas: (x, y, r, e) => r() < .07 ? null : ((x >> 2) + (y >> 2)) % 2 ? e(['#1fae5a', '#22b45f']) : (x % 4 === 1 && y % 4 === 1) ? '#7ff0a8' : e(['#189c4f', '#1aa354']),
+  madera: (x, y, r, e) => y % 4 === 3 ? '#8a4f1e' : x === (Math.floor(y / 4) % 2 ? 4 : 11) ? '#b8682a' : e(['#e08a3a', '#dc8636', '#e48e3e']),
+  ladrillo: (x, y, r, e) => (y % 4 === 3 || (x + (Math.floor(y / 4) % 2 ? 4 : 0)) % 8 === 7) ? '#f3d2c8' : e(['#d8455a', '#d24055', '#de4a5f']),
   vidrio: (x, y) => { if (x === 0 || y === 0 || x === 15 || y === 15) return '#c9e8f5'; if ((x === y + 2 || x === y + 3) && x < 9 && y > 1) return '#ffffff'; if (x === 12 && y > 9 && y < 13) return '#ffffff'; return null; },
-  agua: (x, y, r, e) => (y + Math.floor(x / 4)) % 5 === 0 ? '#6fb0ff' : e(['#3f8eec', '#3a84e0', '#4699f4', '#357ad4']),
-  adoquin: (x, y, r, e) => { const fila = Math.floor(y / 4), off = (fila % 2) * 3; if (y % 4 === 0 || (x + off) % 6 === 0) return '#555555'; const k = h3(Math.floor((x + off) / 6), fila, 0, 9); return k < .33 ? e(['#8a8a8a', '#7f7f7f']) : k < .66 ? e(['#747474', '#6c6c6c']) : e(['#969696', '#8c8c8c']); },
+  agua: (x, y, r, e) => (y % 6 === 2 && (x + y) % 8 < 4) ? '#9ff0ff' : e(['#1fa8f0', '#1ca3ec', '#23adf4']),
+  adoquin: (x, y, r, e) => { const fila = Math.floor(y / 4), off = (fila % 2) * 3; if (y % 4 === 0 || (x + off) % 6 === 0) return '#3f465c'; const k = h3(Math.floor((x + off) / 6), fila, 0, 9); return k < .33 ? '#8a93ad' : k < .66 ? '#7a839d' : '#969fb8'; },
   carbonM: mineral('#262626', '#3a3a3a'), hierroM: mineral('#d8af93', '#c69a7c'), oroM: mineral('#fcee4b', '#e3c42f'), cristalM: mineral('#c58cf5', '#8a3fd0'),
-  nieve: (x, y, r, e) => e(['#f4fbfb', '#e9f3f5', '#ffffff', '#dfecef']),
-  nieveCostado: (x, y, r, e) => y < 4 + (x % 3 === 1 ? 1 : 0) ? e(['#f4fbfb', '#e9f3f5', '#ffffff']) : e(TIERRA_C),
-  cactusCostado: (x, y, r, e) => x === 0 || x === 15 ? '#2b5a1c' : (x % 4 === 2 && y % 4 === 1) ? '#e8e2a8' : x % 4 === 3 ? '#356c24' : e(['#4c8f34', '#458530', '#4c8f34']),
-  cactusArriba: (x, y, r, e) => (x === 0 || y === 0 || x === 15 || y === 15) ? '#2b5a1c' : Math.max(Math.abs(x - 7.5), Math.abs(y - 7.5)) < 3 ? '#6aa84a' : e(['#4c8f34', '#458530']),
-  cofreCostado: (x, y, r, e) => (x === 0 || y === 0 || x === 15 || y === 15 || y === 6) ? '#3a2a14' : (x >= 7 && x <= 8 && y >= 4 && y <= 8) ? (y === 4 || y === 8 ? '#8f8f8f' : '#d6d6d6') : y % 3 === 0 ? '#7a5428' : e(['#a0702f', '#946628', '#a87836']),
-  cofreArriba: (x, y, r, e) => (x === 0 || y === 0 || x === 15 || y === 15) ? '#3a2a14' : y % 4 === 0 ? '#7a5428' : e(['#a0702f', '#946628', '#a87836']),
+  nieve: (x, y, r, e) => e(['#ffffff', '#f2f8ff', '#eaf3ff']),
+  nieveCostado: (x, y, r, e) => y < 6 ? e(['#ffffff', '#f2f8ff']) : y === 6 ? '#c8dcf0' : e(TIERRA_C),
+  cactusCostado: (x, y, r, e) => x === 0 || x === 15 ? '#137a3a' : (x % 4 === 2 && y % 4 === 1) ? '#fff2a8' : x % 4 === 3 ? '#16904a' : e(['#22b45f', '#1fae5a']),
+  cactusArriba: (x, y, r, e) => (x === 0 || y === 0 || x === 15 || y === 15) ? '#137a3a' : Math.max(Math.abs(x - 7.5), Math.abs(y - 7.5)) < 3 ? '#5fd88a' : e(['#22b45f', '#1fae5a']),
+  cofreCostado: (x, y, r, e) => (x === 0 || y === 0 || x === 15 || y === 15 || y === 6) ? '#6a3a14' : (x >= 6 && x <= 9 && y >= 4 && y <= 8) ? (y === 4 || y === 8 ? '#c49a1c' : '#ffe14a') : y % 3 === 0 ? '#b8682a' : e(['#e08a3a', '#dc8636']),
+  cofreArriba: (x, y, r, e) => (x === 0 || y === 0 || x === 15 || y === 15) ? '#6a3a14' : y % 4 === 0 ? '#b8682a' : e(['#e08a3a', '#dc8636']),
   antorcha: (x, y) => (x === 7 || x === 8) ? (y >= 5 && y <= 6 ? (x === 7 ? '#ffd84a' : '#fff4b0') : y === 7 ? '#ff9a2e' : y > 7 ? (y % 3 ? '#6b5133' : '#4d3a22') : null) : null,
-  puerta: (x, y, r, e) => { if (x === 0 || x === 15 || y === 0 || y === 15 || y === 8) return '#5e4426'; if ((x >= 3 && x <= 6 || x >= 9 && x <= 12) && y >= 2 && y <= 6) return (x === 3 || x === 9) && y === 2 ? '#e6f4fa' : null; if (x === 12 && y === 10) return '#2a2a2a'; return x % 5 === 2 ? '#7d5f37' : e(['#a7834f', '#9d7a48', '#b08a54']); },
-  escalera: (x, y) => (x === 2 || x === 3 || x === 12 || x === 13) ? (y % 4 === 0 ? '#5e4426' : '#8d6a3f') : (y % 4 === 1 && x > 3 && x < 12) ? '#a07a48' : null,
+  puerta: (x, y, r, e) => { if (x === 0 || x === 15 || y === 0 || y === 15 || y === 8) return '#8a4f1e'; if ((x >= 3 && x <= 6 || x >= 9 && x <= 12) && y >= 2 && y <= 6) return (x === 3 || x === 9) && y === 2 ? '#e6f4fa' : null; if (x === 12 && y === 10) return '#2a2a2a'; return x % 5 === 2 ? '#b8682a' : e(['#e08a3a', '#dc8636', '#b08a54']); },
+  escalera: (x, y) => (x === 2 || x === 3 || x === 12 || x === 13) ? (y % 4 === 0 ? '#8a4f1e' : '#c8742e') : (y % 4 === 1 && x > 3 && x < 12) ? '#e08a3a' : null,
   estante: (x, y, r, e) => { if (y <= 1 || y >= 14 || y === 7 || y === 8) return e(['#a7834f', '#9d7a48']); if (x === 0 || x === 15) return '#6e5130'; const lib = Math.floor(x / 2) + (y > 8 ? 9 : 0); return ['#8a3030', '#2f4f8a', '#3f7a3f', '#a07a2a', '#6a2f7a', '#8a5a2f', '#2f6a6a'][Math.floor(h3(lib, 1, 2, 7) * 7)] + ''; },
   bOro: (x, y, r, e) => (x === 0 || y === 0) ? '#fffbb0' : (x === 15 || y === 15) ? '#c49a1c' : e(['#fcee4b', '#f5e03a', '#fff26a']),
   bHierro: (x, y, r, e) => (x === 0 || y === 0) ? '#ffffff' : (x === 15 || y === 15) ? '#9a9a9a' : e(['#dcdcdc', '#d2d2d2', '#e6e6e6']),
@@ -617,9 +617,9 @@ const PINTA = {
   camaArriba: (x, y, r, e) => (x === 0 || x === 15 || y === 0 || y === 15) ? '#6b4a26' : y < 5 ? e(['#f4f4f4', '#e8e8e8']) : y === 5 ? '#c8c8c8' : e(['#c03030', '#b02828', '#d03a3a']),
   camaCostado: (x, y, r, e) => y < 11 ? (y === 7 || y === 0 ? '#d84a4a' : e(['#c03030', '#b02828'])) : (x < 2 || x > 13) ? '#4d3a22' : e(['#a7834f', '#9d7a48']),
   farol: (x, y) => { if (x < 5 || x > 10 || y < 7) return null; if (y === 7 || y === 15 || x === 5 || x === 10) return '#3a3a3a'; return y < 10 ? '#ffe9a0' : '#ffc84a'; },
-  ladrilloP: (x, y, r, e) => { if (y % 8 === 7 || y % 8 === 0 && false) return '#5a5a5a'; const off = Math.floor(y / 8) % 2 ? 8 : 0; if ((x + off) % 16 === 15) return '#5a5a5a'; if (y % 8 === 0) return '#a0a0a0'; return e(['#8a8a8a', '#838383', '#919191', '#8a8a8a']); },
-  maderaO: (x, y, r, e) => { if (y % 4 === 3) return '#2e1d0e'; if (x === (Math.floor(y / 4) % 2 ? 4 : 11)) return '#3d2814'; return e(['#5a3a1e', '#52351b', '#623f21']); },
-  maderaC: (x, y, r, e) => { if (y % 4 === 3) return '#a8925a'; if (x === (Math.floor(y / 4) % 2 ? 4 : 11)) return '#bfa86c'; return e(['#d8c48a', '#d0bb80', '#e0cc94']); },
+  ladrilloP: (x, y, r, e) => { if (y % 8 === 7) return '#3f465c'; const off = Math.floor(y / 8) % 2 ? 8 : 0; if ((x + off) % 16 === 15) return '#3f465c'; if (y % 8 === 0) return '#b4bcd4'; return e(['#8a93ad', '#848da7', '#9099b3']); },
+  maderaO: (x, y, r, e) => { if (y % 4 === 3) return '#3a1f10'; if (x === (Math.floor(y / 4) % 2 ? 4 : 11)) return '#5a3018'; return e(['#7a4422', '#74401f', '#804826']); },
+  maderaC: (x, y, r, e) => { if (y % 4 === 3) return '#c8a060'; if (x === (Math.floor(y / 4) % 2 ? 4 : 11)) return '#e0b878'; return e(['#ffd89a', '#fbd494', '#ffdca2']); },
   marmol: (x, y, r, e) => (Math.abs((x * 2 + y * 3) % 23 - 11) < 1 && r() < .8) ? '#cfc8c0' : e(['#f2eee8', '#eeeae4', '#f6f3ee', '#e8e3dc']),
   meta: (x, y) => (x === 0 || y === 0 || x === 15 || y === 15) ? '#c49a1c' : (Math.floor(x / 4) + Math.floor(y / 4)) % 2 ? '#1d1d21' : '#f4f4f4',
   boton: (x, y) => (y < 2 || x < 2 || x > 13) ? '#7a1414' : (y < 5 ? '#ff7a6a' : '#d42a2a'),
@@ -630,7 +630,7 @@ const PINTA = {
   pastoAlto: (x, y) => { const alto = 5 + Math.floor(h3(x, 1, 0, 21) * 10); return h3(x, 2, 0, 21) < .72 && y >= 16 - alto ? (y < 16 - alto + 2 ? '#8ad458' : (x + y) % 3 ? '#5fae38' : '#4c962d') : null; },
   florRoja: (x, y) => { if ((x === 7 || x === 8) && y >= 8) return '#3f8a2e'; if (y === 11 && (x === 5 || x === 6 || x === 9 || x === 10)) return '#4cae38'; const d = Math.hypot(x - 7.5, y - 5); return d < 1.3 ? '#ffd84a' : d < 3.3 ? (x < 7 ? '#ff5a4a' : '#d42a2a') : null; },
   florAmarilla: (x, y) => { if ((x === 7 || x === 8) && y >= 8) return '#3f8a2e'; if (y === 12 && (x === 5 || x === 6 || x === 9 || x === 10)) return '#4cae38'; const d = Math.hypot(x - 7.5, y - 5.5); return d < 1.2 ? '#e8902a' : d < 3.2 ? (y < 5 ? '#fff27a' : '#f5d020') : null; },
-  aradaArriba: (x, y, r, e) => y % 4 < 2 ? e(['#4f331c', '#5a3a20']) : e(['#6e4a2c', '#7a5433', '#6e4a2c']),
+  aradaArriba: (x, y, r, e) => y % 4 < 2 ? e(['#7a4426', '#83492a']) : e(['#a8653a', '#ad6a3f']),
   trigo0: (x, y) => (x % 4 === 1 && y >= 12) ? '#5fae38' : null,
   trigo1: (x, y) => (x % 3 === 1 && y >= 8) ? (y < 10 ? '#8ad458' : '#5fae38') : null,
   trigo2: (x, y) => (x % 3 === 1 && y >= 4) ? (y < 7 ? '#b8c84a' : '#7caa38') : null,
@@ -642,6 +642,14 @@ const PINTA = {
 };
 TELAS.forEach(([n, c], k) => PINTA['tela' + k] = tela(c));
 TILES.forEach((n, i) => dibujarTile(i, PINTA[n]));
+// estilo propio: cada bloque entero lleva un bisel (luz arriba-izquierda, sombra abajo-derecha), como una pieza de juguete
+const BISEL = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoCostadoH', 'troncoArriba', 'madera', 'ladrillo', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cofreArriba', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'aradaArriba', 'ladrilloP', 'maderaO', 'maderaC', 'marmol', 'meta', 'control', 'camaArriba', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8'];
+function biselar(n) { const tx = n % 8, ty = Math.floor(n / 8), im = ag.getImageData(tx * 16, ty * 16, 16, 16), d = im.data;
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const k = (y * 16 + x) * 4; if (d[k + 3] < 128) continue; let f = 0;
+    if (x + y < 3) f = .4; else if (x === 0 || y === 0) f = .26; else if (x === 15 || y === 15) f = -.3; else if (x === 1 || y === 1) f = .1; else if (x === 14 || y === 14) f = -.12;
+    for (let c = 0; c < 3; c++) d[k + c] = Math.max(0, Math.min(255, Math.round(f > 0 ? d[k + c] + (255 - d[k + c]) * f : d[k + c] * (1 + f)))); }
+  ag.putImageData(im, tx * 16, ty * 16); }
+for (const n of BISEL) if (TL[n] != null) biselar(TL[n]);
 const atlasTex = new THREE.CanvasTexture(atlas); atlasTex.magFilter = THREE.NearestFilter; atlasTex.minFilter = THREE.NearestFilter; atlasTex.generateMipmaps = false;
 // material propio: luz del cielo (que baja de noche) + luz cálida de antorchas + sombra suave en las esquinas
 const VS = `attribute vec3 luz; varying vec2 vUv; varying vec3 vL; varying float vD;
@@ -1191,24 +1199,28 @@ const ruidoTex = new THREE.CanvasTexture(ruidoC); ruidoTex.magFilter = ruidoTex.
 const matA = c => new THREE.MeshLambertMaterial({ color: c, map: ruidoTex });
 function caja(g, w, h, d, x, y, z, m) { const me = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); me.position.set(x, y, z); g.add(me); return me; }
 function pata(g, w, h, d, x, arriba, z, m) { const ge = new THREE.BoxGeometry(w, h, d); ge.translate(0, -h / 2, 0); const me = new THREE.Mesh(ge, m); me.position.set(x, arriba, z); g.add(me); return me; }
+// animales con estilo propio: cabeza grande y ojos grandes
+function ojos(g, sep, y, z, s = 1) { const bl = matA(0xffffff), ne = new THREE.MeshLambertMaterial({ color: 0x14142a }); for (const sx of [-1, 1]) { caja(g, .16 * s, .18 * s, .03, sx * sep, y, z, bl); caja(g, .085 * s, .11 * s, .03, sx * sep, y - .02 * s, z + .015, ne); } }
+const FORMA_ANIMAL = {
+  vaca(g, c1, c2) { const cu = matA(hex6(c1)), ma = matA(hex6(c2)), ro = matA(0xf2a0a8), ne = matA(0x3a2020), cu2 = matA(0xfff2c0);
+    caja(g, .78, .66, 1, 0, .86, -.05, cu); caja(g, .8, .3, .34, 0, .96, -.28, ma); caja(g, .42, .04, .4, .1, 1.2, .12, ma);
+    caja(g, .64, .58, .52, 0, 1.22, .66, cu); caja(g, .5, .22, .12, 0, 1.03, .96, ro); caja(g, .06, .06, .02, .1, 1.05, 1.025, ne); caja(g, .06, .06, .02, -.1, 1.05, 1.025, ne);
+    ojos(g, .15, 1.32, .935); caja(g, .16, .08, .1, .39, 1.38, .62, cu); caja(g, .16, .08, .1, -.39, 1.38, .62, cu); caja(g, .07, .14, .07, .19, 1.57, .62, cu2); caja(g, .07, .14, .07, -.19, 1.57, .62, cu2);
+    return [[.24, .32], [-.24, -.36], [-.24, .32], [.24, -.36]].map(([x, z]) => pata(g, .2, .5, .2, x, .53, z, ma)); },
+  oveja(g, c1, c2) { const la = matA(hex6(c1)), ca = matA(hex6(c2));
+    caja(g, .9, .72, 1, 0, .9, 0, la); caja(g, .56, .3, .5, 0, 1.32, -.1, la); caja(g, .4, .24, .4, .26, 1.22, .24, la); caja(g, .4, .24, .4, -.26, 1.22, -.3, la);
+    caja(g, .48, .46, .4, 0, 1.15, .66, ca); caja(g, .52, .2, .3, 0, 1.43, .6, la); ojos(g, .12, 1.2, .865, .85);
+    return [[.24, .32], [-.24, -.32], [-.24, .32], [.24, -.32]].map(([x, z]) => pata(g, .18, .5, .18, x, .52, z, ca)); },
+  gallina(g, c1, c2) { const bl = matA(hex6(c1)), na = matA(hex6(c2)), ro = matA(0xff4a5a);
+    caja(g, .5, .46, .52, 0, .52, 0, bl); caja(g, .4, .38, .36, 0, .92, .14, bl); caja(g, .14, .1, .12, 0, .88, .37, na); caja(g, .08, .12, .18, 0, 1.15, .14, ro);
+    ojos(g, .1, .98, .325, .7); caja(g, .06, .24, .34, .28, .55, 0, bl); caja(g, .06, .24, .34, -.28, .55, 0, bl);
+    return [[.1, 0], [-.1, 0]].map(([x, z]) => pata(g, .06, .3, .06, x, .3, z, na)); },
+};
+function hex6(c) { return typeof c === 'number' ? c : parseInt(String(c).slice(1), 16); }
 const TIPOS = {
-  vaca: { vida: 10, an: .45, al: 1.4, vel: 1.1, peso: .36, color: '#7a5230',
-    armar(g) { const cu = matA(0x7a5230), os = matA(0x4f3420), cr = matA(0xe8d2b0), bl = matA(0xf2f2f2), ne = matA(0x1a1a1a);
-      caja(g, .8, .75, 1.25, 0, .95, 0, cu); caja(g, .5, .05, .55, .1, 1.33, -.15, bl); caja(g, .5, .5, .45, 0, 1.25, .8, cu); caja(g, .42, .24, .12, 0, 1.1, 1.06, cr);
-      caja(g, .07, .07, .02, .13, 1.33, 1.03, ne); caja(g, .07, .07, .02, -.13, 1.33, 1.03, ne); caja(g, .08, .16, .08, .22, 1.55, .75, bl); caja(g, .08, .16, .08, -.22, 1.55, .75, bl);
-      return [[.24, .42], [-.24, -.42], [-.24, .42], [.24, -.42]].map(([x, z]) => pata(g, .22, .6, .22, x, .6, z, os)); },
-    suelta: () => [[I.CARNE, 1 + Math.floor(Math.random() * 3)]] },
-  oveja: { vida: 8, an: .45, al: 1.3, vel: 1, peso: .36, color: '#efefef',
-    armar(g) { const la = matA(0xefefef), ca = matA(0x8a8a8a), ne = matA(0x1a1a1a);
-      caja(g, .9, .8, 1.15, 0, .95, 0, la); caja(g, .42, .42, .42, 0, 1.2, .72, ca); caja(g, .46, .16, .3, 0, 1.45, .66, la); caja(g, .07, .07, .02, .11, 1.25, .94, ne); caja(g, .07, .07, .02, -.11, 1.25, .94, ne);
-      return [[.24, .38], [-.24, -.38], [-.24, .38], [.24, -.38]].map(([x, z]) => pata(g, .2, .55, .2, x, .55, z, ca)); },
-    suelta: () => [[B.TELA, 1 + Math.floor(Math.random() * 2)], [I.CARNE, 1]] },
-  gallina: { vida: 4, an: .25, al: .8, vel: 1.3, peso: .28, color: '#f4f4f4',
-    armar(g) { const bl = matA(0xf4f4f4), na = matA(0xf0a020), ro = matA(0xd02828), ne = matA(0x1a1a1a);
-      caja(g, .42, .42, .55, 0, .5, 0, bl); caja(g, .28, .36, .26, 0, .85, .28, bl); caja(g, .14, .08, .12, 0, .82, .47, na); caja(g, .06, .14, .14, 0, 1.08, .28, ro); caja(g, .1, .12, .04, 0, .72, .42, ro);
-      caja(g, .05, .05, .02, .08, .92, .415, ne); caja(g, .05, .05, .02, -.08, .92, .415, ne); caja(g, .06, .3, .4, .24, .52, -.02, bl); caja(g, .06, .3, .4, -.24, .52, -.02, bl);
-      return [[.1, 0], [-.1, 0]].map(([x, z]) => pata(g, .06, .3, .06, x, .3, z, na)); },
-    suelta: () => [[I.POLLO, 1]] },
+  vaca: { vida: 10, an: .45, al: 1.5, vel: 1.1, peso: .36, color: '#f6ead2', armar: g => FORMA_ANIMAL.vaca(g, '#f6ead2', '#7a4a2a'), suelta: () => [[I.CARNE, 1 + Math.floor(Math.random() * 3)]] },
+  oveja: { vida: 8, an: .45, al: 1.45, vel: 1, peso: .36, color: '#fbf6ee', armar: g => FORMA_ANIMAL.oveja(g, '#fbf6ee', '#5a4a5e'), suelta: () => [[B.TELA, 1 + Math.floor(Math.random() * 2)], [I.CARNE, 1]] },
+  gallina: { vida: 4, an: .25, al: 1.1, vel: 1.3, peso: .28, color: '#fff3c4', armar: g => FORMA_ANIMAL.gallina(g, '#fff3c4', '#ff9a2e'), suelta: () => [[I.POLLO, 1]] },
 };
 function crearAnimal(tipo, x, y, z) {
   const A = TIPOS[tipo], g = new THREE.Group(), patas = A.armar(g), mats = [];
@@ -1394,7 +1406,7 @@ let fotoBlob = null;
 function sacarFoto() {
   marco.visible = false; grieta.visible = false; manoG.visible = false; cieloObj.estrellas.material.opacity = cieloObj.estrellas.material.opacity; render.render(escena, cam); manoG.visible = true;
   const src = render.domElement, c = document.createElement('canvas'); c.width = src.width; c.height = src.height; const g = c.getContext('2d'); g.drawImage(src, 0, 0);
-  const k = c.height / 400; g.font = `bold ${Math.round(18 * k)}px "Courier New", monospace`; g.textAlign = 'right'; g.fillStyle = 'rgba(0,0,0,.5)'; g.fillText('BLOX', c.width - 12 * k + 2 * k, c.height - 12 * k + 2 * k); g.fillStyle = '#fff'; g.fillText('BLOX', c.width - 12 * k, c.height - 12 * k);
+  const k = c.height / 400; g.font = `bold ${Math.round(18 * k)}px "Baloo 2", sans-serif`; g.textAlign = 'right'; g.fillStyle = 'rgba(0,0,0,.5)'; g.fillText('BLOX', c.width - 12 * k + 2 * k, c.height - 12 * k + 2 * k); g.fillStyle = '#fff'; g.fillText('BLOX', c.width - 12 * k, c.height - 12 * k);
   $('fotoImg').src = c.toDataURL('image/jpeg', .92); c.toBlob(b => fotoBlob = b, 'image/jpeg', .92);
   $('flash').style.transition = 'none'; $('flash').style.opacity = 1; requestAnimationFrame(() => { $('flash').style.transition = 'opacity .4s'; $('flash').style.opacity = 0; });
   ruido(.12, .25); pausado = true; soltarTodo(); $('fotoCapa').hidden = false;
@@ -1471,7 +1483,7 @@ $('bVolverMundos').onclick = () => { $('nuevo').hidden = true; $('mundos').hidde
 $('bCreativo').onclick = () => crearMundo('creativo');
 $('bSuper').onclick = () => crearMundo('supervivencia');
 $('bEjemplo').onclick = () => crearMundo('creativo', true);
-for (const c of ['mundos', 'nuevo']) $(c).style.backgroundImage = `linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),url(${tileURL(TL.tierra)})`;
+for (const c of ['mundos', 'nuevo']) $(c).style.backgroundImage = 'linear-gradient(#24378f, #0d153d)';
 
 // ═════════ TOQUES: joystick a la izquierda; a la derecha mirar, tocar = poner, mantener = romper ═════════
 const toques = {};
@@ -1558,16 +1570,15 @@ const cieloObj = {};
   const pos = []; for (let i = 0; i < 600; i++) { const a = h3(i, 1, 0, 3) * 6.283, z = h3(i, 2, 0, 3) * 1.1 - .1, r = Math.sqrt(1 - Math.min(1, z * z)); pos.push(Math.cos(a) * r * 150, z * 150, Math.sin(a) * r * 150); }
   const ge = new THREE.BufferGeometry(); ge.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   cieloObj.estrellas = new THREE.Points(ge, new THREE.PointsMaterial({ color: 0xffffff, size: 2, sizeAttenuation: false, fog: false, transparent: true, opacity: 0, depthWrite: false })); escena.add(cieloObj.estrellas);
-  // nubes cuadradas que se repiten sin cortes
   const P = [], I = []; let n = 0; const C = 8, NC = 32, vnP = (x, z) => { const xi = Math.floor(x), zi = Math.floor(z), fx = sm(x - xi), fz = sm(z - zi), w = v => ((v % 8) + 8) % 8, hh = (a, b) => h3(w(a), 0, w(b), 77); const a = hh(xi, zi), b = hh(xi + 1, zi), c = hh(xi, zi + 1), d = hh(xi + 1, zi + 1); return a + (b - a) * fx + (c - a + (d - c - b + a) * fx) * fz; };
   const hay = (i, j) => vnP(i / 3, j / 3) > .7;
-  const quad = (a, b, c, d) => { P.push(...a, ...b, ...c, ...d); I.push(n, n + 1, n + 2, n, n + 2, n + 3); n += 4; };
-  for (let copia = -1; copia <= 0; copia++) for (let i = 0; i < NC; i++) for (let j = 0; j < NC; j++) { if (!hay(i, j)) continue; const x0 = (copia * NC + i) * C, x1 = x0 + C, z0 = j * C - 64, z1 = z0 + C, y0 = 0, y1 = 3;
-    quad([x0, y1, z0], [x0, y1, z1], [x1, y1, z1], [x1, y1, z0]); quad([x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]);
-    if (!hay(i + 1, j)) quad([x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]); if (!hay(i - 1, j)) quad([x0, y0, z1], [x0, y1, z1], [x0, y1, z0], [x0, y0, z0]);
-    if (!hay(i, j + 1)) quad([x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]); if (!hay(i, j - 1)) quad([x1, y0, z0], [x0, y0, z0], [x0, y1, z0], [x1, y1, z0]); }
-  const gn = new THREE.BufferGeometry(); gn.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); gn.setIndex(I); gn.computeVertexNormals();
-  cieloObj.nubes = new THREE.Mesh(gn, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .78, depthWrite: false, side: THREE.DoubleSide })); cieloObj.nubes.position.y = SY + 16; cieloObj.nubes.renderOrder = 2; escena.add(cieloObj.nubes);
+  // nubes redondas y suaves (un dibujo que se repite sin cortes)
+  const cv = document.createElement('canvas'); cv.width = cv.height = 512; const cg = cv.getContext('2d');
+  const bola = (x, y, r) => { for (const ox of [-512, 0, 512]) for (const oy of [-512, 0, 512]) { const gr = cg.createRadialGradient(x + ox, y + oy, r * .2, x + ox, y + oy, r); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(.65, 'rgba(255,255,255,.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); cg.fillStyle = gr; cg.beginPath(); cg.arc(x + ox, y + oy, r, 0, 7); cg.fill(); } };
+  for (let i = 0; i < NC; i++) for (let j = 0; j < NC; j++) if (hay(i, j)) { const x = i * 16 + 8, y = j * 16 + 8; bola(x, y, 15); bola(x + 6 * (h3(i, j, 1, 5) - .5), y + 6 * (h3(i, j, 2, 5) - .5), 11); }
+  const nt = new THREE.CanvasTexture(cv); nt.wrapS = nt.wrapT = THREE.RepeatWrapping; nt.repeat.set(2, 1);
+  const gn = new THREE.PlaneGeometry(NC * C * 2, NC * C); gn.rotateX(-Math.PI / 2); gn.translate(0, 0, NC * C / 2 - 64);
+  cieloObj.nubes = new THREE.Mesh(gn, new THREE.MeshBasicMaterial({ map: nt, color: 0xffffff, transparent: true, opacity: .85, depthWrite: false, side: THREE.DoubleSide })); cieloObj.nubes.position.y = SY + 16; cieloObj.nubes.renderOrder = 2; escena.add(cieloObj.nubes);
 }
 let nubeX = 0;
 function moverCielo(dt) {
@@ -1697,5 +1708,6 @@ window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMun
 <script src="construir.js"></script>
 <script src="mods.js"></script>
 <script src="mecanismos.js"></script>
+<script src="estilo.js"></script>
 </body>
 </html>

@@ -304,9 +304,9 @@ function videoFrame(dt) {
 }
 function videoDespues() {
   const v = video, g = v.g; g.drawImage(render.domElement, 0, 0, 720, 1280);
-  g.textAlign = 'center'; g.font = 'bold 88px "Courier New", monospace'; g.lineWidth = 10; g.strokeStyle = '#3f3f3f'; g.fillStyle = '#ffffff';
+  g.textAlign = 'center'; g.font = 'bold 88px "Baloo 2", sans-serif'; g.lineWidth = 10; g.strokeStyle = '#3f3f3f'; g.fillStyle = '#ffffff';
   g.strokeText('BLOX', 360, 1150); g.fillText('BLOX', 360, 1150);
-  g.font = 'bold 30px "Courier New", monospace'; g.lineWidth = 6; g.strokeText('Building Block Crafting', 360, 1196); g.fillStyle = '#ffff55'; g.fillText('Building Block Crafting', 360, 1196);
+  g.font = 'bold 30px "Baloo 2", sans-serif'; g.lineWidth = 6; g.strokeText('Building Block Crafting', 360, 1196); g.fillStyle = '#ffff55'; g.fillText('Building Block Crafting', 360, 1196);
 }
 let videoBlob = null;
 function terminarVideo(blob) {
