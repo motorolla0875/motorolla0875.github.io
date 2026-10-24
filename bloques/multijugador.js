@@ -359,7 +359,7 @@ function mpFrame(dt) {
   if (!MP.sala) return;
   // mandar mi posición ~10 veces por segundo (solo si cambió)
   mpEstT -= dt; if (mpEstT <= 0 && jugando) { mpEstT = .1;
-    const e = { t: 'e', x: +J.x.toFixed(2), y: +J.y.toFixed(2), z: +J.z.toFixed(2), r: +J.yaw.toFixed(2), v: +(J.rapidez || 0).toFixed(1), s: swing > .9 ? 1 : 0 }, k = e.x + ',' + e.y + ',' + e.z + ',' + e.r + ',' + e.s;
+    const e = { t: 'e', x: +J.x.toFixed(2), y: +J.y.toFixed(2), z: +J.z.toFixed(2), r: +J.yaw.toFixed(2), v: +(J.rapidez || 0).toFixed(1), s: swing > .9 ? 1 : 0 }; if (window.mpExtraE) Object.assign(e, mpExtraE()); const k = e.x + ',' + e.y + ',' + e.z + ',' + e.r + ',' + e.s + ',' + e.vi;
     if (k !== ultEnvio || Math.random() < .05) { ultEnvio = k; mpEnviar(e); } }
   if (MP.dueno && jugando) {
     mpBichT -= dt; if (mpBichT <= 0) { mpBichT = .2; if (MP.jug.size) mpEnviar({ t: 'm', l: fotoBichos() }); }
