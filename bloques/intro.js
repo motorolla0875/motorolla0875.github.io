@@ -84,6 +84,7 @@ $('bEntrarJuego').onclick = () => { $('introFin').hidden = true; $('inicio').hid
 
 // la primera vez que se abre el juego, cuando termina la precarga
 { let vista = false; try { vista = !!localStorage.getItem('voxIntroVista'); } catch (e) {}
+  if (/[?&]intro\b/.test(location.search)) vista = false; // para mostrarla: .../bloques/?intro
   if (!vista) {
     $('introVideo').preload = 'auto'; $('introVideo').src = 'intro.mp4';
     const esperar = setInterval(() => { if (document.getElementById('precarga')) return; clearInterval(esperar); if (!jugando) verIntro(); }, 200);
