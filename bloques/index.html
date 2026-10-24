@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Bloques · prototipo</title>
+<title>Blox: Building Block Crafting</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; background: #79a6ff; font-family: 'Courier New', ui-monospace, monospace; font-weight: 700; color: #fff; user-select: none; -webkit-user-select: none; touch-action: none; image-rendering: pixelated; }
@@ -76,7 +76,8 @@
   .receta .ing .slot b { font-size: 11px; }
   .receta .hacer { padding: 6px 10px; background: #5f8f3a; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; border: 3px solid #000; cursor: pointer; font-size: 13px; }
   .receta.no .hacer { background: #777; }
-  .ajFila { width: min(460px, 92vw); display: flex; align-items: center; gap: 12px; margin: 6px 0; font-size: 14px; background: rgba(0,0,0,.4); padding: 8px 10px; border: 3px solid #000; }
+  .ajFila { width: min(500px, 92vw); display: flex; align-items: center; gap: 12px; margin: 3px 0; font-size: 14px; background: rgba(0,0,0,.4); padding: 4px 10px; border: 3px solid #000; min-height: 42px; }
+  #ajustes .titulo { font-size: clamp(22px, 4vw, 32px) !important; margin-bottom: 2px; } #ajustes .btn { margin-top: 5px; padding: 7px 0 6px; }
   .ajFila span { flex: 1; } .ajFila input { width: 46%; accent-color: #5f8f3a; height: 26px; }
   .ajOpc { display: flex; gap: 4px; } .ajOpc div { padding: 5px 8px; background: #7d7d7d; border: 2px solid #000; cursor: pointer; font-size: 13px; } .ajOpc div.on { background: #5f8f3a; }
   #fotoImg { max-width: min(640px, 80vw); max-height: 58vh; border: 4px solid #fff; box-shadow: 0 6px 0 rgba(0,0,0,.4); }
@@ -88,9 +89,9 @@
   <div id="mision" class="sombra"></div>
   <div id="arriba"><div id="vida"></div><div id="hambre"></div><div id="dia" class="sombra"></div></div>
   <div id="botonesArriba">
-    <div class="bChico" id="bBolsa" title="Bolsa (E)"></div>
-    <div class="bChico" id="bFoto" title="Foto (F)"></div>
-    <div class="bChico" id="bPausa" title="Pausa"></div>
+    <div class="bChico" id="bBolsa" data-it="bolsaT"></div>
+    <div class="bChico" id="bFoto" data-it="fotoT"></div>
+    <div class="bChico" id="bPausa" data-it="pausaT"></div>
   </div>
   <div id="mira"></div>
   <div id="barra"></div>
@@ -100,62 +101,56 @@
 </div>
 <div id="joy"><i></i></div>
 <div id="aviso"></div>
-<div id="girar"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="4" y="1" width="8" height="14" fill="#c6c6c6"/><rect x="5" y="2" width="6" height="11" fill="#3f3f3f"/></svg>Gira el teléfono para jugar acostado</div>
+<div id="girar"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="4" y="1" width="8" height="14" fill="#c6c6c6"/><rect x="5" y="2" width="6" height="11" fill="#3f3f3f"/></svg><span data-i="girar"></span></div>
 
 <div class="capa trans" id="inicio" style="background-color:rgba(0,0,0,.25)">
-  <div class="titulo">BLOQUES</div>
-  <div class="sub">¡Construye, explora y sobrevive!</div>
-  <div class="btn" id="bJugar">Jugar</div>
-  <div class="btn" id="bAjustes1">Ajustes</div>
-  <div class="btn" id="bCreditos">Créditos</div>
+  <div class="titulo">BLOX</div>
+  <div class="sub" data-i="sub"></div>
+  <div class="btn" id="bJugar" data-i="jugar"></div>
+  <div class="btn" id="bAjustes1" data-i="ajustes"></div>
+  <div class="btn" id="bCreditos" data-i="creditos"></div>
 </div>
 <div class="capa" id="mundos" hidden>
-  <div class="titulo" style="font-size:clamp(28px,6vw,44px)">Mis mundos</div>
+  <div class="titulo" style="font-size:clamp(28px,6vw,44px)" data-i="misMundos"></div>
   <div id="listaMundos"></div>
-  <div class="btn" id="bNuevo">Crear mundo nuevo</div>
-  <div class="btn" id="bVolverInicio">Volver</div>
+  <div class="btn" id="bNuevo" data-i="crearMundo"></div>
+  <div class="btn" id="bVolverInicio" data-i="volver"></div>
 </div>
 <div class="capa" id="nuevo" hidden>
-  <div class="titulo" style="font-size:clamp(28px,6vw,44px)">Mundo nuevo</div>
-  <div class="btn" id="bCreativo">Creativo<small>Todos los bloques sin límite, puedes volar y no hay monstruos</small></div>
-  <div class="btn" id="bSuper">Supervivencia<small>Junta materiales, fabrica herramientas y sobrevive a la noche</small></div>
-  <div class="btn" id="bVolverMundos">Volver</div>
+  <div class="titulo" style="font-size:clamp(28px,6vw,44px)" data-i="mundoNuevo"></div>
+  <div class="btn" id="bCreativo" data-ih="creativoBtn"></div>
+  <div class="btn" id="bSuper" data-ih="superBtn"></div>
+  <div class="btn" id="bVolverMundos" data-i="volver"></div>
 </div>
 <div class="capa trans" id="pausa" hidden>
-  <div class="titulo" style="font-size:clamp(28px,6vw,44px)">Pausa</div>
-  <div class="btn" id="bSeguir">Seguir jugando</div>
-  <div class="btn" id="bAjustes2">Ajustes</div>
-  <div class="btn" id="bSalir">Guardar y salir</div>
+  <div class="titulo" style="font-size:clamp(28px,6vw,44px)" data-i="pausa"></div>
+  <div class="btn" id="bSeguir" data-i="seguir"></div>
+  <div class="btn" id="bAjustes2" data-i="ajustes"></div>
+  <div class="btn" id="bSalir" data-i="salir"></div>
 </div>
 <div class="capa trans" id="ajustes" hidden>
-  <div class="titulo" style="font-size:clamp(26px,5vw,40px)">Ajustes</div>
-  <div class="ajFila"><span>Sensibilidad para mirar</span><input type="range" id="ajSens" min="0.4" max="2.2" step="0.1"></div>
-  <div class="ajFila"><span>Distancia de vista</span><div class="ajOpc" id="ajDist"><div data-d="0">Corta</div><div data-d="1">Normal</div><div data-d="2">Lejos</div></div></div>
-  <div class="ajFila"><span>Música</span><input type="range" id="ajMus" min="0" max="1" step="0.05"></div>
-  <div class="ajFila"><span>Sonidos</span><input type="range" id="ajSon" min="0" max="1" step="0.05"></div>
-  <div class="btn" id="bAjListo">Listo</div>
+  <div class="titulo" style="font-size:clamp(26px,5vw,40px)" data-i="ajustes"></div>
+  <div class="ajFila"><span data-i="idioma"></span><div class="ajOpc" id="ajIdioma"><div data-l="en">English</div><div data-l="es">Español</div><div data-l="pt">Português</div></div></div>
+  <div class="ajFila"><span data-i="sens"></span><input type="range" id="ajSens" min="0.4" max="2.2" step="0.1"></div>
+  <div class="ajFila"><span data-i="dist"></span><div class="ajOpc" id="ajDist"><div data-d="0" data-i="corta"></div><div data-d="1" data-i="normal"></div><div data-d="2" data-i="lejos"></div></div></div>
+  <div class="ajFila"><span data-i="musica"></span><input type="range" id="ajMus" min="0" max="1" step="0.05"></div>
+  <div class="ajFila"><span data-i="sonidos"></span><input type="range" id="ajSon" min="0" max="1" step="0.05"></div>
+  <div class="btn" id="bAjListo" data-i="listo"></div>
 </div>
 <div class="capa trans" id="creditos" hidden>
-  <div class="titulo" style="font-size:clamp(26px,5vw,40px)">Créditos</div>
-  <div class="texto" style="text-align:left;max-width:600px">
-    Juego creado por dmith.builds.<br><br>
-    <b>Texturas, personajes y animales:</b> dibujados especialmente para este juego.<br><br>
-    <b>Efectos de sonido y música:</b> SFX Engine (sfxengine.com), efectos generados con inteligencia artificial, libres de regalías para uso comercial. Recortados y editados para el juego.<br><br>
-    <b>Sonidos de Pixabay</b> (pixabay.com), bajo la Licencia de Contenido de Pixabay: "Eating effect" de u_scysdwddsp y "Game winner" de mori_sound.<br><br>
-    <b>Gráficos 3D:</b> three.js, © autores de three.js, licencia MIT.<br><br>
-    Este juego no está afiliado ni respaldado por Mojang ni Microsoft.
-  </div>
-  <div class="btn" id="bCredListo">Volver</div>
+  <div class="titulo" style="font-size:clamp(26px,5vw,40px)" data-i="creditos"></div>
+  <div class="texto" style="text-align:left;max-width:600px" data-ih="creditosTxt"></div>
+  <div class="btn" id="bCredListo" data-i="volver"></div>
 </div>
 <div class="capa trans" id="muerte" hidden>
-  <div class="titulo" style="font-size:clamp(28px,6vw,44px);color:#ff6b6b">¡Te atraparon!</div>
-  <div class="texto">No pierdes nada de lo que juntaste. Vuelves a tu punto de partida.</div>
-  <div class="btn" id="bRevivir">Volver a aparecer</div>
+  <div class="titulo" style="font-size:clamp(28px,6vw,44px);color:#ff6b6b" data-i="muerteT"></div>
+  <div class="texto" data-i="muerteP"></div>
+  <div class="btn" id="bRevivir" data-i="revivir"></div>
 </div>
 <div class="capa trans" id="fotoCapa" hidden>
   <img id="fotoImg" alt="Foto de tu mundo">
-  <div class="filaBtn"><div class="btn" id="bGuardarFoto">Guardar</div><div class="btn" id="bCompartir">Compartir</div></div>
-  <div class="btn" id="bCerrarFoto">Seguir jugando</div>
+  <div class="filaBtn"><div class="btn" id="bGuardarFoto" data-i="guardar"></div><div class="btn" id="bCompartir" data-i="compartir"></div></div>
+  <div class="btn" id="bCerrarFoto" data-i="seguir"></div>
 </div>
 <div class="capa trans" id="panel" hidden>
   <div class="ventana">
@@ -166,6 +161,7 @@
 </div>
 
 <script src="three.min.js"></script>
+<script src="idiomas.js"></script>
 <script>
 'use strict';
 // ═════════ MUNDO ═════════
@@ -248,6 +244,7 @@ item(I.CARNE, 'Carne cruda', TL.carne, { comida: 3 }); item(I.CARNE_A, 'Carne as
 const esComida = id => !!(ITEM[id] && ITEM[id].comida);
 ['de madera', 'de piedra', 'de hierro', 'de cristal'].forEach((m, k) => { item(I.PICO1 + k, 'Pico ' + m, TL['pico' + (k + 1)], { pico: k + 1 }); item(I.ESP1 + k, 'Espada ' + m, TL['esp' + (k + 1)], { espada: k + 1 }); });
 const info = id => DEF[id] || ITEM[id];
+const nom = id => { const n = info(id).nombre; return LANG === 'es' ? n : (NOMBRES[LANG][n] || n); };
 const esBloque = id => id > 0 && id < 100 && !!DEF[id];
 const opaco = t => t > 0 && !DEF[t].trans && !DEF[t].forma;
 const solidoMov = t => t > 0 && DEF[t].solido;
@@ -703,44 +700,44 @@ const nivelEspada = () => Math.max(0, ...[1, 2, 3, 4].filter(k => inv[I.ESP1 + k
 function darItem(id, n = 1, silencio = false) {
   inv[id] = (inv[id] || 0) + n; sucio = true;
   if ((esBloque(id) || esComida(id)) && !barra.includes(id)) { const k = barra.indexOf(0); if (k >= 0) barra[k] = id; }
-  if (ITEM[id] && (ITEM[id].pico || ITEM[id].espada) && !silencio) aviso('¡TIENES ' + ITEM[id].nombre.toUpperCase() + '!', 1400);
+  if (ITEM[id] && (ITEM[id].pico || ITEM[id].espada) && !silencio) aviso(TR('tienes', { x: nom(id).toUpperCase() }), 1400);
   pintarBarra();
 }
 function quitarItem(id, n = 1) { inv[id] = Math.max(0, (inv[id] || 0) - n); if (!inv[id]) { delete inv[id]; barra = barra.map(b => b === id ? 0 : b); } sucio = true; pintarBarra(); }
 function pintarBarra() {
   $('barra').innerHTML = barra.map((id, k) => `<div class="slot${k === sel ? ' sel' : ''}" data-k="${k}" style="${id ? `background-image:url(${icono(id)})` : ''}">${id && !creativo() ? `<b>${inv[id] || 0}</b>` : ''}</div>`).join('');
 }
-$('barra').addEventListener('pointerdown', e => { e.stopPropagation(); const d = e.target.closest('[data-k]'); if (!d) return; sel = +d.dataset.k; pintarBarra(); const id = barra[sel]; if (id) aviso(info(id).nombre.toUpperCase(), 700); });
+$('barra').addEventListener('pointerdown', e => { e.stopPropagation(); const d = e.target.closest('[data-k]'); if (!d) return; sel = +d.dataset.k; pintarBarra(); const id = barra[sel]; if (id) aviso(nom(id).toUpperCase(), 700); });
 function puedeHacer(r) { return r[1].every(([id, n]) => (inv[id] || 0) >= n); }
 function fabricar(r) { if (!puedeHacer(r)) return; for (const [id, n] of r[1]) quitarItem(id, n); darItem(r[0][0], r[0][1]); stats.hechos[r[0][0]] = (stats.hechos[r[0][0]] || 0) + r[0][1]; sonar('fabricar', .6) || son(660, .1, 'triangle', .13); revisarMision(); }
 
 // ───── ventana (bolsa / fabricar / cofre) ─────
 let panelTab = 'bolsa', cofreAbierto = null, pausado = false;
-const slotHTML = (id, n, attr = '') => `<div class="slot${n === 0 ? ' vacio' : ''}" ${attr} style="background-image:url(${icono(id)})" title="${info(id).nombre}">${n > 1 || n === 0 ? `<b>${n}</b>` : ''}</div>`;
+const slotHTML = (id, n, attr = '') => `<div class="slot${n === 0 ? ' vacio' : ''}" ${attr} style="background-image:url(${icono(id)})" title="${nom(id)}">${n > 1 || n === 0 ? `<b>${n}</b>` : ''}</div>`;
 function abrirPanel(tab) { panelTab = tab; pausado = true; soltarTodo(); $('panel').hidden = false; pintarPanel(); }
 function cerrarPanel() { $('panel').hidden = true; pausado = false; cofreAbierto = null; pintarBarra(); }
 function pintarPanel() {
-  const tabs = cofreAbierto !== null ? [['cofre', 'Cofre']] : creativo() ? [['bolsa', 'Bloques']] : [['bolsa', 'Bolsa'], ['fabricar', 'Fabricar']];
+  const tabs = cofreAbierto !== null ? [['cofre', TR('tabCofre')]] : creativo() ? [['bolsa', TR('tabBloques')]] : [['bolsa', TR('tabBolsa')], ['fabricar', TR('tabFabricar')]];
   $('pCab').innerHTML = tabs.map(([k, n]) => `<div class="tab${panelTab === k ? ' on' : ''}" data-tab="${k}">${n}</div>`).join('') + '<div class="vTit"></div><div class="cerrar" id="pCerrar">X</div>';
   let h = '';
-  if (panelTab === 'bolsa' && creativo()) h = '<h4>Toca un bloque para ponerlo en la barra</h4><div class="grilla">' + TODOS.map(id => slotHTML(id, 1, `data-poner="${id}"`)).join('') + '</div>';
+  if (panelTab === 'bolsa' && creativo()) h = '<h4>' + TR('tocaBloque') + '</h4><div class="grilla">' + TODOS.map(id => slotHTML(id, 1, `data-poner="${id}"`)).join('') + '</div>';
   else if (panelTab === 'bolsa') {
     const ids = Object.keys(inv).map(Number).filter(id => inv[id] > 0).sort((a, b) => a - b);
     const herr = ids.filter(id => ITEM[id] && (ITEM[id].pico || ITEM[id].espada)), mats = ids.filter(id => !herr.includes(id));
-    h = '<h4>Toca un bloque para ponerlo en la barra</h4><div class="grilla">' + (mats.length ? mats.map(id => slotHTML(id, inv[id], `data-poner="${id}"`)).join('') : '<small>Todavía no tienes nada. Mantén apretado un árbol para sacar troncos.</small>') + '</div>';
-    if (herr.length) h += '<h4>Herramientas (se usan solas)</h4><div class="grilla">' + herr.map(id => slotHTML(id, 1)).join('') + '</div>';
+    h = '<h4>' + TR('tocaBloque') + '</h4><div class="grilla">' + (mats.length ? mats.map(id => slotHTML(id, inv[id], `data-poner="${id}"`)).join('') : '<small>' + TR('nada') + '</small>') + '</div>';
+    if (herr.length) h += '<h4>' + TR('herramientas') + '</h4><div class="grilla">' + herr.map(id => slotHTML(id, 1)).join('') + '</div>';
   } else if (panelTab === 'fabricar') {
     const rs = RECETAS.slice().sort((a, b) => puedeHacer(b) - puedeHacer(a));
-    h = rs.map(r => { const k = RECETAS.indexOf(r), ok = puedeHacer(r); return `<div class="receta${ok ? '' : ' no'}">${slotHTML(r[0][0], r[0][1])}<div class="nom">${info(r[0][0]).nombre}${r[0][1] > 1 ? ' ×' + r[0][1] : ''}<small>${r[1].map(([id, n]) => n + ' ' + info(id).nombre.toLowerCase()).join(' + ')}</small></div><div class="ing">${r[1].map(([id, n]) => slotHTML(id, inv[id] || 0)).join('')}</div><div class="hacer" data-hacer="${k}">Hacer</div></div>`; }).join('');
+    h = rs.map(r => { const k = RECETAS.indexOf(r), ok = puedeHacer(r); return `<div class="receta${ok ? '' : ' no'}">${slotHTML(r[0][0], r[0][1])}<div class="nom">${nom(r[0][0])}${r[0][1] > 1 ? ' ×' + r[0][1] : ''}<small>${r[1].map(([id, n]) => nom(id) + ' ×' + n).join(' + ')}</small></div><div class="ing">${r[1].map(([id, n]) => slotHTML(id, inv[id] || 0)).join('')}</div><div class="hacer" data-hacer="${k}">${TR('hacer')}</div></div>`; }).join('');
   } else if (panelTab === 'cofre') {
     const c = cofres[cofreAbierto] || {}, ids = Object.keys(c).map(Number).filter(id => c[id] > 0);
-    h = '<h4>En el cofre (toca para sacar)</h4><div class="grilla">' + (ids.length ? ids.map(id => slotHTML(id, c[id], `data-sacar="${id}"`)).join('') : '<small>Vacío</small>') + '</div>';
-    if (ids.length) h += '<div class="btn" data-sacartodo="1" style="width:auto;padding:6px 14px;font-size:14px;display:inline-block">Sacar todo</div>';
+    h = '<h4>' + TR('enCofre') + '</h4><div class="grilla">' + (ids.length ? ids.map(id => slotHTML(id, c[id], `data-sacar="${id}"`)).join('') : '<small>' + TR('vacio') + '</small>') + '</div>';
+    if (ids.length) h += '<div class="btn" data-sacartodo="1" style="width:auto;padding:6px 14px;font-size:14px;display:inline-block">' + TR('sacarTodo') + '</div>';
     const mios = Object.keys(inv).map(Number).filter(id => inv[id] > 0 && !(ITEM[id] && (ITEM[id].pico || ITEM[id].espada)));
-    h += '<h4>Tu bolsa (toca para guardar)</h4><div class="grilla">' + (mios.length ? mios.map(id => slotHTML(id, inv[id], `data-guardar="${id}"`)).join('') : '<small>Vacía</small>') + '</div>';
+    h += '<h4>' + TR('tuBolsa') + '</h4><div class="grilla">' + (mios.length ? mios.map(id => slotHTML(id, inv[id], `data-guardar="${id}"`)).join('') : '<small>' + TR('vacio') + '</small>') + '</div>';
   }
   $('pCuerpo').innerHTML = h;
-  $('pPie').innerHTML = panelTab === 'cofre' ? '' : '<small>Tu barra · el casillero blanco es donde va lo que toques</small><div class="grilla">' + barra.map((id, k) => `<div class="slot${k === sel ? ' sel' : ''}" data-k="${k}" style="${id ? `background-image:url(${icono(id)})` : ''}">${id && !creativo() ? `<b>${inv[id] || 0}</b>` : ''}</div>`).join('') + '</div>';
+  $('pPie').innerHTML = panelTab === 'cofre' ? '' : '<small>' + TR('tuBarra') + '</small><div class="grilla">' + barra.map((id, k) => `<div class="slot${k === sel ? ' sel' : ''}" data-k="${k}" style="${id ? `background-image:url(${icono(id)})` : ''}">${id && !creativo() ? `<b>${inv[id] || 0}</b>` : ''}</div>`).join('') + '</div>';
 }
 $('panel').addEventListener('pointerdown', e => {
   const q = s => e.target.closest(s);
@@ -748,7 +745,7 @@ $('panel').addEventListener('pointerdown', e => {
   let d;
   if (d = q('[data-tab]')) { panelTab = d.dataset.tab; pintarPanel(); }
   else if (d = q('#pPie [data-k]')) { sel = +d.dataset.k; pintarPanel(); }
-  else if (d = q('[data-poner]')) { const id = +d.dataset.poner; if (!esBloque(id) && !esComida(id)) { aviso('ESO NO SE PONE<small>se usa para fabricar</small>', 1100); return; } const ya = barra.indexOf(id); if (ya >= 0 && ya !== sel) barra[ya] = barra[sel] && !creativo() ? barra[sel] : 0; barra[sel] = id; sel = (sel + 1) % 9; son(520, .05, 'triangle', .08); pintarPanel(); }
+  else if (d = q('[data-poner]')) { const id = +d.dataset.poner; if (!esBloque(id) && !esComida(id)) { aviso(TR('noSePone'), 1100); return; } const ya = barra.indexOf(id); if (ya >= 0 && ya !== sel) barra[ya] = barra[sel] && !creativo() ? barra[sel] : 0; barra[sel] = id; sel = (sel + 1) % 9; son(520, .05, 'triangle', .08); pintarPanel(); }
   else if (d = q('[data-hacer]')) { fabricar(RECETAS[+d.dataset.hacer]); pintarPanel(); }
   else if (d = q('[data-sacar]')) { const id = +d.dataset.sacar, c = cofres[cofreAbierto]; darItem(id, c[id], true); delete c[id]; sucio = true; son(520, .05, 'triangle', .08); pintarPanel(); }
   else if (q('[data-sacartodo]')) { const c = cofres[cofreAbierto]; for (const id in c) darItem(+id, c[id]); cofres[cofreAbierto] = {}; sucio = true; son(660, .1, 'triangle', .12); pintarPanel(); }
@@ -761,7 +758,7 @@ function lootCofre(i) {
   return c;
 }
 function abrirCofre(i) {
-  if (!cofres[i]) { cofres[i] = diffs.has(i) ? {} : lootCofre(i); if (!diffs.has(i)) { stats.cofres++; aviso('¡ENCONTRASTE UN COFRE!', 1200); } }
+  if (!cofres[i]) { cofres[i] = diffs.has(i) ? {} : lootCofre(i); if (!diffs.has(i)) { stats.cofres++; aviso(TR('cofreEncontrado'), 1200); } }
   cofreAbierto = i; abrirPanel('cofre'); son(300, .2, 'triangle', .12); revisarMision();
 }
 
@@ -775,7 +772,7 @@ function tocar(dir) {
   const id = barra[sel];
   if (esComida(id)) return comer(id);
   if (!h) return;
-  if (!id) return aviso('ELIGE UN BLOQUE<small>abre la bolsa</small>', 900);
+  if (!id) return aviso(TR('elige'), 900);
   if (!esBloque(id)) return;
   if (!creativo() && !(inv[id] > 0)) return;
   // dos losas iguales, una arriba de la otra, forman un bloque entero
@@ -816,7 +813,7 @@ function romper(h) {
   polvo(h.x + .5, h.y + .5, h.z + .5, d.color); golpe(t, 1.5); setTimeout(() => golpe(t, .7), 70); swing = 1;
   if (!creativo()) {
     stats.rotos[t] = (stats.rotos[t] || 0) + 1;
-    if (d.req && nivelPico() < d.req) aviso('NECESITAS UN PICO ' + ['', 'DE MADERA', 'DE PIEDRA', 'DE HIERRO'][d.req] + '<small>para que suelte algo</small>', 1500);
+    if (d.req && nivelPico() < d.req) aviso(TR('necPico', { p: nom(I.PICO1 + d.req - 1).toUpperCase() }), 1500);
     else if (t === B.HOJAS) { if (Math.random() < .35) darItem(B.HOJAS); if (Math.random() < .12) darItem(I.PALO); if (Math.random() < .07) darItem(I.MANZANA); }
     else if (t === B.VIDRIO) { if (Math.random() < .5) darItem(B.VIDRIO); }
     else darItem(d.suelta === B.PUERTA_A ? B.PUERTA : d.suelta);
@@ -991,8 +988,8 @@ const MUSLO = ['.....XX.', '....XXXX', '...XXXXX', '..XXXXX.', '.XXXX...', 'XXX.
 function muslo(est) { let d1 = '', d2 = ''; MUSLO.forEach((f, y) => [...f].forEach((c, x) => { if (c !== 'X') return; const r = `M${x} ${y}h1v1h-1z`; if (est === 2 || (est === 1 && x >= 3)) d1 += r; else d2 += r; })); return `<svg viewBox="-.5 -.5 9 9" shape-rendering="crispEdges"><path d="${d2}" fill="#3a3a3a" stroke="#000" stroke-width=".25"/><path d="${d1}" fill="#c27a3a" stroke="#000" stroke-width=".25"/></svg>`; }
 function pintarHambre() { $('hambre').hidden = creativo(); if (creativo()) return; const v = Math.ceil(hambre); if (v === hambrePintado) return; hambrePintado = v; let h = ''; for (let k = 9; k >= 0; k--) h += muslo(v >= (k + 1) * 2 ? 2 : v >= k * 2 + 1 ? 1 : 0); $('hambre').innerHTML = h; }
 function comer(id) {
-  if (creativo()) return aviso('EN CREATIVO NO HAY HAMBRE', 900);
-  if (hambre >= 20) return aviso('NO TIENES HAMBRE', 800);
+  if (creativo()) return aviso(TR('creativoHambre'), 900);
+  if (hambre >= 20) return aviso(TR('noHambre'), 800);
   if (!(inv[id] > 0)) return;
   hambre = Math.min(20, hambre + ITEM[id].comida); quitarItem(id, 1); stats.comido = (stats.comido || 0) + 1;
   if (!sonar('comer', .8)) { ruido(.08, .15); setTimeout(() => ruido(.08, .15), 140); setTimeout(() => son(600, .1, 'triangle', .1), 300); } pintarHambre(); sucio = true;
@@ -1030,7 +1027,7 @@ const MISIONES = [
   { t: 'Fabrica un pico de madera', a: 'Con él ya puedes romper piedra', ok: () => nivelPico() >= 1 },
   { t: 'Junta 6 adoquines', a: 'Rompe piedra gris con el pico', ok: () => roto(B.PIEDRA) + roto(B.ADOQUIN) >= 6, p: () => Math.min(6, roto(B.PIEDRA) + roto(B.ADOQUIN)) + '/6' },
   { t: 'Fabrica un pico de piedra', a: 'Rompe más rápido y saca hierro', ok: () => nivelPico() >= 2 },
-  { t: 'Arma un refugio: techo y 4 paredes', a: 'Métete adentro antes de la noche', ok: () => refugio.techo && refugio.paredes === 4, p: () => `techo ${refugio.techo ? 'sí' : 'no'} · paredes ${refugio.paredes}/4` },
+  { t: 'Arma un refugio: techo y 4 paredes', a: 'Métete adentro antes de la noche', ok: () => refugio.techo && refugio.paredes === 4, p: () => TR('refugioP', { a: TR(refugio.techo ? 'si' : 'no'), b: refugio.paredes }) },
   { t: 'Haz antorchas', a: 'Necesitas carbón: piedra con puntos negros', ok: () => hecho(B.ANTORCHA) >= 1 },
   { t: 'Consigue comida', a: 'Golpea una vaca, una oveja o una gallina', ok: () => (stats.cazados || 0) >= 1 },
   { t: 'Cocina carne con carbón', a: 'En Fabricar: carne asada o pollo asado', ok: () => hecho(I.CARNE_A) + hecho(I.POLLO_A) >= 1 },
@@ -1045,15 +1042,15 @@ function revisarMision() {
   if (creativo()) return;
   let avanzo = false;
   while (mision < MISIONES.length && MISIONES[mision].ok()) { mision++; avanzo = true; sucio = true; }
-  if (avanzo) { aviso(mision < MISIONES.length ? '¡MISIÓN CUMPLIDA!<small>' + MISIONES[mision].t + '</small>' : '¡TERMINASTE TODAS LAS MISIONES!<small>ahora construye lo que quieras</small>', 2000); if (!sonar(mision >= MISIONES.length ? 'final' : 'mision', .7)) { son(660, .12, 'triangle', .14); setTimeout(() => son(880, .2, 'triangle', .14), 120); } }
+  if (avanzo) { aviso(mision < MISIONES.length ? TR('misionOk') + '<small>' + TR('m' + mision + 't') + '</small>' : TR('todasT'), 2000); if (!sonar(mision >= MISIONES.length ? 'final' : 'mision', .7)) { son(660, .12, 'triangle', .14); setTimeout(() => son(880, .2, 'triangle', .14), 120); } }
   pintarMision();
 }
 function pintarMision() {
   if (creativo()) { $('mision').hidden = true; return; }
   $('mision').hidden = false;
-  if (mision >= MISIONES.length) { $('mision').innerHTML = 'Todas las misiones listas<small>construye y explora libremente</small>'; return; }
+  if (mision >= MISIONES.length) { $('mision').innerHTML = TR('todasHud'); return; }
   const m = MISIONES[mision];
-  $('mision').innerHTML = `Misión ${mision + 1}/${MISIONES.length}: ${m.t}<small>${m.p ? m.p() + ' · ' : ''}${m.a}</small>`;
+  $('mision').innerHTML = `${TR('mision', { n: mision + 1, t: MISIONES.length })}${TR('m' + mision + 't')}<small>${m.p ? m.p() + ' · ' : ''}${TR('m' + mision + 'a')}</small>`;
 }
 
 // ═════════ VIDA, DÍA Y BOTONES ═════════
@@ -1063,7 +1060,7 @@ function corazon(est) { const lleno = '#e3262e', vacio = '#3a3a3a'; let d1 = '',
 function pintarVida() { $('vida').hidden = creativo(); if (creativo()) return; let h = ''; for (let k = 0; k < 10; k++) h += corazon(vida >= (k + 1) * 2 ? 2 : vida >= k * 2 + 1 ? 1 : 0); $('vida').innerHTML = h; }
 const SOL = pix(['..X..X..', '........', '..XXXX..', 'X.XXXX.X', '..XXXX..', '..XXXX..', '........', '.X....X.'], '#ffd84a'), LUNA = pix(['..XXX...', '.XXX....', 'XXX.....', 'XXX.....', 'XXX.....', 'XXXX..X.', '.XXXXXX.', '..XXXX..'], '#e6e6ff');
 let diaPintado = '';
-function pintarDia() { if (creativo()) { $('dia').hidden = true; return; } $('dia').hidden = false; const s = (oscuridad() > .5 ? 'n' : 'd') + numDia(); if (s === diaPintado) return; diaPintado = s; $('dia').innerHTML = (oscuridad() > .5 ? LUNA : SOL) + 'Día ' + numDia(); }
+function pintarDia() { if (creativo()) { $('dia').hidden = true; return; } $('dia').hidden = false; const s = (oscuridad() > .5 ? 'n' : 'd') + numDia(); if (s === diaPintado) return; diaPintado = s; $('dia').innerHTML = (oscuridad() > .5 ? LUNA : SOL) + TR('dia', { n: numDia() }); }
 $('bSaltar').innerHTML = pix(['...XX...', '..XXXX..', '.XXXXXX.', 'XXXXXXXX', '..XXXX..', '..XXXX..', '..XXXX..', '..XXXX..'], '#fff');
 $('bBajar').innerHTML = pix(['..XXXX..', '..XXXX..', '..XXXX..', '..XXXX..', 'XXXXXXXX', '.XXXXXX.', '..XXXX..', '...XX...'], '#fff');
 $('bVolar').innerHTML = pix(['X......X', 'XX....XX', 'XXX..XXX', '.XXXXXX.', '..XXXX..', '...XX...', '...XX...', '........'], '#fff');
@@ -1086,7 +1083,7 @@ let fotoBlob = null;
 function sacarFoto() {
   marco.visible = false; grieta.visible = false; manoG.visible = false; cieloObj.estrellas.material.opacity = cieloObj.estrellas.material.opacity; render.render(escena, cam); manoG.visible = true;
   const src = render.domElement, c = document.createElement('canvas'); c.width = src.width; c.height = src.height; const g = c.getContext('2d'); g.drawImage(src, 0, 0);
-  const k = c.height / 400; g.font = `bold ${Math.round(18 * k)}px "Courier New", monospace`; g.textAlign = 'right'; g.fillStyle = 'rgba(0,0,0,.5)'; g.fillText('BLOQUES', c.width - 12 * k + 2 * k, c.height - 12 * k + 2 * k); g.fillStyle = '#fff'; g.fillText('BLOQUES', c.width - 12 * k, c.height - 12 * k);
+  const k = c.height / 400; g.font = `bold ${Math.round(18 * k)}px "Courier New", monospace`; g.textAlign = 'right'; g.fillStyle = 'rgba(0,0,0,.5)'; g.fillText('BLOX', c.width - 12 * k + 2 * k, c.height - 12 * k + 2 * k); g.fillStyle = '#fff'; g.fillText('BLOX', c.width - 12 * k, c.height - 12 * k);
   $('fotoImg').src = c.toDataURL('image/jpeg', .92); c.toBlob(b => fotoBlob = b, 'image/jpeg', .92);
   $('flash').style.transition = 'none'; $('flash').style.opacity = 1; requestAnimationFrame(() => { $('flash').style.transition = 'opacity .4s'; $('flash').style.opacity = 0; });
   ruido(.12, .25); pausado = true; soltarTodo(); $('fotoCapa').hidden = false;
@@ -1094,8 +1091,8 @@ function sacarFoto() {
 }
 $('bFoto').addEventListener('pointerdown', e => { e.stopPropagation(); sacarFoto(); });
 $('bCerrarFoto').onclick = () => { $('fotoCapa').hidden = true; pausado = false; };
-$('bGuardarFoto').onclick = () => { if (!fotoBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(fotoBlob); a.download = 'bloques-' + Date.now() + '.jpg'; document.body.appendChild(a); a.click(); a.remove(); };
-$('bCompartir').onclick = () => { if (!fotoBlob) return; navigator.share({ files: [new File([fotoBlob], 'bloques.jpg', { type: 'image/jpeg' })], title: 'Mira lo que construí' }).catch(() => {}); };
+$('bGuardarFoto').onclick = () => { if (!fotoBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(fotoBlob); a.download = 'blox-' + Date.now() + '.jpg'; document.body.appendChild(a); a.click(); a.remove(); };
+$('bCompartir').onclick = () => { if (!fotoBlob) return; navigator.share({ files: [new File([fotoBlob], 'blox.jpg', { type: 'image/jpeg' })], title: TR('compartirT') }).catch(() => {}); };
 
 // ═════════ GUARDAR MUNDOS EN EL TELÉFONO ═════════
 let mundoId = null, mundoNombre = '', sucio = false, jugando = false;
@@ -1109,7 +1106,7 @@ function guardar() {
     const lista = leerLista(), m = lista.find(m => m.id === mundoId);
     if (m) { m.dia = numDia(); m.fecha = Date.now(); m.bloques = diffs.size; } localStorage.setItem('bloquesMundos', JSON.stringify(lista));
     sucio = false;
-  } catch (e) { aviso('NO SE PUDO GUARDAR<small>el teléfono no tiene espacio</small>', 2000); }
+  } catch (e) { aviso(TR('noGuardar'), 2000); }
 }
 setInterval(() => { if (sucio && jugando) guardar(); }, 8000);
 addEventListener('pagehide', guardar); document.addEventListener('visibilitychange', () => { if (document.hidden) guardar(); });
@@ -1130,23 +1127,23 @@ function entrarMundo(id) {
   jugando = true; pausado = false;
   for (const c of ['inicio', 'mundos', 'nuevo']) $(c).hidden = true; $('hud').hidden = false;
   pintarBarra(); pintarVida(); hambrePintado = -1; pintarHambre(); pintarVolar(); diaPintado = ''; revisarRefugio(); pintarMision(); son(440, .1, 'triangle', .1);
-  if (!datos) { guardar(); aviso(creativo() ? 'MODO CREATIVO<small>Toca para poner · mantén apretado para romper</small>' : 'SUPERVIVENCIA<small>Toca para poner · mantén apretado para romper</small>', 3500); }
+  if (!datos) { guardar(); aviso(TR(creativo() ? 'modoCreativo' : 'modoSuper') + '<small>' + TR('ayuda') + '</small>', 3500); }
 }
 function crearMundo(modo) {
   const lista = leerLista(), id = Date.now().toString(36), n = lista.length + 1;
-  lista.unshift({ id, nombre: 'Mundo ' + n, modo, semilla: (Math.random() * 2147483647) | 0, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0 });
+  lista.unshift({ id, nombre: 'Mundo ' + n, num: n, modo, semilla: (Math.random() * 2147483647) | 0, creado: Date.now(), fecha: Date.now(), dia: 1, bloques: 0 });
   localStorage.setItem('bloquesMundos', JSON.stringify(lista));
   pantallaCompleta(); entrarMundo(id);
 }
 function borrarMundo(id) { localStorage.setItem('bloquesMundos', JSON.stringify(leerLista().filter(m => m.id !== id))); localStorage.removeItem('bloquesMundo_' + id); pintarMundos(); }
 function pintarMundos() {
   const lista = leerLista();
-  $('listaMundos').innerHTML = lista.length ? lista.map(m => `<div class="mundoFila"><div class="info">${m.nombre}<small>${m.modo === 'creativo' ? 'Creativo' : 'Supervivencia · día ' + (m.dia || 1)} · ${new Date(m.fecha).toLocaleDateString()}</small></div><div class="btn" data-entrar="${m.id}">Entrar</div><div class="btn rojo" data-borrar="${m.id}">Borrar</div></div>`).join('') : '<div class="mundoFila"><div class="info">Todavía no tienes mundos<small>crea el primero</small></div></div>';
+  $('listaMundos').innerHTML = lista.length ? lista.map(m => `<div class="mundoFila"><div class="info">${TR('mundo')} ${m.num || (m.nombre.match(/\d+/) || [''])[0]}<small>${m.modo === 'creativo' ? TR('creativo') : TR('supervivencia') + ' · ' + TR('diaMin', { n: m.dia || 1 })} · ${new Date(m.fecha).toLocaleDateString(LANG)}</small></div><div class="btn" data-entrar="${m.id}">${TR('entrar')}</div><div class="btn rojo" data-borrar="${m.id}">${TR('borrar')}</div></div>`).join('') : '<div class="mundoFila"><div class="info">' + TR('sinMundos') + '</div></div>';
 }
 $('listaMundos').addEventListener('click', e => {
   const en = e.target.closest('[data-entrar]'), bo = e.target.closest('[data-borrar]');
   if (en) { pantallaCompleta(); entrarMundo(en.dataset.entrar); }
-  if (bo) { if (bo.dataset.seguro) borrarMundo(bo.dataset.borrar); else { bo.dataset.seguro = 1; bo.textContent = '¿Seguro?'; } }
+  if (bo) { if (bo.dataset.seguro) borrarMundo(bo.dataset.borrar); else { bo.dataset.seguro = 1; bo.textContent = TR('seguro'); } }
 });
 function pantallaCompleta() { try { const d = document.documentElement; (d.requestFullscreen ? d.requestFullscreen() : Promise.resolve()).then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape')).catch(() => {}); } catch (e) {} }
 function salirAlMenu() { jugando = false; mundoId = null; $('hud').hidden = true; for (const m of monstruos.slice()) quitarMonstruo(m, false); pintarMundos(); $('mundos').hidden = false; }
@@ -1266,7 +1263,9 @@ function moverCielo(dt) {
 
 // ═════════ AJUSTES ═════════
 let ajustesDesde = null;
-function abrirAjustes(desde) { ajustesDesde = desde; $(desde).hidden = true; $('ajustes').hidden = false; $('ajSens').value = AJ.sens; $('ajMus').value = AJ.musica; $('ajSon').value = AJ.sonidos; pintarDist(); }
+function abrirAjustes(desde) { ajustesDesde = desde; $(desde).hidden = true; $('ajustes').hidden = false; $('ajSens').value = AJ.sens; $('ajMus').value = AJ.musica; $('ajSon').value = AJ.sonidos; pintarDist(); pintarIdioma(); }
+function pintarIdioma() { for (const d of $('ajIdioma').children) d.classList.toggle('on', d.dataset.l === LANG); }
+$('ajIdioma').addEventListener('click', e => { const d = e.target.closest('[data-l]'); if (!d) return; LANG = d.dataset.l; try { localStorage.setItem('bloxIdioma', LANG); } catch (er) {} aplicarIdioma(); pintarIdioma(); diaPintado = ''; pintarMision(); pintarMundos(); });
 function pintarDist() { for (const d of $('ajDist').children) d.classList.toggle('on', +d.dataset.d === AJ.dist); }
 $('ajSens').oninput = e => { AJ.sens = +e.target.value; guardarAjustes(); };
 $('ajMus').oninput = e => { AJ.musica = +e.target.value; guardarAjustes(); };
@@ -1278,6 +1277,7 @@ $('bCredListo').onclick = () => { $('creditos').hidden = true; $('inicio').hidde
 $('bAjustes2').onclick = () => abrirAjustes('pausa');
 $('bAjListo').onclick = () => { $('ajustes').hidden = true; $(ajustesDesde).hidden = false; };
 cam.far = DIST[AJ.dist][1] + 140; cam.updateProjectionMatrix();
+aplicarIdioma();
 
 // ═════════ BUCLE ═════════
 let ult = performance.now(), revisarT = 0, curaT = 0;
@@ -1291,13 +1291,13 @@ function bucle(ya) {
     fisica(dt);
     if (!creativo()) {
       const antes = oscuridad() > .5; tiempo += dt; const noche = oscuridad() > .5;
-      if (!antes && noche) { aviso('¡LLEGÓ LA NOCHE!<small>salen los Ojones, quédate en tu refugio</small>', 2600); sonar('noche', .8) || son(110, .8, 'sawtooth', .12); }
-      const t = tiempo % CICLO; if (t > 170 && t < 171 && ya - ultimoAviso > 2000) { ultimoAviso = ya; aviso('SE VIENE LA NOCHE<small>arma tu refugio</small>', 2000); }
+      if (!antes && noche) { aviso(TR('noche'), 2600); sonar('noche', .8) || son(110, .8, 'sawtooth', .12); }
+      const t = tiempo % CICLO; if (t > 170 && t < 171 && ya - ultimoAviso > 2000) { ultimoAviso = ya; aviso(TR('vieneNoche'), 2000); }
       if (noche) aparecerMonstruos(dt);
       moverMonstruos(dt, oscuridad() > .2);
       golpeT += dt; if (golpeT > 5 && vida < 20 && hambre >= 12) { curaT += dt; if (curaT > 3) { curaT = 0; vida++; hambre -= .5; pintarVida(); } }
       hambre = Math.max(0, hambre - dt / 45); pintarHambre();
-      if (hambre <= 0) { hambreT += dt; if (hambreT > 5) { hambreT = 0; if (vida > 2) { vida--; $('dano').style.background = 'rgba(200,0,0,.3)'; setTimeout(() => $('dano').style.background = 'rgba(200,0,0,0)', 120); pintarVida(); aviso('TIENES HAMBRE<small>come algo</small>', 1200); } } }
+      if (hambre <= 0) { hambreT += dt; if (hambreT > 5) { hambreT = 0; if (vida > 2) { vida--; $('dano').style.background = 'rgba(200,0,0,.3)'; setTimeout(() => $('dano').style.background = 'rgba(200,0,0,0)', 120); pintarVida(); aviso(TR('hambre'), 1200); } } }
       pintarDia();
     }
     revisarT += dt; if (revisarT > .5) { revisarT = 0; revisarRefugio(); revisarMision(); }
