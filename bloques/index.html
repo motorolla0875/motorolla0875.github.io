@@ -13,7 +13,7 @@
   #mision { position: fixed; top: max(6px, env(safe-area-inset-top)); left: max(8px, env(safe-area-inset-left)); max-width: 38vw; pointer-events: none; z-index: 3; font-size: 13px; background: rgba(0,0,0,.45); padding: 4px 8px; line-height: 1.25; }
   #mision small { display: block; font-size: 11px; color: #ffff55; }
   #arriba { position: fixed; top: max(6px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 3px; pointer-events: none; }
-  #vida { display: flex; gap: 1px; } #vida svg { width: 17px; height: 15px; }
+  #vida, #hambre { display: flex; gap: 1px; } #vida svg, #hambre svg { width: 17px; height: 15px; }
   #dia { font-size: 13px; background: rgba(0,0,0,.4); padding: 1px 8px; display: flex; align-items: center; gap: 5px; } #dia svg { width: 14px; height: 14px; }
   #botonesArriba { position: fixed; top: max(6px, env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right)); display: flex; gap: 6px; z-index: 3; }
   #mira { position: fixed; left: 50%; top: 50%; width: 18px; height: 18px; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; mix-blend-mode: difference; }
@@ -83,7 +83,7 @@
 <div id="bajoAgua" hidden></div><div id="dano"></div><div id="flash"></div>
 <div class="hud" id="hud" hidden>
   <div id="mision" class="sombra"></div>
-  <div id="arriba"><div id="vida"></div><div id="dia" class="sombra"></div></div>
+  <div id="arriba"><div id="vida"></div><div id="hambre"></div><div id="dia" class="sombra"></div></div>
   <div id="botonesArriba">
     <div class="bChico" id="bBolsa" title="Bolsa (E)"></div>
     <div class="bChico" id="bFoto" title="Foto (F)"></div>
@@ -145,10 +145,10 @@
 // ═════════ MUNDO ═════════
 const SX = 128, SY = 48, SZ = 128, CH = 16, SEA = 15, N = SX * SY * SZ;
 const NCX = SX / CH, NCZ = SZ / CH;
-const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36 };
-const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123 };
+const B = { AIRE: 0, PASTO: 1, TIERRA: 2, PIEDRA: 3, ARENA: 4, TRONCO: 5, HOJAS: 6, MADERA: 7, LADRILLO: 8, VIDRIO: 9, AGUA: 10, ADOQUIN: 11, CARBON_M: 12, HIERRO_M: 13, ORO_M: 14, CRISTAL_M: 15, NIEVE: 16, CACTUS: 17, COFRE: 18, ANTORCHA: 19, PUERTA: 20, PUERTA_A: 21, ESCALERA: 22, TELA: 23, /* 23..31 telas */ ESTANTE: 32, B_ORO: 33, B_HIERRO: 34, LAMPARA: 35, ROCA: 36, LOSA: 37, /* 37..40 */ ESCALON: 41 /* 41..56 */ };
+const I = { PALO: 100, CARBON: 101, HIERRO: 102, ORO: 103, CRISTAL: 104, PICO1: 110, PICO2: 111, PICO3: 112, PICO4: 113, ESP1: 120, ESP2: 121, ESP3: 122, ESP4: 123, CARNE: 105, CARNE_A: 106, POLLO: 107, POLLO_A: 108, MANZANA: 109 };
 // dibujos (16x16) del atlas
-const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4'];
+const TILES = ['pastoArriba', 'pastoCostado', 'tierra', 'piedra', 'arena', 'troncoCostado', 'troncoArriba', 'hojas', 'madera', 'ladrillo', 'vidrio', 'agua', 'adoquin', 'carbonM', 'hierroM', 'oroM', 'cristalM', 'nieve', 'nieveCostado', 'cactusCostado', 'cactusArriba', 'cofreCostado', 'cofreArriba', 'antorcha', 'puerta', 'escalera', 'tela0', 'tela1', 'tela2', 'tela3', 'tela4', 'tela5', 'tela6', 'tela7', 'tela8', 'estante', 'bOro', 'bHierro', 'lampara', 'roca', 'palo', 'carbon', 'hierro', 'oro', 'cristal', 'pico1', 'pico2', 'pico3', 'pico4', 'esp1', 'esp2', 'esp3', 'esp4', 'carne', 'carneAsada', 'pollo', 'polloAsado', 'manzana'];
 const TL = {}; TILES.forEach((n, i) => TL[n] = i);
 const TELAS = [['Blanca', '#e9ecec'], ['Roja', '#a12722'], ['Naranja', '#f07613'], ['Amarilla', '#f8c527'], ['Verde', '#5e7c16'], ['Celeste', '#3aafd9'], ['Azul', '#35399d'], ['Violeta', '#7e2fbe'], ['Negra', '#1d1d21']];
 // definición de bloques: dibujos [arriba, abajo, costados], dureza (segundos a mano), pico necesario, qué suelta, etc.
@@ -172,9 +172,9 @@ def(B.CRISTAL_M, 'Cristal (mineral)', [TL.cristalM], { dur: 5, req: 3, suelta: I
 def(B.NIEVE, 'Nieve', [TL.nieve, TL.tierra, TL.nieveCostado], { dur: .6, color: '#f4fbfb' });
 def(B.CACTUS, 'Cactus', [TL.cactusArriba, TL.cactusArriba, TL.cactusCostado], { dur: .5, color: '#3d7a2a' });
 def(B.COFRE, 'Cofre', [TL.cofreArriba, TL.cofreArriba, TL.cofreCostado], { dur: 2, trans: true, color: '#8a6232' });
-def(B.ANTORCHA, 'Antorcha', [TL.antorcha], { dur: .05, trans: true, solido: false, forma: [7 / 16, 0, 7 / 16, 9 / 16, 11 / 16, 9 / 16], luz: 14, color: '#ffd84a' });
+def(B.ANTORCHA, 'Antorcha', [TL.antorcha], { dur: .05, trans: true, solido: false, forma: [[7 / 16, 0, 7 / 16, 9 / 16, 11 / 16, 9 / 16]], luz: 14, color: '#ffd84a' });
 def(B.PUERTA, 'Puerta', [TL.puerta], { dur: 1.5, trans: true, color: '#a7834f' });
-def(B.PUERTA_A, 'Puerta', [TL.puerta], { dur: 1.5, trans: true, solido: false, forma: [0, 0, 0, 1, 1, 3 / 16], suelta: B.PUERTA, color: '#a7834f' });
+def(B.PUERTA_A, 'Puerta', [TL.puerta], { dur: 1.5, trans: true, solido: false, forma: [[0, 0, 0, 1, 1, 3 / 16]], suelta: B.PUERTA, color: '#a7834f' });
 def(B.ESCALERA, 'Escalera', [TL.escalera], { dur: .5, trans: true, solido: false, color: '#8d6a3f' });
 TELAS.forEach(([n, c], k) => def(B.TELA + k, 'Tela ' + n.toLowerCase(), [TL['tela' + k]], { dur: .9, color: c }));
 def(B.ESTANTE, 'Estantería', [TL.madera, TL.madera, TL.estante], { dur: 1.5, color: '#a7834f' });
@@ -182,9 +182,19 @@ def(B.B_ORO, 'Bloque de oro', [TL.bOro], { dur: 5, req: 3, color: '#fcee4b' });
 def(B.B_HIERRO, 'Bloque de hierro', [TL.bHierro], { dur: 5, req: 2, color: '#dcdcdc' });
 def(B.LAMPARA, 'Lámpara', [TL.lampara], { dur: .5, luz: 15, color: '#f9d49c' });
 def(B.ROCA, 'Roca del fondo', [TL.roca], { dur: -1, color: '#333' });
+// medios bloques (losas) y escalones: el escalón alto queda hacia donde miras al ponerlo
+const CAJA_ESC = [[.5, .5, 0, 1, 1, 1], [0, .5, 0, .5, 1, 1], [0, .5, .5, 1, 1, 1], [0, .5, 0, 1, 1, .5]];
+const MAT_FORMA = [[B.MADERA, 'de madera'], [B.ADOQUIN, 'de adoquín'], [B.PIEDRA, 'de piedra'], [B.LADRILLO, 'de ladrillo']];
+MAT_FORMA.forEach(([m, n], k) => { const md = DEF[m], o = { dur: md.dur * .7, req: md.req, color: md.color, base: m };
+  def(B.LOSA + k, 'Losa ' + n, md.tiles.slice(), Object.assign({ forma: [[0, 0, 0, 1, .5, 1]] }, o));
+  for (let d = 0; d < 4; d++) def(B.ESCALON + k * 4 + d, 'Escalón ' + n, md.tiles.slice(), Object.assign({ forma: [[0, 0, 0, 1, .5, 1], CAJA_ESC[d]], suelta: B.ESCALON + k * 4 }, o)); });
+const esLosa = id => id >= B.LOSA && id < B.LOSA + 4, esEscalon = id => id >= B.ESCALON && id < B.ESCALON + 16;
+function escalonHacia(id, yaw) { const k = Math.floor((id - B.ESCALON) / 4), fx = -Math.sin(yaw), fz = -Math.cos(yaw); return B.ESCALON + k * 4 + (Math.abs(fx) > Math.abs(fz) ? (fx > 0 ? 0 : 1) : (fz > 0 ? 2 : 3)); }
 const ITEM = {};
 function item(id, nombre, tile, o = {}) { ITEM[id] = Object.assign({ id, nombre, tile }, o); }
 item(I.PALO, 'Palo', TL.palo); item(I.CARBON, 'Carbón', TL.carbon); item(I.HIERRO, 'Hierro', TL.hierro); item(I.ORO, 'Oro', TL.oro); item(I.CRISTAL, 'Cristal', TL.cristal);
+item(I.CARNE, 'Carne cruda', TL.carne, { comida: 3 }); item(I.CARNE_A, 'Carne asada', TL.carneAsada, { comida: 8 }); item(I.POLLO, 'Pollo crudo', TL.pollo, { comida: 2 }); item(I.POLLO_A, 'Pollo asado', TL.polloAsado, { comida: 6 }); item(I.MANZANA, 'Manzana', TL.manzana, { comida: 4 });
+const esComida = id => !!(ITEM[id] && ITEM[id].comida);
 ['de madera', 'de piedra', 'de hierro', 'de cristal'].forEach((m, k) => { item(I.PICO1 + k, 'Pico ' + m, TL['pico' + (k + 1)], { pico: k + 1 }); item(I.ESP1 + k, 'Espada ' + m, TL['esp' + (k + 1)], { espada: k + 1 }); });
 const info = id => DEF[id] || ITEM[id];
 const esBloque = id => id > 0 && id < 100 && !!DEF[id];
@@ -355,6 +365,11 @@ const PINTA = {
   hierro: (x, y) => (y >= 6 && y <= 10 && x >= 3 + (10 - y) * .5 && x <= 12 + (y - 6) * .4) ? (y === 6 ? '#ffffff' : y === 10 ? '#9a9a9a' : '#d8d8d8') : null,
   oro: (x, y) => (y >= 6 && y <= 10 && x >= 3 + (10 - y) * .5 && x <= 12 + (y - 6) * .4) ? (y === 6 ? '#fffbb0' : y === 10 ? '#c49a1c' : '#fcee4b') : null,
   cristal: (x, y) => { const d = Math.abs(x - 7.5) + Math.abs(y - 8) * .8; return d < 6 ? (x < 7 && y < 8 ? '#e9ccff' : d < 3 ? '#c58cf5' : '#8a3fd0') : null; },
+  carne: (x, y) => { const d = Math.hypot(x - 7.5, (y - 8) * 1.3); return d < 6 ? (d < 2 && x > 7 ? '#f2d0c0' : (x + y) % 5 === 0 ? '#e88a8a' : '#c8403f') : null; },
+  carneAsada: (x, y) => { const d = Math.hypot(x - 7.5, (y - 8) * 1.3); return d < 6 ? ((x + y) % 4 === 0 ? '#5a2e14' : d > 4.6 ? '#3e1f0c' : '#8a4a22') : null; },
+  pollo: (x, y) => { const d = Math.hypot(x - 8, y - 6); if (x < 6 && y > 9 && Math.abs(x - (15 - y)) < 2) return '#f4f0e8'; return d < 5 ? ((x + y) % 4 ? '#f2b8a8' : '#e8a090') : null; },
+  polloAsado: (x, y) => { const d = Math.hypot(x - 8, y - 6); if (x < 6 && y > 9 && Math.abs(x - (15 - y)) < 2) return '#f4f0e8'; return d < 5 ? ((x + y) % 4 ? '#c07830' : '#9a5a20') : null; },
+  manzana: (x, y) => { if (x === 8 && y < 4) return '#5a3a1a'; if (x === 9 && y === 2) return '#3f8a2e'; const d = Math.hypot(x - 7.5, (y - 9) * 1.1); return d < 5.5 ? (x < 6 && y < 8 ? '#ff8a8a' : '#d42a2a') : null; },
   pico1: pico(0), pico2: pico(1), pico3: pico(2), pico4: pico(3), esp1: espada(0), esp2: espada(1), esp3: espada(2), esp4: espada(3),
 };
 TELAS.forEach(([n, c], k) => PINTA['tela' + k] = tela(c));
@@ -378,6 +393,7 @@ const iconos = {};
 function icono(id) {
   if (iconos[id]) return iconos[id];
   const d = DEF[id];
+  if (d && d.base) return iconos[id] = iconoCajas(d);
   if (!d || d.forma || id === B.ESCALERA || id === B.PUERTA) return iconos[id] = tileURL(d ? d.tiles[2] : ITEM[id].tile);
   const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d'); g.imageSmoothingEnabled = false;
   const cara = (tile, m, osc) => { g.setTransform(...m); g.drawImage(atlas, (tile % 8) * 16, Math.floor(tile / 8) * 16, 16, 16, 0, 0, 16, 16); if (osc) { g.globalCompositeOperation = 'source-atop'; g.fillStyle = `rgba(0,0,0,${osc})`; g.fillRect(0, 0, 16, 16); g.globalCompositeOperation = 'source-over'; } };
@@ -390,6 +406,19 @@ function icono(id) {
   return iconos[id] = c.toDataURL();
 }
 
+function iconoCajas(d) {
+  const c = document.createElement('canvas'); c.width = c.height = 32; const g = c.getContext('2d');
+  const pat = tile => { const t = document.createElement('canvas'); t.width = t.height = 16; t.getContext('2d').drawImage(atlas, (tile % 8) * 16, Math.floor(tile / 8) * 16, 16, 16, 0, 0, 16, 16); return g.createPattern(t, 'repeat'); };
+  const pa = pat(d.tiles[0]), pc = pat(d.tiles[2]), iso = (x, y, z) => [16 + (x - z) * 16, (x + z) * 8 + (1 - y) * 16];
+  const cara = (pts, fill, osc) => { g.beginPath(); pts.forEach((q, i) => { const [a, b] = iso(...q); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.closePath(); g.fillStyle = fill; g.fill(); if (osc) { g.fillStyle = `rgba(0,0,0,${osc})`; g.fill(); } };
+  const cajas = d.id >= B.ESCALON ? [[0, 0, 0, 1, .5, 1], CAJA_ESC[1]] : d.forma;
+  for (const [x0, y0, z0, x1, y1, z1] of cajas) {
+    cara([[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], pc, .22);
+    cara([[x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]], pc, .4);
+    cara([[x0, y1, z0], [x1, y1, z0], [x1, y1, z1], [x0, y1, z1]], pa, 0);
+  }
+  return c.toDataURL();
+}
 // ───── mallas por pedazos (16x16) ─────
 const CARAS = [
   { d: [0, 1, 0], v: [[0, 1, 1], [1, 1, 1], [1, 1, 0], [0, 1, 0]], luz: 1, t: 0 },
@@ -406,10 +435,11 @@ function armarPedazo(cx, cz) {
   const A = { P: [], UV: [], L: [], I: [], n: 0 }, W = { P: [], UV: [], L: [], I: [], n: 0 }, e = .0006;
   const x0 = cx * CH, z0 = cz * CH;
   for (let y = 0; y < SY; y++) for (let z = z0; z < z0 + CH; z++) for (let x = x0; x < x0 + CH; x++) {
-    const t = mundo[idx(x, y, z)]; if (!t) continue; const d = DEF[t], agua = t === B.AGUA, F = d.forma;
-    for (const f of CARAS) {
+    const t = mundo[idx(x, y, z)]; if (!t) continue; const d = DEF[t], agua = t === B.AGUA, cajas = d.forma || [null];
+    for (const F of cajas) for (const f of CARAS) {
       const nx = x + f.d[0], ny = y + f.d[1], nz = z + f.d[2], v = get(nx, ny, nz);
       if (!F) { if (opaco(v)) continue; if (v === t && (d.trans || agua)) continue; if (agua && v && v !== B.AGUA && !DEF[v].trans) continue; }
+      else if (opaco(v) && (f.d[0] > 0 ? F[3] === 1 : f.d[0] < 0 ? F[0] === 0 : f.d[1] > 0 ? F[4] === 1 : f.d[1] < 0 ? F[1] === 0 : f.d[2] > 0 ? F[5] === 1 : F[2] === 0)) continue;
       const Q = agua ? W : A, tile = d.tiles[f.t], tx = tile % 8, ty = Math.floor(tile / 8);
       const [cs, ct] = F ? luzCelda(x, y, z) : luzCelda(nx, ny, nz);
       const aos = [];
@@ -466,10 +496,17 @@ grieta.visible = false; escena.add(grieta);
 const J = { x: SX / 2, y: 30, z: SZ / 2, vx: 0, vy: 0, vz: 0, yaw: 0, pitch: -.15, suelo: false };
 const ANCHO = .3, ALTO = 1.7, OJOS = 1.55;
 let modoJuego = 'creativo', volando = false, saltando = false, bajando = false, vida = 20, golpeT = 0, tiempo = 0;
-function choca(x, y, z, an = ANCHO, al = ALTO) {
-  for (let bx = Math.floor(x - an); bx <= Math.floor(x + an); bx++) for (let by = Math.floor(y); by <= Math.floor(y + al - .01); by++) for (let bz = Math.floor(z - an); bz <= Math.floor(z + an); bz++) if (solidoMov(get(bx, by, bz))) return true;
-  return false;
+// devuelve la altura más alta con la que choca la caja (o -Infinity si no choca nada)
+function tope(x, y, z, an = ANCHO, al = ALTO) {
+  let m = -Infinity;
+  for (let bx = Math.floor(x - an); bx <= Math.floor(x + an); bx++) for (let by = Math.floor(y); by <= Math.floor(y + al - .01); by++) for (let bz = Math.floor(z - an); bz <= Math.floor(z + an); bz++) {
+    const t = get(bx, by, bz); if (!solidoMov(t)) continue; const F = DEF[t].forma;
+    if (!F) { m = Math.max(m, by + 1); continue; }
+    for (const c of F) if (x + an > bx + c[0] && x - an < bx + c[3] && y + al > by + c[1] && y < by + c[4] && z + an > bz + c[2] && z - an < bz + c[5]) m = Math.max(m, by + c[4]);
+  }
+  return m;
 }
+const choca = (x, y, z, an = ANCHO, al = ALTO) => tope(x, y, z, an, al) > -Infinity;
 const teclas = {}; let mov = { x: 0, y: 0 };
 function fisica(dt) {
   const fx = Math.floor(J.x), fz = Math.floor(J.z);
@@ -482,10 +519,13 @@ function fisica(dt) {
   else if (enAgua) { J.vy -= 9 * dt; if (J.vy < -2.5) J.vy = -2.5; if (saltando) J.vy = 3.4; }
   else { J.vy -= 26 * dt; if (J.vy < -30) J.vy = -30; if (saltando && J.suelo) { J.vy = 8.6; J.suelo = false; } }
   const sube = J.suelo && !volando;
-  let nx = J.x + J.vx * dt; if (!choca(nx, J.y, J.z)) J.x = nx; else if (sube && !choca(nx, J.y + 1.05, J.z) && !choca(J.x, J.y + 1.05, J.z)) { J.y += 1.05; J.x = nx; } else J.vx = 0;
-  let nz = J.z + J.vz * dt; if (!choca(J.x, J.y, nz)) J.z = nz; else if (sube && !choca(J.x, J.y + 1.05, nz) && !choca(J.x, J.y + 1.05, J.z)) { J.y += 1.05; J.z = nz; } else J.vz = 0;
+  // sube solo escalones de medio bloque o de un bloque
+  const subir = (ax, az) => { if (!sube) return false; for (const h of [.55, 1.05]) if (!choca(ax, J.y + h, az) && !choca(J.x, J.y + h, J.z)) { J.y += h; return true; } return false; };
+  let nx = J.x + J.vx * dt; if (!choca(nx, J.y, J.z) || subir(nx, J.z)) J.x = nx; else J.vx = 0;
+  let nz = J.z + J.vz * dt; if (!choca(J.x, J.y, nz) || subir(J.x, nz)) J.z = nz; else J.vz = 0;
   let ny = J.y + J.vy * dt; J.suelo = false;
-  if (!choca(J.x, ny, J.z)) J.y = ny; else { if (J.vy < 0) { J.suelo = true; J.y = Math.floor(ny) + 1; if (volando && !bajando) {} } J.vy = 0; }
+  const tp = tope(J.x, ny, J.z);
+  if (tp === -Infinity) J.y = ny; else { if (J.vy < 0) { J.suelo = true; J.y = Math.max(ny, Math.min(J.y, tp)); } J.vy = 0; }
   if (J.y < -5) { Object.assign(J, { x: spawn.x, y: spawn.y + 1, z: spawn.z, vy: 0 }); }
   if (J.y > SY + 8) J.y = SY + 8;
   J.x = Math.max(.4, Math.min(SX - .4, J.x)); J.z = Math.max(.4, Math.min(SZ - .4, J.z));
@@ -520,7 +560,7 @@ function ruido(d = .15, v = .2) { try { if (!ac) ac = new (window.AudioContext |
 const $ = id => document.getElementById(id);
 let inv = {}, barra = [], sel = 0, cofres = {}, stats = { rotos: {}, hechos: {}, cofres: 0 }, mision = 0;
 const BARRA_CREATIVO = [B.MADERA, B.ADOQUIN, B.LADRILLO, B.VIDRIO, B.TRONCO, B.PUERTA, B.ANTORCHA, B.TELA + 1, B.ESCALERA];
-const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
+const TODOS = [B.PASTO, B.TIERRA, B.PIEDRA, B.ADOQUIN, B.ARENA, B.NIEVE, B.TRONCO, B.MADERA, B.HOJAS, B.LADRILLO, B.VIDRIO, B.PUERTA, B.ESCALERA, B.ANTORCHA, B.LAMPARA, B.COFRE, B.ESTANTE, ...[0, 1, 2, 3].map(k => B.LOSA + k), ...[0, 1, 2, 3].map(k => B.ESCALON + k * 4), B.CACTUS, ...TELAS.map((t, k) => B.TELA + k), B.B_ORO, B.B_HIERRO, B.CARBON_M, B.HIERRO_M, B.ORO_M, B.CRISTAL_M, B.AGUA];
 const RECETAS = [
   [[B.MADERA, 4], [[B.TRONCO, 1]]], [[I.PALO, 4], [[B.MADERA, 2]]], [[B.ANTORCHA, 4], [[I.PALO, 1], [I.CARBON, 1]]],
   [[I.PICO1, 1], [[B.MADERA, 3], [I.PALO, 2]]], [[I.PICO2, 1], [[B.ADOQUIN, 3], [I.PALO, 2]]], [[I.PICO3, 1], [[I.HIERRO, 3], [I.PALO, 2]]], [[I.PICO4, 1], [[I.CRISTAL, 3], [I.PALO, 2]]],
@@ -528,6 +568,8 @@ const RECETAS = [
   [[B.PUERTA, 1], [[B.MADERA, 6]]], [[B.ESCALERA, 4], [[I.PALO, 7]]], [[B.COFRE, 1], [[B.MADERA, 8]]], [[B.ESTANTE, 1], [[B.MADERA, 6]]],
   [[B.VIDRIO, 2], [[B.ARENA, 2], [I.CARBON, 1]]], [[B.PIEDRA, 2], [[B.ADOQUIN, 2], [I.CARBON, 1]]], [[B.LADRILLO, 4], [[B.TIERRA, 3], [I.CARBON, 1]]],
   [[B.LAMPARA, 1], [[B.VIDRIO, 1], [B.ANTORCHA, 2]]], [[B.B_HIERRO, 1], [[I.HIERRO, 4]]], [[B.B_ORO, 1], [[I.ORO, 4]]],
+  ...MAT_FORMA.map(([m], k) => [[B.LOSA + k, 6], [[m, 3]]]), ...MAT_FORMA.map(([m], k) => [[B.ESCALON + k * 4, 4], [[m, 6]]]),
+  [[I.CARNE_A, 2], [[I.CARNE, 2], [I.CARBON, 1]]], [[I.POLLO_A, 2], [[I.POLLO, 2], [I.CARBON, 1]]],
   [[B.TELA, 2], [[B.HOJAS, 4]]], ...TELAS.slice(1).map((t, k) => [[B.TELA + k + 1, 1], [[B.TELA, 1]]]),
 ];
 const creativo = () => modoJuego === 'creativo';
@@ -535,7 +577,7 @@ const nivelPico = () => creativo() ? 4 : Math.max(0, ...[1, 2, 3, 4].filter(k =>
 const nivelEspada = () => Math.max(0, ...[1, 2, 3, 4].filter(k => inv[I.ESP1 + k - 1] > 0));
 function darItem(id, n = 1, silencio = false) {
   inv[id] = (inv[id] || 0) + n; sucio = true;
-  if (esBloque(id) && !barra.includes(id)) { const k = barra.indexOf(0); if (k >= 0) barra[k] = id; }
+  if ((esBloque(id) || esComida(id)) && !barra.includes(id)) { const k = barra.indexOf(0); if (k >= 0) barra[k] = id; }
   if (ITEM[id] && (ITEM[id].pico || ITEM[id].espada) && !silencio) aviso('¡TIENES ' + ITEM[id].nombre.toUpperCase() + '!', 1400);
   pintarBarra();
 }
@@ -581,7 +623,7 @@ $('panel').addEventListener('pointerdown', e => {
   let d;
   if (d = q('[data-tab]')) { panelTab = d.dataset.tab; pintarPanel(); }
   else if (d = q('#pPie [data-k]')) { sel = +d.dataset.k; pintarPanel(); }
-  else if (d = q('[data-poner]')) { const id = +d.dataset.poner; if (!esBloque(id)) { aviso('ESO NO SE PONE<small>se usa para fabricar</small>', 1100); return; } const ya = barra.indexOf(id); if (ya >= 0 && ya !== sel) barra[ya] = barra[sel] && !creativo() ? barra[sel] : 0; barra[sel] = id; sel = (sel + 1) % 9; son(520, .05, 'triangle', .08); pintarPanel(); }
+  else if (d = q('[data-poner]')) { const id = +d.dataset.poner; if (!esBloque(id) && !esComida(id)) { aviso('ESO NO SE PONE<small>se usa para fabricar</small>', 1100); return; } const ya = barra.indexOf(id); if (ya >= 0 && ya !== sel) barra[ya] = barra[sel] && !creativo() ? barra[sel] : 0; barra[sel] = id; sel = (sel + 1) % 9; son(520, .05, 'triangle', .08); pintarPanel(); }
   else if (d = q('[data-hacer]')) { fabricar(RECETAS[+d.dataset.hacer]); pintarPanel(); }
   else if (d = q('[data-sacar]')) { const id = +d.dataset.sacar, c = cofres[cofreAbierto]; darItem(id, c[id], true); delete c[id]; sucio = true; son(520, .05, 'triangle', .08); pintarPanel(); }
   else if (q('[data-sacartodo]')) { const c = cofres[cofreAbierto]; for (const id in c) darItem(+id, c[id]); cofres[cofreAbierto] = {}; sucio = true; son(660, .1, 'triangle', .12); pintarPanel(); }
@@ -603,18 +645,22 @@ function tocar(dir) {
   // primero: ¿le pegué a un monstruo?
   const m = monstruoApuntado(dir), h = apuntar(dir);
   if (m && (!h || m.t < h.t)) return golpear(m.m, dir);
+  if (h && h.b === B.COFRE) return abrirCofre(idx(h.x, h.y, h.z));
+  if (h && (h.b === B.PUERTA || h.b === B.PUERTA_A)) return puerta(h.x, h.y, h.z);
+  const id = barra[sel];
+  if (esComida(id)) return comer(id);
   if (!h) return;
-  if (h.b === B.COFRE) return abrirCofre(idx(h.x, h.y, h.z));
-  if (h.b === B.PUERTA || h.b === B.PUERTA_A) return puerta(h.x, h.y, h.z);
-  const id = barra[sel]; if (!id) return aviso('ELIGE UN BLOQUE<small>abre la bolsa</small>', 900);
+  if (!id) return aviso('ELIGE UN BLOQUE<small>abre la bolsa</small>', 900);
   if (!esBloque(id)) return;
   if (!creativo() && !(inv[id] > 0)) return;
+  // dos losas iguales, una arriba de la otra, forman un bloque entero
+  if (esLosa(id) && h.b === id && h.cara[1] === 1) { ponerBloque(h.x, h.y, h.z, DEF[id].base); if (!creativo()) quitarItem(id, 1); son(520, .08, 'triangle', .14); return; }
   const x = h.x + h.cara[0], y = h.y + h.cara[1], z = h.z + h.cara[2];
   const ocupa = (yy) => DEF[id].solido && x + 1 > J.x - ANCHO && x < J.x + ANCHO && z + 1 > J.z - ANCHO && z < J.z + ANCHO && yy + 1 > J.y && yy < J.y + ALTO;
   const libre = (yy) => yy < SY && (get(x, yy, z) === B.AIRE || get(x, yy, z) === B.AGUA);
   if (!libre(y) || ocupa(y)) return;
   if (id === B.PUERTA) { if (!libre(y + 1) || ocupa(y + 1)) return; ponerBloque(x, y + 1, z, B.PUERTA); }
-  ponerBloque(x, y, z, id);
+  ponerBloque(x, y, z, esEscalon(id) ? escalonHacia(id, J.yaw) : id);
   if (id === B.COFRE) cofres[idx(x, y, z)] = {};
   if (!creativo()) quitarItem(id, 1);
   son(520, .08, 'triangle', .14); revisarRefugio(); revisarMision();
@@ -640,7 +686,7 @@ function romper(h) {
   if (!creativo()) {
     stats.rotos[t] = (stats.rotos[t] || 0) + 1;
     if (d.req && nivelPico() < d.req) aviso('NECESITAS UN PICO ' + ['', 'DE MADERA', 'DE PIEDRA', 'DE HIERRO'][d.req] + '<small>para que suelte algo</small>', 1500);
-    else if (t === B.HOJAS) { if (Math.random() < .35) darItem(B.HOJAS); if (Math.random() < .12) darItem(I.PALO); }
+    else if (t === B.HOJAS) { if (Math.random() < .35) darItem(B.HOJAS); if (Math.random() < .12) darItem(I.PALO); if (Math.random() < .07) darItem(I.MANZANA); }
     else if (t === B.VIDRIO) { if (Math.random() < .5) darItem(B.VIDRIO); }
     else darItem(d.suelta === B.PUERTA_A ? B.PUERTA : d.suelta);
     if (t === B.COFRE && cofres[i]) { for (const id in cofres[i]) darItem(+id, cofres[i][id]); }
@@ -676,12 +722,13 @@ function crearMonstruo(x, y, z) {
 function quitarMonstruo(m, humo = true) { escena.remove(m); monstruos = monstruos.filter(x => x !== m); if (humo) polvo(m.position.x, m.position.y + .8, m.position.z, '#6b3fa0', 14); }
 function monstruoApuntado(dir) {
   const o = new THREE.Vector3(J.x, J.y + OJOS, J.z), r = new THREE.Ray(o, dir), v = new THREE.Vector3(); let mejor = null;
-  for (const m of monstruos) { const p = m.position, caja = new THREE.Box3(new THREE.Vector3(p.x - .5, p.y, p.z - .5), new THREE.Vector3(p.x + .5, p.y + 1.45, p.z + .5)); if (r.intersectBox(caja, v)) { const t = v.distanceTo(o); if (t < 4.5 && (!mejor || t < mejor.t)) mejor = { m, t }; } }
+  for (const m of monstruos.concat(animales)) { const p = m.position, an = m.userData.an || .5, al = m.userData.al || 1.45, caja = new THREE.Box3(new THREE.Vector3(p.x - an - .1, p.y, p.z - an - .1), new THREE.Vector3(p.x + an + .1, p.y + al, p.z + an + .1)); if (r.intersectBox(caja, v)) { const t = v.distanceTo(o); if (t < 4.5 && (!mejor || t < mejor.t)) mejor = { m, t }; } }
   return mejor;
 }
 function golpear(m, dir) {
   const u = m.userData, dano = [2, 3, 4, 6, 8][nivelEspada()];
   u.vida -= dano; u.rojo = .25; u.kx = dir.x * 7; u.kz = dir.z * 7; u.vy = 4; son(220, .1, 'sawtooth', .12);
+  if (u.animal) { u.huir = 5; son(u.animal === 'gallina' ? 1100 : u.animal === 'oveja' ? 520 : 260, .18, 'triangle', .1); if (u.vida <= 0) matarAnimal(m); return; }
   if (u.vida <= 0) { quitarMonstruo(m); son(520, .25, 'triangle', .12); if (Math.random() < .5) darItem(I.CARBON); }
 }
 function chocaM(x, y, z) { return choca(x, y, z, .4, 1.4); }
@@ -699,7 +746,7 @@ function moverMonstruos(dt, noche) {
     const enAgua = get(Math.floor(p.x), Math.floor(p.y + .3), Math.floor(p.z)) === B.AGUA;
     u.vy -= (enAgua ? 6 : 24) * dt; if (enAgua && u.vy < -1) u.vy = 2;
     const ny = p.y + u.vy * dt; u.suelo = false;
-    if (!chocaM(p.x, ny, p.z)) p.y = ny; else { if (u.vy < 0) { u.suelo = true; p.y = Math.floor(ny) + 1; } u.vy = 0; }
+    const tp = tope(p.x, ny, p.z, .4, 1.4); if (tp === -Infinity) p.y = ny; else { if (u.vy < 0) { u.suelo = true; p.y = Math.max(ny, Math.min(p.y, tp)); } u.vy = 0; }
     if (p.y < -5) { quitarMonstruo(m, false); continue; }
     p.x = Math.max(.5, Math.min(SX - .5, p.x)); p.z = Math.max(.5, Math.min(SZ - .5, p.z));
     m.rotation.y = Math.atan2(dx, dz);
@@ -727,6 +774,95 @@ function aparecerMonstruos(dt) {
     if (luzT[idx(x, y + 1, z)] > 5) continue;
     crearMonstruo(x + .5, y + 1, z + .5); break;
   }
+}
+
+// ═════════ ANIMALES ═════════
+let animales = [];
+const ruidoC = document.createElement('canvas'); ruidoC.width = ruidoC.height = 8; { const g = ruidoC.getContext('2d'); for (let y = 0; y < 8; y++) for (let x = 0; x < 8; x++) { const v = 205 + Math.floor(h3(x, y, 1, 5) * 50); g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(x, y, 1, 1); } }
+const ruidoTex = new THREE.CanvasTexture(ruidoC); ruidoTex.magFilter = ruidoTex.minFilter = THREE.NearestFilter; ruidoTex.generateMipmaps = false;
+const matA = c => new THREE.MeshLambertMaterial({ color: c, map: ruidoTex });
+function caja(g, w, h, d, x, y, z, m) { const me = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); me.position.set(x, y, z); g.add(me); return me; }
+function pata(g, w, h, d, x, arriba, z, m) { const ge = new THREE.BoxGeometry(w, h, d); ge.translate(0, -h / 2, 0); const me = new THREE.Mesh(ge, m); me.position.set(x, arriba, z); g.add(me); return me; }
+const TIPOS = {
+  vaca: { vida: 10, an: .45, al: 1.4, vel: 1.1, peso: .36, color: '#7a5230',
+    armar(g) { const cu = matA(0x7a5230), os = matA(0x4f3420), cr = matA(0xe8d2b0), bl = matA(0xf2f2f2), ne = matA(0x1a1a1a);
+      caja(g, .8, .75, 1.25, 0, .95, 0, cu); caja(g, .5, .05, .55, .1, 1.33, -.15, bl); caja(g, .5, .5, .45, 0, 1.25, .8, cu); caja(g, .42, .24, .12, 0, 1.1, 1.06, cr);
+      caja(g, .07, .07, .02, .13, 1.33, 1.03, ne); caja(g, .07, .07, .02, -.13, 1.33, 1.03, ne); caja(g, .08, .16, .08, .22, 1.55, .75, bl); caja(g, .08, .16, .08, -.22, 1.55, .75, bl);
+      return [[.24, .42], [-.24, -.42], [-.24, .42], [.24, -.42]].map(([x, z]) => pata(g, .22, .6, .22, x, .6, z, os)); },
+    suelta: () => [[I.CARNE, 1 + Math.floor(Math.random() * 3)]] },
+  oveja: { vida: 8, an: .45, al: 1.3, vel: 1, peso: .36, color: '#efefef',
+    armar(g) { const la = matA(0xefefef), ca = matA(0x8a8a8a), ne = matA(0x1a1a1a);
+      caja(g, .9, .8, 1.15, 0, .95, 0, la); caja(g, .42, .42, .42, 0, 1.2, .72, ca); caja(g, .46, .16, .3, 0, 1.45, .66, la); caja(g, .07, .07, .02, .11, 1.25, .94, ne); caja(g, .07, .07, .02, -.11, 1.25, .94, ne);
+      return [[.24, .38], [-.24, -.38], [-.24, .38], [.24, -.38]].map(([x, z]) => pata(g, .2, .55, .2, x, .55, z, ca)); },
+    suelta: () => [[B.TELA, 1 + Math.floor(Math.random() * 2)], [I.CARNE, 1]] },
+  gallina: { vida: 4, an: .25, al: .8, vel: 1.3, peso: .28, color: '#f4f4f4',
+    armar(g) { const bl = matA(0xf4f4f4), na = matA(0xf0a020), ro = matA(0xd02828), ne = matA(0x1a1a1a);
+      caja(g, .42, .42, .55, 0, .5, 0, bl); caja(g, .28, .36, .26, 0, .85, .28, bl); caja(g, .14, .08, .12, 0, .82, .47, na); caja(g, .06, .14, .14, 0, 1.08, .28, ro); caja(g, .1, .12, .04, 0, .72, .42, ro);
+      caja(g, .05, .05, .02, .08, .92, .415, ne); caja(g, .05, .05, .02, -.08, .92, .415, ne); caja(g, .06, .3, .4, .24, .52, -.02, bl); caja(g, .06, .3, .4, -.24, .52, -.02, bl);
+      return [[.1, 0], [-.1, 0]].map(([x, z]) => pata(g, .06, .3, .06, x, .3, z, na)); },
+    suelta: () => [[I.POLLO, 1]] },
+};
+function crearAnimal(tipo, x, y, z) {
+  const A = TIPOS[tipo], g = new THREE.Group(), patas = A.armar(g), mats = [];
+  g.traverse(o => { if (o.material && !mats.includes(o.material)) mats.push(o.material); });
+  g.position.set(x, y, z); g.rotation.y = Math.random() * 6.283;
+  g.userData = { animal: tipo, vida: A.vida, an: A.an, al: A.al, vel: A.vel, vy: 0, suelo: false, t: 0, dir: g.rotation.y, andar: Math.random() * 3, camina: false, huir: 0, kx: 0, kz: 0, rojo: 0, patas, mats };
+  escena.add(g); animales.push(g); return g;
+}
+function quitarAnimal(a) { escena.remove(a); animales = animales.filter(x => x !== a); a.traverse(o => { if (o.geometry) o.geometry.dispose(); }); }
+function matarAnimal(a) {
+  const u = a.userData; polvo(a.position.x, a.position.y + .6, a.position.z, TIPOS[u.animal].color, 12);
+  if (!creativo() && jugando) { for (const [id, n] of TIPOS[u.animal].suelta()) darItem(id, n); stats.cazados = (stats.cazados || 0) + 1; revisarMision(); }
+  quitarAnimal(a);
+}
+function poblarAnimales(n, lejos) {
+  for (let k = 0, intentos = 0; k < n && intentos < n * 40; intentos++) {
+    const x = 3 + Math.floor(Math.random() * (SX - 6)), z = 3 + Math.floor(Math.random() * (SZ - 6));
+    if (lejos && Math.hypot(x - J.x, z - J.z) < 26) continue;
+    let y = SY - 2; while (y > 0 && !solidoMov(get(x, y, z)) && get(x, y, z) !== B.AGUA) y--;
+    if (get(x, y, z) !== B.PASTO || get(x, y + 1, z) || get(x, y + 2, z)) continue;
+    const r = Math.random(); crearAnimal(r < .36 ? 'vaca' : r < .72 ? 'oveja' : 'gallina', x + .5, y + 1, z + .5); k++;
+  }
+}
+let animalT = 0;
+function moverAnimales(dt) {
+  animalT -= dt; if (animalT <= 0) { animalT = 6; if (animales.length < 16) poblarAnimales(1, true); }
+  for (const a of animales.slice()) {
+    const u = a.userData, p = a.position; u.t += dt;
+    let vel = 0;
+    if (u.huir > 0) { u.huir -= dt; u.dir = Math.atan2(p.x - J.x, p.z - J.z) + Math.sin(u.t * 3) * .4; vel = u.vel * 2.6; }
+    else { u.andar -= dt; if (u.andar <= 0) { u.camina = Math.random() < .55; u.dir = Math.random() * 6.283; u.andar = 2 + Math.random() * 4; } if (u.camina) vel = u.vel; }
+    const vx = Math.sin(u.dir) * vel + u.kx, vz = Math.cos(u.dir) * vel + u.kz; u.kx *= Math.pow(.02, dt); u.kz *= Math.pow(.02, dt);
+    // no se tiran al agua solos
+    if (vel && !u.huir) { const fx = Math.floor(p.x + Math.sin(u.dir) * .9), fz = Math.floor(p.z + Math.cos(u.dir) * .9); let y = Math.floor(p.y); if (get(fx, y, fz) === B.AGUA || get(fx, y - 1, fz) === B.AGUA || (!solidoMov(get(fx, y - 1, fz)) && !solidoMov(get(fx, y - 2, fz)))) { u.dir += Math.PI; u.andar = 1.5; } }
+    let bloqueado = false;
+    const nx = p.x + vx * dt; if (!choca(nx, p.y, p.z, u.an, u.al)) p.x = nx; else bloqueado = true;
+    const nz = p.z + vz * dt; if (!choca(p.x, p.y, nz, u.an, u.al)) p.z = nz; else bloqueado = true;
+    if (bloqueado && u.suelo && !choca(p.x, p.y + 1.1, p.z, u.an, u.al)) u.vy = 7;
+    else if (bloqueado && !u.huir) u.dir += 1.5;
+    const enAgua = get(Math.floor(p.x), Math.floor(p.y + .3), Math.floor(p.z)) === B.AGUA;
+    u.vy -= (enAgua ? 6 : 24) * dt; if (enAgua && u.vy < -1) u.vy = 2;
+    const ny = p.y + u.vy * dt; u.suelo = false; const tp = tope(p.x, ny, p.z, u.an, u.al);
+    if (tp === -Infinity) p.y = ny; else { if (u.vy < 0) { u.suelo = true; p.y = Math.max(ny, Math.min(p.y, tp)); } u.vy = 0; }
+    if (p.y < -5) { quitarAnimal(a); continue; }
+    p.x = Math.max(.5, Math.min(SX - .5, p.x)); p.z = Math.max(.5, Math.min(SZ - .5, p.z));
+    let dr = u.dir - a.rotation.y; dr = Math.atan2(Math.sin(dr), Math.cos(dr)); a.rotation.y += dr * Math.min(1, dt * 8);
+    const paso = vel ? Math.sin(u.t * (u.huir > 0 ? 16 : 9)) * .55 : 0; u.patas.forEach((l, k) => l.rotation.x = k % 2 ? -paso : paso);
+    u.rojo -= dt; for (const m of u.mats) m.emissive.setHex(u.rojo > 0 ? 0x990000 : 0x000000);
+  }
+}
+
+// ═════════ HAMBRE ═════════
+let hambre = 20, hambreT = 0, hambrePintado = -1;
+const MUSLO = ['.....XX.', '....XXXX', '...XXXXX', '..XXXXX.', '.XXXX...', 'XXX.....', '.X......', 'X.X.....'];
+function muslo(est) { let d1 = '', d2 = ''; MUSLO.forEach((f, y) => [...f].forEach((c, x) => { if (c !== 'X') return; const r = `M${x} ${y}h1v1h-1z`; if (est === 2 || (est === 1 && x >= 3)) d1 += r; else d2 += r; })); return `<svg viewBox="-.5 -.5 9 9" shape-rendering="crispEdges"><path d="${d2}" fill="#3a3a3a" stroke="#000" stroke-width=".25"/><path d="${d1}" fill="#c27a3a" stroke="#000" stroke-width=".25"/></svg>`; }
+function pintarHambre() { $('hambre').hidden = creativo(); if (creativo()) return; const v = Math.ceil(hambre); if (v === hambrePintado) return; hambrePintado = v; let h = ''; for (let k = 9; k >= 0; k--) h += muslo(v >= (k + 1) * 2 ? 2 : v >= k * 2 + 1 ? 1 : 0); $('hambre').innerHTML = h; }
+function comer(id) {
+  if (creativo()) return aviso('EN CREATIVO NO HAY HAMBRE', 900);
+  if (hambre >= 20) return aviso('NO TIENES HAMBRE', 800);
+  if (!(inv[id] > 0)) return;
+  hambre = Math.min(20, hambre + ITEM[id].comida); quitarItem(id, 1); stats.comido = (stats.comido || 0) + 1;
+  ruido(.08, .15); setTimeout(() => ruido(.08, .15), 140); setTimeout(() => son(600, .1, 'triangle', .1), 300); pintarHambre(); sucio = true;
 }
 
 // ═════════ DÍA Y NOCHE ═════════
@@ -763,6 +899,8 @@ const MISIONES = [
   { t: 'Fabrica un pico de piedra', a: 'Rompe más rápido y saca hierro', ok: () => nivelPico() >= 2 },
   { t: 'Arma un refugio: techo y 4 paredes', a: 'Métete adentro antes de la noche', ok: () => refugio.techo && refugio.paredes === 4, p: () => `techo ${refugio.techo ? 'sí' : 'no'} · paredes ${refugio.paredes}/4` },
   { t: 'Haz antorchas', a: 'Necesitas carbón: piedra con puntos negros', ok: () => hecho(B.ANTORCHA) >= 1 },
+  { t: 'Consigue comida', a: 'Golpea una vaca, una oveja o una gallina', ok: () => (stats.cazados || 0) >= 1 },
+  { t: 'Cocina carne con carbón', a: 'En Fabricar: carne asada o pollo asado', ok: () => hecho(I.CARNE_A) + hecho(I.POLLO_A) >= 1 },
   { t: 'Sobrevive tu primera noche', a: 'De noche salen los Ojones', ok: () => numDia() >= 2 },
   { t: 'Encuentra hierro', a: 'Piedra con puntos color piel, en cuevas', ok: () => roto(B.HIERRO_M) >= 1 },
   { t: 'Fabrica un pico de hierro', a: 'Lo necesitas para oro y cristal', ok: () => nivelPico() >= 3 },
@@ -808,7 +946,7 @@ $('bBolsa').addEventListener('pointerdown', e => { e.stopPropagation(); abrirPan
 $('bPausa').addEventListener('pointerdown', e => { e.stopPropagation(); pausado = true; soltarTodo(); guardar(); $('pausa').hidden = false; });
 $('bSeguir').onclick = () => { $('pausa').hidden = true; pausado = false; };
 $('bSalir').onclick = () => { guardar(); $('pausa').hidden = true; salirAlMenu(); };
-$('bRevivir').onclick = () => { $('muerte').hidden = true; vida = 20; pausado = false; Object.assign(J, { x: spawn.x, y: spawn.y, z: spawn.z, vx: 0, vy: 0, vz: 0 }); for (const m of monstruos.slice()) if (Math.hypot(m.position.x - J.x, m.position.z - J.z) < 20) quitarMonstruo(m, false); pintarVida(); };
+$('bRevivir').onclick = () => { $('muerte').hidden = true; vida = 20; hambre = 20; hambrePintado = -1; pintarHambre(); pausado = false; Object.assign(J, { x: spawn.x, y: spawn.y, z: spawn.z, vx: 0, vy: 0, vz: 0 }); for (const m of monstruos.slice()) if (Math.hypot(m.position.x - J.x, m.position.z - J.z) < 20) quitarMonstruo(m, false); pintarVida(); };
 
 // ═════════ FOTO ═════════
 let fotoBlob = null;
@@ -833,7 +971,7 @@ function guardar() {
   if (!mundoId || !jugando) return;
   try {
     const d = []; for (const [i, t] of diffs) d.push(i, t);
-    const datos = { v: 1, semilla, modo: modoJuego, d, J: { x: J.x, y: J.y, z: J.z, yaw: J.yaw, pitch: J.pitch }, inv, barra, sel, tiempo, vida, cofres, stats, mision, volando };
+    const datos = { v: 1, semilla, modo: modoJuego, d, J: { x: J.x, y: J.y, z: J.z, yaw: J.yaw, pitch: J.pitch }, inv, barra, sel, tiempo, vida, hambre, cofres, stats, mision, volando };
     localStorage.setItem('bloquesMundo_' + mundoId, JSON.stringify(datos));
     const lista = leerLista(), m = lista.find(m => m.id === mundoId);
     if (m) { m.dia = numDia(); m.fecha = Date.now(); m.bloques = diffs.size; } localStorage.setItem('bloquesMundos', JSON.stringify(lista));
@@ -843,22 +981,22 @@ function guardar() {
 setInterval(() => { if (sucio && jugando) guardar(); }, 8000);
 addEventListener('pagehide', guardar); document.addEventListener('visibilitychange', () => { if (document.hidden) guardar(); });
 function prepararMundo(S) { generar(S); diffs = new Map(); }
-function terminarCarga() { altTodo(); buscarFuentes(); calcLuz(); for (const m of monstruos.slice()) quitarMonstruo(m, false); armarTodo(); }
+function terminarCarga() { altTodo(); buscarFuentes(); calcLuz(); for (const m of monstruos.slice()) quitarMonstruo(m, false); for (const a of animales.slice()) quitarAnimal(a); armarTodo(); poblarAnimales(22, false); }
 function entrarMundo(id) {
   let datos; try { datos = JSON.parse(localStorage.getItem('bloquesMundo_' + id)); } catch (e) {}
   const meta = leerLista().find(m => m.id === id); if (!meta) return;
   mundoId = id; mundoNombre = meta.nombre; modoJuego = meta.modo;
   prepararMundo(meta.semilla);
-  inv = {}; barra = modoJuego === 'creativo' ? BARRA_CREATIVO.slice() : Array(9).fill(0); sel = 0; cofres = {}; stats = { rotos: {}, hechos: {}, cofres: 0 }; mision = 0; tiempo = 0; vida = 20; volando = false;
+  inv = {}; barra = modoJuego === 'creativo' ? BARRA_CREATIVO.slice() : Array(9).fill(0); sel = 0; cofres = {}; stats = { rotos: {}, hechos: {}, cofres: 0 }; mision = 0; tiempo = 0; vida = 20; hambre = 20; volando = false;
   Object.assign(J, { x: spawn.x, y: spawn.y, z: spawn.z, vx: 0, vy: 0, vz: 0, yaw: .6, pitch: -.2 });
   if (datos) {
     for (let k = 0; k < datos.d.length; k += 2) { mundo[datos.d[k]] = datos.d[k + 1]; diffs.set(datos.d[k], datos.d[k + 1]); }
-    Object.assign(J, datos.J); inv = datos.inv || {}; barra = datos.barra || barra; sel = datos.sel || 0; tiempo = datos.tiempo || 0; vida = datos.vida || 20; cofres = datos.cofres || {}; stats = datos.stats || stats; mision = datos.mision || 0; volando = !!datos.volando;
+    Object.assign(J, datos.J); inv = datos.inv || {}; barra = datos.barra || barra; sel = datos.sel || 0; tiempo = datos.tiempo || 0; vida = datos.vida || 20; hambre = datos.hambre ?? 20; cofres = datos.cofres || {}; stats = datos.stats || stats; mision = datos.mision || 0; volando = !!datos.volando;
   }
   terminarCarga();
   jugando = true; pausado = false;
   for (const c of ['inicio', 'mundos', 'nuevo']) $(c).hidden = true; $('hud').hidden = false;
-  pintarBarra(); pintarVida(); pintarVolar(); diaPintado = ''; revisarRefugio(); pintarMision(); son(440, .1, 'triangle', .1);
+  pintarBarra(); pintarVida(); hambrePintado = -1; pintarHambre(); pintarVolar(); diaPintado = ''; revisarRefugio(); pintarMision(); son(440, .1, 'triangle', .1);
   if (!datos) { guardar(); aviso(creativo() ? 'MODO CREATIVO<small>Toca para poner · mantén apretado para romper</small>' : 'SUPERVIVENCIA<small>Toca para poner · mantén apretado para romper</small>', 3500); }
 }
 function crearMundo(modo) {
@@ -939,14 +1077,17 @@ function bucle(ya) {
       const t = tiempo % CICLO; if (t > 170 && t < 171 && ya - ultimoAviso > 2000) { ultimoAviso = ya; aviso('SE VIENE LA NOCHE<small>arma tu refugio</small>', 2000); }
       if (noche) aparecerMonstruos(dt);
       moverMonstruos(dt, oscuridad() > .2);
-      golpeT += dt; if (golpeT > 5 && vida < 20) { curaT += dt; if (curaT > 3) { curaT = 0; vida++; pintarVida(); } }
+      golpeT += dt; if (golpeT > 5 && vida < 20 && hambre >= 12) { curaT += dt; if (curaT > 3) { curaT = 0; vida++; hambre -= .5; pintarVida(); } }
+      hambre = Math.max(0, hambre - dt / 45); pintarHambre();
+      if (hambre <= 0) { hambreT += dt; if (hambreT > 5) { hambreT = 0; if (vida > 2) { vida--; $('dano').style.background = 'rgba(200,0,0,.3)'; setTimeout(() => $('dano').style.background = 'rgba(200,0,0,0)', 120); pintarVida(); aviso('TIENES HAMBRE<small>come algo</small>', 1200); } } }
       pintarDia();
     }
     revisarT += dt; if (revisarT > .5) { revisarT = 0; revisarRefugio(); revisarMision(); }
     // romper manteniendo apretado
     const tq = Object.values(toques).find(t => !t.izq && !t.mira && t.boton !== 2 && performance.now() - t.t0 > 450);
     if (tq) { tq.rompe = true; dirMira = rayoDesde(tq.x, tq.y); seguirRompiendo(dirMira, dt); } else rompiendo = null;
-  } else if (!jugando) J.yaw += dt * .06;   // en el menú la cámara gira despacio
+  } else if (!jugando) J.yaw += dt * .06;
+  if (!pausado) moverAnimales(dt);   // en el menú la cámara gira despacio
   cam.position.set(J.x, J.y + OJOS, J.z);
   cam.rotation.order = 'YXZ'; cam.rotation.y = J.yaw; cam.rotation.x = J.pitch;
   cielo();
@@ -958,7 +1099,7 @@ function bucle(ya) {
   render.render(escena, cam);
 }
 requestAnimationFrame(bucle);
-window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMundo, crearMundo, guardar, armarTodo, monstruos: () => monstruos, crearMonstruo, estado: () => ({ modoJuego, inv, barra, sel, vida, tiempo, mision, stats, refugio, diffs: diffs.size, spawn, ruinas, oscuridad: oscuridad() }), setTiempo: t => tiempo = t, darItem, fabricar, RECETAS, abrirPanel, cerrarPanel, sacarFoto, U, setPausa: p => pausado = p, mundo: () => mundo, idx, ponerBloque, prepararMundo, terminarCarga };
+window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMundo, crearMundo, guardar, armarTodo, monstruos: () => monstruos, crearMonstruo, animales: () => animales, crearAnimal, comer, hambre: v => v === undefined ? hambre : (hambre = v), estado: () => ({ modoJuego, inv, barra, sel, vida, tiempo, mision, stats, refugio, diffs: diffs.size, spawn, ruinas, oscuridad: oscuridad() }), setTiempo: t => tiempo = t, darItem, fabricar, RECETAS, abrirPanel, cerrarPanel, sacarFoto, U, setPausa: p => pausado = p, mundo: () => mundo, idx, ponerBloque, prepararMundo, terminarCarga };
 </script>
 </body>
 </html>
