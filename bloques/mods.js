@@ -3,7 +3,7 @@
 
 // ───── textos de esta parte ─────
 Object.assign(TX.es, {
-  cargarArchivoBtn: 'Cargar mapa o mod<small>Abre un archivo .blox que te pasaron</small>', modsBtn: 'Mods', compartirMundo: 'Compartir mundo', opcionesMundo: 'Opciones',
+  cargarArchivoBtn: 'Cargar mapa o mod<small>Abre un archivo .voxel que te pasaron</small>', modsBtn: 'Mods', compartirMundo: 'Compartir mundo', opcionesMundo: 'Opciones',
   misMods: 'Mis mods', nuevoMod: 'Crear mod nuevo', editar: 'Editar', borrar: 'Borrar', compartir: 'Compartir', bloquesN: '{n} bloques', sinMods: 'Todavía no tienes mods<small>crea uno o carga un archivo</small>',
   modNombre: 'Nombre del mod', bloquesMod: 'Bloques', agregarBloque: '+ Bloque nuevo', recetas: 'Recetas', reglas: 'Reglas', guardarMod: 'Guardar mod', maxBloques: 'MÁXIMO 10 BLOQUES POR MOD',
   sinReceta: 'sin receta', receta: 'se fabrica con', cantidad: 'da', noCambia: '—',
@@ -12,13 +12,13 @@ Object.assign(TX.es, {
   inicioAqui: 'Usar mi posición como inicio', inicioOk: 'INICIO GUARDADO<small>acá aparece quien cargue tu mapa</small>',
   hora: 'Hora', horaNormal: 'Normal', horaDia: 'Siempre de día', horaNoche: 'Siempre de noche', monstruos: 'Monstruos', no: 'No', muchos: 'Muchos', gravedad: 'Gravedad', baja: 'Baja', alta: 'Alta', salto: 'Salto', alto: 'Alto', super: 'Súper', velocidad: 'Velocidad', rapida: 'Rápida', danoCaida: 'Daño por caídas', hambreR: 'Hambre', si: 'Sí',
   modsMundo: 'Mods de este mundo', activar: 'Activar', quitar: 'Quitar', actualizar: 'Actualizar', modActivado: 'MOD ACTIVADO', modQuitado: 'MOD QUITADO', maxMods: 'MÁXIMO 8 MODS POR MUNDO',
-  archivoMal: 'ESE ARCHIVO NO ES DE BLOX', mapaCargado: 'MAPA CARGADO', modCargado: 'MOD CARGADO<small>actívalo desde Opciones dentro de un mundo</small>', creandoArchivo: 'PREPARANDO EL ARCHIVO…',
+  archivoMal: 'ESE ARCHIVO NO ES DE VOXELIUM', mapaCargado: 'MAPA CARGADO', modCargado: 'MOD CARGADO<small>actívalo desde Opciones dentro de un mundo</small>', creandoArchivo: 'PREPARANDO EL ARCHIVO…',
   cartelTitulo: 'Texto del cartel', cartelVacio: '(cartel vacío)', escribeAqui: 'Escribe aquí…',
   metaLlegaste: '¡LLEGASTE A LA META!', tiempo: 'Tiempo: {t}', mejor: 'Mejor: {t}', jugarDeNuevo: 'Jugar de nuevo', seguirExplorando: 'Seguir explorando', control: 'PUNTO DE CONTROL',
   aventuraAyuda: 'MODO AVENTURA<small>explora y llega a la meta</small>',
 });
 Object.assign(TX.en, {
-  cargarArchivoBtn: 'Load map or mod<small>Open a .blox file someone sent you</small>', modsBtn: 'Mods', compartirMundo: 'Share world', opcionesMundo: 'Options',
+  cargarArchivoBtn: 'Load map or mod<small>Open a .voxel file someone sent you</small>', modsBtn: 'Mods', compartirMundo: 'Share world', opcionesMundo: 'Options',
   misMods: 'My mods', nuevoMod: 'Create new mod', editar: 'Edit', borrar: 'Delete', compartir: 'Share', bloquesN: '{n} blocks', sinMods: "You don't have any mods yet<small>create one or load a file</small>",
   modNombre: 'Mod name', bloquesMod: 'Blocks', agregarBloque: '+ New block', recetas: 'Recipes', reglas: 'Rules', guardarMod: 'Save mod', maxBloques: 'MAXIMUM 10 BLOCKS PER MOD',
   sinReceta: 'no recipe', receta: 'made with', cantidad: 'gives', noCambia: '—',
@@ -27,13 +27,13 @@ Object.assign(TX.en, {
   inicioAqui: 'Use my position as the start', inicioOk: 'START SAVED<small>whoever loads your map appears here</small>',
   hora: 'Time', horaNormal: 'Normal', horaDia: 'Always day', horaNoche: 'Always night', monstruos: 'Monsters', no: 'No', muchos: 'Many', gravedad: 'Gravity', baja: 'Low', alta: 'High', salto: 'Jump', alto: 'High', super: 'Super', velocidad: 'Speed', rapida: 'Fast', danoCaida: 'Fall damage', hambreR: 'Hunger', si: 'Yes',
   modsMundo: 'Mods in this world', activar: 'Turn on', quitar: 'Remove', actualizar: 'Update', modActivado: 'MOD TURNED ON', modQuitado: 'MOD REMOVED', maxMods: 'MAXIMUM 8 MODS PER WORLD',
-  archivoMal: "THAT FILE ISN'T A BLOX FILE", mapaCargado: 'MAP LOADED', modCargado: 'MOD LOADED<small>turn it on from Options inside a world</small>', creandoArchivo: 'PREPARING THE FILE…',
+  archivoMal: "THAT FILE ISN'T A VOXELIUM FILE", mapaCargado: 'MAP LOADED', modCargado: 'MOD LOADED<small>turn it on from Options inside a world</small>', creandoArchivo: 'PREPARING THE FILE…',
   cartelTitulo: 'Sign text', cartelVacio: '(empty sign)', escribeAqui: 'Write here…',
   metaLlegaste: 'YOU REACHED THE FINISH!', tiempo: 'Time: {t}', mejor: 'Best: {t}', jugarDeNuevo: 'Play again', seguirExplorando: 'Keep exploring', control: 'CHECKPOINT',
   aventuraAyuda: 'ADVENTURE MODE<small>explore and reach the finish</small>',
 });
 Object.assign(TX.pt, {
-  cargarArchivoBtn: 'Carregar mapa ou mod<small>Abra um arquivo .blox que te enviaram</small>', modsBtn: 'Mods', compartirMundo: 'Compartilhar mundo', opcionesMundo: 'Opções',
+  cargarArchivoBtn: 'Carregar mapa ou mod<small>Abra um arquivo .voxel que te enviaram</small>', modsBtn: 'Mods', compartirMundo: 'Compartilhar mundo', opcionesMundo: 'Opções',
   misMods: 'Meus mods', nuevoMod: 'Criar mod novo', editar: 'Editar', borrar: 'Apagar', compartir: 'Compartilhar', bloquesN: '{n} blocos', sinMods: 'Você ainda não tem mods<small>crie um ou carregue um arquivo</small>',
   modNombre: 'Nome do mod', bloquesMod: 'Blocos', agregarBloque: '+ Bloco novo', recetas: 'Receitas', reglas: 'Regras', guardarMod: 'Salvar mod', maxBloques: 'MÁXIMO 10 BLOCOS POR MOD',
   sinReceta: 'sem receita', receta: 'feito com', cantidad: 'dá', noCambia: '—',
@@ -42,7 +42,7 @@ Object.assign(TX.pt, {
   inicioAqui: 'Usar minha posição como início', inicioOk: 'INÍCIO SALVO<small>quem carregar seu mapa aparece aqui</small>',
   hora: 'Hora', horaNormal: 'Normal', horaDia: 'Sempre dia', horaNoche: 'Sempre noite', monstruos: 'Monstros', no: 'Não', muchos: 'Muitos', gravedad: 'Gravidade', baja: 'Baixa', alta: 'Alta', salto: 'Pulo', alto: 'Alto', super: 'Super', velocidad: 'Velocidade', rapida: 'Rápida', danoCaida: 'Dano de queda', hambreR: 'Fome', si: 'Sim',
   modsMundo: 'Mods deste mundo', activar: 'Ativar', quitar: 'Remover', actualizar: 'Atualizar', modActivado: 'MOD ATIVADO', modQuitado: 'MOD REMOVIDO', maxMods: 'MÁXIMO 8 MODS POR MUNDO',
-  archivoMal: 'ESSE ARQUIVO NÃO É DO BLOX', mapaCargado: 'MAPA CARREGADO', modCargado: 'MOD CARREGADO<small>ative em Opções dentro de um mundo</small>', creandoArchivo: 'PREPARANDO O ARQUIVO…',
+  archivoMal: 'ESSE ARQUIVO NÃO É DO VOXELIUM', mapaCargado: 'MAPA CARREGADO', modCargado: 'MOD CARREGADO<small>ative em Opções dentro de um mundo</small>', creandoArchivo: 'PREPARANDO O ARQUIVO…',
   cartelTitulo: 'Texto da placa', cartelVacio: '(placa vazia)', escribeAqui: 'Escreva aqui…',
   metaLlegaste: 'VOCÊ CHEGOU AO FINAL!', tiempo: 'Tempo: {t}', mejor: 'Melhor: {t}', jugarDeNuevo: 'Jogar de novo', seguirExplorando: 'Continuar explorando', control: 'PONTO DE CONTROLE',
   aventuraAyuda: 'MODO AVENTURA<small>explore e chegue ao final</small>',
@@ -98,7 +98,7 @@ cap('cartelCapa', '<div class="titulo" style="font-size:clamp(22px,4vw,32px)" da
 cap('verCartel', '<div class="tablero" id="verCartelTxt"></div><div class="btn" id="verCartelOk" data-i="seguir"></div>');
 cap('metaCapa', '<div class="titulo" style="font-size:clamp(24px,5vw,40px);color:#ffe14a" data-i="metaLlegaste"></div><div class="texto" id="metaTxt" style="font-size:18px"></div><div class="btn" id="metaOtra" data-i="jugarDeNuevo"></div><div class="btn" id="metaSeguir" data-i="seguirExplorando"></div>');
 { const c = document.createElement('div'); c.id = 'crono'; c.className = 'sombra'; c.hidden = true; $('hud').appendChild(c); }
-const archivoIn = document.createElement('input'); archivoIn.type = 'file'; archivoIn.accept = '.blox,.bloxmod,application/octet-stream,application/json,application/gzip'; archivoIn.style.display = 'none'; document.body.appendChild(archivoIn);
+const archivoIn = document.createElement('input'); archivoIn.type = 'file'; archivoIn.accept = '.voxel,.voxelmod,.blox,.bloxmod,application/octet-stream,application/json,application/gzip'; archivoIn.style.display = 'none'; document.body.appendChild(archivoIn);
 aplicarIdioma();
 const abrir = id => { $(id).hidden = false; }, cerrar = id => { $(id).hidden = true; };
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -267,7 +267,7 @@ function quitarMod(id) {
   modsMundo = modsMundo.filter(x => x !== m); aviso(TR('modQuitado'), 1200); recargarMundo();
 }
 
-// ═════════ ARCHIVOS .blox (mapas y mods) ═════════
+// ═════════ ARCHIVOS .voxel / .voxelmod (mapas y mods; también abre los .blox viejos) ═════════
 async function empacar(obj) {
   const txt = JSON.stringify(obj);
   if (window.CompressionStream) { const s = new Blob([txt]).stream().pipeThrough(new CompressionStream('gzip')); return new Blob([await new Response(s).arrayBuffer()], { type: 'application/octet-stream' }); }
@@ -278,7 +278,7 @@ async function desempacar(file) {
   if (u[0] === 0x1f && u[1] === 0x8b) { if (!window.DecompressionStream) throw new Error('gzip'); const s = new Blob([ab]).stream().pipeThrough(new DecompressionStream('gzip')); return JSON.parse(await new Response(s).text()); }
   return JSON.parse(new TextDecoder().decode(u));
 }
-const nombreArchivo = n => (String(n || 'blox').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '') || 'blox').slice(0, 40);
+const nombreArchivo = n => (String(n || 'voxelium').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '') || 'voxelium').slice(0, 40);
 async function compartirArchivo(blob, nombre) {
   const f = new File([blob], nombre, { type: 'application/octet-stream' });
   try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: nombre }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
@@ -291,8 +291,8 @@ async function exportarMundo() {
   const d = Object.assign({}, datos, { J: { x: ini.x, y: ini.y, z: ini.z, yaw: ini.yaw ?? 0, pitch: -.1 }, spawnP: ini, inv: {}, stats: { rotos: {}, hechos: {}, cofres: 0 }, mision: 0, tiempo: 0, vida: 20, hambre: 20, volando: false, extra: null });
   const modo = mapa.modoJugar || (tieneMeta ? 'aventura' : meta.modo);
   if (modo === 'creativo') d.barra = BARRA_CREATIVO.slice(); else d.barra = Array(9).fill(0);
-  const obj = { formato: 'blox', tipo: 'mapa', v: 1, nombre: mapa.nombre || meta.nombre, modo, semilla: meta.semilla, ejemplo: !!meta.ejemplo, datos: d };
-  compartirArchivo(await empacar(obj), nombreArchivo(obj.nombre) + '.blox');
+  const obj = { formato: 'voxelium', tipo: 'mapa', v: 1, nombre: mapa.nombre || meta.nombre, modo, semilla: meta.semilla, ejemplo: !!meta.ejemplo, datos: d };
+  compartirArchivo(await empacar(obj), nombreArchivo(obj.nombre) + '.voxel');
 }
 $('bCompartirMundo').onclick = () => exportarMundo();
 let tras = null;
@@ -300,7 +300,7 @@ function pedirArchivo(despues) { tras = despues; archivoIn.value = ''; archivoIn
 archivoIn.onchange = async () => {
   const f = archivoIn.files[0]; if (!f) return; let o;
   try { o = await desempacar(f); } catch (e) { return aviso(TR('archivoMal'), 1800); }
-  if (!o || o.formato !== 'blox') return aviso(TR('archivoMal'), 1800);
+  if (!o || (o.formato !== 'voxelium' && o.formato !== 'blox')) return aviso(TR('archivoMal'), 1800);
   if (o.tipo === 'mod' && o.mod) { guardarModLib(Object.assign(o.mod, { id: o.mod.id || 'm' + Date.now().toString(36) })); aviso(TR('modCargado'), 2400); if (!$('modsCapa').hidden) pintarLibreria(); return; }
   if (o.tipo === 'mapa' && o.datos) {
     const lista = leerLista(), id = Date.now().toString(36), modo = ['aventura', 'supervivencia', 'creativo'].includes(o.modo) ? o.modo : 'aventura';
@@ -331,7 +331,7 @@ $('bCargarMod').onclick = () => pedirArchivo();
 $('modsLista').addEventListener('click', async e => {
   const q = s => e.target.closest(s); let d; const l = leerMods();
   if (d = q('[data-editar]')) abrirEditorMod(JSON.parse(JSON.stringify(l.find(m => m.id === d.dataset.editar))));
-  else if (d = q('[data-compartir]')) { const m = l.find(x => x.id === d.dataset.compartir); compartirArchivo(await empacar({ formato: 'blox', tipo: 'mod', v: 1, mod: m }), nombreArchivo(m.nombre) + '.bloxmod'); }
+  else if (d = q('[data-compartir]')) { const m = l.find(x => x.id === d.dataset.compartir); compartirArchivo(await empacar({ formato: 'voxelium', tipo: 'mod', v: 1, mod: m }), nombreArchivo(m.nombre) + '.voxelmod'); }
   else if (d = q('[data-borrar]')) { if (d.dataset.seguro) { localStorage.setItem('bloxMods', JSON.stringify(l.filter(m => m.id !== d.dataset.borrar))); pintarLibreria(); } else { d.dataset.seguro = 1; d.textContent = TR('seguro'); } }
 });
 const resumenMod = m => [m.bloques.length ? TR('bloquesN', { n: m.bloques.length }) : '', Object.keys(m.texturas || {}).length ? TR('texturasN', { n: Object.keys(m.texturas).length }) : '', (m.criaturas || []).length ? TR('criaturasN', { n: m.criaturas.length }) : ''].filter(x => x).join(' · ') || TR('bloquesN', { n: 0 });

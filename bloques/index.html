@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Blox: Building Block Crafting</title>
+<title>Voxelium: Block Crafting</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; background: #79a6ff; font-family: 'Baloo 2', 'Trebuchet MS', sans-serif; font-weight: 700; color: #fff; user-select: none; -webkit-user-select: none; touch-action: none; image-rendering: pixelated; }
@@ -120,7 +120,7 @@
 <div id="girar"><svg viewBox="0 0 16 16" shape-rendering="crispEdges"><rect x="4" y="1" width="8" height="14" fill="#c6c6c6"/><rect x="5" y="2" width="6" height="11" fill="#3f3f3f"/></svg><span data-i="girar"></span></div>
 
 <div class="capa trans" id="inicio" style="background-color:rgba(0,0,0,.25)">
-  <div class="titulo">BLOX</div>
+  <div class="titulo">VOXELIUM</div>
   <div class="sub" data-i="sub"></div>
   <div class="btn" id="bJugar" data-i="jugar"></div>
   <div class="btn" id="bAjustes1" data-i="ajustes"></div>
@@ -1406,7 +1406,7 @@ let fotoBlob = null;
 function sacarFoto() {
   marco.visible = false; grieta.visible = false; manoG.visible = false; cieloObj.estrellas.material.opacity = cieloObj.estrellas.material.opacity; render.render(escena, cam); manoG.visible = true;
   const src = render.domElement, c = document.createElement('canvas'); c.width = src.width; c.height = src.height; const g = c.getContext('2d'); g.drawImage(src, 0, 0);
-  const k = c.height / 400; g.font = `bold ${Math.round(18 * k)}px "Baloo 2", sans-serif`; g.textAlign = 'right'; g.fillStyle = 'rgba(0,0,0,.5)'; g.fillText('BLOX', c.width - 12 * k + 2 * k, c.height - 12 * k + 2 * k); g.fillStyle = '#fff'; g.fillText('BLOX', c.width - 12 * k, c.height - 12 * k);
+  const k = c.height / 400; g.font = `bold ${Math.round(18 * k)}px "Baloo 2", sans-serif`; g.textAlign = 'right'; g.fillStyle = 'rgba(0,0,0,.5)'; g.fillText('VOXELIUM', c.width - 12 * k + 2 * k, c.height - 12 * k + 2 * k); g.fillStyle = '#fff'; g.fillText('VOXELIUM', c.width - 12 * k, c.height - 12 * k);
   $('fotoImg').src = c.toDataURL('image/jpeg', .92); c.toBlob(b => fotoBlob = b, 'image/jpeg', .92);
   $('flash').style.transition = 'none'; $('flash').style.opacity = 1; requestAnimationFrame(() => { $('flash').style.transition = 'opacity .4s'; $('flash').style.opacity = 0; });
   ruido(.12, .25); pausado = true; soltarTodo(); $('fotoCapa').hidden = false;
@@ -1414,8 +1414,8 @@ function sacarFoto() {
 }
 $('bFoto').addEventListener('pointerdown', e => { e.stopPropagation(); sacarFoto(); });
 $('bCerrarFoto').onclick = () => { $('fotoCapa').hidden = true; pausado = false; };
-$('bGuardarFoto').onclick = () => { if (!fotoBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(fotoBlob); a.download = 'blox-' + Date.now() + '.jpg'; document.body.appendChild(a); a.click(); a.remove(); };
-$('bCompartir').onclick = () => { if (!fotoBlob) return; navigator.share({ files: [new File([fotoBlob], 'blox.jpg', { type: 'image/jpeg' })], title: TR('compartirT') }).catch(() => {}); };
+$('bGuardarFoto').onclick = () => { if (!fotoBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(fotoBlob); a.download = 'voxelium-' + Date.now() + '.jpg'; document.body.appendChild(a); a.click(); a.remove(); };
+$('bCompartir').onclick = () => { if (!fotoBlob) return; navigator.share({ files: [new File([fotoBlob], 'voxelium.jpg', { type: 'image/jpeg' })], title: TR('compartirT') }).catch(() => {}); };
 
 // ═════════ GUARDAR MUNDOS EN EL TELÉFONO ═════════
 let mundoId = null, mundoNombre = '', sucio = false, jugando = false;

@@ -305,8 +305,8 @@ function videoFrame(dt) {
 function videoDespues() {
   const v = video, g = v.g; g.drawImage(render.domElement, 0, 0, 720, 1280);
   g.textAlign = 'center'; g.font = 'bold 88px "Baloo 2", sans-serif'; g.lineWidth = 10; g.strokeStyle = '#3f3f3f'; g.fillStyle = '#ffffff';
-  g.strokeText('BLOX', 360, 1150); g.fillText('BLOX', 360, 1150);
-  g.font = 'bold 30px "Baloo 2", sans-serif'; g.lineWidth = 6; g.strokeText('Building Block Crafting', 360, 1196); g.fillStyle = '#ffff55'; g.fillText('Building Block Crafting', 360, 1196);
+  g.strokeText('VOXELIUM', 360, 1150); g.fillText('VOXELIUM', 360, 1150);
+  g.font = 'bold 30px "Baloo 2", sans-serif'; g.lineWidth = 6; g.strokeText('Block Crafting', 360, 1196); g.fillStyle = '#ffff55'; g.fillText('Block Crafting', 360, 1196);
 }
 let videoBlob = null;
 function terminarVideo(blob) {
@@ -315,14 +315,14 @@ function terminarVideo(blob) {
   buscarFuentes(); calcLuz(); armarTodo(); sucio = true;
   $('grabando').hidden = true; $('hud').hidden = false; videoBlob = blob;
   const url = URL.createObjectURL(blob); $('videoCaja').innerHTML = `<video src="${url}" autoplay loop muted playsinline></video>`; $('videoCapa').hidden = false;
-  const f = new File([blob], 'blox.' + (blob.type.includes('mp4') ? 'mp4' : 'webm'), { type: blob.type });
+  const f = new File([blob], 'voxelium.' + (blob.type.includes('mp4') ? 'mp4' : 'webm'), { type: blob.type });
   $('bCompartirVideo').hidden = !(navigator.canShare && navigator.canShare({ files: [f] }));
   stats.videos = (stats.videos || 0) + 1;
 }
 $('bVideo').onclick = () => crearVideo();
 $('bCerrarVideo').onclick = () => { $('videoCapa').hidden = true; $('videoCaja').innerHTML = ''; pausado = false; };
-$('bGuardarVideo').onclick = () => { if (!videoBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(videoBlob); a.download = 'blox-timelapse.' + (videoBlob.type.includes('mp4') ? 'mp4' : 'webm'); document.body.appendChild(a); a.click(); a.remove(); };
-$('bCompartirVideo').onclick = () => { if (!videoBlob) return; navigator.share({ files: [new File([videoBlob], 'blox.' + (videoBlob.type.includes('mp4') ? 'mp4' : 'webm'), { type: videoBlob.type })], title: TR('compartirT') }).catch(() => {}); };
+$('bGuardarVideo').onclick = () => { if (!videoBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(videoBlob); a.download = 'voxelium-timelapse.' + (videoBlob.type.includes('mp4') ? 'mp4' : 'webm'); document.body.appendChild(a); a.click(); a.remove(); };
+$('bCompartirVideo').onclick = () => { if (!videoBlob) return; navigator.share({ files: [new File([videoBlob], 'voxelium.' + (videoBlob.type.includes('mp4') ? 'mp4' : 'webm'), { type: videoBlob.type })], title: TR('compartirT') }).catch(() => {}); };
 
 // ═════════ CADA CUADRO ═════════
 let previoT = 0;

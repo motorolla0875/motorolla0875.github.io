@@ -1,5 +1,5 @@
 'use strict';
-// ═════════ ESTILO PROPIO DE BLOX: botones azules redondeados, letra Baloo 2, ventanas claras y barras de vida/hambre ═════════
+// ═════════ ESTILO PROPIO DE VOXELIUM: botones azules redondeados, letra Baloo 2, ventanas claras y barras de vida/hambre ═════════
 // (la versión con el estilo anterior quedó guardada en la rama "blox-original" del repositorio)
 { const st = document.createElement('style'); st.textContent = `
   @font-face { font-family: 'Baloo 2'; font-weight: 600; font-display: swap; src: url(fonts/baloo-2-latin-600-normal.woff2) format('woff2'); }
