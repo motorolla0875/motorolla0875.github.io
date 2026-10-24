@@ -60,14 +60,15 @@ addEventListener('resize', escalar); escalar();
 // auto: arranca según el aparato y baja sola si el juego anda lento
 const esCel = matchMedia('(pointer: coarse)').matches;
 const CAL = { baja: { pr: .75, nubes: false, part: .35 }, media: { pr: 1, nubes: true, part: .7 }, alta: { pr: 2, nubes: true, part: 1 } };
-if (!AJ.calidad) AJ.calidad = 'auto';
+// siempre arranca en la calidad más alta; si el jugador la baja en Ajustes, queda como él la eligió
+if (!AJ.calidad || AJ.calidad === 'auto') { AJ.calidad = 'alta'; delete AJ.calAuto; }
 function nivelInicial() {
   const mem = navigator.deviceMemory || 4, nuc = navigator.hardwareConcurrency || 4;
   if (!esCel) return 'alta';
   if (mem <= 3 || nuc <= 4) return 'baja';
   return 'media';
 }
-let calNivel = AJ.calidad === 'auto' ? (AJ.calAuto || nivelInicial()) : AJ.calidad;
+let calNivel = AJ.calidad;
 function aplicarCalidad() {
   const c = CAL[calNivel] || CAL.media, dpr = devicePixelRatio || 1;
   render.setPixelRatio(Math.min(c.pr, dpr)); medir();
@@ -79,7 +80,7 @@ aplicarCalidad();
 // medidor: si en 'auto' el juego anda a menos de ~40 cuadros por segundo, baja la calidad un escalón
 let fpsN = 0, fpsT = 0, lentoVeces = 0;
 function medirFps(dt) {
-  if (AJ.calidad !== 'auto' || !jugando || pausado || document.hidden) { fpsN = 0; fpsT = 0; return; }
+  if (true || !jugando || pausado || document.hidden) { fpsN = 0; fpsT = 0; return; }
   fpsN++; fpsT += dt; if (fpsT < 4) return;
   const fps = fpsN / fpsT; fpsN = 0; fpsT = 0;
   if (fps < 40) lentoVeces++; else lentoVeces = 0;
@@ -92,9 +93,9 @@ function medirFps(dt) {
 { let ult = performance.now(); const tick = t => { requestAnimationFrame(tick); const dt = Math.min(.25, (t - ult) / 1000); ult = t; medirFps(dt); }; requestAnimationFrame(tick); }
 
 // fila de ajustes
-{ const f = document.createElement('div'); f.className = 'ajFila'; f.innerHTML = '<span data-i="calidad"></span><div class="ajOpc" id="ajCal"><div data-c="auto" data-i="calAuto"></div><div data-c="baja" data-i="calBaja"></div><div data-c="media" data-i="calMedia"></div><div data-c="alta" data-i="calAlta"></div></div>';
+{ const f = document.createElement('div'); f.className = 'ajFila'; f.innerHTML = '<span data-i="calidad"></span><div class="ajOpc" id="ajCal"><div data-c="baja" data-i="calBaja"></div><div data-c="media" data-i="calMedia"></div><div data-c="alta" data-i="calAlta"></div></div>';
   $('ajustes').insertBefore(f, $('ajDist').parentNode); aplicarIdioma(); }
 function pintarCal() { for (const d of $('ajCal').children) d.classList.toggle('on', d.dataset.c === AJ.calidad); }
-$('ajCal').addEventListener('click', e => { const d = e.target.closest('[data-c]'); if (!d) return; AJ.calidad = d.dataset.c; calNivel = AJ.calidad === 'auto' ? (AJ.calAuto || nivelInicial()) : AJ.calidad; guardarAjustes(); pintarCal(); aplicarCalidad(); });
+$('ajCal').addEventListener('click', e => { const d = e.target.closest('[data-c]'); if (!d) return; AJ.calidad = d.dataset.c; calNivel = AJ.calidad; guardarAjustes(); pintarCal(); aplicarCalidad(); });
 { const a0 = abrirAjustes; abrirAjustes = function (d) { a0(d); pintarCal(); }; }
 window.__cal = { nivel: () => calNivel, aplicar: aplicarCalidad, escalar };

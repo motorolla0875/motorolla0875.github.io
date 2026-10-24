@@ -97,8 +97,63 @@
   #videoCaja video, #grabCaja canvas { max-height: 70vh; max-width: 80vw; border: 4px solid #fff; display: block; position: static; width: auto; height: 70vh; }
   #fotoImg { max-width: min(640px, 80vw); max-height: 58vh; border: 4px solid #fff; box-shadow: 0 6px 0 rgba(0,0,0,.4); }
 </style>
+<link rel="preload" href="fonts/baloo-2-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* ===== Precarga: "dmith.builds presenta" y después la carga de Voxelium ===== */
+  @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: block; src: url(fonts/baloo-2-latin-800-normal.woff2) format('woff2'); }
+  #precarga { position: fixed; inset: 0; z-index: 100000; overflow: hidden; background: #0d153d; font-family: 'Baloo 2', 'Trebuchet MS', sans-serif; color: #fff; transition: opacity .45s; }
+  #precarga.fuera { opacity: 0; pointer-events: none; }
+  #precarga .pc-estudio, #precarga .pc-juego { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .pc-estudio { animation: pcEstudio 1.7s ease forwards; opacity: 0; }
+  @keyframes pcEstudio { 0% { opacity: 0; transform: translateY(8px); } 20% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
+  .pc-marca { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; width: 48px; margin-bottom: 14px; }
+  .pc-marca i { aspect-ratio: 1; border-radius: 7px; background: #3E9BFF; box-shadow: inset 0 -4px 0 rgba(0,0,0,.25); animation: pcCae .5s cubic-bezier(.3,1.6,.5,1) backwards; }
+  .pc-marca i:nth-child(2) { background: #FFC23D; animation-delay: .08s; } .pc-marca i:nth-child(3) { background: #26D6A0; animation-delay: .16s; } .pc-marca i:nth-child(4) { background: #FF5A6E; animation-delay: .24s; }
+  @keyframes pcCae { from { transform: translateY(-30px); opacity: 0; } }
+  .pc-nombre { font-weight: 800; font-size: 28px; letter-spacing: .5px; } .pc-nombre span { color: #FFC23D; }
+  .pc-sub { font-weight: 700; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,.55); }
+  .pc-juego { background: linear-gradient(#24378f, #0d153d); opacity: 0; animation: pcAparece .4s ease 1.55s forwards; }
+  @keyframes pcAparece { to { opacity: 1; } }
+  .pc-titulo { font-weight: 800; font-style: italic; font-size: clamp(44px, 11vw, 96px); color: #ffe14a; letter-spacing: 1px; line-height: 1; text-shadow: 3px 3px 0 #1b2a6b, 6px 6px 0 #0d153d; }
+  .pc-titulo i { display: inline-block; font-style: italic; opacity: 0; animation: pcLetra .45s cubic-bezier(.3,1.7,.4,1) forwards; }
+  @keyframes pcLetra { from { opacity: 0; transform: translateY(24px) scale(.4) rotate(-10deg); } to { opacity: 1; transform: none; } }
+  .pc-lema { font-weight: 800; font-size: clamp(15px, 2.8vw, 22px); letter-spacing: 3px; text-shadow: 0 3px 0 #0d153d; margin: 2px 0 22px; }
+  .pc-barra { display: flex; gap: 5px; padding: 5px; border: 3px solid #0d153d; border-radius: 10px; background: rgba(13,21,61,.6); }
+  .pc-barra i { width: clamp(18px, 3.4vw, 28px); aspect-ratio: 1; border-radius: 4px; background: rgba(255,255,255,.12); transition: background .2s, transform .2s; }
+  .pc-barra i.on { background: #6cbb40; box-shadow: inset 0 -5px 0 #7a5230, inset 0 4px 0 #8fd95a; transform: translateY(-2px); }
+  .pc-texto { margin-top: 12px; font-weight: 700; font-size: 14px; color: rgba(255,255,255,.75); }
+</style>
 </head>
 <body>
+<div id="precarga">
+  <div class="pc-estudio"><div class="pc-marca"><i></i><i></i><i></i><i></i></div><div class="pc-nombre">dmith<span>.</span>builds</div><div class="pc-sub" id="pcPresenta">presenta</div></div>
+  <div class="pc-juego" id="pcJuego"><div class="pc-titulo" id="pcTitulo"></div><div class="pc-lema">Block Crafting</div><div class="pc-barra" id="pcBarra"></div><div class="pc-texto" id="pcTexto"></div></div>
+</div>
+<script>
+// precarga: corre antes que todo el juego; se va sola cuando el juego terminó de cargar (y como mínimo 3 segundos)
+(function () {
+  var t0 = Date.now(), L = 'es';
+  try { L = localStorage.getItem('bloxIdioma') || ((navigator.language || 'es').slice(0, 2)); } catch (e) {}
+  if (['es', 'en', 'pt'].indexOf(L) < 0) L = 'en';
+  var TX = { es: ['presenta', ['Juntando bloques…', 'Plantando árboles…', 'Llenando los mares…', 'Despertando a los animales…', 'Escondiendo tesoros…']], en: ['presents', ['Gathering blocks…', 'Planting trees…', 'Filling the seas…', 'Waking up the animals…', 'Hiding treasure…']], pt: ['apresenta', ['Juntando blocos…', 'Plantando árvores…', 'Enchendo os mares…', 'Acordando os animais…', 'Escondendo tesouros…']] }[L];
+  document.getElementById('pcPresenta').textContent = TX[0];
+  var titulo = document.getElementById('pcTitulo'), barra = document.getElementById('pcBarra'), texto = document.getElementById('pcTexto'), N = 10, k;
+  'VOXELIUM'.split('').forEach(function (c, i) { var e = document.createElement('i'); e.textContent = c; e.style.animationDelay = (1.75 + i * .07) + 's'; titulo.appendChild(e); });
+  for (k = 0; k < N; k++) barra.appendChild(document.createElement('i'));
+  var listo = false, avance = 0, frase = 0;
+  function pintar() { var n = Math.round(avance * N); for (var i = 0; i < N; i++) barra.children[i].classList.toggle('on', i < n); }
+  var reloj = setInterval(function () {
+    var t = (Date.now() - t0) / 1000; if (t < 1.8) return;
+    var meta = listo ? 1 : Math.min(.9, (t - 1.8) / 2.5); avance += (meta - avance) * .35; if (meta - avance < .02) avance = meta; pintar();
+    var f = Math.min(TX[1].length - 1, Math.floor((t - 1.8) / .7)); if (f !== frase || !texto.textContent) { frase = f; texto.textContent = TX[1][f]; }
+    if (listo && avance >= 1 && Date.now() - t0 > 3000) { clearInterval(reloj); var p = document.getElementById('precarga'); setTimeout(function () { p.classList.add('fuera'); setTimeout(function () { p.remove(); }, 500); }, 250); }
+  }, 120);
+  window.addEventListener('load', function () {
+    var f = document.fonts && document.fonts.load ? Promise.all([document.fonts.load('800 20px "Baloo 2"'), document.fonts.load('600 20px "Baloo 2"')]) : Promise.resolve();
+    f.catch(function () {}).then(function () { setTimeout(function () { listo = true; }, 200); });
+  });
+})();
+</script>
 <div id="bajoAgua" hidden></div><div id="dano"></div><div id="flash"></div>
 <div class="hud" id="hud" hidden>
   <div id="mision" class="sombra"></div>
