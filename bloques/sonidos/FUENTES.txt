@@ -1,0 +1,28 @@
+Origen de los sonidos de Bloques (recortados, normalizados y convertidos a mp3)
+Todos fueron conseguidos por Diego Schmid en octubre de 2026.
+
+SFX Engine (sfxengine.com) - efectos generados con IA, libres de regalías para uso comercial:
+  piedra*      <- minecraft-stone-chunky-sa-5k5ul6zj.wav, mineing-cobblestone-in-mi-5buuga7f.wav
+  picar*       <- minecraft-pickaxe-sound-yl3luh6d.wav
+  madera*      <- block-wird-platziert-stum-csf6dfuo.wav, minecraft-placing-apparat-skqsybvb.wav
+  tierra*      <- a-block-of-minecraft-dirt-3yew6y4d.wav, minecraft-dirt-block-cutt-vion4bel.wav
+  vidrio*      <- minecraft-glasblock--der--rzclvxew.wav
+  arena*       <- minecraft-ash-block-break-5lxxki5j.wav
+  tela*        <- minecraft-style-soft-thud-zty3p6al.wav, sound-of-a-rubber-block-kpjdou72.wav
+  paso*        <- herobrine-gravel-footstep-5iaxnohj.wav, minecraftt-walking-on-gra-pttfkudz.wav
+  puerta*      <- minecraft-trap-door-sound-c6wwmkqe.wav, una-porta-che-si-apre-qoobyjmu.wav
+  golpe*       <- minecraft-critical-hit-da-653votin.wav, minecraft-critical-hit-eciztawe.wav
+  agarrar      <- pickup-minecraft-sound-4656at7z.wav
+  mision       <- minecraft-style-experienc-iqn7rd6k.wav
+  fabricar     <- a-short-slightly-brighter-loo5wst5.wav
+  ojon*        <- minecraft-zoimbe-sound-lpf6spxx.wav
+  noche        <- creepy-ambient-sound-simi-netfrtlc.wav
+  musica1..3   <- c418-minecraft-style-titl-3xp64r4i.wav, -pfentqgr.wav, -xltoy2ph.wav
+
+Pixabay (pixabay.com, Licencia de Contenido de Pixabay):
+  comer        <- u_scysdwddsp-eating-effect-254996.mp3 (autor: u_scysdwddsp)
+  final        <- mori_sound-fx-game-winner-497166.mp3 (autor: mori_sound)
+
+No se usan (posibles copias de sonidos originales de otro juego):
+  chieuk-minecraft-villager-289282.mp3, freesound_community-creeper-36141.mp3,
+  freesound_community-minecraft-villager-confused-sound-102005.mp3, new2009pro-minecraft-villager-sound-15065.mp3

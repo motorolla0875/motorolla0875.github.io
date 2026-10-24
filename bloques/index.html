@@ -571,7 +571,7 @@ function fisica(dt) {
   J.x = Math.max(.4, Math.min(SX - .4, J.x)); J.z = Math.max(.4, Math.min(SZ - .4, J.z));
   // pasos
   const rapidez = Math.hypot(J.vx, J.vz); J.rapidez = J.suelo && !volando ? rapidez : 0;
-  if (J.rapidez > 1.2) { pasoT -= dt * rapidez / 4.6; if (pasoT <= 0) { pasoT = .42; golpe(get(Math.floor(J.x), Math.floor(J.y - .1), Math.floor(J.z)), .28); } }
+  if (J.rapidez > 1.2) { pasoT -= dt * rapidez / 4.6; if (pasoT <= 0) { pasoT = .42; const tp = get(Math.floor(J.x), Math.floor(J.y - .1), Math.floor(J.z)); if (!(matDe(tp) === 'tierra' && sonar('paso', .4))) golpe(tp, .28); } }
 }
 let pasoT = 0;
 
@@ -610,13 +610,19 @@ function audio() {
     // eco suave para que la música suene amplia
     const d = c.createDelay(1), fb = c.createGain(), lp = c.createBiquadFilter(); d.delayTime.value = .34; fb.gain.value = .4; lp.type = 'lowpass'; lp.frequency.value = 2000;
     AU.mus.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(AU.master);
-    const n = c.createBuffer(1, c.sampleRate, c.sampleRate), ch = n.getChannelData(0); for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1; AU.ruido = n;
+    const n = c.createBuffer(1, c.sampleRate, c.sampleRate), ch = n.getChannelData(0); for (let i = 0; i < ch.length; i++) ch[i] = Math.random() * 2 - 1; AU.ruido = n; setTimeout(decodificar, 0);
   } catch (e) { AU.ctx = null; }
   return AU.ctx;
 }
 document.addEventListener('pointerdown', () => { const c = audio(); if (c && c.state === 'suspended') c.resume(); }, true);
 function son(f, d, tipo = 'square', v = .12) { const c = audio(); if (!c) return; const o = c.createOscillator(), g = c.createGain(), n = c.currentTime; o.type = tipo; o.frequency.setValueAtTime(f, n); o.frequency.exponentialRampToValueAtTime(f * .5, n + d); g.gain.setValueAtTime(v, n); g.gain.exponentialRampToValueAtTime(.001, n + d); o.connect(g).connect(AU.sfx); o.start(n); o.stop(n + d + .02); }
 function ruido(d = .15, v = .2, f = 3000) { const c = audio(); if (!c) return; const s = c.createBufferSource(), fi = c.createBiquadFilter(), g = c.createGain(), n = c.currentTime; s.buffer = AU.ruido; fi.type = 'lowpass'; fi.frequency.value = f; g.gain.setValueAtTime(v, n); g.gain.exponentialRampToValueAtTime(.001, n + d); s.connect(fi).connect(g).connect(AU.sfx); s.start(n, Math.random() * .5); s.stop(n + d + .02); }
+// sonidos grabados (carpeta sonidos): se cargan de a poco; si alguno falta, suena el sonido hecho por el juego
+const LISTA_SON = {"agarrar":["agarrar"],"arena":["arena1","arena2"],"comer":["comer"],"fabricar":["fabricar"],"final":["final"],"golpe":["golpe1","golpe_b1"],"madera":["madera1","madera2","madera3","madera4","madera5","madera_b1","madera_b2","madera_b3","madera_b4"],"mision":["mision"],"musica":["musica1","musica2","musica3"],"noche":["noche"],"ojon":["ojon1","ojon2"],"paso":["paso1","paso2","paso3","paso4","paso5","paso6","paso_b1","paso_b2","paso_b3","paso_b4","paso_b5","paso_b6"],"picar":["picar1","picar2","picar3","picar4","picar5"],"piedra":["piedra1","piedra_c1","piedra_c2","piedra_c3","piedra_c4"],"puerta":["puerta1","puerta2","puerta_b1","puerta_b2","puerta_b3"],"tela":["tela1","tela2","tela_b1","tela_b2","tela_b3","tela_b4"],"tierra":["tierra1","tierra2","tierra3","tierra4","tierra5","tierra_b1","tierra_b2","tierra_b3","tierra_b4"],"vidrio":["vidrio1","vidrio2","vidrio3","vidrio4","vidrio5"]};
+const BUF = {}, crudos = [];
+for (const [g, ns] of Object.entries(LISTA_SON)) for (const n of ns) fetch('sonidos/' + n + '.mp3').then(r => r.ok ? r.arrayBuffer() : null).then(ab => { if (ab) { crudos.push([g, ab]); decodificar(); } }).catch(() => {});
+function decodificar() { if (!AU.ctx) return; while (crudos.length) { const [g, ab] = crudos.pop(); AU.ctx.decodeAudioData(ab, b => (BUF[g] = BUF[g] || []).push(b), () => {}); } }
+function sonar(g, v = 1, rate = 1, dest) { const c = AU.ctx, L = BUF[g]; if (!c || !L || !L.length) return false; const s = c.createBufferSource(), gn = c.createGain(); s.buffer = L[Math.floor(Math.random() * L.length)]; s.playbackRate.value = rate * (.92 + Math.random() * .16); gn.gain.value = v; s.connect(gn).connect(dest || AU.sfx); s.start(); return s; }
 // sonido de cada material al romper, poner y pisar
 const SONMAT = { piedra: { f: 1500, q: 1, d: .13, v: .6, t: 'bandpass' }, madera: { f: 520, q: 1.6, d: .12, v: .75, t: 'bandpass' }, tierra: { f: 800, q: .6, d: .13, v: .5, t: 'lowpass' }, arena: { f: 2500, q: .5, d: .17, v: .35, t: 'highpass' }, vidrio: { f: 3600, q: 7, d: .22, v: .45, t: 'bandpass' }, tela: { f: 450, q: .5, d: .1, v: .4, t: 'lowpass' } };
 function matDe(t) { const d = DEF[t]; if (!d) return 'tierra'; const b = d.base || (d.suelta < 100 ? d.suelta : t) || t;
@@ -624,7 +630,7 @@ function matDe(t) { const d = DEF[t]; if (!d) return 'tierra'; const b = d.base 
   if ([B.VIDRIO, B.PANEL, B.LAMPARA].includes(b)) return 'vidrio'; if ([B.ARENA, B.NIEVE].includes(b)) return 'arena';
   if ([B.TIERRA, B.PASTO, B.HOJAS, B.CACTUS].includes(b)) return 'tierra'; if (b >= B.TELA && b < B.TELA + 9) return 'tela'; return 'piedra'; }
 function golpe(t, fuerza = 1) {
-  const c = audio(); if (!c || !t) return; const m = SONMAT[matDe(t)], n = c.currentTime;
+  const c = audio(); if (!c || !t) return; if (sonar(matDe(t), Math.min(1, .5 * fuerza + .15), fuerza < .5 ? 1.12 : 1)) return; const m = SONMAT[matDe(t)], n = c.currentTime;
   const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
   s.buffer = AU.ruido; s.playbackRate.value = .75 + Math.random() * .5; f.type = m.t; f.frequency.value = m.f * (.85 + Math.random() * .3); f.Q.value = m.q;
   g.gain.setValueAtTime(Math.min(1, m.v * fuerza), n); g.gain.exponentialRampToValueAtTime(.001, n + m.d * (fuerza > 1 ? 1.4 : 1));
@@ -641,13 +647,15 @@ function voz(tipo, dist = 0) {
   if (tipo === 'vaca') tono(150, 105, 1, 'sawtooth', 650, 3, 5);
   else if (tipo === 'oveja') tono(330, 300, .65, 'sawtooth', 1300, 22, 11);
   else if (tipo === 'gallina') { for (let k = 0; k < 3; k++) tono(950 + k * 60, 700, .07, 'square', 2400, 0, 0, k * .1); }
-  else tono(75, 55, .9, 'sawtooth', 380, 9, 6);
+  else if (!sonar('ojon', v * 3.5)) tono(75, 55, .9, 'sawtooth', 380, 9, 6);
 }
 // música tranquila que se arma sola, de a ratos
 function nota(f, t, d, v) { const c = AU.ctx, o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), g2 = c.createGain(); o.type = 'sine'; o2.type = 'triangle'; o.frequency.value = f; o2.frequency.value = f * 2; g2.gain.value = .12;
   g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + .02); g.gain.exponentialRampToValueAtTime(.0008, t + d); o.connect(g); o2.connect(g2).connect(g); g.connect(AU.mus); o.start(t); o2.start(t); o.stop(t + d + .05); o2.stop(t + d + .05); }
 function tocarMusica() {
   const c = audio(); if (!c || AJ.musica <= 0) return 30;
+  // casi siempre una de las músicas grabadas; a veces una armada por el juego
+  if (BUF.musica && Math.random() < .75) { const s = sonar('musica', .75, 1 / .96, AU.mus); if (s) { s.playbackRate.value = 1; return s.buffer.duration; } }
   const escala = [0, 2, 4, 7, 9], base = [48, 50, 53, 55, 45][Math.floor(Math.random() * 5)], mf = m => 440 * Math.pow(2, (m - 69) / 12);
   let t = c.currentTime + .3, grado = 4; const largo = 24 + Math.floor(Math.random() * 14);
   for (let i = 0; i < largo; i++) {
@@ -691,7 +699,7 @@ function pintarBarra() {
 }
 $('barra').addEventListener('pointerdown', e => { e.stopPropagation(); const d = e.target.closest('[data-k]'); if (!d) return; sel = +d.dataset.k; pintarBarra(); const id = barra[sel]; if (id) aviso(info(id).nombre.toUpperCase(), 700); });
 function puedeHacer(r) { return r[1].every(([id, n]) => (inv[id] || 0) >= n); }
-function fabricar(r) { if (!puedeHacer(r)) return; for (const [id, n] of r[1]) quitarItem(id, n); darItem(r[0][0], r[0][1]); stats.hechos[r[0][0]] = (stats.hechos[r[0][0]] || 0) + r[0][1]; son(660, .1, 'triangle', .13); revisarMision(); }
+function fabricar(r) { if (!puedeHacer(r)) return; for (const [id, n] of r[1]) quitarItem(id, n); darItem(r[0][0], r[0][1]); stats.hechos[r[0][0]] = (stats.hechos[r[0][0]] || 0) + r[0][1]; sonar('fabricar', .6) || son(660, .1, 'triangle', .13); revisarMision(); }
 
 // ───── ventana (bolsa / fabricar / cofre) ─────
 let panelTab = 'bolsa', cofreAbierto = null, pausado = false;
@@ -779,7 +787,7 @@ function puerta(x, y, z) {
   const t = get(x, y, z), nuevo = t === B.PUERTA ? B.PUERTA_A : B.PUERTA;
   for (const yy of [y - 1, y, y + 1]) { const b = get(x, yy, z); if (b === B.PUERTA || b === B.PUERTA_A) { if (nuevo === B.PUERTA && choca(J.x, J.y, J.z) === false && x + 1 > J.x - ANCHO && x < J.x + ANCHO && z + 1 > J.z - ANCHO && z < J.z + ANCHO && yy + 1 > J.y && yy < J.y + ALTO) return; } }
   for (const yy of [y - 1, y, y + 1]) { const b = get(x, yy, z); if (b === B.PUERTA || b === B.PUERTA_A) ponerBloque(x, yy, z, nuevo); }
-  son(nuevo === B.PUERTA ? 240 : 320, .12, 'square', .1); revisarRefugio();
+  sonar('puerta', .7, nuevo === B.PUERTA ? .9 : 1.05) || son(nuevo === B.PUERTA ? 240 : 320, .12, 'square', .1); revisarRefugio();
 }
 function tiempoRomper(t) {
   const d = DEF[t]; if (d.dur < 0) return Infinity; if (creativo()) return .3;
@@ -792,13 +800,14 @@ function romper(h) {
   const i = idx(h.x, h.y, h.z);
   if (t === B.PUERTA || t === B.PUERTA_A) for (const yy of [h.y - 1, h.y + 1]) { const b = get(h.x, yy, h.z); if (b === B.PUERTA || b === B.PUERTA_A) ponerBloque(h.x, yy, h.z, B.AIRE); }
   ponerBloque(h.x, h.y, h.z, B.AIRE);
-  polvo(h.x + .5, h.y + .5, h.z + .5, d.color); golpe(t, 1.5); setTimeout(() => golpe(t, 1), 70); swing = 1;
+  polvo(h.x + .5, h.y + .5, h.z + .5, d.color); golpe(t, 1.5); setTimeout(() => golpe(t, .7), 70); swing = 1;
   if (!creativo()) {
     stats.rotos[t] = (stats.rotos[t] || 0) + 1;
     if (d.req && nivelPico() < d.req) aviso('NECESITAS UN PICO ' + ['', 'DE MADERA', 'DE PIEDRA', 'DE HIERRO'][d.req] + '<small>para que suelte algo</small>', 1500);
     else if (t === B.HOJAS) { if (Math.random() < .35) darItem(B.HOJAS); if (Math.random() < .12) darItem(I.PALO); if (Math.random() < .07) darItem(I.MANZANA); }
     else if (t === B.VIDRIO) { if (Math.random() < .5) darItem(B.VIDRIO); }
     else darItem(d.suelta === B.PUERTA_A ? B.PUERTA : d.suelta);
+    if (!(d.req && nivelPico() < d.req)) setTimeout(() => sonar('agarrar', .3), 120);
     if (t === B.COFRE && cofres[i]) { for (const id in cofres[i]) darItem(+id, cofres[i][id]); }
   }
   delete cofres[i];
@@ -810,7 +819,7 @@ function seguirRompiendo(dir, dt) {
   if (!rompiendo || rompiendo.x !== h.x || rompiendo.y !== h.y || rompiendo.z !== h.z) rompiendo = { x: h.x, y: h.y, z: h.z, p: 0, espera: rompiendo ? rompiendo.espera : 0 };
   if (rompiendo.espera > 0) { rompiendo.espera -= dt; return; }
   rompiendo.p += dt / tiempoRomper(h.b);
-  rompiendo.tick = (rompiendo.tick || 0) - dt; if (rompiendo.tick <= 0) { rompiendo.tick = .24; golpe(h.b, .45); swing = Math.max(swing, .9); }
+  rompiendo.tick = (rompiendo.tick || 0) - dt; if (rompiendo.tick <= 0) { rompiendo.tick = .24; if (!(matDe(h.b) === 'piedra' && sonar('picar', .5))) golpe(h.b, .45); swing = Math.max(swing, .9); }
   if (rompiendo.p >= 1) { romper(h); rompiendo = { x: -1, y: -1, z: -1, p: 0, espera: creativo() ? .2 : .08 }; }
 }
 let ultimoAviso = 0;
@@ -837,7 +846,7 @@ function monstruoApuntado(dir) {
 }
 function golpear(m, dir) {
   const u = m.userData, dano = [2, 3, 4, 6, 8][nivelEspada()];
-  u.vida -= dano; u.rojo = .25; u.kx = dir.x * 7; u.kz = dir.z * 7; u.vy = 4; son(220, .1, 'sawtooth', .12);
+  u.vida -= dano; u.rojo = .25; u.kx = dir.x * 7; u.kz = dir.z * 7; u.vy = 4; sonar('golpe', .7) || son(220, .1, 'sawtooth', .12);
   swing = 1; if (u.animal) { u.huir = 5; voz(u.animal, 0); if (u.vida <= 0) matarAnimal(m); return; }
   if (u.vida <= 0) { quitarMonstruo(m); son(520, .25, 'triangle', .12); if (Math.random() < .5) darItem(I.CARBON); }
 }
@@ -973,7 +982,7 @@ function comer(id) {
   if (hambre >= 20) return aviso('NO TIENES HAMBRE', 800);
   if (!(inv[id] > 0)) return;
   hambre = Math.min(20, hambre + ITEM[id].comida); quitarItem(id, 1); stats.comido = (stats.comido || 0) + 1;
-  ruido(.08, .15); setTimeout(() => ruido(.08, .15), 140); setTimeout(() => son(600, .1, 'triangle', .1), 300); pintarHambre(); sucio = true;
+  if (!sonar('comer', .8)) { ruido(.08, .15); setTimeout(() => ruido(.08, .15), 140); setTimeout(() => son(600, .1, 'triangle', .1), 300); } pintarHambre(); sucio = true;
 }
 
 // ═════════ DÍA Y NOCHE ═════════
@@ -1023,7 +1032,7 @@ function revisarMision() {
   if (creativo()) return;
   let avanzo = false;
   while (mision < MISIONES.length && MISIONES[mision].ok()) { mision++; avanzo = true; sucio = true; }
-  if (avanzo) { aviso(mision < MISIONES.length ? '¡MISIÓN CUMPLIDA!<small>' + MISIONES[mision].t + '</small>' : '¡TERMINASTE TODAS LAS MISIONES!<small>ahora construye lo que quieras</small>', 2000); son(660, .12, 'triangle', .14); setTimeout(() => son(880, .2, 'triangle', .14), 120); }
+  if (avanzo) { aviso(mision < MISIONES.length ? '¡MISIÓN CUMPLIDA!<small>' + MISIONES[mision].t + '</small>' : '¡TERMINASTE TODAS LAS MISIONES!<small>ahora construye lo que quieras</small>', 2000); if (!sonar(mision >= MISIONES.length ? 'final' : 'mision', .7)) { son(660, .12, 'triangle', .14); setTimeout(() => son(880, .2, 'triangle', .14), 120); } }
   pintarMision();
 }
 function pintarMision() {
@@ -1267,7 +1276,7 @@ function bucle(ya) {
     fisica(dt);
     if (!creativo()) {
       const antes = oscuridad() > .5; tiempo += dt; const noche = oscuridad() > .5;
-      if (!antes && noche) { aviso('¡LLEGÓ LA NOCHE!<small>salen los Ojones, quédate en tu refugio</small>', 2600); son(110, .8, 'sawtooth', .12); }
+      if (!antes && noche) { aviso('¡LLEGÓ LA NOCHE!<small>salen los Ojones, quédate en tu refugio</small>', 2600); sonar('noche', .8) || son(110, .8, 'sawtooth', .12); }
       const t = tiempo % CICLO; if (t > 170 && t < 171 && ya - ultimoAviso > 2000) { ultimoAviso = ya; aviso('SE VIENE LA NOCHE<small>arma tu refugio</small>', 2000); }
       if (noche) aparecerMonstruos(dt);
       moverMonstruos(dt, oscuridad() > .2);
