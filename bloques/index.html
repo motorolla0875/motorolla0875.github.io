@@ -107,6 +107,7 @@
   <div class="sub">¡Construye, explora y sobrevive!</div>
   <div class="btn" id="bJugar">Jugar</div>
   <div class="btn" id="bAjustes1">Ajustes</div>
+  <div class="btn" id="bCreditos">Créditos</div>
 </div>
 <div class="capa" id="mundos" hidden>
   <div class="titulo" style="font-size:clamp(28px,6vw,44px)">Mis mundos</div>
@@ -133,6 +134,18 @@
   <div class="ajFila"><span>Música</span><input type="range" id="ajMus" min="0" max="1" step="0.05"></div>
   <div class="ajFila"><span>Sonidos</span><input type="range" id="ajSon" min="0" max="1" step="0.05"></div>
   <div class="btn" id="bAjListo">Listo</div>
+</div>
+<div class="capa trans" id="creditos" hidden>
+  <div class="titulo" style="font-size:clamp(26px,5vw,40px)">Créditos</div>
+  <div class="texto" style="text-align:left;max-width:600px">
+    Juego creado por dmith.builds.<br><br>
+    <b>Texturas, personajes y animales:</b> dibujados especialmente para este juego.<br><br>
+    <b>Efectos de sonido y música:</b> SFX Engine (sfxengine.com), efectos generados con inteligencia artificial, libres de regalías para uso comercial. Recortados y editados para el juego.<br><br>
+    <b>Sonidos de Pixabay</b> (pixabay.com), bajo la Licencia de Contenido de Pixabay: "Eating effect" de u_scysdwddsp y "Game winner" de mori_sound.<br><br>
+    <b>Gráficos 3D:</b> three.js, © autores de three.js, licencia MIT.<br><br>
+    Este juego no está afiliado ni respaldado por Mojang ni Microsoft.
+  </div>
+  <div class="btn" id="bCredListo">Volver</div>
 </div>
 <div class="capa trans" id="muerte" hidden>
   <div class="titulo" style="font-size:clamp(28px,6vw,44px);color:#ff6b6b">¡Te atraparon!</div>
@@ -1260,6 +1273,8 @@ $('ajMus').oninput = e => { AJ.musica = +e.target.value; guardarAjustes(); };
 $('ajSon').oninput = e => { AJ.sonidos = +e.target.value; guardarAjustes(); golpe(B.MADERA, 1); };
 $('ajDist').addEventListener('click', e => { const d = e.target.closest('[data-d]'); if (!d) return; AJ.dist = +d.dataset.d; guardarAjustes(); pintarDist(); cam.far = DIST[AJ.dist][1] + 140; cam.updateProjectionMatrix(); });
 $('bAjustes1').onclick = () => abrirAjustes('inicio');
+$('bCreditos').onclick = () => { $('inicio').hidden = true; $('creditos').hidden = false; };
+$('bCredListo').onclick = () => { $('creditos').hidden = true; $('inicio').hidden = false; };
 $('bAjustes2').onclick = () => abrirAjustes('pausa');
 $('bAjListo').onclick = () => { $('ajustes').hidden = true; $(ajustesDesde).hidden = false; };
 cam.far = DIST[AJ.dist][1] + 140; cam.updateProjectionMatrix();
