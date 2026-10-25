@@ -169,7 +169,7 @@ function recibir(m) {
     case 'reportado': return aviso(TR('reportado'), 1800);
     case 'mundo': return cargarMundoRemoto(m);
     case 'e': return estadoJugador(m);
-    case 'b': return aplicarBloques(m.c || []);
+    case 'b': if (m.ab && typeof m.ab === 'object') { mapa.alfBajo = mapa.alfBajo || {}; for (const k in m.ab) if (esAlfombra(+m.ab[k])) mapa.alfBajo[k] = +m.ab[k]; } return aplicarBloques(m.c || []);
     case 'f': return fraseDe(m.id, m.k);
     case 'm': return bichosDelDueno(m.l || []);
     case 'h': if (MP.invitado) { tiempo = m.tiempo; REG.hora = m.hora || REG.hora; window.climaRemoto = m.clima || 'sol'; } return;
@@ -273,7 +273,7 @@ function aplicarBloques(c) {
   MP.remoto = true; try { ponerMuchos(L); } finally { MP.remoto = false; }
 }
 // lo que hace el jugador (romper, poner, puertas…) se manda al terminar cada acción
-{ const a0 = alTerminarAccion; alTerminarAccion = function (g) { a0(g); if (MP.sala && !MP.remoto) { const c = []; for (const [i, , t] of g) c.push(i, t); if (c.length) mpEnviar({ t: 'b', c }); } }; }
+{ const a0 = alTerminarAccion; alTerminarAccion = function (g) { a0(g); if (MP.sala && !MP.remoto) { const c = [], ab = {}; for (const [i, , t] of g) { c.push(i, t); const al = alfBajo(i); if (al) ab[i] = al; } if (c.length) mpEnviar(Object.keys(ab).length ? { t: 'b', c, ab } : { t: 'b', c }); } }; }
 // lo que pasa solo en el mundo (cultivos, TNT, generadores…) lo manda el dueño; en el invitado no pasa
 { const p0 = ponerBloque; ponerBloque = function (x, y, z, t) {
     if (MP.sala && !MP.remoto && grupo === null) { if (MP.invitado) return; if (dentro(x, y, z)) MP.cola.push(idx(x, y, z), t); }
@@ -364,7 +364,7 @@ function mpFrame(dt) {
   if (MP.dueno && jugando) {
     mpBichT -= dt; if (mpBichT <= 0) { mpBichT = .2; if (MP.jug.size) mpEnviar({ t: 'm', l: fotoBichos() }); }
     mpHoraT -= dt; if (mpHoraT <= 0) { mpHoraT = 2; if (MP.jug.size) mpEnviar({ t: 'h', tiempo, hora: REG.hora, clima: window.climaTipo || 'sol' }); }
-    mpColaT -= dt; if (mpColaT <= 0) { mpColaT = .15; if (MP.cola.length) { mpEnviar({ t: 'b', c: MP.cola }); MP.cola = []; } }
+    mpColaT -= dt; if (mpColaT <= 0) { mpColaT = .15; if (MP.cola.length) { const ab = {}; for (let k = 0; k < MP.cola.length; k += 2) { const al = alfBajo(MP.cola[k]); if (al) ab[MP.cola[k]] = al; } mpEnviar(Object.keys(ab).length ? { t: 'b', c: MP.cola, ab } : { t: 'b', c: MP.cola }); MP.cola = []; } }
   }
   // mover suave a los demás jugadores
   const k = Math.min(1, dt * 10);
