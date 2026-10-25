@@ -324,7 +324,7 @@ function contenidoFrame(dt) {
   // telaraña: frena
   { const f = (dy) => get(Math.floor(J.x), Math.floor(J.y + dy), Math.floor(J.z)) === B.TELARANA; if (f(.2) || f(1.2)) { J.vx *= .25; J.vz *= .25; if (J.vy < -1) J.vy = -1; } }
   // los zombis se queman de día
-  quemaT -= dt; if (quemaT <= 0) { quemaT = .5; if (oscuridad() < .25) for (const a of animales.slice()) { if (!tipoDe(a).quemaDia || a.userData.extra && a.userData.extra.d) continue; const p = a.position; if (cieloEn(Math.floor(p.x), Math.floor(p.y + 1.8), Math.floor(p.z)) < .5) continue; a.userData.quema = (a.userData.quema || 0) + .5; polvo(p.x, p.y + 1.2, p.z, '#ff9a2e', 3); if (a.userData.quema > 3) { polvo(p.x, p.y + 1, p.z, '#555555', 10); quitarAnimal(a); } } }
+  quemaT -= dt; if (quemaT <= 0) { quemaT = .5; if (oscuridad() < .25 && REG.quemar !== false) for (const a of animales.slice()) { if (!tipoDe(a).quemaDia || a.userData.extra && a.userData.extra.d) continue; const p = a.position; if (cieloEn(Math.floor(p.x), Math.floor(p.y + 1.8), Math.floor(p.z)) < .5) continue; a.userData.quema = (a.userData.quema || 0) + .5; polvo(p.x, p.y + 1.2, p.z, '#ff9a2e', 3); if (a.userData.quema > 3) { polvo(p.x, p.y + 1, p.z, '#555555', 10); quitarAnimal(a); } } }
   // de vez en cuando aparece un perro o un gato sin dueño
   mascotaT -= dt; if (mascotaT <= 0) { mascotaT = 70; const sueltos = animales.filter(a => (a.userData.animal === 'perro' || a.userData.animal === 'gato') && !(a.userData.extra && a.userData.extra.d)).length;
     if (sueltos < 2 && animales.length < 20) { const p = lugarCerca(14, 26); if (p && get(Math.floor(p[0]), Math.floor(p[1]) - 1, Math.floor(p[2])) === B.PASTO) crearAnimal(Math.random() < .55 ? 'perro' : 'gato', ...p); } }

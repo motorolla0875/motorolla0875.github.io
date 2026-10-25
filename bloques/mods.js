@@ -218,6 +218,7 @@ const OPC = [
   ['vel', 'velocidad', [[1, 'normalD'], [1.6, 'rapida']]],
   ['caida', 'danoCaida', [[true, 'si'], [false, 'no']]],
   ['hambre', 'hambreR', [[true, 'si'], [false, 'no']]],
+  ['quemar', 'quemarDia', [[true, 'si'], [false, 'no']]],
 ];
 function opcHTML(obj, conNoCambia) {
   return OPC.map(([k, lab, ops]) => `<div class="fila"><div class="nom">${TR(lab)}</div><div class="opcG" data-regla="${k}">${(conNoCambia ? [[null, 'noCambia']] : []).concat(ops).map(([v, l]) => `<div data-v='${JSON.stringify(v)}' class="${JSON.stringify(obj[k] ?? null) === JSON.stringify(v) ? 'on' : ''}">${TR(l)}</div>`).join('')}</div></div>`).join('');
