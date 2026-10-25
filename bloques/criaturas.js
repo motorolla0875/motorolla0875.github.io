@@ -186,7 +186,7 @@ TIPOS.bruja = { vida: 18, an: .3, al: 2.2, vel: 1, peso: .3, color: '#2a6a6a', v
   suelta: () => [[I.POCION + Math.floor(Math.random() * 4), Math.random() < .4 ? 1 : 0], [I.CARBON, 1]].filter(x => x[1]) };
 
 // Gelatina: salta hacia ti; al morir se divide en dos más chicas
-const COL_GEL = ['#5ad0ff', '#ff6ad5', '#8fe36a'];
+const COL_GEL = ['#5ad0ff', '#ff6ad5', '#ffb02e'];
 [3, 2, 1].forEach(n => {
   const s = [0, .45, .75, 1.15][n];
   TIPOS['gelatina' + n] = { vida: [0, 4, 8, 16][n], an: s * .45, al: s * .9, vel: 1.2, peso: .25, color: COL_GEL[0], voz: 'gelatina', hostil: true, ia: true, dano: n, noNatural: n < 3, divide: n > 1 ? 'gelatina' + (n - 1) : null,
