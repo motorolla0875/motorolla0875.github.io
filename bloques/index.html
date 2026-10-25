@@ -393,6 +393,9 @@ def(B.PALANCA, 'Palanca', [TL.palanca], { dur: .3, trans: true, solido: false, f
 def(B.PALANCA_ON, 'Palanca', [TL.palancaOn], { dur: .3, trans: true, solido: false, forma: [[3 / 16, 0, 5 / 16, 13 / 16, 3 / 16, 11 / 16], [10 / 16, 3 / 16, 7 / 16, 12 / 16, 12 / 16, 9 / 16]], suelta: B.PALANCA, color: '#8d6a3f', mec: 'palanca', luz: 4 });
 def(B.PLACA, 'Placa de presión', [TL.placa], { dur: .3, trans: true, solido: false, forma: [[1 / 16, 0, 1 / 16, 15 / 16, 1 / 16, 15 / 16]], icono: [[1 / 16, 0, 1 / 16, 15 / 16, 3 / 16, 15 / 16]], color: '#a0a0a0', mec: 'placa' });
 const esCultivo = t => t >= B.TRIGO && t <= B.TRIGO + 3, reemplazable = t => t === B.AIRE || t === B.AGUA || t === B.LAVA || (t > 0 && DEF[t].planta && !esCultivo(t) && DEF[t].huevo == null);
+// muebles arriba de una alfombra: el mueble ocupa el lugar y la alfombra se sigue viendo debajo (se guarda en mapa.alfBajo)
+const esAlfombra = t => t >= B.ALFOMBRA && t < B.ALFOMBRA + TELAS.length;
+const alfBajo = i => { try { return (mapa.alfBajo && mapa.alfBajo[i]) || 0; } catch (e) { return 0; } };
 function formaDe(t, x, y, z, choque) {
   const d = DEF[t]; if (!d.conecta) return d.forma;
   const une = (dx, dz) => { const n = get(x + dx, y, z + dz); return n === t || opaco(n) || (t === B.PANEL && n === B.VIDRIO); };
@@ -991,7 +994,8 @@ function armarPedazo(cx, cz) {
         A.UV.push(...(lado ? [u1, w0, u0, w0, u0, w1, u1, w1] : [u0, w0, u1, w0, u1, w1, u0, w1])); for (let k = 0; k < 4; k++) A.L.push(.92, cs, ct);
         const n = A.n; A.I.push(n, n + 1, n + 2, n, n + 2, n + 3); A.n += 4; }
       continue; }
-    for (const F of cajas) for (const f of CARAS) {
+    const ab = alfBajo(idx(x, y, z)), capas = ab && ab !== t && d.forma ? [[d, cajas], [DEF[ab], DEF[ab].forma]] : [[d, cajas]];
+    for (const [d, cajas] of capas) for (const F of cajas) for (const f of CARAS) {
       const nx = x + f.d[0], ny = y + f.d[1], nz = z + f.d[2], v = get(nx, ny, nz);
       if (!F) { if (opaco(v)) continue; if (v === t && (d.trans || agua)) continue; if (agua && v && v !== B.AGUA && !DEF[v].trans) continue; }
       else if (opaco(v) && (f.d[0] > 0 ? F[3] === 1 : f.d[0] < 0 ? F[0] === 0 : f.d[1] > 0 ? F[4] === 1 : f.d[1] < 0 ? F[1] === 0 : f.d[2] > 0 ? F[5] === 1 : F[2] === 0)) continue;
@@ -1030,7 +1034,9 @@ function rearmarCerca(x, z, r) { const c0 = Math.max(0, Math.floor((x - r) / CH)
 let grupo = null;
 function accion(fn) { grupo = []; let g; try { fn(); } finally { g = grupo; grupo = null; } if (g.length && typeof alTerminarAccion === 'function') alTerminarAccion(g); }
 function ponerBloque(x, y, z, t) {
-  if (!dentro(x, y, z)) return; const i = idx(x, y, z), viejo = mundo[i]; if (viejo === t) return;
+  if (!dentro(x, y, z)) return; const i = idx(x, y, z), viejo = mundo[i];
+  { const ab = alfBajo(i); if (ab && !t) { delete mapa.alfBajo[i]; if (viejo !== ab) t = ab; } }   // al sacar el mueble, la alfombra vuelve
+  if (viejo === t) return;
   if (grupo) grupo.push([i, viejo, t]);
   mundo[i] = t; diffs.set(i, t); sucio = true;
   const a0 = alt[x + SX * z]; altColumna(x, z); const cambioAlt = a0 !== alt[x + SX * z];
@@ -1327,11 +1333,13 @@ function tocar(dir) {
   if (esLosa(id) && arriba) pone = id - B.LOSA + B.LOSA_ARR;
   if (esEscalon(id)) pone = escalonHacia(id, J.yaw) + (arriba ? B.ESC_INV - B.ESCALON : 0);
   if (id === B.TRONCO && h.cara[0]) pone = B.TRONCO_X; if (id === B.TRONCO && h.cara[2]) pone = B.TRONCO_Z;
-  const enPlanta = reemplazable(h.b), x = enPlanta ? h.x : h.x + h.cara[0], y = enPlanta ? h.y : h.y + h.cara[1], z = enPlanta ? h.z : h.z + h.cara[2];
+  const sobreAlf = !!DEF[id] && esAlfombra(h.b) && h.cara[1] !== -1 && !esAlfombra(id) && !DEF[id].planta && !!DEF[id].forma && id !== B.PUERTA;
+  const enPlanta = reemplazable(h.b) || sobreAlf, x = enPlanta ? h.x : h.x + h.cara[0], y = enPlanta ? h.y : h.y + h.cara[1], z = enPlanta ? h.z : h.z + h.cara[2];
   const ocupa = (yy) => DEF[id].solido && x + 1 > J.x - ANCHO && x < J.x + ANCHO && z + 1 > J.z - ANCHO && z < J.z + ANCHO && yy + 1 > J.y && yy < J.y + ALTO;
-  const libre = (yy) => yy < SY && reemplazable(get(x, yy, z));
+  const libre = (yy) => yy < SY && (reemplazable(get(x, yy, z)) || (sobreAlf && yy === y));
   if (!libre(y) || ocupa(y)) return;
   if (id === B.PUERTA) { if (!libre(y + 1) || ocupa(y + 1)) return; ponerBloque(x, y + 1, z, B.PUERTA); }
+  if (sobreAlf) { mapa.alfBajo = mapa.alfBajo || {}; mapa.alfBajo[idx(x, y, z)] = h.b; }
   ponerBloque(x, y, z, pone);
   if (typeof espejo === 'function') espejo(x, y, z, pone);
   if (id === B.COFRE) cofres[idx(x, y, z)] = {};
