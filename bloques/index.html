@@ -97,12 +97,20 @@
   #videoCaja video, #grabCaja canvas { max-height: 70vh; max-width: 80vw; border: 4px solid #fff; display: block; position: static; width: auto; height: 70vh; }
   #fotoImg { max-width: min(640px, 80vw); max-height: 58vh; border: 4px solid #fff; box-shadow: 0 6px 0 rgba(0,0,0,.4); }
 </style>
+<link rel="preload" href="fondo-carga.jpg" as="image">
 <link rel="preload" href="fonts/baloo-2-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
   /* ===== Precarga: "dmith.builds presenta" y después la carga de Voxelium ===== */
   @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: block; src: url(fonts/baloo-2-latin-800-normal.woff2) format('woff2'); }
-  #precarga { position: fixed; inset: 0; z-index: 100000; overflow: hidden; background: #0d153d; font-family: 'Baloo 2', 'Trebuchet MS', sans-serif; color: #fff; transition: opacity .45s; }
+  #precarga { position: fixed; inset: 0; z-index: 100000; overflow: hidden; background: #6aa5e8; font-family: 'Baloo 2', 'Trebuchet MS', sans-serif; color: #fff; transition: opacity .45s; }
   #precarga.fuera { opacity: 0; pointer-events: none; }
+  /* fondo: el mundo del juego, como en el menú (se mueve despacio) */
+  #precarga::before { content: ''; position: absolute; inset: -6%; background: url(fondo-carga.jpg) center / cover no-repeat; animation: pcFondo 14s ease-in-out infinite alternate; }
+  #precarga::after { content: ''; position: absolute; inset: 0; background: rgba(10,16,48,.25); }
+  @keyframes pcFondo { from { transform: scale(1) translateX(-2%); } to { transform: scale(1.08) translateX(2%); } }
+  #precarga .pc-estudio, #precarga .pc-juego { z-index: 1; }
+  .pc-estudio .pc-nombre, .pc-estudio .pc-sub { text-shadow: 0 3px 0 #0d153d, 0 0 14px rgba(13,21,61,.6); } .pc-estudio .pc-sub { color: #fff; }
+  .pc-texto { text-shadow: 0 2px 0 #0d153d; }
   #precarga .pc-estudio, #precarga .pc-juego { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .pc-estudio { animation: pcEstudio 1.7s ease forwards; opacity: 0; }
   @keyframes pcEstudio { 0% { opacity: 0; transform: translateY(8px); } 20% { opacity: 1; transform: none; } 80% { opacity: 1; } 100% { opacity: 0; } }
@@ -112,7 +120,7 @@
   @keyframes pcCae { from { transform: translateY(-30px); opacity: 0; } }
   .pc-nombre { font-weight: 800; font-size: 28px; letter-spacing: .5px; } .pc-nombre span { color: #FFC23D; }
   .pc-sub { font-weight: 700; font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,.55); }
-  .pc-juego { background: linear-gradient(#24378f, #0d153d); opacity: 0; animation: pcAparece .4s ease 1.55s forwards; }
+  .pc-juego { opacity: 0; animation: pcAparece .4s ease 1.55s forwards; }
   @keyframes pcAparece { to { opacity: 1; } }
   .pc-logo svg { display: block; height: clamp(80px, 22vh, 190px); width: auto; overflow: visible; }
   .pc-logo { margin-bottom: 4px; opacity: 0; animation: pcLogo .6s cubic-bezier(.3,1.5,.5,1) 1.7s forwards; }
