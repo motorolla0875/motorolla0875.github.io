@@ -6,17 +6,17 @@
 Object.assign(TX.es, { mapasBtn: 'Mapas<small>descarga mapas de otros jugadores</small>', mapasTit: 'Mapas', mapasNuevos: 'Nuevos', mapasPopulares: 'Populares', mapasVacio: 'Todavía no hay mapas publicados. ¡Sube el primero desde la pausa de tu mundo!',
   mapasCargando: 'Cargando mapas…', mapasError: 'No se pudo conectar. Revisa tu internet.', descargas: '{n} descargas', jugarMapa: 'Descargar y jugar', descargando: 'DESCARGANDO MAPA…', mapaListo: '¡MAPA DESCARGADO!',
   subirMapaBtn: 'Subir a Mapas', subirTit: 'Subir mi mapa', subirNombre: 'Nombre del mapa', subirDesc: 'Cuéntale a los demás de qué se trata (opcional)', subirEnviar: 'Enviar', subirNota: 'Lo revisamos antes de publicarlo. Se publica con tu nombre de jugador: {n}',
-  subiendo: 'SUBIENDO…', subidoOk: '¡MAPA ENVIADO!<small>cuando lo aprobemos aparece en Mapas</small>', subidoEspera: 'ESPERA UN MINUTO ANTES DE SUBIR OTRO', subidoGrande: 'EL MAPA ES DEMASIADO GRANDE', subidoMal: 'NO SE PUDO SUBIR', nombreCorto: 'PONLE UN NOMBRE (3 LETRAS O MÁS)',
+  subiendo: 'SUBIENDO…', subirNotaOficial: 'Eres el creador del juego: se publica al instante como mapa OFICIAL.', subidoOficial: '¡MAPA OFICIAL PUBLICADO!<small>ya aparece en Mapas</small>', subidoOk: '¡MAPA ENVIADO!<small>cuando lo aprobemos aparece en Mapas</small>', subidoEspera: 'ESPERA UN MINUTO ANTES DE SUBIR OTRO', subidoGrande: 'EL MAPA ES DEMASIADO GRANDE', subidoMal: 'NO SE PUDO SUBIR', nombreCorto: 'PONLE UN NOMBRE (3 LETRAS O MÁS)',
   tipoMapaSky: 'SkyBlock', tipoMapaParkour: 'Parkour', tipoMapaPlano: 'Superplano', modoMapaAventura: 'Aventura' });
 Object.assign(TX.en, { mapasBtn: 'Maps<small>download maps from other players</small>', mapasTit: 'Maps', mapasNuevos: 'New', mapasPopulares: 'Popular', mapasVacio: 'No maps published yet. Upload the first one from your world\'s pause menu!',
   mapasCargando: 'Loading maps…', mapasError: 'Could not connect. Check your internet.', descargas: '{n} downloads', jugarMapa: 'Download and play', descargando: 'DOWNLOADING MAP…', mapaListo: 'MAP DOWNLOADED!',
   subirMapaBtn: 'Upload to Maps', subirTit: 'Upload my map', subirNombre: 'Map name', subirDesc: 'Tell others what it is about (optional)', subirEnviar: 'Send', subirNota: 'We review it before publishing. It is published with your player name: {n}',
-  subiendo: 'UPLOADING…', subidoOk: 'MAP SENT!<small>it shows up in Maps once approved</small>', subidoEspera: 'WAIT A MINUTE BEFORE UPLOADING ANOTHER', subidoGrande: 'THE MAP IS TOO BIG', subidoMal: 'COULD NOT UPLOAD', nombreCorto: 'GIVE IT A NAME (3 LETTERS OR MORE)',
+  subiendo: 'UPLOADING…', subirNotaOficial: 'You are the game creator: it is published right away as an OFFICIAL map.', subidoOficial: 'OFFICIAL MAP PUBLISHED!<small>it is already in Maps</small>', subidoOk: 'MAP SENT!<small>it shows up in Maps once approved</small>', subidoEspera: 'WAIT A MINUTE BEFORE UPLOADING ANOTHER', subidoGrande: 'THE MAP IS TOO BIG', subidoMal: 'COULD NOT UPLOAD', nombreCorto: 'GIVE IT A NAME (3 LETTERS OR MORE)',
   tipoMapaSky: 'SkyBlock', tipoMapaParkour: 'Parkour', tipoMapaPlano: 'Superflat', modoMapaAventura: 'Adventure' });
 Object.assign(TX.pt, { mapasBtn: 'Mapas<small>baixe mapas de outros jogadores</small>', mapasTit: 'Mapas', mapasNuevos: 'Novos', mapasPopulares: 'Populares', mapasVacio: 'Ainda não há mapas publicados. Envie o primeiro pela pausa do seu mundo!',
   mapasCargando: 'Carregando mapas…', mapasError: 'Não foi possível conectar. Verifique sua internet.', descargas: '{n} downloads', jugarMapa: 'Baixar e jogar', descargando: 'BAIXANDO MAPA…', mapaListo: 'MAPA BAIXADO!',
   subirMapaBtn: 'Enviar para Mapas', subirTit: 'Enviar meu mapa', subirNombre: 'Nome do mapa', subirDesc: 'Conte aos outros do que se trata (opcional)', subirEnviar: 'Enviar', subirNota: 'Revisamos antes de publicar. É publicado com seu nome de jogador: {n}',
-  subiendo: 'ENVIANDO…', subidoOk: 'MAPA ENVIADO!<small>aparece em Mapas quando for aprovado</small>', subidoEspera: 'ESPERE UM MINUTO ANTES DE ENVIAR OUTRO', subidoGrande: 'O MAPA É GRANDE DEMAIS', subidoMal: 'NÃO FOI POSSÍVEL ENVIAR', nombreCorto: 'DÊ UM NOME (3 LETRAS OU MAIS)',
+  subiendo: 'ENVIANDO…', subirNotaOficial: 'Você é o criador do jogo: é publicado na hora como mapa OFICIAL.', subidoOficial: 'MAPA OFICIAL PUBLICADO!<small>já aparece em Mapas</small>', subidoOk: 'MAPA ENVIADO!<small>aparece em Mapas quando for aprovado</small>', subidoEspera: 'ESPERE UM MINUTO ANTES DE ENVIAR OUTRO', subidoGrande: 'O MAPA É GRANDE DEMAIS', subidoMal: 'NÃO FOI POSSÍVEL ENVIAR', nombreCorto: 'DÊ UM NOME (3 LETRAS OU MAIS)',
   tipoMapaSky: 'SkyBlock', tipoMapaParkour: 'Parkour', tipoMapaPlano: 'Superplano', modoMapaAventura: 'Aventura' });
 
 { const st = document.createElement('style'); st.textContent = `
@@ -29,6 +29,8 @@ Object.assign(TX.pt, { mapasBtn: 'Mapas<small>baixe mapas de outros jogadores</s
   .mapaT { background: #fff; border: 2px solid #d5dbf3; border-radius: 12px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; }
   .mapaT img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #9db7e8; display: block; }
   .mapaT .n { font-weight: 800; font-size: 14px; color: #1b2a6b; padding: 5px 8px 0; line-height: 1.15; } .mapaT .a { font-size: 11px; color: #5a6aa8; font-weight: 700; padding: 1px 8px 7px; }
+  .oficial { display: inline-block; background: linear-gradient(#ffe14a, #f5a62a); color: #1b2a6b; border: 2px solid #c8841a; border-radius: 7px; font-size: 10px; font-weight: 800; letter-spacing: .5px; padding: 0 5px; margin-right: 4px; vertical-align: 1px; }
+  .mapaT { position: relative; } .mapaT .oficial { position: absolute; top: 6px; left: 6px; font-size: 11px; box-shadow: 0 2px 0 rgba(0,0,0,.25); }
   #mapasMsg { padding: 16px; text-align: center; font-weight: 700; color: #5a6aa8; }
   #mapaDet { display: flex; gap: 12px; padding: 12px; overflow: auto; flex-wrap: wrap; } #mapaDet img { width: min(420px, 100%); border-radius: 10px; aspect-ratio: 16 / 9; object-fit: cover; background: #9db7e8; }
   #mapaDet .info { flex: 1; min-width: 200px; color: #1b2a6b; } #mapaDet .btn { width: 100%; max-width: 100%; box-sizing: border-box; } #mapaDet .info b { font-size: 20px; display: block; } #mapaDet .info small { display: block; color: #5a6aa8; font-weight: 700; margin: 2px 0 8px; } #mapaDet .info p { margin: 0 0 12px; font-weight: 600; white-space: pre-wrap; }
@@ -41,6 +43,8 @@ Object.assign(TX.pt, { mapasBtn: 'Mapas<small>baixe mapas de outros jogadores</s
 const urlMapas = () => { let u = 'wss://dmith.app/voxws'; try { u = localStorage.getItem('voxServidor') || u; } catch (e) {} return u.replace(/^ws/, 'http').replace(/\/$/, ''); };
 const escH = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const MAPAS = { orden: 'nuevos', lista: [], desde: null };
+{ const m = location.search.match(/[?&]admin=([a-f0-9]{24,})/); if (m) try { localStorage.setItem('voxAdmin', m[1]); } catch (e) {} }
+const claveAdmin = () => { try { return localStorage.getItem('voxAdmin') || ''; } catch (e) { return ''; } };
 
 // ═════════ VER Y DESCARGAR ═════════
 cap('mapasCapa', `<div class="ventana"><div class="vCab"><div class="tab on" data-i="mapasTit"></div><div style="flex:1"></div><div class="cerrar" id="mapasCerrar">X</div></div>
@@ -60,10 +64,10 @@ async function cargarLista() {
   catch (e) { $('mapasMsg').textContent = TR('mapasError'); return; }
   if (!MAPAS.lista.length) { $('mapasMsg').textContent = TR('mapasVacio'); return; }
   $('mapasMsg').hidden = true;
-  $('mapasGrilla').innerHTML = MAPAS.lista.map(m => `<div class="mapaT" data-id="${escH(m.id)}"><img loading="lazy" src="${urlMapas()}/mapas/foto/${encodeURIComponent(m.id)}" alt=""><div class="n">${escH(m.nombre)}</div><div class="a">${escH(subMapa(m))}</div></div>`).join('');
+  $('mapasGrilla').innerHTML = MAPAS.lista.map(m => `<div class="mapaT" data-id="${escH(m.id)}">${m.oficial ? '<span class="oficial">OFICIAL</span>' : ''}<img loading="lazy" src="${urlMapas()}/mapas/foto/${encodeURIComponent(m.id)}" alt=""><div class="n">${escH(m.nombre)}</div><div class="a">${escH(subMapa(m))}</div></div>`).join('');
 }
 $('mapasGrilla').addEventListener('click', e => { const d = e.target.closest('[data-id]'); if (!d) return; const m = MAPAS.lista.find(x => x.id === d.dataset.id); if (!m) return;
-  $('mapaDet').innerHTML = `<img src="${urlMapas()}/mapas/foto/${encodeURIComponent(m.id)}" alt=""><div class="info"><b>${escH(m.nombre)}</b><small>${escH(subMapa(m))}</small><p>${escH(m.desc)}</p><div class="btn" id="bJugarMapa" data-i="jugarMapa">${TR('jugarMapa')}</div></div>`;
+  $('mapaDet').innerHTML = `<img src="${urlMapas()}/mapas/foto/${encodeURIComponent(m.id)}" alt=""><div class="info"><b>${escH(m.nombre)}</b><small>${m.oficial ? '<span class="oficial">OFICIAL</span>' : ''}${escH(subMapa(m))}</small><p>${escH(m.desc)}</p><div class="btn" id="bJugarMapa" data-i="jugarMapa">${TR('jugarMapa')}</div></div>`;
   $('mapasGrilla').hidden = true; $('mapasTabs').hidden = true; $('mapaDet').hidden = false;
   $('bJugarMapa').onclick = () => descargarMapa(m); });
 async function descargarMapa(m) {
@@ -95,7 +99,7 @@ function fotoMapa() {
 function abrirSubir() {
   $('pausa').hidden = true; subirFotoURL = fotoMapa(); $('subirFoto').src = subirFotoURL;
   const meta = leerLista().find(m => m.id === mundoId) || {}; $('subirNom').value = (typeof mapa !== 'undefined' && mapa.nombre) || meta.nombre || ''; $('subirDes').value = '';
-  aplicarIdioma(); $('subirNotaTxt').textContent = TR('subirNota', { n: window.__mp ? __mp.nombre() : '' }); abrir('subirCapa');
+  aplicarIdioma(); $('subirNotaTxt').textContent = claveAdmin() ? TR('subirNotaOficial') : TR('subirNota', { n: window.__mp ? __mp.nombre() : '' }); abrir('subirCapa');
 }
 $('subirCerrar').onclick = () => { cerrar('subirCapa'); $('pausa').hidden = false; };
 // el mapa se arma igual que "Compartir mundo", con el tipo de mundo para que se vea igual
@@ -114,11 +118,11 @@ $('bSubirEnviar').onclick = async () => {
   aviso(TR('subiendo'), 6000); const voxel = await aBase64(await empacar(a.obj));
   if (voxel.length > 8 * 1024 * 1024) return aviso(TR('subidoGrande'), 2000);
   try {
-    const r = await fetch(urlMapas() + '/mapas/subir', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ nombre, desc: $('subirDes').value.trim().slice(0, 200), autor: window.__mp ? __mp.nombre() : '', dev: window.__dia ? __dia.miDev : '', modo: a.modo, tipo: a.meta.tipo || '', plano: !!a.meta.plano, tam: a.meta.tam || 160, foto: subirFotoURL, voxel }) });
+    const r = await fetch(urlMapas() + '/mapas/subir', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ nombre, desc: $('subirDes').value.trim().slice(0, 200), autor: window.__mp ? __mp.nombre() : '', dev: window.__dia ? __dia.miDev : '', modo: a.modo, tipo: a.meta.tipo || '', plano: !!a.meta.plano, tam: a.meta.tam || 160, foto: subirFotoURL, voxel, clave: claveAdmin() || undefined }) });
     if (r.status === 429) return aviso(TR('subidoEspera'), 2200);
     if (r.status === 413) return aviso(TR('subidoGrande'), 2200);
     if (!r.ok) throw 0;
-    cerrar('subirCapa'); pausado = false; aviso(TR('subidoOk'), 3000); sonar('final', .5) || son(880, .2, 'triangle', .1);
+    const d = await r.json().catch(() => ({})); cerrar('subirCapa'); pausado = false; aviso(TR(d.oficial ? 'subidoOficial' : 'subidoOk'), 3000); sonar('final', .5) || son(880, .2, 'triangle', .1);
   } catch (e) { aviso(TR('subidoMal'), 2000); }
 };
 // al escribir en los campos, que el juego no tome las teclas
