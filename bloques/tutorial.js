@@ -103,7 +103,7 @@ for (const l in TT) Object.assign(TX[l], TT[l]);
   #tutoCaja .txt { font-size: 15px; font-weight: 700; line-height: 1.25; margin-top: 4px; }
   #tutoCaja .subs { display: flex; gap: 10px; margin-top: 4px; font-size: 13px; font-weight: 800; } #tutoCaja .subs span { opacity: .55; } #tutoCaja .subs span.ok { opacity: 1; color: #8fe36a; }
   #tutoCaja.bien { border-color: #6cbb40; } #tutoCaja.bien .txt { color: #8fe36a; }
-  .tutoBrilla { animation: tutoBrilla 1s ease-in-out infinite; position: relative; z-index: 7 !important; }
+  .tutoBrilla { animation: tutoBrilla 1s ease-in-out infinite; z-index: 7 !important; }
   @keyframes tutoBrilla { 0%, 100% { box-shadow: 0 0 0 3px #ffe14a, 0 0 14px 4px rgba(255,225,74,.8); } 50% { box-shadow: 0 0 0 5px #ffe14a, 0 0 26px 10px rgba(255,225,74,.35); } }
   #tutoJoy, #tutoDesliza { position: fixed; z-index: 4; pointer-events: none; zoom: var(--u); }
   #tutoJoy { left: max(34px, env(safe-area-inset-left)); bottom: 34px; width: 120px; height: 120px; }
