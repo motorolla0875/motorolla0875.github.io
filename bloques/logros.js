@@ -55,7 +55,7 @@ const LOGROS = [
   ['foto', B.VIDRIO, () => lgCuenta('foto') >= 1, 'Fotógrafo', 'Saca una foto del mundo', 'Photographer', 'Take a picture of the world', 'Fotógrafo', 'Tire uma foto do mundo'],
   ['todos', I.CORONA, () => LOGROS.every(l => l[0] === 'todos' || LG.g[l[0]]), 'Maestro de Voxelium', 'Consigue todos los demás logros', 'Voxelium Master', 'Unlock every other achievement', 'Mestre do Voxelium', 'Consiga todas as outras conquistas']
 ];
-const txtLogro = l => { const k = LANG === 'en' ? 5 : LANG === 'pt' ? 7 : 3; return [l[k], l[k + 1]]; };
+const txtLogro = l => { const x = LANG_EXTRA[LANG] && LANG_EXTRA[LANG].logros && LANG_EXTRA[LANG].logros[l[0]]; if (x) return x; const k = LANG === 'es' ? 3 : LANG === 'pt' ? 7 : 5; return [l[k], l[k + 1]]; };
 
 // ─── aviso de logro nuevo (arriba a la derecha, debajo de los botones, no tapa la mira) ───
 { const st = document.createElement('style'); st.textContent = `

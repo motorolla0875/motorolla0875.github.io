@@ -2,8 +2,12 @@
 // ═════════ ESTILO PROPIO DE VOXELIUM: botones azules redondeados, letra Baloo 2, ventanas claras y barras de vida/hambre ═════════
 // (la versión con el estilo anterior quedó guardada en la rama "blox-original" del repositorio)
 { const st = document.createElement('style'); st.textContent = `
-  @font-face { font-family: 'Baloo 2'; font-weight: 600; font-display: swap; src: url(fonts/baloo-2-latin-600-normal.woff2) format('woff2'); }
-  @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: swap; src: url(fonts/baloo-2-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Baloo 2'; font-weight: 600; font-display: swap; src: url(fonts/baloo-2-latin-600-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: 'Baloo 2'; font-weight: 600; font-display: swap; src: url(fonts/baloo-2-latin-ext-600-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face { font-family: 'Baloo 2'; font-weight: 600; font-display: swap; src: url(fonts/baloo-bhaijaan-2-arabic-600-normal.woff2) format('woff2'); unicode-range: U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC; }
+  @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: swap; src: url(fonts/baloo-2-latin-800-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: swap; src: url(fonts/baloo-2-latin-ext-800-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: swap; src: url(fonts/baloo-bhaijaan-2-arabic-800-normal.woff2) format('woff2'); unicode-range: U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC; }
   html, body { font-family: 'Baloo 2', 'Trebuchet MS', sans-serif; font-weight: 700; }
   .sombra { text-shadow: 0 2px 0 rgba(13,21,61,.85); }
   .capa { background-color: #13205a; background-image: linear-gradient(#24378f, #0d153d); }
@@ -77,3 +81,13 @@ if (document.fonts && document.fonts.load) { document.fonts.load('800 20px "Balo
 // ─── en los menús (fuera del juego) todas las pantallas dejan ver el mundo que gira, igual que el inicio ───
 { const st = document.createElement('style'); st.textContent = `body.enMenu .capa:not(#grabando):not(#precarga) { background-color: rgba(10,16,48,.25) !important; background-image: none !important; }`; document.head.appendChild(st);
   const marcar = () => document.body.classList.toggle('enMenu', !jugando); marcar(); setInterval(marcar, 150); }
+
+// ═════════ ÁRABE (de derecha a izquierda) ═════════
+// Los menús y ventanas se dan vuelta solos; los controles del juego (botones, barra, joystick) quedan donde están.
+{ const st = document.createElement('style'); st.textContent = `
+  body.rtl #hud, body.rtl #hud * { direction: ltr; }
+  body.rtl #hud * { unicode-bidi: plaintext; }
+  body.rtl input[type=range] { direction: ltr; }
+  /* pantallas más altas que el teléfono (Ajustes, Pausa): que se vea el principio y se pueda deslizar */
+  .capa { justify-content: safe center; }
+`; document.head.appendChild(st); }

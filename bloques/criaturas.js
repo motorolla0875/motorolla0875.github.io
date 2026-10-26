@@ -20,7 +20,8 @@ const NOM_CRIA = {
     conejo: 'Coelho', lobo: 'Lobo', llama: 'Lhama', cabra: 'Cabra', osoPolar: 'Urso polar', murcielago: 'Morcego', golemHierro: 'Golem de ferro', golemNieve: 'Golem de neve', dragonJefe: 'Dragão da Tempestade', tricefalo: 'Rei de Três Cabeças',
     dragon0: 'Dragão verde', dragon1: 'Dragão de fogo', dragon2: 'Dragão de gelo', dragon3: 'Dragão dourado', dragon4: 'Dragão de cristal', pez: 'Peixes', calamar: 'Lula', delfin: 'Golfinho', guardian: 'Guardião' },
 };
-const nomCria = t => (NOM_CRIA[LANG] || NOM_CRIA.es)[t] || (TIPOS[t] && TIPOS[t].nombre) || t;
+for (const l in LANG_EXTRA) if (LANG_EXTRA[l].cria) NOM_CRIA[l] = LANG_EXTRA[l].cria;
+const nomCria = t => (NOM_CRIA[LANG] || NOM_CRIA.en)[t] || NOM_CRIA.en[t] || (TIPOS[t] && TIPOS[t].nombre) || t;
 Object.assign(TX.es, { tabCriaturas: 'Criaturas', quemarDia: 'Zombis se queman de día', criaGranja: 'Granja', criaSalvajes: 'Salvajes y mascotas', criaMar: 'Mar', criaMonstruos: 'Monstruos', criaAyudantes: 'Ayudantes', criaDragones: 'Dragones', criaJefes: 'Jefes', criaMods: 'Mis criaturas',
   criaTocar: 'Toca una criatura y aparece adelante tuyo', ponEnAgua: 'MIRA HACIA EL AGUA PARA PONERLO', golemListo: '¡ARMASTE UN GÓLEM!', loboDomado: '¡EL LOBO AHORA ES TU PERRO!', loboNo: 'EL LOBO NO QUISO… PRUEBA OTRA VEZ',
   jefeYaHay: 'YA HAY UN JEFE CERCA', jefeLlega: '¡SE ACERCA {n}!', jefeVencido: '¡VENCISTE A {n}!', cuernoAyuda: 'TOCA EL PISO PARA LLAMAR AL JEFE' });

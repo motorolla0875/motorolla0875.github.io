@@ -139,10 +139,14 @@ const NOMBRES = {
     'Carne cruda': 'Carne Crua', 'Carne asada': 'Carne Assada', 'Pollo crudo': 'Frango Cru', 'Pollo asado': 'Frango Assado', 'Manzana': 'Maçã', 'Pasto alto': 'Grama Alta', 'Flor roja': 'Flor Vermelha', 'Flor amarilla': 'Flor Amarela', 'Tierra arada': 'Terra Arada', 'Trigo': 'Trigo', 'Semillas': 'Sementes', 'Pan': 'Pão', 'Cama': 'Cama', 'Farol': 'Lanterna', 'Ladrillo de piedra': 'Tijolos de Pedra', 'Madera oscura': 'Madeira Escura', 'Madera clara': 'Madeira Clara', 'Mármol': 'Mármore',
     'Alfombra blanca': 'Tapete Branco', 'Alfombra roja': 'Tapete Vermelho', 'Alfombra naranja': 'Tapete Laranja', 'Alfombra amarilla': 'Tapete Amarelo', 'Alfombra verde': 'Tapete Verde', 'Alfombra celeste': 'Tapete Azul-claro', 'Alfombra azul': 'Tapete Azul', 'Alfombra violeta': 'Tapete Roxo', 'Alfombra negra': 'Tapete Preto' },
 };
-let LANG = (() => { try { const g = localStorage.getItem('bloxIdioma'); if (g && TX[g]) return g; } catch (e) {} const n = (navigator.language || 'en').slice(0, 2).toLowerCase(); return n === 'es' ? 'es' : n === 'pt' ? 'pt' : 'en'; })();
+// idiomas nuevos: los textos están en idioma-tr.js, idioma-id.js e idioma-ar.js (se cargan después de este archivo)
+const IDIOMAS = { en: 'English', es: 'Español', pt: 'Português', tr: 'Türkçe', id: 'Bahasa Indonesia', ar: 'العربية' };
+for (const l of ['tr', 'id', 'ar']) { TX[l] = TX[l] || {}; NOMBRES[l] = NOMBRES[l] || {}; }
+const LANG_EXTRA = { tr: {}, id: {}, ar: {} };   // nombres de criaturas y logros en los idiomas nuevos
+let LANG = (() => { try { const g = localStorage.getItem('bloxIdioma'); if (g && TX[g]) return g; } catch (e) {} let n = (navigator.language || 'en').slice(0, 2).toLowerCase(); if (n === 'in') n = 'id'; return TX[n] ? n : 'en'; })();
 function TR(k, v) { let s = TX[LANG][k] ?? TX.en[k] ?? k; if (v) for (const a in v) s = s.split('{' + a + '}').join(v[a]); return s; }
 function aplicarIdioma() {
-  document.documentElement.lang = LANG;
+  document.documentElement.lang = LANG; document.documentElement.dir = LANG === 'ar' ? 'rtl' : 'ltr'; document.body && document.body.classList.toggle('rtl', LANG === 'ar');
   document.querySelectorAll('[data-i]').forEach(e => e.textContent = TR(e.dataset.i));
   document.querySelectorAll('[data-ih]').forEach(e => e.innerHTML = TR(e.dataset.ih));
   document.querySelectorAll('[data-it]').forEach(e => e.title = TR(e.dataset.it));

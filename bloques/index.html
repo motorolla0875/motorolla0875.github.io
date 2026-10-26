@@ -101,7 +101,9 @@
 <link rel="preload" href="fonts/baloo-2-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
   /* ===== Precarga: "dmith.builds presenta" y después la carga de Voxelium ===== */
-  @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: block; src: url(fonts/baloo-2-latin-800-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: block; src: url(fonts/baloo-2-latin-800-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+  @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: swap; src: url(fonts/baloo-2-latin-ext-800-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+  @font-face { font-family: 'Baloo 2'; font-weight: 700 900; font-display: swap; src: url(fonts/baloo-bhaijaan-2-arabic-800-normal.woff2) format('woff2'); unicode-range: U+0600-06FF,U+0750-077F,U+0870-088E,U+0890-0891,U+0897-08E1,U+08E3-08FF,U+200C-200E,U+FB50-FDFF,U+FE70-FE74,U+FE76-FEFC; }
   #precarga { position: fixed; inset: 0; z-index: 100000; overflow: hidden; background: #6aa5e8; font-family: 'Baloo 2', 'Trebuchet MS', sans-serif; color: #fff; transition: opacity .45s; }
   #precarga.fuera { opacity: 0; pointer-events: none; }
   /* fondo: el mundo del juego, como en el menú (se mueve despacio) */
@@ -147,8 +149,9 @@
 (function () {
   var t0 = Date.now(), L = 'es';
   try { L = localStorage.getItem('bloxIdioma') || ((navigator.language || 'es').slice(0, 2)); } catch (e) {}
-  if (['es', 'en', 'pt'].indexOf(L) < 0) L = 'en';
-  var TX = { es: ['presenta', ['Juntando bloques…', 'Plantando árboles…', 'Llenando los mares…', 'Despertando a los animales…', 'Escondiendo tesoros…']], en: ['presents', ['Gathering blocks…', 'Planting trees…', 'Filling the seas…', 'Waking up the animals…', 'Hiding treasure…']], pt: ['apresenta', ['Juntando blocos…', 'Plantando árvores…', 'Enchendo os mares…', 'Acordando os animais…', 'Escondendo tesouros…']] }[L];
+  if (L === 'in') L = 'id'; if (['es', 'en', 'pt', 'tr', 'id', 'ar'].indexOf(L) < 0) L = 'en';
+  if (L === 'ar') { document.documentElement.dir = 'rtl'; document.documentElement.lang = 'ar'; }
+  var TX = { es: ['presenta', ['Juntando bloques…', 'Plantando árboles…', 'Llenando los mares…', 'Despertando a los animales…', 'Escondiendo tesoros…']], en: ['presents', ['Gathering blocks…', 'Planting trees…', 'Filling the seas…', 'Waking up the animals…', 'Hiding treasure…']], pt: ['apresenta', ['Juntando blocos…', 'Plantando árvores…', 'Enchendo os mares…', 'Acordando os animais…', 'Escondendo tesouros…']], tr: ['sunar', ['Bloklar toplanıyor…', 'Ağaçlar dikiliyor…', 'Denizler dolduruluyor…', 'Hayvanlar uyandırılıyor…', 'Hazineler saklanıyor…']], id: ['mempersembahkan', ['Mengumpulkan blok…', 'Menanam pohon…', 'Mengisi lautan…', 'Membangunkan hewan…', 'Menyembunyikan harta…']], ar: ['تقدّم', ['نجمع المكعبات…', 'نزرع الأشجار…', 'نملأ البحار…', 'نوقظ الحيوانات…', 'نخبّئ الكنوز…']] }[L];
   document.getElementById('pcPresenta').textContent = TX[0];
   var barra = document.getElementById('pcBarra'), texto = document.getElementById('pcTexto'), N = 10, k;
   for (k = 0; k < N; k++) barra.appendChild(document.createElement('i'));
@@ -222,7 +225,7 @@
 </div>
 <div class="capa trans" id="ajustes" hidden>
   <div class="titulo" style="font-size:clamp(26px,5vw,40px)" data-i="ajustes"></div>
-  <div class="ajFila"><span data-i="idioma"></span><div class="ajOpc" id="ajIdioma"><div data-l="en">English</div><div data-l="es">Español</div><div data-l="pt">Português</div></div></div>
+  <div class="ajFila"><span data-i="idioma"></span><div class="ajOpc" id="ajIdioma"><div data-l="en">English</div><div data-l="es">Español</div><div data-l="pt">Português</div><div data-l="tr">Türkçe</div><div data-l="id">Indonesia</div><div data-l="ar">العربية</div></div></div>
   <div class="ajFila"><span data-i="sens"></span><input type="range" id="ajSens" min="0.4" max="2.2" step="0.1"></div>
   <div class="ajFila"><span data-i="dist"></span><div class="ajOpc" id="ajDist"><div data-d="0" data-i="corta"></div><div data-d="1" data-i="normal"></div><div data-d="2" data-i="lejos"></div></div></div>
   <div class="ajFila"><span data-i="vibracion"></span><div class="ajOpc" id="ajVib"><div data-v="1" data-i="si"></div><div data-v="0" data-i="no"></div></div></div>
@@ -265,6 +268,9 @@
 
 <script src="three.min.js"></script>
 <script src="idiomas.js"></script>
+<script src="idioma-tr.js"></script>
+<script src="idioma-id.js"></script>
+<script src="idioma-ar.js"></script>
 <script>
 'use strict';
 // ═════════ MUNDO ═════════
@@ -434,7 +440,7 @@ item(I.SEMILLAS, 'Semillas', TL.semillas); item(I.TRIGO_I, 'Trigo', TL.trigoItem
 const esComida = id => !!(ITEM[id] && ITEM[id].comida);
 ['de madera', 'de piedra', 'de hierro', 'de cristal'].forEach((m, k) => { item(I.PICO1 + k, 'Pico ' + m, TL['pico' + (k + 1)], { pico: k + 1 }); item(I.ESP1 + k, 'Espada ' + m, TL['esp' + (k + 1)], { espada: k + 1 }); });
 const info = id => DEF[id] || ITEM[id];
-const nom = id => { const n = info(id).nombre; return LANG === 'es' ? n : (NOMBRES[LANG][n] || n); };
+const nom = id => { const n = info(id).nombre; return LANG === 'es' ? n : (NOMBRES[LANG][n] || NOMBRES.en[n] || n); };
 const esBloque = id => id > 0 && !!DEF[id] && !ITEM[id];
 // materiales que solo sirven para fabricar (no se llevan en la mano); todo lo demás (montura, balde, arco, pala...) sí va a la barra
 const SOLO_MATERIAL = new Set([I.PALO, I.CARBON, I.HIERRO, I.ORO, I.CRISTAL]);
