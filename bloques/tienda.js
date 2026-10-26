@@ -3,31 +3,31 @@
 // Por ahora todo se desbloquea mirando un anuncio corto. En la web es un anuncio de prueba;
 // en la app, si existe window.mostrarAnuncioPremiado(cb), se usa ese (Unity Ads).
 
-Object.assign(TX.es, {
+Object.assign(TX.es, { texUsar: 'Usar en este mundo', texEnUso: 'En uso',
   tienda: 'Tienda', tDragones: 'Dragones', tPersonaje: 'Personaje', tSkins: 'Skins', tTexturas: 'Texturas', tMascotas: 'Mascotas', tiendaAyuda: 'Todo se desbloquea gratis mirando un anuncio corto',
   desbloquear: 'Desbloquear', gratisHw: 'GRATIS POR HALLOWEEN', listo2: 'Desbloqueado', recibir: 'Recibir', llamar: 'Llamar', instalado: 'Está en Mis mods', usar: 'Usar', especial: 'Especial',
   pzAlas: 'Alas', pzCuernos: 'Cuernos', pzAura: 'Aura brillante', pzArmadura: 'Armadura', plata: 'Plata', oro: 'Oro', sMago: 'Mago', sBruja: 'Bruja', sVikingo: 'Vikingo', sCalabaza: 'Calabaza', pzMago: 'Sombrero de mago', pzBruja: 'Sombrero de bruja', pzVikingo: 'Casco vikingo', pzCalabaza: 'Cabeza de calabaza',
-  huevoDorado: 'Dragón dorado', huevoCristal: 'Dragón de cristal', dHuevo: 'Un huevo que nace en un dragón único', dPieza: 'Para tus personajes', dPack: '3 personajes listos para usar o copiar', dTex: 'Cambia cómo se ven los bloques; actívalo en Opciones del mundo', dMascota: 'Una mascota que te sigue a todos lados',
+  huevoDorado: 'Dragón dorado', huevoCristal: 'Dragón de cristal', dHuevo: 'Un huevo que nace en un dragón único', dPieza: 'Para tus personajes', dPack: '3 personajes listos para usar o copiar', dTex: 'Cambia cómo se ven los bloques que ya tienes', dMascota: 'Una mascota que te sigue a todos lados',
   packDragones: 'Pack Dragones', packZombis: 'Pack Zombis', packCaballeros: 'Pack Caballeros', packHalloween: 'Pack Halloween', packKawaii: 'Pack Kawaii', texPastel: 'Texturas Pastel', texMedieval: 'Texturas Medievales', texNeon: 'Texturas Neón', texCiudad: 'Texturas Ciudad', zorro: 'Zorro', panda: 'Panda', miniojon: 'Mini Ojón',
   anuncioPrueba: 'ANUNCIO DE PRUEBA', anuncioPruebaTxt: 'En la app acá se ve un video corto', desbloqueadoOk: '¡DESBLOQUEADO!', entraMundo: 'ENTRA A UN MUNDO PRIMERO', recibido: 'YA LO TIENES EN LA BARRA',
   sk_jinete: 'Jinete de dragón', sk_dragona: 'Dragona', sk_fuego: 'Domador de fuego', sk_zombi: 'Zombi', sk_zombiCocinero: 'Zombi cocinero', sk_cazador: 'Cazador de zombis', sk_caballero: 'Caballero', sk_vikinga: 'Vikinga', sk_rey: 'Rey',
   sk_calabaza: 'Cabeza de calabaza', sk_bruja: 'Bruja', sk_vampiro: 'Vampiro', sk_gatita: 'Gatita', sk_nube: 'Nube', sk_frutilla: 'Frutilla',
 });
-Object.assign(TX.en, {
+Object.assign(TX.en, { texUsar: 'Use in this world', texEnUso: 'In use',
   tienda: 'Shop', tDragones: 'Dragons', tPersonaje: 'Character', tSkins: 'Skins', tTexturas: 'Textures', tMascotas: 'Pets', tiendaAyuda: 'Everything unlocks for free by watching a short ad',
   desbloquear: 'Unlock', gratisHw: 'FREE FOR HALLOWEEN', listo2: 'Unlocked', recibir: 'Get', llamar: 'Call', instalado: 'In My mods', usar: 'Use', especial: 'Special',
   pzAlas: 'Wings', pzCuernos: 'Horns', pzAura: 'Glowing aura', pzArmadura: 'Armor', plata: 'Silver', oro: 'Gold', sMago: 'Wizard', sBruja: 'Witch', sVikingo: 'Viking', sCalabaza: 'Pumpkin', pzMago: 'Wizard hat', pzBruja: 'Witch hat', pzVikingo: 'Viking helmet', pzCalabaza: 'Pumpkin head',
-  huevoDorado: 'Golden dragon', huevoCristal: 'Crystal dragon', dHuevo: 'An egg that hatches into a unique dragon', dPieza: 'For your characters', dPack: '3 ready-to-use characters you can also copy', dTex: 'Changes how blocks look; turn it on in World options', dMascota: 'A pet that follows you everywhere',
+  huevoDorado: 'Golden dragon', huevoCristal: 'Crystal dragon', dHuevo: 'An egg that hatches into a unique dragon', dPieza: 'For your characters', dPack: '3 ready-to-use characters you can also copy', dTex: 'Changes how your blocks look', dMascota: 'A pet that follows you everywhere',
   packDragones: 'Dragons Pack', packZombis: 'Zombies Pack', packCaballeros: 'Knights Pack', packHalloween: 'Halloween Pack', packKawaii: 'Kawaii Pack', texPastel: 'Pastel Textures', texMedieval: 'Medieval Textures', texNeon: 'Neon Textures', texCiudad: 'City Textures', zorro: 'Fox', panda: 'Panda', miniojon: 'Mini Big Eye',
   anuncioPrueba: 'TEST AD', anuncioPruebaTxt: 'In the app a short video plays here', desbloqueadoOk: 'UNLOCKED!', entraMundo: 'ENTER A WORLD FIRST', recibido: "IT'S IN YOUR HOTBAR",
   sk_jinete: 'Dragon rider', sk_dragona: 'Dragon girl', sk_fuego: 'Fire tamer', sk_zombi: 'Zombie', sk_zombiCocinero: 'Zombie chef', sk_cazador: 'Zombie hunter', sk_caballero: 'Knight', sk_vikinga: 'Viking girl', sk_rey: 'King',
   sk_calabaza: 'Pumpkin head', sk_bruja: 'Witch', sk_vampiro: 'Vampire', sk_gatita: 'Kitty', sk_nube: 'Cloud', sk_frutilla: 'Strawberry',
 });
-Object.assign(TX.pt, {
+Object.assign(TX.pt, { texUsar: 'Usar neste mundo', texEnUso: 'Em uso',
   tienda: 'Loja', tDragones: 'Dragões', tPersonaje: 'Personagem', tSkins: 'Skins', tTexturas: 'Texturas', tMascotas: 'Bichinhos', tiendaAyuda: 'Tudo se desbloqueia grátis assistindo um anúncio curto',
   desbloquear: 'Desbloquear', gratisHw: 'GRÁTIS NO HALLOWEEN', listo2: 'Desbloqueado', recibir: 'Receber', llamar: 'Chamar', instalado: 'Está em Meus mods', usar: 'Usar', especial: 'Especial',
   pzAlas: 'Asas', pzCuernos: 'Chifres', pzAura: 'Aura brilhante', pzArmadura: 'Armadura', plata: 'Prata', oro: 'Ouro', sMago: 'Mago', sBruja: 'Bruxa', sVikingo: 'Viking', sCalabaza: 'Abóbora', pzMago: 'Chapéu de mago', pzBruja: 'Chapéu de bruxa', pzVikingo: 'Capacete viking', pzCalabaza: 'Cabeça de abóbora',
-  huevoDorado: 'Dragão dourado', huevoCristal: 'Dragão de cristal', dHuevo: 'Um ovo que nasce como um dragão único', dPieza: 'Para seus personagens', dPack: '3 personagens prontos para usar ou copiar', dTex: 'Muda o visual dos blocos; ative em Opções do mundo', dMascota: 'Um bichinho que te segue por todo lado',
+  huevoDorado: 'Dragão dourado', huevoCristal: 'Dragão de cristal', dHuevo: 'Um ovo que nasce como um dragão único', dPieza: 'Para seus personagens', dPack: '3 personagens prontos para usar ou copiar', dTex: 'Muda o visual dos blocos que você já tem', dMascota: 'Um bichinho que te segue por todo lado',
   packDragones: 'Pacote Dragões', packZombis: 'Pacote Zumbis', packCaballeros: 'Pacote Cavaleiros', packHalloween: 'Pacote Halloween', packKawaii: 'Pacote Kawaii', texPastel: 'Texturas Pastel', texMedieval: 'Texturas Medievais', texNeon: 'Texturas Neon', texCiudad: 'Texturas Cidade', zorro: 'Raposa', panda: 'Panda', miniojon: 'Mini Olhão',
   anuncioPrueba: 'ANÚNCIO DE TESTE', anuncioPruebaTxt: 'No app aqui passa um vídeo curto', desbloqueadoOk: 'DESBLOQUEADO!', entraMundo: 'ENTRE EM UM MUNDO PRIMEIRO', recibido: 'JÁ ESTÁ NA SUA BARRA',
   sk_jinete: 'Cavaleiro de dragão', sk_dragona: 'Dragoa', sk_fuego: 'Domador de fogo', sk_zombi: 'Zumbi', sk_zombiCocinero: 'Zumbi cozinheiro', sk_cazador: 'Caçador de zumbis', sk_caballero: 'Cavaleiro', sk_vikinga: 'Viking', sk_rey: 'Rei',
@@ -127,7 +127,7 @@ function abrirTienda(foco, volver) {
 function pintarTienda() {
   $('tiendaTabs').innerHTML = `<div class="vTit">${TR('tienda')}</div>` + ['tDragones', 'tPersonaje', 'tSkins', 'tTexturas', 'tMascotas'].map(t => `<div class="tab${t === tiendaTab ? ' on' : ''}" data-tab="${t}">${TR(t)}</div>`).join('') + '<div class="cerrar" id="tiendaCerrar">X</div>';
   $('tiendaGrid').innerHTML = CATALOGO.filter(c => c.tab === tiendaTab).map(c => { const ok = desbloqueado(c.id);
-    const accion = !ok ? `<div class="mb verde" data-desb="${c.id}">${TR('desbloquear')}</div>` : c.huevo != null ? `<div class="mb" data-recibir="${c.id}">${TR('recibir')}</div>` : c.tab === 'tMascotas' ? `<div class="mb" data-llamar="${c.id}">${TR('llamar')}</div>` : c.tab === 'tTexturas' ? `<div class="mb" style="background:#7c86ad">${TR('instalado')}</div>` : c.tab === 'tSkins' || c.tab === 'tPersonaje' ? `<div class="mb" data-personaje="1">${TR('usar')}</div>` : '';
+    const accion = !ok ? `<div class="mb verde" data-desb="${c.id}">${TR('desbloquear')}</div>` : c.huevo != null ? `<div class="mb" data-recibir="${c.id}">${TR('recibir')}</div>` : c.tab === 'tMascotas' ? `<div class="mb" data-llamar="${c.id}">${TR('llamar')}</div>` : c.tab === 'tTexturas' ? botonTextura(c.id) : c.tab === 'tSkins' || c.tab === 'tPersonaje' ? `<div class="mb" data-personaje="1">${TR('usar')}</div>` : '';
     return `<div class="tCard"><img src="${fotoItem(c)}" alt=""><b>${TR(c.huevo != null ? c.id : c.id)}</b>${c.hw && esHw() && !leerDesb().has(c.id) ? `<span class="hw">${TR('gratisHw')}</span>` : ''}<small>${TR(c.desc)}</small>${accion}</div>`; }).join('');
 }
 $('tiendaCapa').addEventListener('click', e => {
@@ -140,6 +140,17 @@ $('tiendaCapa').addEventListener('click', e => {
   else if (d = q('[data-llamar]')) { if (!jugando) return aviso(TR('entraMundo'), 1400); const a = nuevaMascota(d.dataset.llamar, J.x + Math.sin(J.yaw + Math.PI) * 2, J.y + .2, J.z + Math.cos(J.yaw + Math.PI) * 2); voz(TIPOS[a.userData.animal].voz, 0); sucio = true; cerrar('tiendaCapa'); if (tiendaVolver) abrir(tiendaVolver); }
   else if (q('[data-personaje]')) { cerrar('tiendaCapa'); if (tiendaVolver === 'skinCapa') { abrir('skinCapa'); pintarSkins(); vistaSkin(); } else abrirSkins(tiendaVolver); }
 });
+
+// ───── texturas: usarlas en el mundo donde estás, sin ir a Opciones ─────
+function botonTextura(id) {
+  const mid = 'tp_' + id;
+  if (!jugando || typeof modsMundo === 'undefined') return `<div class="mb" style="background:#7c86ad">${TR('instalado')}</div>`;
+  if (modsMundo.some(m => m.id === mid)) return `<div class="mb" style="background:#7c86ad">${TR('texEnUso')}</div>`;
+  return `<div class="mb verde" data-usartex="${id}">${TR('texUsar')}</div>`;
+}
+$('tiendaCapa').addEventListener('click', e => { const d = e.target.closest('[data-usartex]'); if (!d) return; e.stopPropagation();
+  const id = d.dataset.usartex; alActivar(id); if (!leerMods().some(m => m.id === 'tp_' + id) && typeof alCambiarPro === 'function') alCambiarPro();
+  cerrar('tiendaCapa'); tiendaVolver = null; activarMod('tp_' + id); }, true);
 
 // ───── fotos de la tienda (se dibujan una vez con three.js) ─────
 const fotos = {}; let fotoR = null;

@@ -1267,7 +1267,7 @@ const slotHTML = (id, n, attr = '') => `<div class="slot${n === 0 ? ' vacio' : '
 function abrirPanel(tab) { panelTab = tab; pausado = true; soltarTodo(); $('panel').hidden = false; pintarPanel(); }
 function cerrarPanel() { $('panel').hidden = true; pausado = false; cofreAbierto = null; pintarBarra(); }
 function pintarPanel() {
-  const tabs = cofreAbierto !== null ? [['cofre', TR('tabCofre')]] : aventura() ? [['bolsa', TR('tabBolsa')]] : creativo() ? [['bolsa', TR('tabBloques')], ['criaturas', TR('tabCriaturas')], ['planos', TR('tabPlanos')]] : [['bolsa', TR('tabBolsa')], ['fabricar', TR('tabFabricar')], ['planos', TR('tabPlanos')]];
+  const tabs = cofreAbierto !== null ? [['cofre', TR('tabCofre')]] : aventura() ? [['bolsa', TR('tabBolsa')], ['fabricar', TR('tabFabricar')]] : creativo() ? [['bolsa', TR('tabBloques')], ['criaturas', TR('tabCriaturas')], ['planos', TR('tabPlanos')]] : [['bolsa', TR('tabBolsa')], ['fabricar', TR('tabFabricar')], ['planos', TR('tabPlanos')]];
   $('pCab').innerHTML = tabs.map(([k, n]) => `<div class="tab${panelTab === k ? ' on' : ''}" data-tab="${k}">${n}</div>`).join('') + '<div class="vTit"></div><div class="cerrar" id="pCerrar">X</div>';
   let h = '';
   if (panelTab === 'bolsa' && creativo()) h = '<h4>' + TR('tocaBloque') + '</h4><div class="grilla">' + TODOS.map(id => slotHTML(id, 1, `data-poner="${id}"`)).join('') + '</div>';

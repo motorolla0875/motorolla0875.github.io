@@ -192,7 +192,7 @@ function fotoPro(c) {
     if (ayuda) ayuda.textContent = TR('proTiendaAyuda');
     const pro = esPro();
     $('tiendaGrid').innerHTML = PRO_CAT.map(c => {
-      const accion = !pro ? `<div class="mb oro" data-hazpro="1">${TR('proHazte')}</div>` : c.tipo ? `<div class="mb" data-prollamar="${c.id}">${TR('llamar')}</div>` : c.tex ? `<div class="mb" style="background:#7c86ad">${TR('instalado')}</div>` : `<div class="mb" data-personaje="1">${TR('usar')}</div>`;
+      const accion = !pro ? `<div class="mb oro" data-hazpro="1">${TR('proHazte')}</div>` : c.tipo ? `<div class="mb" data-prollamar="${c.id}">${TR('llamar')}</div>` : c.tex ? botonTextura(c.id) : `<div class="mb" data-personaje="1">${TR('usar')}</div>`;
       return `<div class="tCard pro"><span class="solo">${TR('proSolo')}</span><img src="${fotoPro(c)}" alt=""><b>${TR(c.id)}</b><small>${TR(c.desc)}</small>${accion}</div>`; }).join('');
     return r; }; }
 let proVolver = null;
