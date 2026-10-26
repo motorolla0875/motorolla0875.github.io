@@ -249,3 +249,19 @@ new MutationObserver(() => { const d = $('diaCapa'); if (d && !d.hidden && esPro
 function alCambiarPro() { sincronizarTexturasPro(); if (esPro()) for (const c of CATALOGO) try { alActivar(c.id); } catch (e) {} try { if (jugando) rearmarJugador(); } catch (e) {} }
 window.alCambiarPro = alCambiarPro;
 alCambiarPro();
+
+// ═════════ 9) MAPAS OFICIALES SOLO PRO ═════════
+// Los mapas oficiales con "soloPro" se ven en la lista con la marca PRO; si no eres Pro, "Jugar" abre la pantalla de Voxelium Pro.
+Object.assign(TX.es, { proJugarMapa: 'Hazte Pro para jugar', mapaSoloPro: 'Este mapa es solo para jugadores Pro' });
+Object.assign(TX.en, { proJugarMapa: 'Go Pro to play', mapaSoloPro: 'This map is for Pro players only' });
+Object.assign(TX.pt, { proJugarMapa: 'Seja Pro para jogar', mapaSoloPro: 'Este mapa é só para jogadores Pro' });
+{ const st = document.createElement('style'); st.textContent = `.soloPro { display: inline-block; background: linear-gradient(#ffe14a, #f5a62a); color: #1b2a6b; border: 2px solid #8a5a0a; border-radius: 7px; font-size: 10px; font-weight: 800; padding: 0 5px; margin-right: 4px; letter-spacing: .5px; }
+  .mapaT .soloPro { position: absolute; top: 6px; right: 6px; font-size: 11px; box-shadow: 0 2px 0 rgba(0,0,0,.25); } #bJugarMapa.hazPro { background: linear-gradient(#ffd23a, #c8841a); }`; document.head.appendChild(st); }
+{ const c0 = cargarLista; cargarLista = async function () { const r = await c0.apply(this, arguments);
+    try { for (const el of document.querySelectorAll('#mapasGrilla .mapaT')) { const m = MAPAS.lista.find(x => x.id === el.dataset.id); if (m && m.soloPro && !el.querySelector('.soloPro')) el.insertAdjacentHTML('afterbegin', `<span class="soloPro">PRO</span>`); } } catch (e) {}
+    return r; }; }
+// la ficha del mapa: marca PRO y botón dorado si no eres Pro
+$('mapasGrilla').addEventListener('click', e => { const d = e.target.closest('[data-id]'); if (!d) return; const m = MAPAS.lista.find(x => x.id === d.dataset.id); if (!m || !m.soloPro) return;
+  const sm = $('mapaDet').querySelector('small'); if (sm && !sm.querySelector('.soloPro')) sm.insertAdjacentHTML('afterbegin', '<span class="soloPro">PRO</span>');
+  const bt = $('bJugarMapa'); if (bt && !esPro()) { bt.textContent = TR('proJugarMapa'); bt.classList.add('hazPro'); } });
+{ const d0 = descargarMapa; descargarMapa = function (m) { if (m && m.soloPro && !esPro()) { aviso(TR('mapaSoloPro'), 1600); abrirPro(); return; } return d0.apply(this, arguments); }; }
