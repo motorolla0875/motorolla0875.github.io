@@ -161,7 +161,7 @@ $('adQuitar').onclick = () => comprar('sinAnuncios');
 let planPro = 'anual';
 function pintarPro() {
   const c = $('proCuerpo');
-  const lista = ['proB1', 'proB2', 'proB3', 'proB4', 'proB5', 'proB6'].map(k => `<div>${SVG_PRO_OK}<span>${TR(k)}</span></div>`).join('');
+  const lista = ['proB1', 'proB2', 'proB3', 'proB4', 'proB5', 'proB6', 'proB7'].map(k => `<div>${SVG_PRO_OK}<span>${TR(k)}</span></div>`).join('');
   if (esPro()) { c.innerHTML = `<div class="cab">${SVG_CORONA}<div><b>${TR('proTitulo')}</b><small>${TR('proSub')}</small></div></div><div class="proLista">${lista}</div><div class="proActivo">${TR('proActivo')}</div>`; return; }
   c.innerHTML = `<div class="x2" id="proCerrar2">X</div><div class="izq"><div class="cab">${SVG_CORONA}<div><b>${TR('proTitulo')}</b><small>${TR('proSub')}</small></div></div>
     <div class="proLista">${lista}</div></div><div class="der">
@@ -197,6 +197,7 @@ async function comprar(que) {
   if (adAbierto) { cerrar('adCapa'); adAbierto = false; adEsperando = false; adCuentaEl.hidden = true; pausado = false; }
   else if (jugando && $('pausa').hidden) pausado = false;
   actualizarBotonPausa();
+  if (typeof window.alCambiarPro === 'function') window.alCambiarPro();
 }
 async function restaurar() {
   if (typeof window.restaurarVoxelium === 'function') { try { await window.restaurarVoxelium(); } catch (e) {} pintarPro(); return; }
