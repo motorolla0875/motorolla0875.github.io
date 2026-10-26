@@ -102,7 +102,7 @@ rearmarJugador = function () { if (jugador) escena.remove(jugador); const a = ju
 
 // ═════════ ARCO Y FLECHAS ═════════
 const flechas = [];
-function disparar(dir) {
+function dispararFlecha(dir) {
   if (!creativo()) { if (!(inv[I.FLECHA] > 0)) return aviso(TR('sinFlechas'), 1400); quitarItem(I.FLECHA, 1); }
   const g = new THREE.Group(); cajaC(g, .05, .05, .6, 0, 0, 0, '#8a5a2a'); cajaC(g, .1, .1, .1, 0, 0, -.32, '#c8c8c8'); cajaC(g, .12, .02, .12, 0, 0, .28, '#f4f4f4');
   g.position.set(J.x + dir.x * .6, J.y + OJOS - .1 + dir.y * .6, J.z + dir.z * .6); escena.add(g);
@@ -178,7 +178,7 @@ function tocarExtra2(dir) {
   if (cerca && m.m.userData.animal && TIPOS[m.m.userData.animal].aldeano) { abrirTrato(m.m); return true; }
   if (it && it.armadura != null) { vestir(id); return true; }
   if (it && it.pocion != null) { beber(id); return true; }
-  if (id === I.ARCO && !cerca) { disparar(dir); return true; }
+  if (id === I.ARCO && !cerca) { dispararFlecha(dir); return true; }
   if (id === I.CANA) { tirarCana(dir); return true; }
   if (h && h.b === B.MESA_ENC && !aventura()) { encantar(); return true; }
   if (it && it.siembra && h && [B.PASTO, B.TIERRA, B.ARADA].includes(h.b) && h.cara[1] === 1 && !aventura()) return sembrar(h, id);
@@ -194,4 +194,4 @@ function supervivenciaFrame(dt) {
   armPintT -= dt; if (armPintT <= 0) { armPintT = 1; pintarArm(); }
 }
 { const entrar0 = entrarMundo; entrarMundo = function (id) { for (const k in efectos) { EFECTO[k].off && EFECTO[k].off(); delete efectos[k]; } quitarPesca(); for (const f of flechas.splice(0)) escena.remove(f.g); entrar0(id); pintarEfectos(); pintarArm(); rearmarJugador(); }; }
-window.__s = { flechas, abrirTrato, vestir, disparar, tirarCana, beber, encantar, puntosArm, efectos, pesca: () => pesca, cultivos2: () => cultivos2, TRATOS };
+window.__s = { flechas, abrirTrato, vestir, disparar: dispararFlecha, tirarCana, beber, encantar, puntosArm, efectos, pesca: () => pesca, cultivos2: () => cultivos2, TRATOS };
