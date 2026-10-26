@@ -1331,7 +1331,7 @@ function tocar(dir) {
   // primero: ¿le pegué a un monstruo?
   const m = monstruoApuntado(dir), h = apuntar(dir);
   if (m && (!h || m.t < h.t) && m.m.userData.animal && typeof tocarAnimal === 'function' && tocarAnimal(m.m, dir)) return;
-  if (m && (!h || m.t < h.t)) return (m.m.userData.animal && barra[sel] === I.TRIGO_I) ? alimentar(m.m) : golpear(m.m, dir);
+  if (m && (!h || m.t < h.t)) return (m.m.userData.animal && comeEsto(m.m.userData.animal, barra[sel])) ? alimentar(m.m) : golpear(m.m, dir);
   if (h && h.b === B.CAMA) return usarCama(h);
   if (h && h.b === B.COFRE) return abrirCofre(idx(h.x, h.y, h.z));
   if (h && (h.b === B.PUERTA || h.b === B.PUERTA_A)) return puerta(h.x, h.y, h.z);
@@ -1553,14 +1553,19 @@ function matarAnimal(a) {
   quitarAnimal(a);
 }
 function corazones(a, n) { for (let i = 0; i < n; i++) { const m = new THREE.Mesh(geoP, new THREE.MeshBasicMaterial({ color: 0xff4a78 })); m.position.set(a.position.x + (Math.random() - .5) * .6, a.position.y + 1.1 * a.scale.y + .2, a.position.z + (Math.random() - .5) * .6); m.userData = { vx: 0, vy: 2.5 + Math.random(), vz: 0, t: 0, flota: true }; escena.add(m); parts.push(m); } }
+// qué come cada animal para criarlo (como en la vida real); el que no está en la lista come trigo
+const COMIDA_ANIMAL = () => ({ vaca: [I.TRIGO_I, B.HENO], oveja: [I.TRIGO_I, B.HENO], cabra: [I.TRIGO_I, B.HENO], llama: [B.HENO, I.TRIGO_I], caballo: [I.MANZANA, I.TRIGO_I, B.HENO],
+  cerdo: [I.ZANAHORIA_I, I.PAPA_I], conejo: [I.ZANAHORIA_I], gallina: [I.SEMILLAS], loro: [I.SEMILLAS], tortuga: [I.PESCADO], osoPolar: [I.PESCADO, I.MIEL], panda: [I.MANZANA, I.MIEL] });
+const comidaDe = t => COMIDA_ANIMAL()[t] || [I.TRIGO_I];
+const comeEsto = (t, id) => !!id && comidaDe(t).includes(id);
 function alimentar(a) {
-  const u = a.userData;
-  if (!creativo() && !(inv[I.TRIGO_I] > 0)) return;
+  const u = a.userData, id = barra[sel];
+  if (!comeEsto(u.animal, id) || (!creativo() && !(inv[id] > 0))) return;
   if (TIPOS[u.animal].hostil) return;
   if (u.bebe > 0) { u.bebe = Math.max(0, u.bebe - 40); }
   else if (u.amor > 0 || u.amorCD > 0) return aviso(TR('noAmor'), 1000);
   else u.amor = 25;
-  if (!creativo()) quitarItem(I.TRIGO_I, 1); corazones(a, 5); voz(u.animal, 0); swing = 1; sucio = true;
+  if (!creativo()) quitarItem(id, 1); corazones(a, 5); voz(u.animal, 0); swing = 1; sucio = true;
 }
 function poblarAnimales(n, lejos) {
   for (let k = 0, intentos = 0; k < n && intentos < n * 40; intentos++) {
@@ -2059,6 +2064,7 @@ window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMun
 <script src="criaturas.js"></script>
 <script src="mapatools.js"></script>
 <script src="bolsa.js"></script>
+<script src="misionui.js"></script>
 <script src="anuncios.js"></script>
 <script src="pro.js"></script>
 <script src="unity.js"></script>
