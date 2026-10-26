@@ -8,7 +8,7 @@
 // y no cuenta nada (así nunca se tocan anuncios reales propios, que Unity castiga).
 
 const UNITY_VOX = {
-  android: { game: '', inter: 'Interstitial_Android', reward: 'Rewarded_Android' },   // game: el Game ID de Android del proyecto Voxelium en Unity
+  android: { game: '800411850', inter: 'BP_Interstitial_Android', reward: 'BP_Rewarded_Android' },   // game: el Game ID de Android del proyecto Voxelium en Unity
 };
 
 (() => {
