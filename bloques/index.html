@@ -436,6 +436,8 @@ const esComida = id => !!(ITEM[id] && ITEM[id].comida);
 const info = id => DEF[id] || ITEM[id];
 const nom = id => { const n = info(id).nombre; return LANG === 'es' ? n : (NOMBRES[LANG][n] || n); };
 const esBloque = id => id > 0 && !!DEF[id] && !ITEM[id];
+// materiales que solo sirven para fabricar (no se llevan en la mano); todo lo demás (montura, balde, arco, pala...) sí va a la barra
+const SOLO_MATERIAL = new Set([I.PALO, I.CARBON, I.HIERRO, I.ORO, I.CRISTAL]);
 const opaco = t => t > 0 && !DEF[t].trans && !DEF[t].forma;
 const solidoMov = t => t > 0 && DEF[t].solido;
 
@@ -1297,7 +1299,7 @@ $('panel').addEventListener('pointerdown', e => {
   else if (d = q('[data-plano]')) { cerrarPanel(); elegirPlano(d.dataset.plano); }
   else if (d = q('[data-cria]')) { if (typeof elegirCria === 'function') elegirCria(d.dataset.cria); }
   else if (d = q('#pPie [data-k]')) { sel = +d.dataset.k; pintarPanel(); }
-  else if (d = q('[data-poner]')) { const id = +d.dataset.poner; if (!esBloque(id) && !esComida(id) && id !== I.SEMILLAS && id !== I.TRIGO_I) { aviso(TR('noSePone'), 1100); return; } const ya = barra.indexOf(id); if (ya >= 0 && ya !== sel) barra[ya] = barra[sel] && !creativo() ? barra[sel] : 0; barra[sel] = id; sel = (sel + 1) % 9; son(520, .05, 'triangle', .08); pintarPanel(); }
+  else if (d = q('[data-poner]')) { const id = +d.dataset.poner; if (!esBloque(id) && !esComida(id) && id !== I.SEMILLAS && id !== I.TRIGO_I && !(ITEM[id] && !SOLO_MATERIAL.has(id))) { aviso(TR('noSePone'), 1100); return; } const ya = barra.indexOf(id); if (ya >= 0 && ya !== sel) barra[ya] = barra[sel] && !creativo() ? barra[sel] : 0; barra[sel] = id; sel = (sel + 1) % 9; son(520, .05, 'triangle', .08); pintarPanel(); }
   else if (d = q('[data-hacer]')) { fabricar(RECETAS[+d.dataset.hacer]); pintarPanel(); }
   else if (d = q('[data-sacar]')) { const id = +d.dataset.sacar, c = cofres[cofreAbierto]; darItem(id, c[id], true); delete c[id]; sucio = true; son(520, .05, 'triangle', .08); pintarPanel(); }
   else if (q('[data-sacartodo]')) { const c = cofres[cofreAbierto]; for (const id in c) darItem(+id, c[id]); cofres[cofreAbierto] = {}; sucio = true; son(660, .1, 'triangle', .12); pintarPanel(); }
