@@ -6,7 +6,7 @@
 //   - "Voxelium Pro" (suscripción):   voxelium_pro, con dos planes base: "mensual" y "anual"
 // Si existen en RevenueCat los derechos (entitlements) "pro" y "sinanuncios", también se usan.
 
-const RC_KEY_ANDROID = '';   // la clave pública de RevenueCat para Android (empieza con goog_)
+const RC_KEY_ANDROID = 'goog_LbQAMPCHqpPRjKlZmaFrhVyyxcy';   // la clave pública de RevenueCat para Android (empieza con goog_)
 const RC_SIN_ANUNCIOS = 'com.dmithbuilds.voxelium.sinanuncios';
 const RC_PRO = 'voxelium_pro';
 
