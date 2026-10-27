@@ -22,6 +22,7 @@ function categoria(id) {
   if (!CAT_CACHE) CAT_CACHE = { nat: NATURALES(), mec: MECANICOS(), deco: DECO() };
   if (ITEM[id]) return 'catObjetos';
   const d = DEF[id] || {};
+  if (d.cat) return d.cat;
   if (CAT_CACHE.mec.has(id) || d.mec) return 'catMec';
   if (CAT_CACHE.deco.has(id) || (id >= B.ALFOMBRA && id < B.ALFOMBRA + TELAS.length) || (id >= B.HUEVO && id < B.HUEVO + 5)) return 'catDeco';
   if (CAT_CACHE.nat.has(id) || d.planta || /_M$/.test(Object.keys(B).find(k => B[k] === id) || '')) return 'catNaturaleza';

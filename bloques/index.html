@@ -321,11 +321,11 @@ def(B.ROCA, 'Roca del fondo', [TL.roca], { dur: -1, color: '#333' });
 const CAJA_ESC = [[.5, .5, 0, 1, 1, 1], [0, .5, 0, .5, 1, 1], [0, .5, .5, 1, 1, 1], [0, .5, 0, 1, 1, .5]], CAJA_ESC_INV = CAJA_ESC.map(c => [c[0], 0, c[2], c[3], .5, c[5]]);
 const MAT_FORMA = [[B.MADERA, 'de madera'], [B.ADOQUIN, 'de adoquín'], [B.PIEDRA, 'de piedra'], [B.LADRILLO, 'de ladrillo']];
 MAT_FORMA.forEach(([m, n], k) => { const md = DEF[m], o = { dur: md.dur * .7, req: md.req, color: md.color, base: m };
-  def(B.LOSA + k, 'Losa ' + n, md.tiles.slice(), Object.assign({ forma: [[0, 0, 0, 1, .5, 1]] }, o));
-  def(B.LOSA_ARR + k, 'Losa ' + n, md.tiles.slice(), Object.assign({ forma: [[0, .5, 0, 1, 1, 1]], suelta: B.LOSA + k }, o));
+  def(B.LOSA + k, 'Losa ' + n, md.tiles.slice(), Object.assign({ forma: [[0, 0, 0, 1, .5, 1]], losaArr: B.LOSA_ARR + k }, o));
+  def(B.LOSA_ARR + k, 'Losa ' + n, md.tiles.slice(), Object.assign({ forma: [[0, .5, 0, 1, 1, 1]], suelta: B.LOSA + k, losaArr: B.LOSA_ARR + k, losaArriba: true }, o));
   for (let d = 0; d < 4; d++) {
-    def(B.ESCALON + k * 4 + d, 'Escalón ' + n, md.tiles.slice(), Object.assign({ forma: [[0, 0, 0, 1, .5, 1], CAJA_ESC[d]], suelta: B.ESCALON + k * 4 }, o));
-    def(B.ESC_INV + k * 4 + d, 'Escalón ' + n, md.tiles.slice(), Object.assign({ forma: [[0, .5, 0, 1, 1, 1], CAJA_ESC_INV[d]], suelta: B.ESCALON + k * 4 }, o)); }
+    def(B.ESCALON + k * 4 + d, 'Escalón ' + n, md.tiles.slice(), Object.assign({ forma: [[0, 0, 0, 1, .5, 1], CAJA_ESC[d]], suelta: B.ESCALON + k * 4, escB: B.ESCALON + k * 4, escI: B.ESC_INV + k * 4 }, o));
+    def(B.ESC_INV + k * 4 + d, 'Escalón ' + n, md.tiles.slice(), Object.assign({ forma: [[0, .5, 0, 1, 1, 1], CAJA_ESC_INV[d]], suelta: B.ESCALON + k * 4, escB: B.ESCALON + k * 4, escI: B.ESC_INV + k * 4, escInv: true }, o)); }
   DEF[B.LOSA + k].icono = [[0, 0, 0, 1, .5, 1]]; DEF[B.ESCALON + k * 4].icono = [[0, 0, 0, 1, .5, 1], CAJA_ESC[1]]; });
 // troncos acostados, vallas y paneles de vidrio (estos dos se unen solos con lo que tienen al lado)
 def(B.TRONCO_X, 'Tronco', [TL.troncoCostadoH], { caras: [TL.troncoCostadoH, TL.troncoCostadoH, TL.troncoArriba, TL.troncoArriba, TL.troncoCostadoH, TL.troncoCostadoH], dur: 2.2, suelta: B.TRONCO, color: '#6b5133' });
@@ -421,8 +421,9 @@ function formaDe(t, x, y, z, choque) {
   if (px || sinNada) c.push([b, 0, a, 1, 1, b]); if (nx || sinNada) c.push([0, 0, a, a, 1, b]); if (pz) c.push([a, 0, b, b, 1, 1]); if (nz) c.push([a, 0, 0, b, 1, a]);
   return c;
 }
-const esLosa = id => id >= B.LOSA && id < B.LOSA + 4, esEscalon = id => id >= B.ESCALON && id < B.ESCALON + 16;
-function escalonHacia(id, yaw) { const k = Math.floor((id - B.ESCALON) / 4), fx = -Math.sin(yaw), fz = -Math.cos(yaw); return B.ESCALON + k * 4 + (Math.abs(fx) > Math.abs(fz) ? (fx > 0 ? 0 : 1) : (fz > 0 ? 2 : 3)); }
+// losas y escalones: cada uno sabe cuál es su versión de arriba (losaArr) y su grupo de 4 direcciones (escB / escI boca abajo)
+const esLosa = id => !!(DEF[id] && DEF[id].losaArr != null && !DEF[id].losaArriba), esEscalon = id => !!(DEF[id] && DEF[id].escB != null && !DEF[id].escInv);
+function escalonHacia(id, yaw) { const fx = -Math.sin(yaw), fz = -Math.cos(yaw); return DEF[id].escB + (Math.abs(fx) > Math.abs(fz) ? (fx > 0 ? 0 : 1) : (fz > 0 ? 2 : 3)); }
 const ITEM = {};
 function item(id, nombre, tile, o = {}) { ITEM[id] = Object.assign({ id, nombre, tile }, o); }
 item(I.PALO, 'Palo', TL.palo); item(I.CARBON, 'Carbón', TL.carbon); item(I.HIERRO, 'Hierro', TL.hierro); item(I.ORO, 'Oro', TL.oro); item(I.CRISTAL, 'Cristal', TL.cristal);
@@ -1348,12 +1349,12 @@ function tocar(dir) {
   if (!esBloque(id)) return;
   if (!creativo() && !(inv[id] > 0)) return;
   // dos losas iguales, una arriba de la otra, forman un bloque entero
-  if (esLosa(id) && ((h.b === id && h.cara[1] === 1) || (h.b === id - B.LOSA + B.LOSA_ARR && h.cara[1] === -1))) { ponerBloque(h.x, h.y, h.z, DEF[id].base); if (!creativo()) quitarItem(id, 1); golpe(id, 1); swing = 1; return; }
+  if (esLosa(id) && ((h.b === id && h.cara[1] === 1) || (h.b === DEF[id].losaArr && h.cara[1] === -1))) { ponerBloque(h.x, h.y, h.z, DEF[id].base); if (!creativo()) quitarItem(id, 1); golpe(id, 1); swing = 1; return; }
   // ¿tocó la mitad de arriba? entonces losas y escalones van boca abajo
   const yToque = J.y + OJOS + dir.y * h.t - h.y, arriba = h.cara[1] === -1 || (h.cara[1] === 0 && yToque > .5);
   let pone = id;
-  if (esLosa(id) && arriba) pone = id - B.LOSA + B.LOSA_ARR;
-  if (esEscalon(id)) pone = escalonHacia(id, J.yaw) + (arriba ? B.ESC_INV - B.ESCALON : 0);
+  if (esLosa(id) && arriba) pone = DEF[id].losaArr;
+  if (esEscalon(id)) pone = escalonHacia(id, J.yaw) + (arriba ? DEF[id].escI - DEF[id].escB : 0);
   if (id === B.TRONCO && h.cara[0]) pone = B.TRONCO_X; if (id === B.TRONCO && h.cara[2]) pone = B.TRONCO_Z;
   const sobreAlf = !!DEF[id] && esAlfombra(h.b) && h.cara[1] !== -1 && !esAlfombra(id) && !DEF[id].planta && !!DEF[id].forma && id !== B.PUERTA;
   const enPlanta = reemplazable(h.b) || sobreAlf, x = enPlanta ? h.x : h.x + h.cara[0], y = enPlanta ? h.y : h.y + h.cara[1], z = enPlanta ? h.z : h.z + h.cara[2];
@@ -2050,6 +2051,7 @@ window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMun
 <script src="abismo.js"></script>
 <script src="confin.js"></script>
 <script src="estructuras.js"></script>
+<script src="bloques2.js"></script>
 <script src="modos.js"></script>
 <script src="adaptar.js"></script>
 <script src="copia.js"></script>

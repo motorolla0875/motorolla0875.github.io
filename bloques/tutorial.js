@@ -209,7 +209,7 @@ function ponerEnBarra(id) { let k = barra.indexOf(id); if (k < 0) { k = barra.fi
 // lo que hace el jugador, para saber si cumplió el paso
 { const p0 = ponerBloque; ponerBloque = function (x, y, z, t) {
     const viejo = dentro(x, y, z) ? mundo[idx(x, y, z)] : 0, r = p0(x, y, z, t);
-    if (TU.on && grupo && t && t !== viejo) { TU.cuenta[t] = (TU.cuenta[t] || 0) + 1; if (esEscalon(t)) TU.cuenta.esc = (TU.cuenta.esc || 0) + 1; if (t >= B.ESC_INV && t < B.ESC_INV + 16) TU.cuenta.inv = (TU.cuenta.inv || 0) + 1;
+    if (TU.on && grupo && t && t !== viejo) { TU.cuenta[t] = (TU.cuenta[t] || 0) + 1; if (esEscalon(t)) TU.cuenta.esc = (TU.cuenta.esc || 0) + 1; if (DEF[t] && DEF[t].escInv) TU.cuenta.inv = (TU.cuenta.inv || 0) + 1;
       if (esLosa(viejo) && t === DEF[viejo].base) TU.flags.losa = true; }
     return r; }; }
 { const p0 = ponerMuchos; ponerMuchos = function (L) { if (TU.on && herr.modo === 'rellenar') TU.flags.rellenar = true; if (TU.on && herr.modo === 'pegar') TU.flags.pegar = true; return p0(L); }; }

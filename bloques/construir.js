@@ -39,16 +39,16 @@ const DIRV = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 const dirIdx = (vx, vz) => vx > 0 ? 0 : vx < 0 ? 1 : vz > 0 ? 2 : 3;
 // gira un bloque con dirección (escalones, troncos acostados) del plano local al mundo
 function girarBloque(t, r, f) {
-  const esc = t >= B.ESCALON && t < B.ESCALON + 16, inv = t >= B.ESC_INV && t < B.ESC_INV + 16;
-  if (esc || inv) { const base = esc ? B.ESCALON : B.ESC_INV, k = Math.floor((t - base) / 4), d = (t - base) % 4, [lx, lz] = DIRV[d]; return base + k * 4 + dirIdx(lx * r[0] + lz * f[0], lx * r[1] + lz * f[1]); }
+  const de = DEF[t];
+  if (de && de.escB != null) { const base = de.escInv ? de.escI : de.escB, d = t - base, [lx, lz] = DIRV[d]; return base + dirIdx(lx * r[0] + lz * f[0], lx * r[1] + lz * f[1]); }
   if (t === B.TRONCO_X || t === B.TRONCO_Z) { const lx = t === B.TRONCO_X ? 1 : 0; const wx = lx ? r[0] : f[0]; return wx ? B.TRONCO_X : B.TRONCO_Z; }
   return t;
 }
 // "familia" de un bloque, para aceptar el mismo material aunque esté girado o abierto
 function familia(t) {
-  if (t >= B.ESCALON && t < B.ESCALON + 16) return 1000 + Math.floor((t - B.ESCALON) / 4);
-  if (t >= B.ESC_INV && t < B.ESC_INV + 16) return 1000 + Math.floor((t - B.ESC_INV) / 4);
-  if (t >= B.LOSA_ARR && t < B.LOSA_ARR + 4) return B.LOSA + t - B.LOSA_ARR;
+  const de = DEF[t];
+  if (de && de.escB != null) return 100000 + de.escB;           // todas las direcciones (y boca abajo) del mismo escalón
+  if (de && de.losaArriba) return de.suelta;                     // la losa de arriba es la misma losa
   if (t === B.PUERTA_A) return B.PUERTA; if (t === B.TRONCO_X || t === B.TRONCO_Z) return B.TRONCO;
   return t;
 }
@@ -258,7 +258,7 @@ function espejo(x, y, z, t) {
   const g = grupo; const mx = espejoEje.eje === 'x' ? 2 * espejoEje.c - x : x, mz = espejoEje.eje === 'z' ? 2 * espejoEje.c - z : z;
   if (mx === x && mz === z) return;
   let tm = t;
-  if (t >= B.ESCALON && t < B.ESC_INV + 16) { const base = t >= B.ESC_INV ? B.ESC_INV : B.ESCALON, d = (t - base) % 4, k = Math.floor((t - base) / 4); const nd = espejoEje.eje === 'x' ? [1, 0, 2, 3][d] : [0, 1, 3, 2][d]; tm = base + k * 4 + nd; }
+  const de = DEF[t]; if (de && de.escB != null) { const base = de.escInv ? de.escI : de.escB, d = t - base; const nd = espejoEje.eje === 'x' ? [1, 0, 2, 3][d] : [0, 1, 3, 2][d]; tm = base + nd; }
   if (t === B.AIRE) { const v = get(mx, y, mz); if (v && v !== B.ROCA) ponerBloque(mx, y, mz, B.AIRE); }
   else if (reemplazable(get(mx, y, mz))) ponerBloque(mx, y, mz, tm);
 }
