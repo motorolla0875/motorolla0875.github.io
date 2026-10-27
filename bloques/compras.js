@@ -4,7 +4,7 @@
 // Productos en Play Console:
 //   - "Sin anuncios" (compra única):  com.dmithbuilds.voxelium.sinanuncios
 //   - "Voxelium Pro" (suscripción):   voxelium_pro, con dos planes base: "mensual" y "anual"
-// Si existen en RevenueCat los derechos (entitlements) "pro" y "sinanuncios", también se usan.
+// En RevenueCat: derecho "voxelium_pro" (mensual + anual) y derecho "sinanuncios" (Sin anuncios).
 
 const RC_KEY_ANDROID = 'goog_LbQAMPCHqpPRjKlZmaFrhVyyxcy';   // la clave pública de RevenueCat para Android (empieza con goog_)
 const RC_SIN_ANUNCIOS = 'com.dmithbuilds.voxelium.sinanuncios';
@@ -33,6 +33,7 @@ if (TX.ar) Object.assign(TX.ar, { tiendaError: 'تعذّر الاتصال بـ G
       const exp = ci.allExpirationDates || {};
       if (act.sinanuncios || compras.some(p => p.indexOf(RC_SIN_ANUNCIOS) === 0)) lsPoner('voxSinAnuncios', '1');
       const proSubs = subs.filter(p => p.indexOf(RC_PRO) === 0);
+      if (!act.pro && act.voxelium_pro) act.pro = act.voxelium_pro;   // en RevenueCat el derecho se llama voxelium_pro
       if (act.pro || proSubs.length) {
         let hasta = act.pro && act.pro.expirationDate ? Date.parse(act.pro.expirationDate) : 0;
         for (const p of proSubs) { const t = Date.parse(exp[p] || ''); if (t > hasta) hasta = t; }
