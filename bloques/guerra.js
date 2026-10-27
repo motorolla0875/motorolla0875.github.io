@@ -692,3 +692,32 @@ let gzAvisoAtaqueT = 0;
 { const s0 = salirAlMenu; salirAlMenu = function () { gzHud.hidden = gzPtsEl.hidden = gzReapEl.hidden = true; cerrar('gzFinCapa'); cerrar('gzEsperaCapa'); GZR = null; gzRevivirBots = []; return s0.apply(this, arguments); }; }
 aplicarIdioma();
 window.__gz = { GZ, nueva: gzNueva, estado: gzEstado, danar: gzDanar, terminar: gzTerminar, corDe: gzCorDe, bots: gzBots, miEquipo: gzMiEquipo, empezarConstruccion: gzEmpezarConstruccion, abrirGuerra, crearGuerra, base: GZ_BASE };
+
+// ═════════ VOLAR SOLO DURANTE LA CONSTRUCCIÓN ═════════
+// En la fase de construcción se puede volar para armar las defensas; al empezar la batalla
+// se deja de volar y el personaje baja suave al suelo (sin daño por caída).
+Object.assign(TX.es, { gzVolarAyuda: 'PUEDES VOLAR MIENTRAS CONSTRUYES<small>toca el botón de volar</small>', gzSinVolar: '¡A COMBATIR!<small>en la batalla ya no se puede volar</small>' });
+Object.assign(TX.en, { gzVolarAyuda: 'YOU CAN FLY WHILE BUILDING<small>tap the fly button</small>', gzSinVolar: 'TO BATTLE!<small>no more flying during the battle</small>' });
+Object.assign(TX.pt, { gzVolarAyuda: 'VOCÊ PODE VOAR ENQUANTO CONSTRÓI<small>toque no botão de voar</small>', gzSinVolar: 'À BATALHA!<small>na batalha não dá mais para voar</small>' });
+if (TX.tr) Object.assign(TX.tr, { gzVolarAyuda: 'İNŞA EDERKEN UÇABİLİRSİN<small>uçma düğmesine dokun</small>', gzSinVolar: 'SAVAŞA!<small>savaşta artık uçamazsın</small>' });
+if (TX.id) Object.assign(TX.id, { gzVolarAyuda: 'KAMU BISA TERBANG SAAT MEMBANGUN<small>ketuk tombol terbang</small>', gzSinVolar: 'BERTEMPUR!<small>saat pertempuran tidak bisa terbang</small>' });
+if (TX.ar) Object.assign(TX.ar, { gzVolarAyuda: 'يمكنك الطيران أثناء البناء<small>اضغط زر الطيران</small>', gzSinVolar: 'إلى المعركة!<small>لا طيران أثناء المعركة</small>' });
+const gzPuedeVolar = () => { try { const G = gzEstado(); return gzEs() && jugando && G && G.fase === 'constr' && !G.fin; } catch (e) { return false; } };
+{ const p0 = pintarVolar; pintarVolar = function () { const r = p0.apply(this, arguments); if (gzEs()) { $('bVolar').hidden = !gzPuedeVolar(); $('bBajar').hidden = !volando; } return r; }; }
+let gzFaseVista = null;
+setInterval(() => {
+  if (!gzEs() || !jugando) { gzFaseVista = null; return; }
+  const G = gzEstado(); const f = G ? G.fase : null;
+  if (f !== gzFaseVista) {
+    const antes = gzFaseVista; gzFaseVista = f;
+    if (f === 'constr') { pintarVolar(); aviso(TR('gzVolarAyuda'), 2200); }
+    else if (antes === 'constr') {
+      if (volando) {   // baja al suelo sin golpe
+        volando = false; J.vy = 0;
+        try { const y = sueloCerca(J.x, J.z); if (J.y > y) J.y = y; } catch (e) {}
+      }
+      pintarVolar(); if (f === 'batalla') aviso(TR('gzSinVolar'), 2000);
+    }
+  }
+  if (volando && !gzPuedeVolar() && !window.espectador) { volando = false; J.vy = 0; pintarVolar(); }
+}, 250);
