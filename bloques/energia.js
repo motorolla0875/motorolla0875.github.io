@@ -66,6 +66,11 @@ const EN_USA = new Set([B.LAMPARA_E, B.PISTON, B.PUERTA, B.PUERTA_A, B.TNT, B.TN
 const EN_MIRA = new Uint8Array(65536); for (const t of [B.CABLE_E, B.PISTON, B.LAMPARA_E, ...EN_MEC]) EN_MIRA[t] = 1;
 let enBloques = new Set(), enPrev = new Map(), enPrimera = true, enBotones = new Map(), enFirma = '', enAbiertas = new Set();
 const enDatos = () => { try { return mapa.ener || (mapa.ener = {}); } catch (e) { return {}; } };
+// revisa el mundo de a pedazos (1/30 por vez) para no trabar el juego; poner y sacar bloques ya lo mantiene al día
+let enCursor = 0;
+function enEscanearParte() { if (enCursor >= N) enCursor = 0; const fin = Math.min(N, enCursor + Math.ceil(N / 30));
+  for (let i = enCursor; i < fin; i++) if (EN_MIRA[mundo[i]]) enBloques.add(i); enCursor = fin;
+  for (const i of enBloques) if (!EN_MIRA[mundo[i]]) enBloques.delete(i); }
 function enEscanear() { const s = new Set(); for (let i = 0; i < N; i++) if (EN_MIRA[mundo[i]]) s.add(i); enBloques = s;
   const d = enDatos(); for (const k in d) if (mundo[+k] !== B.PISTON) delete d[k]; }
 const V6 = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]];
@@ -146,7 +151,7 @@ function enTick() {
   pintarEnergia(cables, usa);
 }
 setInterval(() => { try { enTick(); } catch (e) { console.warn('energia', e); } }, 100);
-setInterval(() => { try { if (jugando) enEscanear(); } catch (e) {} }, 3000);
+setInterval(() => { try { if (jugando) enEscanearParte(); } catch (e) {} }, 100);
 
 // ───── cómo se ve: cables que brillan, lámparas prendidas y la cabeza de los pistones ─────
 const enG = new THREE.Group(); escena.add(enG);

@@ -148,7 +148,7 @@ let cultivos2 = new Set(), cultivoT = 0;
 const esCultivo2 = t => t >= B.ZANAHORIA && t <= B.PAPA + 3;
 function cultivos2Cargar() { cultivos2 = new Set(); for (let i = 0; i < N; i++) { const t = mundo[i]; if (t >= B.ZANAHORIA && t <= B.PAPA + 2 && DEF[t].cultivo < 3) cultivos2.add(i); } }
 function crecerCultivos2(dt) { cultivoT += dt; if (cultivoT < 1) return; cultivoT = 0;
-  for (const i of cultivos2) { const t = mundo[i]; if (!esCultivo2(t) || DEF[t].cultivo >= 3) { cultivos2.delete(i); continue; } if (Math.random() < 1 / 35) { const [x, y, z] = xyz(i); sinG(() => ponerBloque(x, y, z, t + 1)); if (DEF[t + 1].cultivo === 3) cultivos2.delete(i); } } }
+  for (const i of cultivos2) { const t = mundo[i]; if (!esCultivo2(t) || DEF[t].cultivo >= 3) { cultivos2.delete(i); continue; } if (Math.random() < 1 / 35) { const [x, y, z] = xyz(i); const s0 = sucio; rearmeLento = true; try { sinG(() => ponerBloque(x, y, z, t + 1)); } finally { rearmeLento = false; sucio = s0; } if (DEF[t + 1].cultivo === 3) cultivos2.delete(i); } } }
 function sembrar(h, id) {
   const arriba = get(h.x, h.y + 1, h.z);
   if (![B.PASTO, B.TIERRA, B.ARADA].includes(h.b) || h.cara[1] !== 1 || !reemplazable(arriba) || arriba === B.AGUA) { aviso(TR('plantaZ'), 1000); return true; }

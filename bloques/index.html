@@ -1042,14 +1042,27 @@ function armarPedazo(cx, cz) {
       Q.n += 4;
     }
   }
-  const malla = (Q, m) => { if (!Q.n) return null; const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(Q.P, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(Q.UV, 2)); g.setAttribute('luz', new THREE.Float32BufferAttribute(Q.L, 3)); g.setIndex(Q.I); g.computeBoundingSphere(); const me = new THREE.Mesh(g, m); escena.add(me); return me; };
+  const malla = (Q, m) => { if (!Q.n) return null; const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(Q.P, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(Q.UV, 2)); g.setAttribute('luz', new THREE.Float32BufferAttribute(Q.L, 3)); g.setIndex(Q.I); g.computeBoundingSphere(); const me = new THREE.Mesh(g, m); me.matrixAutoUpdate = false; me.updateMatrix(); escena.add(me); return me; };
   const k = cx + NCX * cz, viejo = pedazos[k];
   if (viejo) for (const m of [viejo.op, viejo.ag]) if (m) { escena.remove(m); m.geometry.dispose(); }
   pedazos[k] = { op: malla(A, matOp), ag: malla(W, matAgua) };
   if (pedazos[k].ag) pedazos[k].ag.renderOrder = 1;
 }
-function armarTodo() { for (let cx = 0; cx < NCX; cx++) for (let cz = 0; cz < NCZ; cz++) armarPedazo(cx, cz); }
-function rearmarCerca(x, z, r) { const c0 = Math.max(0, Math.floor((x - r) / CH)), c1 = Math.min(NCX - 1, Math.floor((x + r) / CH)), d0 = Math.max(0, Math.floor((z - r) / CH)), d1 = Math.min(NCZ - 1, Math.floor((z + r) / CH)); for (let cx = c0; cx <= c1; cx++) for (let cz = d0; cz <= d1; cz++) armarPedazo(cx, cz); }
+function armarTodo() { pendientes.clear(); pendientesLentos.clear(); for (let cx = 0; cx < NCX; cx++) for (let cz = 0; cz < NCZ; cz++) armarPedazo(cx, cz); }
+function rearmarCerca(x, z, r) { rearmarCaja(x - r, x + r, z - r, z + r); }
+// los pedazos a rehacer se juntan y se arman antes de dibujar el próximo cuadro, sin repetir
+// y repartidos entre cuadros si son muchos, así el juego no se traba
+const pendientes = new Set();
+let rearmeLento = false; const pendientesLentos = new Set(); let lentoT = 0;
+function rearmarCaja(xa, xb, za, zb) { if (rearmeLento) { const c0 = Math.max(0, Math.floor(xa / CH)), c1 = Math.min(NCX - 1, Math.floor(xb / CH)), d0 = Math.max(0, Math.floor(za / CH)), d1 = Math.min(NCZ - 1, Math.floor(zb / CH)); for (let cx = c0; cx <= c1; cx++) for (let cz = d0; cz <= d1; cz++) pendientesLentos.add(cx + cz * 4096); return; } const c0 = Math.max(0, Math.floor(xa / CH)), c1 = Math.min(NCX - 1, Math.floor(xb / CH)), d0 = Math.max(0, Math.floor(za / CH)), d1 = Math.min(NCZ - 1, Math.floor(zb / CH)); for (let cx = c0; cx <= c1; cx++) for (let cz = d0; cz <= d1; cz++) pendientes.add(cx + cz * 4096); }
+function armarPendientes() {
+  // lo que crece solo (cultivos): de a un pedazo cada tanto, nunca junto con otros
+  if (pendientesLentos.size && !pendientes.size && performance.now() - lentoT > 250) { lentoT = performance.now(); const c = pendientesLentos.values().next().value; pendientesLentos.delete(c); pendientes.add(c); }
+  if (!pendientes.size) return;
+  const t0 = performance.now(), px = J.x / CH, pz = J.z / CH;
+  const lista = [...pendientes].sort((a, b) => Math.hypot(a % 4096 + .5 - px, ((a / 4096) | 0) + .5 - pz) - Math.hypot(b % 4096 + .5 - px, ((b / 4096) | 0) + .5 - pz));
+  for (const c of lista) { pendientes.delete(c); const cx = c % 4096, cz = (c / 4096) | 0; if (cx < NCX && cz < NCZ) armarPedazo(cx, cz); if (performance.now() - t0 > 8) break; }
+}
 // cambiar un bloque (lo que pone o rompe el jugador)
 // cada acción del jugador junta sus cambios (para deshacer y para el video)
 let grupo = null;
@@ -1061,12 +1074,37 @@ function ponerBloque(x, y, z, t) {
   if (grupo) grupo.push([i, viejo, t]);
   mundo[i] = t; diffs.set(i, t); sucio = true;
   const a0 = alt[x + SX * z]; altColumna(x, z); const cambioAlt = a0 !== alt[x + SX * z];
-  let luz = false;
-  if (viejo && DEF[viejo].luz) { fuentes.delete(i); luz = true; }
-  if (t && DEF[t].luz) { fuentes.add(i); luz = true; }
-  if (!luz) for (const f of fuentes) { const fx = f % SX, fz = ((f / SX) | 0) % SZ, fy = (f / (SX * SZ)) | 0; if (Math.abs(fx - x) < 15 && Math.abs(fy - y) < 15 && Math.abs(fz - z) < 15) { luz = true; break; } }
-  if (luz) calcLuz();
-  rearmarCerca(x, z, luz ? 15 : cambioAlt ? 5 : 1);
+  // luz de antorchas: solo se recalcula si cambió una fuente o si el bloque deja pasar la luz distinto,
+  // y solo en la zona cercana (antes se recalculaba el mundo entero y el juego se trababa)
+  let fuente = false;
+  if (viejo && DEF[viejo].luz) { fuentes.delete(i); fuente = true; }
+  if (t && DEF[t].luz) { fuentes.add(i); fuente = true; }
+  let caja = null;
+  if (fuente || opaco(viejo) !== opaco(t)) caja = luzLocal(x, y, z);
+  if (fuente && typeof actualizarHalos === 'function' && typeof haloMat !== 'undefined') actualizarHalos();
+  rearmarCerca(x, z, cambioAlt ? 5 : 1);
+  if (caja) rearmarCaja(caja[0], caja[1], caja[2], caja[3]);
+}
+// recalcula la luz de las antorchas en un cubo de ±15 alrededor del cambio (más lejos no puede cambiar)
+// y devuelve el rectángulo [x0, x1, z0, z1] donde la luz cambió de verdad (o null si no cambió nada)
+function luzLocal(x, y, z) {
+  const R = 15, x0 = Math.max(0, x - R), x1 = Math.min(SX - 1, x + R), y0 = Math.max(0, y - R), y1 = Math.min(SY - 1, y + R), z0 = Math.max(0, z - R), z1 = Math.min(SZ - 1, z + R);
+  const w = x1 - x0 + 1, d = z1 - z0 + 1, viejo = new Uint8Array(w * d * (y1 - y0 + 1)), XY = SX * SZ;
+  let k = 0; for (let yy = y0; yy <= y1; yy++) for (let zz = z0; zz <= z1; zz++) { let i = idx(x0, yy, zz); for (let xx = x0; xx <= x1; xx++, i++) { viejo[k++] = luzT[i]; luzT[i] = 0; } }
+  const q = []; const den = (a, b, c) => a >= x0 && a <= x1 && b >= y0 && b <= y1 && c >= z0 && c <= z1;
+  for (const f of fuentes) { const fx = f % SX, fz = ((f / SX) | 0) % SZ, fy = (f / XY) | 0; if (den(fx, fy, fz)) { luzT[f] = DEF[mundo[f]].luz; q.push(f); } }
+  // la luz que entra desde afuera del cubo (allá no cambió nada)
+  const borde = (a, b, c) => { if (!dentro(a, b, c)) return; const i = idx(a, b, c); if (luzT[i] > 1) q.push(i); };
+  for (let yy = y0; yy <= y1; yy++) for (let zz = z0; zz <= z1; zz++) { borde(x0 - 1, yy, zz); borde(x1 + 1, yy, zz); }
+  for (let yy = y0; yy <= y1; yy++) for (let xx = x0; xx <= x1; xx++) { borde(xx, yy, z0 - 1); borde(xx, yy, z1 + 1); }
+  for (let zz = z0; zz <= z1; zz++) for (let xx = x0; xx <= x1; xx++) { borde(xx, y0 - 1, zz); borde(xx, y1 + 1, zz); }
+  let n = 0;
+  while (n < q.length) { const i = q[n++], l = luzT[i]; if (l <= 1) continue; const cx = i % SX, cz = ((i / SX) | 0) % SZ, cy = (i / XY) | 0;
+    for (let v = 0; v < 6; v++) { const nx = cx + (v === 0 ? 1 : v === 1 ? -1 : 0), ny = cy + (v === 2 ? 1 : v === 3 ? -1 : 0), nz = cz + (v === 4 ? 1 : v === 5 ? -1 : 0);
+      if (!den(nx, ny, nz)) continue; const j = idx(nx, ny, nz); if (opaco(mundo[j]) || luzT[j] >= l - 1) continue; luzT[j] = l - 1; q.push(j); } }
+  let a0 = SX, a1 = -1, b0 = SZ, b1 = -1; k = 0;
+  for (let yy = y0; yy <= y1; yy++) for (let zz = z0; zz <= z1; zz++) { let i = idx(x0, yy, zz); for (let xx = x0; xx <= x1; xx++, i++, k++) if (viejo[k] !== luzT[i]) { if (xx < a0) a0 = xx; if (xx > a1) a1 = xx; if (zz < b0) b0 = zz; if (zz > b1) b1 = zz; } }
+  return a1 < 0 ? null : [a0 - 1, a1 + 1, b0 - 1, b1 + 1];
 }
 // marco del bloque apuntado y grietas al romper
 const marco = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.004, 1.004, 1.004)), new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: .6 }));
@@ -1391,7 +1429,7 @@ function plantar(h) {
 function crecer(dt) {
   cultT += dt; if (cultT < 1) return; cultT = 0;
   for (const i of cultivos) { const t = mundo[i]; if (t < B.TRIGO || t > B.TRIGO + 2) { cultivos.delete(i); continue; }
-    if (Math.random() < 1 / 35) { const x = i % SX, z = ((i / SX) | 0) % SZ, y = (i / (SX * SZ)) | 0; ponerBloque(x, y, z, t + 1); if (t + 1 === B.TRIGO + 3) cultivos.delete(i); } }
+    if (Math.random() < 1 / 35) { const x = i % SX, z = ((i / SX) | 0) % SZ, y = (i / (SX * SZ)) | 0; const s0 = sucio; rearmeLento = true; try { ponerBloque(x, y, z, t + 1); } finally { rearmeLento = false; sucio = s0; } if (t + 1 === B.TRIGO + 3) cultivos.delete(i); } }
 }
 function puerta(x, y, z) {
   const t = get(x, y, z), nuevo = t === B.PUERTA ? B.PUERTA_A : B.PUERTA;
@@ -1922,6 +1960,8 @@ function moverCielo(dt) {
   nubeX = (nubeX + dt * .5) % 256; cieloObj.nubes.position.x = nubeX; cieloObj.nubes.material.color.setScalar(.06 + .94 * Math.pow(U.uDia.value, 1.6));
   // no dibujar pedazos que quedan detrás de la niebla
   const lejos = DIST[AJ.dist][1] + 24; for (let k = 0; k < pedazos.length; k++) { const p = pedazos[k]; if (!p) continue; const cx = (k % NCX) * CH + 8, cz = Math.floor(k / NCX) * CH + 8, v = Math.hypot(cx - c.x, cz - c.z) < lejos; if (p.op) p.op.visible = v; if (p.ag) p.ag.visible = v; }
+  // animales y monstruos que quedan detrás de la niebla tampoco se dibujan
+  for (const L of [animales, monstruos]) for (const o of L) { const lej = Math.hypot(o.position.x - c.x, o.position.z - c.z) > lejos; if (lej && o.visible) { o.visible = false; o.userData.ocultoLejos = true; } else if (!lej && o.userData.ocultoLejos) { o.visible = true; o.userData.ocultoLejos = false; } }
 }
 
 // ═════════ AJUSTES ═════════
@@ -2034,6 +2074,7 @@ function bucle(ya) {
   if (typeof supervivenciaFrame === 'function') supervivenciaFrame(dt);
   if (typeof abismoFrame === 'function') abismoFrame(dt);
   if (typeof modosFrame === 'function') modosFrame(dt);
+  armarPendientes();
   render.render(escena, cam);
   if (typeof herrDespues === 'function') herrDespues();
 }
