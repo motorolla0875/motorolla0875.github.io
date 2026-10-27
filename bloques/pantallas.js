@@ -15,16 +15,15 @@ const FLECHA = d => `<svg viewBox="0 0 10 10" shape-rendering="crispEdges" style
 
 { const st = document.createElement('style'); st.textContent = `
   #mundos { justify-content: center; padding: max(6px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); overflow: hidden; }
-  #mundos > .titulo { margin: 0 0 4px; font-size: clamp(22px, 6vh, 40px) !important; line-height: 1; }
-  #mundosCuerpo { display: flex; flex-direction: column; gap: 6px; width: min(900px, 100%); flex: 1; min-height: 0; max-height: 640px; }
-  #mundosIzq { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
-  #mundosDer { flex: none; display: flex; gap: 6px; align-items: stretch; }
+  #mundos > .titulo { margin: 0 0 8px; font-size: clamp(22px, 6vh, 40px) !important; line-height: 1; }
+  #mundosCuerpo { display: flex; flex-direction: column; gap: 8px; width: min(600px, 100%); flex: none; }
+  #mundosIzq { flex: none; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  #mundosDer { flex: none; order: -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   #mundosDer .filaBtn { display: contents; }
-  #mundosDer .btn { flex: 1; min-width: 0; width: auto !important; max-width: none !important; margin: 0 !important; padding: 6px 4px 5px; font-size: 14px; line-height: 1.1; display: flex; flex-direction: column; justify-content: center; }
+  #mundosDer .btn { flex: 1; min-width: 0; width: auto !important; max-width: none !important; margin: 0 !important; padding: 4px 4px 3px; font-size: 14px; line-height: 1.1; display: flex; flex-direction: column; justify-content: center; }
   #mundosDer .btn small { font-size: 10px; line-height: 1.1; margin-top: 2px; }
-  #mundosDer #bVolverInicio { flex: .7; }
   #listaMundos { width: 100% !important; max-height: none !important; flex: 0 1 auto; min-height: 0; overflow: hidden !important; display: flex; flex-direction: column; justify-content: flex-start; padding: 5px; gap: 4px; box-sizing: border-box; }
-  #listaMundos .mundoFila { flex: none; border: 2px solid rgba(255,255,255,.14); border-radius: 10px; background: rgba(255,255,255,.06); padding: 3px 8px; gap: 8px; }
+  #listaMundos .mundoFila { flex: none; border: 2px solid rgba(255,255,255,.14); border-radius: 10px; background: rgba(255,255,255,.06); padding: 2px 8px; gap: 8px; }
   #listaMundos .mundoFila.oculta { display: none; }
   #listaMundos .mundoFila .info { font-size: 14px; min-width: 0; line-height: 1.15; } #listaMundos .mundoFila .info small { display: block; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #listaMundos .mundoFila .info .fecha { font-size: 11px; color: #ffd23a; font-weight: 700; white-space: nowrap; }
@@ -36,7 +35,6 @@ const FLECHA = d => `<svg viewBox="0 0 10 10" shape-rendering="crispEdges" style
   .pg { width: 40px; height: 30px; display: flex; align-items: center; justify-content: center; background: linear-gradient(#ffe14a, #f5a62a); border: 3px solid #0d153d; border-radius: 10px; box-shadow: 0 3px 0 #0d153d; cursor: pointer; box-sizing: border-box; }
   .pg:active { transform: translateY(2px); box-shadow: 0 1px 0 #0d153d; }
   .pg.off { opacity: .35; pointer-events: none; }
-  #mundosPag { padding-top: 4px; }
   #mundosPag .num { font-weight: 800; color: #fff; text-shadow: 0 2px 0 #0d153d; min-width: 64px; text-align: center; font-size: 15px; }
   #mapasPag .num { font-weight: 800; color: #1b2a6b; min-width: 54px; text-align: center; font-size: 14px; }
   #mapasPag { gap: 6px; margin-inline-end: 8px; } #mapasPag .pg { width: 36px; height: 28px; }
@@ -82,7 +80,8 @@ function paginarMundos() {
   const cols = 1;
   filas.forEach(f => f.classList.remove('oculta'));
   // cuántas filas entran (se mide con la primera)
-  const alto = $('mundosIzq').clientHeight - 38 - 10 + 4, h = filas[0].getBoundingClientRect().height + 4;
+  const M = $('mundos'), cs = getComputedStyle(M), tit = M.querySelector('.titulo');
+  const alto = M.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - (tit ? tit.offsetHeight + 8 : 0) - $('mundosDer').offsetHeight - 8 - 8 - Math.max(30, $('mundosPag').offsetHeight) - (lista.offsetHeight - lista.clientHeight) - 10 + 4, h = filas[0].getBoundingClientRect().height + 4;
   const porPag = Math.min(5, Math.max(1, Math.floor(Math.max(1, alto) / Math.max(30, h))));
   const total = Math.max(1, Math.ceil(filas.length / porPag));
   mundosPagina = Math.min(Math.max(0, mundosPagina), total - 1);
