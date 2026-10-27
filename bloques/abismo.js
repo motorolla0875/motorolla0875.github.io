@@ -27,7 +27,7 @@ aplicarIdioma();
 // ═════════ GENERACIÓN DEL ABISMO ═════════
 const ARENA = { x: 80, z: 34, y: 10, r: 15 };
 function generarAbismo(S) {
-  semilla = S; mundo = new Uint8Array(N); ruinas = []; aldeas = []; ejemploFaro = null; animalesIniciales = null; biomaDe = () => 0;
+  semilla = S; mundo = new Uint16Array(N); ruinas = []; aldeas = []; ejemploFaro = null; animalesIniciales = null; biomaDe = () => 0;
   const put = (x, y, z, t) => { if (dentro(x, y, z)) mundo[idx(x, y, z)] = t; };
   for (let x = 0; x < SX; x++) for (let z = 0; z < SZ; z++) {
     const suelo = Math.round(8 + vn2(x / 14, z / 14, S + 1) * 6 + vn2(x / 5, z / 5, S + 2) * 2), techo = Math.round(SY - 6 - vn2(x / 11, z / 11, S + 3) * 8);

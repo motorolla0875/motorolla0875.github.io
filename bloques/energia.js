@@ -63,7 +63,7 @@ RECETAS.push([[B.CABLE_E, 8], [[I.HIERRO, 1], [I.CRISTAL, 1]]], [[B.PISTON, 1], 
 // ───── qué hay en el mundo ─────
 const EN_MEC = new Set([B.BOTON, B.PALANCA, B.PALANCA_ON, B.PLACA, B.ZONA].filter(x => x != null));
 const EN_USA = new Set([B.LAMPARA_E, B.PISTON, B.PUERTA, B.PUERTA_A, B.TNT, B.TNT_G, B.DISPENSADOR, B.JAULA].filter(x => x != null));
-const EN_MIRA = new Uint8Array(256); for (const t of [B.CABLE_E, B.PISTON, B.LAMPARA_E, ...EN_MEC]) EN_MIRA[t] = 1;
+const EN_MIRA = new Uint8Array(65536); for (const t of [B.CABLE_E, B.PISTON, B.LAMPARA_E, ...EN_MEC]) EN_MIRA[t] = 1;
 let enBloques = new Set(), enPrev = new Map(), enPrimera = true, enBotones = new Map(), enFirma = '', enAbiertas = new Set();
 const enDatos = () => { try { return mapa.ener || (mapa.ener = {}); } catch (e) { return {}; } };
 function enEscanear() { const s = new Set(); for (let i = 0; i < N; i++) if (EN_MIRA[mundo[i]]) s.add(i); enBloques = s;

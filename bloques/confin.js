@@ -76,7 +76,7 @@ if (NOMBRES.id) Object.assign(NOMBRES.id, { 'Altar estelar': 'Altar Bintang', 'P
 if (NOMBRES.ar) Object.assign(NOMBRES.ar, { 'Altar estelar': 'مذبح النجوم', 'Portal estelar': 'بوابة النجوم', 'Llave estelar': 'مفتاح النجوم', 'Fragmento estelar': 'شظية نجمية' });
 
 // ═════════ DIBUJOS (5 casilleros del atlas) ═════════
-if (TILES.length > CF_TILES.altarLado) console.warn('confin.js: el atlas ya usa el casillero', CF_TILES.altarLado);
+if (TILES[CF_TILES.altarLado] != null) console.warn('confin.js: el atlas ya usa el casillero', CF_TILES.altarLado);
 function cfPintar() {
   const borrar = n => ag.clearRect((n % 8) * 16, Math.floor(n / 8) * 16, 16, 16);
   for (const n of Object.values(CF_TILES)) borrar(n);
@@ -112,7 +112,7 @@ for (const id of [B.ALTAR_E, I.LLAVE_E, I.FRAGMENTO_E]) if (!TODOS.includes(id))
 const CF = { llegada: { x: 80, y: 24, z: 128 }, arena: { x: 80, y: 26, z: 38, r: 17 } };
 const cofresConfin = new Map();
 function generarConfin(S) {
-  semilla = S; mundo = new Uint8Array(N); ruinas = []; aldeas = []; ejemploFaro = null; animalesIniciales = []; biomaDe = () => 0; cofresConfin.clear();
+  semilla = S; mundo = new Uint16Array(N); ruinas = []; aldeas = []; ejemploFaro = null; animalesIniciales = []; biomaDe = () => 0; cofresConfin.clear();
   const put = (x, y, z, t) => { if (dentro(x, y, z)) mundo[idx(x, y, z)] = t; };
   const cx = SX / 2; CF.llegada.x = cx; CF.arena.x = cx;
   // una isla flotante: arriba piedra clara, abajo piedra oscura que termina en punta con cristales

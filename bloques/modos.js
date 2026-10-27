@@ -41,7 +41,7 @@ $('bParkour').onclick = () => crearMundoTipo('aventura', 'parkour');
 const vacio = () => window.mundoTipo === 'skyblock' || window.mundoTipo === 'parkour';
 let skyCofre = -1, pkMeta = -1, pkInicio = null, pkLista = [];
 function mundoVacio(S) {
-  semilla = S; mundo = new Uint8Array(N); ruinas = []; aldeas = []; ejemploFaro = null; animalesIniciales = []; biomaDe = () => 0;
+  semilla = S; mundo = new Uint16Array(N); ruinas = []; aldeas = []; ejemploFaro = null; animalesIniciales = []; biomaDe = () => 0;
   return (x, y, z, t) => { if (dentro(x, y, z)) mundo[idx(x, y, z)] = t; };
 }
 function arbolEn(put, x, y, z, alto) {

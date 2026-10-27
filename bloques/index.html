@@ -447,10 +447,11 @@ const SOLO_MATERIAL = new Set([I.PALO, I.CARBON, I.HIERRO, I.ORO, I.CRISTAL]);
 const opaco = t => t > 0 && !DEF[t].trans && !DEF[t].forma;
 const solidoMov = t => t > 0 && DEF[t].solido;
 
-let mundo = new Uint8Array(N), alt = new Uint8Array(SX * SZ), luzT = new Uint8Array(N), fuentes = new Set(), diffs = new Map();
+// los bloques del mundo usan 16 bits (ids hasta 65535): ver RANGOS DE IDS en bloques2.js
+let mundo = new Uint16Array(N), alt = new Uint8Array(SX * SZ), luzT = new Uint8Array(N), fuentes = new Set(), diffs = new Map();
 // tamaño del mundo: 160 (normal), 256 (grande) o 352 (enorme)
 function ponerTamano(t) { t = t || 160; if (t === SX) return; for (const p of pedazos) if (p) for (const m of [p.op, p.ag]) if (m) { escena.remove(m); m.geometry.dispose(); } pedazos.length = 0;
-  SX = SZ = t; N = SX * SY * SZ; NCX = SX / CH; NCZ = SZ / CH; mundo = new Uint8Array(N); alt = new Uint8Array(SX * SZ); luzT = new Uint8Array(N); }
+  SX = SZ = t; N = SX * SY * SZ; NCX = SX / CH; NCZ = SZ / CH; mundo = new Uint16Array(N); alt = new Uint8Array(SX * SZ); luzT = new Uint8Array(N); }
 const idx = (x, y, z) => x + SX * (z + SZ * y);
 const dentro = (x, y, z) => x >= 0 && y >= 0 && z >= 0 && x < SX && y < SY && z < SZ;
 const get = (x, y, z) => dentro(x, y, z) ? mundo[idx(x, y, z)] : (y < 0 ? B.ROCA : B.AIRE);
@@ -468,7 +469,7 @@ const sstep = (a, b, t) => { const k = Math.max(0, Math.min(1, (t - a) / (b - a)
 let semilla = 1, spawn = { x: SX / 2, y: 30, z: SZ / 2 }, ruinas = [], aldeas = [], biomaDe = null;
 let ejemploFaro = null, animalesIniciales = null;
 function generar(S, ejemplo) {
-  semilla = S; mundo = new Uint8Array(N); ruinas = []; aldeas = []; ejemploFaro = null; animalesIniciales = null;
+  semilla = S; mundo = new Uint16Array(N); ruinas = []; aldeas = []; ejemploFaro = null; animalesIniciales = null;
   const H = new Int16Array(SX * SZ), des = new Uint8Array(SX * SZ), BIO = new Uint8Array(SX * SZ); biomaDe = (x, z) => BIO[Math.max(0, Math.min(SX - 1, x)) + SX * Math.max(0, Math.min(SZ - 1, z))];
   const put = (x, y, z, t) => { if (dentro(x, y, z)) mundo[idx(x, y, z)] = t; };
   // archipiélago: una isla grande y tres islitas en las esquinas
@@ -739,7 +740,9 @@ function medir() { render.setSize(innerWidth, innerHeight); cam.aspect = innerWi
 addEventListener('resize', medir); medir();
 
 // ───── texturas pixeladas hechas con código ─────
-const atlas = document.createElement('canvas'); atlas.width = 128; atlas.height = 512;   // 8 columnas × 32 filas de dibujos de 16×16
+// atlas de dibujos 16×16: 8 columnas × 64 filas = 512 casilleros (0–255 los de siempre, 256–447 bloques nuevos, 448–511 mods)
+const ATLAS_F = 64, ATLAS_N = 8 * ATLAS_F;
+const atlas = document.createElement('canvas'); atlas.width = 128; atlas.height = 16 * ATLAS_F;
 const ag = atlas.getContext('2d');
 function dibujarTile(n, f) {
   const tx = n % 8, ty = Math.floor(n / 8); let s = 1000 + n * 97;
@@ -1005,7 +1008,7 @@ function armarPedazo(cx, cz) {
   const x0 = cx * CH, z0 = cz * CH;
   for (let y = 0; y < SY; y++) for (let z = z0; z < z0 + CH; z++) for (let x = x0; x < x0 + CH; x++) {
     const t = mundo[idx(x, y, z)]; if (!t) continue; const d = DEF[t], agua = t === B.AGUA, cajas = d.conecta ? formaDe(t, x, y, z, false) : d.forma || [null];
-    if (d.planta) { const tile = d.tiles[0], tx = tile % 8, ty = Math.floor(tile / 8), [cs, ct] = luzCelda(x, y, z), u0 = (tx + e) / 8, u1 = (tx + 1 - e) / 8, w0 = 1 - (ty + 1 - e) / 32, w1 = 1 - (ty + e) / 32, al = .95;
+    if (d.planta) { const tile = d.tiles[0], tx = tile % 8, ty = Math.floor(tile / 8), [cs, ct] = luzCelda(x, y, z), u0 = (tx + e) / 8, u1 = (tx + 1 - e) / 8, w0 = 1 - (ty + 1 - e) / ATLAS_F, w1 = 1 - (ty + e) / ATLAS_F, al = .95;
       for (const [a0, b0, a1, b1] of [[.15, .15, .85, .85], [.15, .85, .85, .15]]) for (const lado of [0, 1]) { const p = lado ? [[a1, b1], [a0, b0]] : [[a0, b0], [a1, b1]];
         A.P.push(x + p[0][0], y, z + p[0][1], x + p[1][0], y, z + p[1][1], x + p[1][0], y + al, z + p[1][1], x + p[0][0], y + al, z + p[0][1]);
         A.UV.push(...(lado ? [u1, w0, u0, w0, u0, w1, u1, w1] : [u0, w0, u1, w0, u1, w1, u0, w1])); for (let k = 0; k < 4; k++) A.L.push(.92, cs, ct);
@@ -1026,7 +1029,7 @@ function armarPedazo(cx, cz) {
         Q.P.push(x + px, y + py, z + pz);
         // coordenadas del dibujo según la cara
         let u, w; if (f.d[0]) { u = f.d[0] > 0 ? 1 - pz : pz; w = py; } else if (f.d[2]) { u = f.d[2] > 0 ? px : 1 - px; w = py; } else { u = px; w = pz; }
-        Q.UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / 32);
+        Q.UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / ATLAS_F);
         // sombra en las esquinas (oclusión ambiental)
         let ao = 3;
         if (!F && !agua) { const ax = [], s = []; for (let k = 0; k < 3; k++) if (!f.d[k]) { ax.push(k); s.push(p[k] ? 1 : -1); }
@@ -1860,7 +1863,7 @@ function geoBloque(d, tam) {
     for (const q of f.v) { const px = F[0] + q[0] * (F[3] - F[0]), py = F[1] + q[1] * (F[4] - F[1]), pz = F[2] + q[2] * (F[5] - F[2]);
       P.push((px - .5) * tam, (py - .5) * tam, (pz - .5) * tam); C.push(f.luz, f.luz, f.luz);
       let u, w; if (f.d[0]) { u = f.d[0] > 0 ? 1 - pz : pz; w = py; } else if (f.d[2]) { u = f.d[2] > 0 ? px : 1 - px; w = py; } else { u = px; w = pz; }
-      UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / 32); }
+      UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / ATLAS_F); }
     I.push(n, n + 1, n + 2, n, n + 2, n + 3); n += 4; }
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(UV, 2)); g.setAttribute('color', new THREE.Float32BufferAttribute(C, 3)); g.setIndex(I); return g;
 }

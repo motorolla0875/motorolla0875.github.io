@@ -128,7 +128,7 @@ function geoCeldas(lista) {
       for (const q of f.v) { const px = F[0] + q[0] * (F[3] - F[0]), py = F[1] + q[1] * (F[4] - F[1]), pz = F[2] + q[2] * (F[5] - F[2]);
         P.push(x + enc + px * (1 - 2 * enc), y + enc + py * (1 - 2 * enc), z + enc + pz * (1 - 2 * enc)); C.push(f.luz * .9 + .1, f.luz * .95 + .05, 1);
         let u, w; if (f.d[0]) { u = f.d[0] > 0 ? 1 - pz : pz; w = py; } else if (f.d[2]) { u = f.d[2] > 0 ? px : 1 - px; w = py; } else { u = px; w = pz; }
-        UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / 16); }
+        UV.push((tx + e + u * (1 - 2 * e)) / 8, 1 - (ty + 1 - e - w * (1 - 2 * e)) / ATLAS_F); }
       I.push(n, n + 1, n + 2, n, n + 2, n + 3); n += 4; } }
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(UV, 2)); g.setAttribute('color', new THREE.Float32BufferAttribute(C, 3)); g.setIndex(I); return g;
 }

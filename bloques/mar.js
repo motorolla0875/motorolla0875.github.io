@@ -119,7 +119,7 @@ function construirDecor() {
   const P = [], UV = [], L = [], Ix = []; let n = 0; const e = .0006;
   for (const d of decor) {
     const [x, y, z, tile, alto] = d; if (d[5]) continue;
-    const tn = TL[tile], tx = tn % 8, ty = Math.floor(tn / 8), u0 = (tx + e) / 8, u1 = (tx + 1 - e) / 8, w0 = 1 - (ty + 1 - e) / 32, w1 = 1 - (ty + e) / 32;
+    const tn = TL[tile], tx = tn % 8, ty = Math.floor(tn / 8), u0 = (tx + e) / 8, u1 = (tx + 1 - e) / 8, w0 = 1 - (ty + 1 - e) / ATLAS_F, w1 = 1 - (ty + e) / ATLAS_F;
     for (let k = 0; k < alto; k++) { const yy = y + k; if (get(x, yy, z) !== B.AGUA) break; const [cs, ct] = luzCelda(x, yy, z);
       for (const [a0, b0, a1, b1] of [[.15, .15, .85, .85], [.15, .85, .85, .15]]) for (const lado of [0, 1]) { const p = lado ? [[a1, b1], [a0, b0]] : [[a0, b0], [a1, b1]];
         P.push(x + p[0][0], yy, z + p[0][1], x + p[1][0], yy, z + p[1][1], x + p[1][0], yy + 1, z + p[1][1], x + p[0][0], yy + 1, z + p[0][1]);

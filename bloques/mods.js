@@ -104,12 +104,14 @@ const abrir = id => { $(id).hidden = false; }, cerrar = id => { $(id).hidden = t
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 // ═════════ ESTADO DEL MUNDO: mods activos, carteles, reglas y datos del mapa ═════════
-const MOD_BASE = 160, MOD_SLOTS = 6, MOD_MAX_BLOQUES = 10, TILE_MOD0 = TILES.length;
+// los mods usan los ids 160–219 (como siempre) y sus dibujos van en los casilleros 448–511 del atlas
+const MOD_BASE = 160, MOD_SLOTS = 6, MOD_MAX_BLOQUES = 10, TILE_MOD0 = ATLAS_N - 64;
+const esIdMod = id => id >= MOD_BASE && id < MOD_BASE + MOD_SLOTS * MOD_MAX_BLOQUES;
 let tileLibre = TILE_MOD0, modsMundo = [], carteles = {}, mapa = {}, tieneMeta = false, cronoT = 0, cronoOn = false, ultControl = -1;
 function quitarModsInstalados() {
   for (let id = MOD_BASE; id < MOD_BASE + MOD_SLOTS * MOD_MAX_BLOQUES; id++) { if (DEF[id]) delete DEF[id]; delete iconos[id]; const k = TODOS.indexOf(id); if (k >= 0) TODOS.splice(k, 1); }
   for (let k = RECETAS.length - 1; k >= 0; k--) if (RECETAS[k].mod) RECETAS.splice(k, 1);
-  for (let t = TILE_MOD0; t < 256; t++) delete tileURLs[t];
+  for (let t = TILE_MOD0; t < ATLAS_N; t++) delete tileURLs[t];
   for (const t in tilesOrig) { ag.putImageData(tilesOrig[t], (t % 8) * 16, Math.floor(t / 8) * 16); delete tileURLs[t]; }   // texturas originales de vuelta
   tilesOrig = {}; for (const k in iconos) delete iconos[k];
   for (const k in TIPOS) if (TIPOS[k].mod) delete TIPOS[k];
@@ -119,7 +121,7 @@ const pixTile = (t, pix) => { const tx = t % 8, ty = Math.floor(t / 8); ag.clear
 const refId = (m, r) => typeof r === 'string' && r.startsWith('m:') ? MOD_BASE + m.slot * MOD_MAX_BLOQUES + (+r.slice(2)) : +r;
 function instalarMod(m) {
   m.bloques.forEach((b, k) => {
-    const id = MOD_BASE + m.slot * MOD_MAX_BLOQUES + k, t = tileLibre < 256 ? tileLibre++ : TILE_MOD0 + (tileLibre++ % (256 - TILE_MOD0));   // cada bloque de mod usa un casillero libre del atlas
+    const id = MOD_BASE + m.slot * MOD_MAX_BLOQUES + k, t = tileLibre < ATLAS_N ? tileLibre++ : TILE_MOD0 + ((tileLibre++ - TILE_MOD0) % (ATLAS_N - TILE_MOD0));   // cada bloque de mod usa un casillero libre del atlas
     const tx = t % 8, ty = Math.floor(t / 8); ag.clearRect(tx * 16, ty * 16, 16, 16);
     let trans = false; for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const c = b.pix[y * 16 + x]; if (!c) { trans = true; continue; } ag.fillStyle = c; ag.fillRect(tx * 16 + x, ty * 16 + y, 1, 1); }
     delete tileURLs[t];
@@ -399,7 +401,7 @@ function abrirPix(k, textura) {
   $('pixPaleta').innerHTML = PALETA.map(c => `<div data-c="${c}" style="background:${c}" class="${c === pixE.color ? 'on' : ''}"></div>`).join('');
   $('pixHerr').innerHTML = PIX_HERR.map(h => `<div data-h="${h}" class="${h === pixE.herr ? 'on' : ''}">${TR(h)}</div>`).join('');
   $('pixDureza').innerHTML = ['blando', 'normalD', 'duro'].map((h, i) => `<div data-d="${i}" class="${i === pixE.dureza ? 'on' : ''}">${TR(h)}</div>`).join('');
-  $('pixDesde').innerHTML = `<option value="">${TR('partirDe')}…</option>` + TODOS.filter(id => id < MOD_BASE && DEF[id] && !DEF[id].forma && !DEF[id].planta).map(id => `<option value="${id}">${esc(nom(id))}</option>`).join('');
+  $('pixDesde').innerHTML = `<option value="">${TR('partirDe')}…</option>` + TODOS.filter(id => !esIdMod(id) && DEF[id] && !DEF[id].forma && !DEF[id].planta).map(id => `<option value="${id}">${esc(nom(id))}</option>`).join('');
   dibujarPix(); cerrar('modEd'); abrir('pixEd');
 }
 function dibujarPix() { const g = $('pixGrid').getContext('2d'); g.clearRect(0, 0, 16, 16); pixE.datos.forEach((c, k) => { if (c) { g.fillStyle = c; g.fillRect(k % 16, (k / 16) | 0, 1, 1); } }); }
@@ -428,7 +430,7 @@ function leerTile(t) { const d = (tilesOrig[t] || ag.getImageData((t % 8) * 16, 
 // lista de dibujos del juego que se pueden redibujar: "Pasto · arriba", "Piedra", "Palo"…
 function listaTiles() {
   const vistos = new Set(), l = [];
-  for (const id of TODOS) { const d = DEF[id]; if (id >= MOD_BASE || !d) { if (ITEM[id] && !vistos.has(ITEM[id].tile)) { vistos.add(ITEM[id].tile); l.push([TILES[ITEM[id].tile], nom(id)]); } continue; }
+  for (const id of TODOS) { const d = DEF[id]; if (esIdMod(id) || !d) { if (ITEM[id] && !vistos.has(ITEM[id].tile)) { vistos.add(ITEM[id].tile); l.push([TILES[ITEM[id].tile], nom(id)]); } continue; }
     const igual = d.tiles[0] === d.tiles[1] && d.tiles[1] === d.tiles[2];
     for (const k of [2, 0, 1]) { const t = d.tiles[k]; if (vistos.has(t) || t >= TILE_MOD0) continue; vistos.add(t); l.push([TILES[t], nom(id) + (igual ? '' : ' · ' + TR(['arriba', 'abajo', 'costado'][k]))]); } }
   for (const id in ITEM) { const t = ITEM[id].tile; if (!vistos.has(t)) { vistos.add(t); l.push([TILES[t], nom(+id)]); } }
