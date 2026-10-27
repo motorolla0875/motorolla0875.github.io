@@ -73,3 +73,32 @@ $('privSi').onclick = async () => {
       d.insertAdjacentHTML('beforeend', `<span class="leg"><a data-leg="terms">${TR('privTer')}</a> · <a data-leg="privacy">${TR('privPol')}</a></span>`);
       d.querySelectorAll('[data-leg]').forEach(a => a.onclick = () => abrirEnlace(urlLegal(a.dataset.leg))); }
     return r; }; }
+
+// ═════════ CÓDIGO (para el equipo de revisión de Google / Apple) ═════════
+// En la pantalla de Voxelium Pro: "Tengo un código". El código de revisión activa Pro por 30 días en ese teléfono.
+const COD_REVISION = 'VOXREVIEW26';
+Object.assign(TX.es, { codLink: 'Tengo un código', codTit: 'Código', codPh: 'Escribe tu código', codOk: '¡CÓDIGO ACTIVADO!<small>Voxelium Pro por 30 días</small>', codMal: 'CÓDIGO NO VÁLIDO', codUsar: 'Usar código' });
+Object.assign(TX.en, { codLink: 'I have a code', codTit: 'Code', codPh: 'Type your code', codOk: 'CODE ACTIVATED!<small>Voxelium Pro for 30 days</small>', codMal: 'INVALID CODE', codUsar: 'Redeem' });
+Object.assign(TX.pt, { codLink: 'Tenho um código', codTit: 'Código', codPh: 'Digite seu código', codOk: 'CÓDIGO ATIVADO!<small>Voxelium Pro por 30 dias</small>', codMal: 'CÓDIGO INVÁLIDO', codUsar: 'Usar código' });
+if (TX.tr) Object.assign(TX.tr, { codLink: 'Kodum var', codTit: 'Kod', codPh: 'Kodunu yaz', codOk: 'KOD ETKİN!<small>30 gün Voxelium Pro</small>', codMal: 'GEÇERSİZ KOD', codUsar: 'Kullan' });
+if (TX.id) Object.assign(TX.id, { codLink: 'Saya punya kode', codTit: 'Kode', codPh: 'Ketik kodemu', codOk: 'KODE AKTIF!<small>Voxelium Pro selama 30 hari</small>', codMal: 'KODE TIDAK VALID', codUsar: 'Pakai kode' });
+if (TX.ar) Object.assign(TX.ar, { codLink: 'لدي رمز', codTit: 'الرمز', codPh: 'اكتب رمزك', codOk: 'تم تفعيل الرمز!<small>Voxelium Pro لمدة 30 يومًا</small>', codMal: 'رمز غير صالح', codUsar: 'استخدم الرمز' });
+{ const st = document.createElement('style'); st.textContent = `#codCapa .ventana { max-width: 380px; } #codCuerpo { padding: 14px 18px 16px; }
+  #codIn { width: 100%; box-sizing: border-box; font: inherit; font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 10px 12px; border: 2px solid #c5cdee; border-radius: 12px; color: #1b2a6b; margin-bottom: 10px; }
+  #codBtn { margin: 0 !important; width: 100%; } .proPie .leg a[data-cod] { font-weight: 700; }`; document.head.appendChild(st); }
+cap('codCapa', `<div class="ventana"><div class="vCab"><div class="tab on" data-i="codTit"></div><div style="flex:1"></div><div class="cerrar" id="codX">X</div></div>
+  <div id="codCuerpo"><input id="codIn" autocomplete="off" autocapitalize="characters" spellcheck="false"><div class="btn" id="codBtn" data-i="codUsar"></div></div></div>`);
+$('codX').onclick = () => cerrar('codCapa');
+$('codBtn').onclick = () => {
+  const v = String($('codIn').value || '').trim().toUpperCase();
+  if (v !== COD_REVISION) { aviso(TR('codMal'), 1500); return; }
+  lsPoner('voxCodigoHasta', String(Math.max(+lsLeer('voxCodigoHasta', 0), Date.now() + 30 * 864e5)));
+  cerrar('codCapa'); cerrar('proCapa'); aviso(TR('codOk'), 2400);
+  if (typeof window.alCambiarPro === 'function') window.alCambiarPro();
+  try { actualizarBotonPausa(); } catch (e) {}
+};
+{ const p0 = pintarPro; pintarPro = function () { const r = p0.apply(this, arguments);
+    const d = document.querySelector('#proCuerpo .proPie .der2');
+    if (d && !d.querySelector('[data-cod]')) { d.insertAdjacentHTML('beforeend', `<span class="leg"><a data-cod>${TR('codLink')}</a></span>`);
+      d.querySelector('[data-cod]').onclick = () => { $('codIn').value = ''; $('codIn').placeholder = TR('codPh'); aplicarIdioma(); abrir('codCapa'); setTimeout(() => $('codIn').focus(), 50); }; }
+    return r; }; }

@@ -33,7 +33,7 @@ Object.assign(TX.pt, { adSinRedT: 'SEM CONEXÃO', adSinRed: 'Conecte-se à inter
 // ─── ¿tiene Pro o compró "sin anuncios"? ───
 const lsLeer = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
 const lsPoner = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
-function esPro() { const u = +lsLeer('voxProHasta', 0); return u === -1 || u > Date.now(); }
+function esPro() { const u = +lsLeer('voxProHasta', 0), c = +lsLeer('voxCodigoHasta', 0); return u === -1 || u > Date.now() || c > Date.now(); }   // voxCodigoHasta: Pro activado con un código (no lo toca la tienda)
 function sinAnuncios() { return esPro() || lsLeer('voxSinAnuncios', '0') === '1'; }
 window.esPro = esPro; window.sinAnuncios = sinAnuncios;
 
