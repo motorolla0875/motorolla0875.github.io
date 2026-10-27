@@ -191,7 +191,7 @@ async function comprar(que) {
   else ok = confirm(TR('proSim'));
   if (!ok) return;
   if (que === 'sinAnuncios') lsPoner('voxSinAnuncios', '1');
-  else lsPoner('voxProHasta', String(Date.now() + (que === 'anual' ? 365 : 30) * 864e5));
+  else if (!esPro()) lsPoner('voxProHasta', String(Date.now() + (que === 'anual' ? 365 : 30) * 864e5));   // en la app ya lo puso la tienda con la fecha real
   aviso(TR(que === 'sinAnuncios' ? 'sinAnunciosYa' : 'proYa'), 2200); sonar('final', .6) || son(880, .3, 'triangle', .12);
   cerrar('proCapa');
   if (adAbierto) { cerrar('adCapa'); adAbierto = false; adEsperando = false; adCuentaEl.hidden = true; pausado = false; }
