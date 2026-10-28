@@ -5,9 +5,9 @@
 // En la compu el juego dibuja en 1080 mientras graba; en el celular dibuja en su calidad normal (para que no se trabe).
 
 {
-Object.assign(TX.es, { recT: 'Grabar video', recEmpieza: 'GRABANDO<small>toca el botón otra vez para terminar</small>', recListo: 'VIDEO LISTO<small>{n}</small>', recNo: 'ESTE NAVEGADOR NO PUEDE GRABAR VIDEO', recLargo: 'SE LLEGÓ AL MÁXIMO DE 15 MINUTOS', recGuardado: 'se guardó en Descargas', recCompartir: 'Guardar o compartir el video' });
-Object.assign(TX.en, { recT: 'Record video', recEmpieza: 'RECORDING<small>tap the button again to stop</small>', recListo: 'VIDEO READY<small>{n}</small>', recNo: 'THIS BROWSER CANNOT RECORD VIDEO', recLargo: 'REACHED THE 15 MINUTE LIMIT', recGuardado: 'saved to Downloads', recCompartir: 'Save or share the video' });
-Object.assign(TX.pt, { recT: 'Gravar vídeo', recEmpieza: 'GRAVANDO<small>toque o botão de novo para terminar</small>', recListo: 'VÍDEO PRONTO<small>{n}</small>', recNo: 'ESTE NAVEGADOR NÃO CONSEGUE GRAVAR VÍDEO', recLargo: 'CHEGOU AO LIMITE DE 15 MINUTOS', recGuardado: 'salvo em Downloads', recCompartir: 'Salvar ou compartilhar o vídeo' });
+Object.assign(TX.es, { recFinT: 'VIDEO LISTO', recFinTxt: 'Toca "Guardar en la galería" y elige "Guardar video" (en iPhone) o "Fotos/Galería" (en Android). También lo puedes mandar directo a YouTube o WhatsApp.', recGaleria: 'Guardar en la galería', recBajar: 'Guardar como archivo', recT: 'Grabar video', recEmpieza: 'GRABANDO<small>toca el botón otra vez para terminar</small>', recListo: 'VIDEO LISTO<small>{n}</small>', recNo: 'ESTE NAVEGADOR NO PUEDE GRABAR VIDEO', recLargo: 'SE LLEGÓ AL MÁXIMO DE 15 MINUTOS', recGuardado: 'se guardó en Descargas', recCompartir: 'Guardar o compartir el video' });
+Object.assign(TX.en, { recFinT: 'VIDEO READY', recFinTxt: 'Tap "Save to gallery" and choose "Save Video" (iPhone) or "Photos/Gallery" (Android). You can also send it straight to YouTube or WhatsApp.', recGaleria: 'Save to gallery', recBajar: 'Save as file', recT: 'Record video', recEmpieza: 'RECORDING<small>tap the button again to stop</small>', recListo: 'VIDEO READY<small>{n}</small>', recNo: 'THIS BROWSER CANNOT RECORD VIDEO', recLargo: 'REACHED THE 15 MINUTE LIMIT', recGuardado: 'saved to Downloads', recCompartir: 'Save or share the video' });
+Object.assign(TX.pt, { recFinT: 'VÍDEO PRONTO', recFinTxt: 'Toque em "Salvar na galeria" e escolha "Salvar vídeo" (iPhone) ou "Fotos/Galeria" (Android). Também pode mandar direto para o YouTube ou WhatsApp.', recGaleria: 'Salvar na galeria', recBajar: 'Salvar como arquivo', recT: 'Gravar vídeo', recEmpieza: 'GRAVANDO<small>toque o botão de novo para terminar</small>', recListo: 'VÍDEO PRONTO<small>{n}</small>', recNo: 'ESTE NAVEGADOR NÃO CONSEGUE GRAVAR VÍDEO', recLargo: 'CHEGOU AO LIMITE DE 15 MINUTOS', recGuardado: 'salvo em Downloads', recCompartir: 'Salvar ou compartilhar o vídeo' });
 
 const W = 1920, H = 1080, MAX_SEG = 15 * 60;
 { const st = document.createElement('style'); st.textContent = `
@@ -26,7 +26,7 @@ aplicarIdioma();
 let rec = null;
 const lienzo = document.createElement('canvas'); lienzo.width = W; lienzo.height = H; const cx = lienzo.getContext('2d');
 const hud = document.createElement('canvas'); hud.width = W; hud.height = H; const hx = hud.getContext('2d');
-const MIMES = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1.42E01F,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+const MIMES = ['video/mp4;codecs=avc1.640028,mp4a.40.2', 'video/mp4;codecs=avc1.42E01F,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp8,opus', 'video/webm;codecs=vp9,opus', 'video/webm'];
 const esCelular = () => matchMedia('(pointer: coarse)').matches || Math.min(innerWidth, innerHeight) < 600;
 
 // cómo se pasa de la pantalla al video (se recorta al centro para que quede 16:9)
@@ -85,13 +85,18 @@ function pintarHud() {
 }
 
 // ─── cada cuadro: mundo + HUD al video ───
-let hudT = 0;
+let hudT = 0, hudCada = 120;
 { const r0 = render.render.bind(render); render.render = function (e, c) { const r = r0(e, c); if (rec && e === escena) componer(); return r; }; }
 function componer() {
   const cv = render.domElement, E = encuadre(), sx = cv.width / innerWidth;
   cx.drawImage(cv, E.ox * sx, E.oy * sx, E.ancho * sx, E.alto * sx, 0, 0, W, H);
-  const ahora = performance.now(); if (ahora - hudT > 100) { hudT = ahora; pintarHud(); }
+  const ahora = performance.now(); if (ahora - hudT > hudCada) { hudT = ahora; pintarHud(); }
   cx.drawImage(hud, 0, 0);
+  // calidad automática: cada 3 segundos mide si la compu anda sobrada (sube a 1080) o si se traba (se aliviana)
+  rec.cuadros++; if (ahora - rec.tMedida > 3000) { const fps = rec.cuadros * 1000 / (ahora - rec.tMedida); rec.cuadros = 0; rec.tMedida = ahora;
+    if (fps < 40 && rec.subio) { rec.subio = false; render.setPixelRatio(rec.prevPR); medir(); }
+    else if (fps < 34) { rec.lento = true; hudCada = 250; }
+    else if (fps > 55 && !rec.subio && !rec.lento && !esCelular()) { const pr = Math.min(2, H / Math.min(innerHeight, innerWidth * 9 / 16)); if (pr > rec.prevPR + .05) { rec.subio = true; render.setPixelRatio(pr); medir(); } } }
   const seg = (ahora - rec.t0) / 1000; $('recInd').lastElementChild.textContent = Math.floor(seg / 60) + ':' + String(Math.floor(seg % 60)).padStart(2, '0');
   if (seg > MAX_SEG) { aviso(TR('recLargo'), 2500); parar(); }
 }
@@ -103,11 +108,11 @@ function empezar() {
   const mime = MIMES.find(m => { try { return MediaRecorder.isTypeSupported(m); } catch (e) { return false; } }) || '';
   const st = lienzo.captureStream(30);
   let dest = null; try { const c = audio(); if (c && AU.master) { dest = c.createMediaStreamDestination(); AU.master.connect(dest); for (const t of dest.stream.getAudioTracks()) st.addTrack(t); } } catch (e) { dest = null; }
-  let mr; try { mr = new MediaRecorder(st, Object.assign(mime ? { mimeType: mime } : {}, { videoBitsPerSecond: esCelular() ? 5e6 : 8e6, audioBitsPerSecond: 160000 })); } catch (e) { try { mr = new MediaRecorder(st); } catch (e2) { aviso(TR('recNo'), 2000); return; } }
+  let mr; try { mr = new MediaRecorder(st, Object.assign(mime ? { mimeType: mime } : {}, { videoBitsPerSecond: (mime || '').includes('mp4') ? (esCelular() ? 5e6 : 8e6) : 4e6, audioBitsPerSecond: 160000 })); } catch (e) { try { mr = new MediaRecorder(st); } catch (e2) { aviso(TR('recNo'), 2000); return; } }
   const partes = []; mr.ondataavailable = ev => { if (ev.data && ev.data.size) partes.push(ev.data); };
   // en la compu: dibujar en 1080 mientras se graba
-  const prevPR = render.getPixelRatio(); if (!esCelular()) { const pr = Math.min(2, Math.max(prevPR, H / Math.min(innerHeight, innerWidth * 9 / 16))); if (pr > prevPR + .01) { render.setPixelRatio(pr); medir(); } }
-  rec = { mr, partes, dest, mime: mr.mimeType || mime, t0: performance.now(), prevPR };
+  const prevPR = render.getPixelRatio(); hudCada = 120;
+  rec = { mr, partes, dest, mime: mr.mimeType || mime, t0: performance.now(), prevPR, cuadros: 0, tMedida: performance.now(), lento: false, subio: false };
   mr.onstop = terminar; mr.start(1000);
   $('bRec').classList.add('on'); $('recInd').hidden = false; aviso(TR('recEmpieza'), 1800); son(880, .08, 'triangle', .08);
   cx.fillStyle = '#000'; cx.fillRect(0, 0, W, H);
@@ -122,13 +127,21 @@ function terminar() {
   const d = new Date(), nombre = `voxelium-${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}-${String(d.getHours()).padStart(2, '0')}${String(d.getMinutes()).padStart(2, '0')}.${ext}`;
   guardarVideo(blob, nombre, tipo);
 }
-async function guardarVideo(blob, nombre, tipo) {
+let videoFin = null;
+function guardarVideo(blob, nombre, tipo) {
   const archivo = new File([blob], nombre, { type: tipo });
-  // en el celular: guardar o compartir (galería, YouTube, WhatsApp…)
+  // en el celular: una ventanita con "Guardar en la galería" (compartir solo funciona tocando un botón)
   if (esCelular() && navigator.canShare && navigator.canShare({ files: [archivo] })) {
-    try { await navigator.share({ files: [archivo], title: 'Voxelium' }); aviso(TR('recListo', { n: nombre }), 2500); return; } catch (e) { if (e && e.name === 'AbortError') { descargar(blob, nombre); return; } } }
+    videoFin = { blob, nombre, archivo }; pausado = true; soltarTodo(); aplicarIdioma(); abrir('grabCapa'); return; }
   descargar(blob, nombre);
 }
+cap('grabCapa', '<div class="mVentana" style="width:min(420px,94vw)"><div class="vCab"><div class="vTit" data-i="recFinT"></div><div class="cerrar" id="grabCerrar">X</div></div><div class="vCuerpo" style="text-align:center"><div data-i="recFinTxt" style="font-size:14px;margin-bottom:10px"></div><div class="btn" id="recGaleria" data-i="recGaleria" style="margin:6px auto"></div><div class="btn" id="recBajar" data-i="recBajar" style="background:#4a7cff;margin:6px auto"></div></div></div>');
+aplicarIdioma();
+const cerrarRec = () => { cerrar('grabCapa'); pausado = false; videoFin = null; };
+$('recGaleria').onclick = async () => { if (!videoFin) return cerrarRec(); const v = videoFin;
+  try { await navigator.share({ files: [v.archivo] }); aviso(TR('recListo', { n: v.nombre }), 2500); cerrarRec(); } catch (e) { if (!(e && e.name === 'AbortError')) { descargar(v.blob, v.nombre); cerrarRec(); } } };
+$('recBajar').onclick = () => { if (videoFin) descargar(videoFin.blob, videoFin.nombre); cerrarRec(); };
+$('grabCerrar').onclick = cerrarRec;
 function descargar(blob, nombre) {
   const u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = nombre; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(u), 60000); aviso(TR('recListo', { n: TR('recGuardado') }), 3000);
