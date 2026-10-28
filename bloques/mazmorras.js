@@ -130,7 +130,7 @@ function generarMazmorras(S) {
     const r = k => h3(i, k, 13, semilla + 6200), c = {};
     c[I.ORO] = 2 + Math.floor(r(1) * 5); c[I.HIERRO] = 2 + Math.floor(r(2) * 4); if (r(3) < .5) c[I.CRISTAL] = 1 + Math.floor(r(4) * 2); c[I.PAN] = 2;
     if (I.SEMILLA_DORADA && r(5) < .5) c[I.SEMILLA_DORADA] = 1; if (I.PERLA && r(6) < .4) c[I.PERLA] = 1 + Math.floor(r(7) * 2);
-    if (t === 'jefe') { const armas = [I.LANZA, I.HACHA_GUERRA, I.ESCUDO, I.ESP4, I.ARCO].filter(Boolean); c[armas[Math.floor(r(8) * armas.length)]] = 1; c[I.ORO] += 4; c[I.CRISTAL] = (c[I.CRISTAL] || 0) + 2; if (I.POCION != null) c[I.POCION + Math.floor(r(9) * 4)] = 2; }
+    if (t === 'jefe') { const armas = [I.LANZA_H, I.HACHA_GUERRA, I.ESCUDO, I.ESP4, I.ARCO].filter(Boolean); c[armas[Math.floor(r(8) * armas.length)]] = 1; c[I.ORO] += 4; c[I.CRISTAL] = (c[I.CRISTAL] || 0) + 2; if (I.POCION != null) c[I.POCION + Math.floor(r(9) * 4)] = 2; }
     return c; }; }
 
 // ═════════ PALANCAS Y REJA ═════════

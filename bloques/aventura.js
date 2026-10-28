@@ -436,7 +436,7 @@ function climaFrameV(dt) {
   // frío en la ventisca: al aire libre y sin fuego cerca
   if (t === 'ventisca') { const fx = Math.floor(J.x), fy = Math.floor(J.y + 1), fz = Math.floor(J.z); frioT -= dt;
     if (frioT <= 0) { frioT = .5; let calor = cieloEn(fx, fy, fz) < .5; if (!calor) for (let a = -3; a <= 3 && !calor; a++) for (let b = -2; b <= 2 && !calor; b++) for (let d = -3; d <= 3; d++) { const q = get(fx + a, fy + b, fz + d); if (q && DEF[q] && DEF[q].luz >= 8) { calor = true; break; } }
-      frio = calor ? Math.max(0, frio - 2) : frio + .5; if (frio > 10 && Math.floor(frio * 2) % 10 === 0) { lastimar(1, 0, 0, false); aviso(TR('pvFrio'), 1600); } } }
+      if (window.__sinFrio && __sinFrio()) calor = true; frio = calor ? Math.max(0, frio - 2) : frio + .5; if (frio > 10 && Math.floor(frio * 2) % 10 === 0) { lastimar(1, 0, 0, false); aviso(TR('pvFrio'), 1600); } } }
   else frio = Math.max(0, frio - dt * 2);
   $('pvFrio').style.opacity = Math.min(.9, frio / 14);
   // lluvia de caramelos: caen y se pueden juntar

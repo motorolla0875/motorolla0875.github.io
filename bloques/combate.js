@@ -21,10 +21,10 @@ const NC = {};
 function objC(id, clave, es, en, pt, tile) { I[clave] = id; NC[es] = { en, pt }; item(id, es, tile, { arma: clave }); TODOS.push(id); }
 objC(2115, 'ESCUDO', 'Escudo', 'Shield', 'Escudo', tileC('escudo', (x, y) => { if (y < 1 || y > 14 || x < 2 || x > 13) return null; const borde = Math.abs(x - 7.5) + Math.max(0, y - 9) * 1.2; if (borde > 6.2) return null; if (borde > 5.2 || y === 1) return '#8a8a96'; return (x === 7 || x === 8) ? '#ffd23a' : x < 8 ? '#3a6ad8' : '#2a52b0'; }));
 objC(2116, 'HACHA_GUERRA', 'Hacha de guerra', 'Battle axe', 'Machado de guerra', tileC('hachaGuerra', (x, y) => { if (x + y === 15 || x + y === 16) return x > 4 ? '#7a5230' : null; const d = Math.hypot(x - 10, y - 4.5); if (d < 4.2 && x > 7) return d > 3.3 ? '#6a7080' : (x + y) % 3 ? '#c8d0e0' : '#e8eef6'; return null; }));
-objC(2117, 'LANZA', 'Lanza', 'Spear', 'Lança', tileC('lanza', (x, y) => { if (x + y === 15 && x < 11) return '#7a5230'; if (x + y >= 14 && x + y <= 16 && x >= 11) return x + y === 15 ? '#e8eef6' : '#a8b0c0'; if ((x === 9 && y === 7) || (x === 8 && y === 8)) return '#c8341a'; return null; }));
+objC(2117, 'LANZA_H', 'Lanza', 'Spear', 'Lança', tileC('lanza', (x, y) => { if (x + y === 15 && x < 11) return '#7a5230'; if (x + y >= 14 && x + y <= 16 && x >= 11) return x + y === 15 ? '#e8eef6' : '#a8b0c0'; if ((x === 9 && y === 7) || (x === 8 && y === 8)) return '#c8341a'; return null; }));
 try { atlasTex.needsUpdate = true; } catch (e) {}
 for (const es in NC) for (const l of ['en', 'pt']) { NOMBRES[l] = NOMBRES[l] || {}; NOMBRES[l][es] = NC[es][l]; }
-RECETAS.push([[I.ESCUDO, 1], [[B.MADERA, 6], [I.HIERRO, 1]]], [[I.HACHA_GUERRA, 1], [[I.HIERRO, 3], [I.PALO, 2]]], [[I.LANZA, 1], [[I.HIERRO, 2], [I.PALO, 3]]]);
+RECETAS.push([[I.ESCUDO, 1], [[B.MADERA, 6], [I.HIERRO, 1]]], [[I.HACHA_GUERRA, 1], [[I.HIERRO, 3], [I.PALO, 2]]], [[I.LANZA_H, 1], [[I.HIERRO, 2], [I.PALO, 3]]]);
 const enMano = () => barra[sel] || 0;
 
 // ─── estilos y botones ───
@@ -61,7 +61,7 @@ function soltarCarga() {
   const dir = centroDir(), base = danoBase(), arma = enMano(), lista = hostiles(), pos = new THREE.Vector3(J.x, J.y + 1, J.z);
   let tocados = 0, msg = 'cbFuerte';
   const pegar = (m, n, kx, kz, vy) => { const u = m.userData; if (u.vida <= 0) return; herir(m, n); u.kx = kx; u.kz = kz; if (vy) u.vy = vy; u.rojo = .3; tocados++; };
-  if (arma === I.LANZA) { msg = 'cbEstocada'; const f = new THREE.Vector3(dir.x, 0, dir.z).normalize();
+  if (arma === I.LANZA_H) { msg = 'cbEstocada'; const f = new THREE.Vector3(dir.x, 0, dir.z).normalize();
     for (const m of lista) { const d = m.position.clone().sub(pos); d.y = 0; const a = d.dot(f), l = d.clone().sub(f.clone().multiplyScalar(a)).length(); if (a > 0 && a < 6.5 && l < 1.3) pegar(m, Math.round(base * 2.2), f.x * 11, f.z * 11, 4); }
     dashDir = [f.x, f.z]; dashT = .18; invulT = .25; }
   else if (arma === I.HACHA_GUERRA) { msg = 'cbGolpeSuelo';
