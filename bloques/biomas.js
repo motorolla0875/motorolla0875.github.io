@@ -273,7 +273,7 @@ let zonaAct = null, zonaT = 0, humoT = 0;
 const humoMat = new THREE.MeshBasicMaterial({ color: 0x8a8890, transparent: true, opacity: .55 });
 function biomasFrame(dt) {
   if (!jugando || pausado || window.mundoTipo) { zonaAct = null; return; }
-  zonaT -= dt; if (zonaT <= 0) { zonaT = .5; const Z = ZONAS.find(Z => Math.hypot(J.x - Z.x, J.z - Z.z) < Z.r * .75); const k = Z ? Z.k : null;
+  zonaT -= dt; if (zonaT <= 0) { zonaT = .5; const Z = J.y > SEA - 3 ? ZONAS.find(Z => Math.hypot(J.x - Z.x, J.z - Z.z) < Z.r * .75) : null; const k = Z ? Z.k : null;
     if (k !== zonaAct) { zonaAct = k; if (k) aviso(TR('bio_' + k), 2200); } }
   const V = ZONAS.find(Z => Z.k === 'volcan' && Z.pico); if (!V || Math.hypot(J.x - V.x, J.z - V.z) > 90) return;
   humoT -= dt; if (humoT <= 0) { humoT = .18; const m = new THREE.Mesh(geoP, humoMat); m.scale.setScalar(2 + Math.random() * 2); m.position.set(V.x + .5 + (Math.random() - .5) * 2, V.pico + 1, V.z + .5 + (Math.random() - .5) * 2);
