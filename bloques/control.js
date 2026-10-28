@@ -88,6 +88,7 @@ function leerPad(dt) {
   // saltar / volar / bajar
   if (nuevo(BT.X)) { const t = performance.now(); if (creativo() && t - ultX < 320) { volando = !volando; J.vy = 0; pintarVolar(); } ultX = t; }
   saltando = !!b[BT.X]; bajando = !!b[BT.CIRCULO];
+  if (nuevo(BT.CIRCULO) && !volando && window.__combate) __combate.esquivar();
   // barra
   if (nuevo(BT.R1) || nuevo(BT.DER)) { sel = (sel + 1) % 9; pintarBarra(); }
   if (nuevo(BT.L1) || nuevo(BT.IZQ)) { sel = (sel + 8) % 9; pintarBarra(); }
@@ -98,12 +99,12 @@ function leerPad(dt) {
   if (nuevo(BT.OPTIONS)) { pausado = true; soltarTodo(); guardar(); $('pausa').hidden = false; antes = b; return; }
   if (nuevo(BT.ABAJO) && typeof dibujarMapa === 'function') { pausado = true; soltarTodo(); dibujarMapa(); $('mapaCapa').hidden = false; antes = b; return; }
   // R2: pegar o romper (manteniendo)
-  if (b[BT.R2]) { const dir = centro(), m = monstruoApuntado(dir), h = apuntar(dir);
-    if (m && (!h || m.t < h.t)) { delete toques.pad; repR2 -= dt; if (nuevo(BT.R2) || repR2 <= 0) { repR2 = .45; accion(() => tocar(dir)); } }
-    else if (!toques.pad) toques.pad = { izq: false, x0: innerWidth / 2, y0: innerHeight / 2, x: innerWidth / 2, y: innerHeight / 2, t0: performance.now() - 460, movio: 0, boton: 0, mouse: false, rompe: false, mira: false, pad: true }; }
-  else if (antes[BT.R2]) { delete toques.pad; rompiendo = null; repR2 = 0; }
+  if (b[BT.R2]) { if (nuevo(BT.R2)) { const dir = centro(), m = monstruoApuntado(dir), h = apuntar(dir); if (m && (!h || m.t < h.t)) accion(() => tocar(dir)); }
+    if (!toques.pad) toques.pad = { izq: false, x0: innerWidth / 2, y0: innerHeight / 2, x: innerWidth / 2, y: innerHeight / 2, t0: performance.now() - 460, movio: 0, boton: 0, mouse: false, rompe: false, mira: false, pad: true }; }
+  else if (antes[BT.R2]) { if (window.__combate && __combate.cargaLista()) __combate.soltarCarga(); delete toques.pad; rompiendo = null; }
   if (toques.pad) { toques.pad.x = innerWidth / 2; toques.pad.y = innerHeight / 2; }
   // L2: poner o usar (manteniendo, sigue poniendo)
+  if (b[BT.L2] && barra[sel] === I.ESCUDO && window.__combate) { __combate.bloquear(); } else
   if (b[BT.L2]) { repL2 -= dt; if (nuevo(BT.L2) || repL2 <= 0) { repL2 = nuevo(BT.L2) ? .35 : .22; accion(() => tocar(centro())); } } else repL2 = 0;
   antes = b;
 }
