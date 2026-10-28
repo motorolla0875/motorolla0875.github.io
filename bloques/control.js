@@ -94,6 +94,7 @@ function leerPad(dt) {
   // menús
   if (nuevo(BT.TRIANGULO)) { abrirPanel('bolsa'); antes = b; return; }
   if (nuevo(BT.CUADRADO)) { abrirPanel(creativo() ? 'bolsa' : 'fabricar'); antes = b; return; }
+  if (nuevo(BT.SHARE) && window.__rec) { __rec.alternar(); }
   if (nuevo(BT.OPTIONS)) { pausado = true; soltarTodo(); guardar(); $('pausa').hidden = false; antes = b; return; }
   if (nuevo(BT.ABAJO) && typeof dibujarMapa === 'function') { pausado = true; soltarTodo(); dibujarMapa(); $('mapaCapa').hidden = false; antes = b; return; }
   // R2: pegar o romper (manteniendo)
