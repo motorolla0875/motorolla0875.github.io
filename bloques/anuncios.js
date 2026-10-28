@@ -90,7 +90,9 @@ let adN = 0, adFalta = 0, adEsperando = false, adAbierto = false, proDesdeAnunci
 const adIntervalo = n => (n < AD_MINUTOS.length ? AD_MINUTOS[n] : AD_REPITE[(n - AD_MINUTOS.length) % AD_REPITE.length]) * (AD_RAPIDO ? 9 : 60);
 adFalta = adIntervalo(0);
 const enLineaAhora = () => { try { return !!(MP && MP.sala); } catch (e) { return false; } };
-const cuentaActiva = () => jugando && !pausado && !document.hidden && window.mundoTipo !== 'tutorial' && !enLineaAhora() && !sinAnuncios();
+// en la web no hay anuncios (solo en la app); para probarlos en la web: ?anuncioRapido
+const adEnApp = () => { const C = window.Capacitor; return !!(C && C.isNativePlatform && C.isNativePlatform()); };
+const cuentaActiva = () => (adEnApp() || AD_RAPIDO) && jugando && !pausado && !document.hidden && window.mundoTipo !== 'tutorial' && !enLineaAhora() && !sinAnuncios();
 // momento tranquilo: sin monstruos cerca, en el suelo (o volando en creativo), sin ir montado, sin paneles abiertos
 function momentoTranquilo() {
   if (!cuentaActiva()) return false;
