@@ -12,6 +12,8 @@
     const st = document.createElement('style');
     st.textContent = '#calChip, #ajCal2 [data-c2="votar"] { display: none !important; }';
     document.head.appendChild(st);
+    // en los portales no se manda a nadie a Google Play (CrazyGames no permite enlaces a otras tiendas)
+    abrirTienda = window.abrirTienda = function () {};
   }
   // CrazyGames empieza en "Basic launch", donde los anuncios están apagados: mientras tanto la Tienda
   // se desbloquea gratis (un botón de anuncio que no hace nada es motivo de rechazo).
