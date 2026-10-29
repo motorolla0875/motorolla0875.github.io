@@ -1,6 +1,6 @@
 'use strict';
 // ═════════ VERSIÓN PARA PORTALES WEB (itch.io, CrazyGames, GameDistribution, GameMonetize, Microsoft Store) ═════════
-// El paquete de cada portal pone window.VOX_PORTAL = 'itch' | 'crazygames' | 'gamedistribution' | 'gamemonetize' | 'windows' en el <head>.
+// El paquete de cada portal pone window.VOX_PORTAL = 'itch' | 'y8' | 'crazygames' | 'gamedistribution' | 'gamemonetize' | 'windows' en el <head>.
 // Para probar en la web: ?portal=itch o ?portal=crazygames
 // - En los portales no hay compras (sin Pro ni "quitar anuncios") ni botón de votar en Google Play.
 // - En CrazyGames los anuncios son los de su SDK (mismo reloj y cartel que en la app); en itch.io no hay anuncios.
@@ -19,8 +19,8 @@
   // se desbloquea gratis (un botón de anuncio que no hace nada es motivo de rechazo).
   // Cuando pasen a "Full launch", poner CG_ANUNCIOS = true para activar los anuncios (entre partidas y con premio).
   const CG_ANUNCIOS = false;
-  // itch.io (y CrazyGames en Basic launch): lo de la Tienda se desbloquea directo (sin el anuncio de prueba)
-  if (P === 'itch' || (P === 'crazygames' && !CG_ANUNCIOS)) {
+  // itch.io, Y8 (y CrazyGames en Basic launch): lo de la Tienda se desbloquea directo (sin el anuncio de prueba)
+  if (P === 'itch' || P === 'y8' || (P === 'crazygames' && !CG_ANUNCIOS)) {
     window.mostrarAnuncioPremiado = cb => cb(true);
     const txt = { es: 'Todo se desbloquea gratis', en: 'Everything unlocks for free', pt: 'Tudo é desbloqueado de graça' };
     for (const l of Object.keys(txt)) if (TX[l]) TX[l].tiendaAyuda = txt[l];
