@@ -105,6 +105,7 @@
         case 'SDK_GAME_START': sonidoGM(true); if (alTerminar) { const f = alTerminar; alTerminar = null; setTimeout(f, 300); } break;
       }
     } };
+    { const st = document.createElement('style'); st.textContent = '#sdk__advertisement, #imaContainer, #imaContainer_new { z-index: 2147483000 !important; }'; document.head.appendChild(st); }
     const s = document.createElement('script'); s.id = 'gamemonetize-sdk'; s.src = 'https://api.gamemonetize.com/sdk.js';
     document.head.appendChild(s);
     const gm = () => (typeof window.sdk !== 'undefined' && window.sdk && typeof window.sdk.showBanner === 'function') ? window.sdk : null;
