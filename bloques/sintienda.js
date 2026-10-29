@@ -6,7 +6,7 @@
 
 { const C = window.Capacitor;
   const enApp = !!(C && C.isNativePlatform && C.isNativePlatform());
-  const sinTienda = (enApp && !(C.Plugins && C.Plugins.Purchases)) || /[?&]sinTienda/.test(location.search);
+  const sinTienda = (enApp && !(C.Plugins && C.Plugins.Purchases)) || /[?&]sinTienda/.test(location.search) || !!window.VOX_PORTAL;
   if (sinTienda) {
     window.__sinTienda = true;
     document.documentElement.classList.add('sinTienda');
