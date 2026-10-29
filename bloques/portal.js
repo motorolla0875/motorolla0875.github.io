@@ -34,9 +34,18 @@
       // CrazyGames puede silenciar el juego desde su página
       const mute = () => { try { silencio = !!(sdk.game.settings && sdk.game.settings.muteAudio); sonido(!silencio); } catch (e) {} };
       mute(); try { sdk.game.addSettingsChangeListener(mute); } catch (e) {}
+      // chat: si CrazyGames lo apaga (disableChat), no se pueden mandar ni ver frases
+      const chat = () => { try { const no = !!(sdk.game.settings && sdk.game.settings.disableChat); document.documentElement.classList.toggle('sinChat', no); } catch (e) {} };
+      chat(); try { sdk.game.addSettingsChangeListener(chat); } catch (e) {}
+      // el nombre en las salas es el usuario de CrazyGames (así los amigos se reconocen)
+      const usarUsuario = u => { if (!u || !u.username) return; try { miNombre = String(u.username).slice(0, 20); } catch (e) { return; }
+        document.documentElement.classList.add('nombreCG'); try { $('mpNombre').textContent = miNombre; } catch (e) {}
+        try { if (window.__mp && __mp.MP.ws) mpEnviar({ t: 'hola', nombre: miNombre, skin: skinParaEnviar() }); } catch (e) {} };
+      try { sdk.user.getUser().then(usarUsuario).catch(() => {}); } catch (e) {}
+      try { sdk.user.addAuthListener(usarUsuario); } catch (e) {}
       // jugar con amigos: si entró desde una invitación, se une a esa sala; si es "multijugador al instante", abre una
       let sala = null, instant = false;
-      try { sala = sdk.game.getInviteParam('roomId'); } catch (e) {}
+      try { sala = (sdk.game.inviteParams && sdk.game.inviteParams.roomId) || sdk.game.getInviteParam('roomId'); } catch (e) {}
       try { instant = !!sdk.game.isInstantMultiplayer; } catch (e) {}
       if (sala || instant) {
         const t = setInterval(() => {
@@ -46,12 +55,28 @@
           clearInterval(t); setTimeout(() => { try { window.__mp.abrirSala(false); } catch (e) {} }, 1500);
         }, 1000);
       }
+      // si acepta una invitación con el juego ya abierto, va a esa sala sin recargar la página
+      try { sdk.game.addJoinRoomListener(p => {
+        const c = p && p.roomId; if (!c || !window.__mp) return;
+        if (__mp.MP.sala === String(c)) return;
+        if (__mp.MP.sala) { try { mpEnviar({ t: 'salir' }); terminarSala(); } catch (e) {} }
+        setTimeout(() => { try { __mp.unirse(String(c)); } catch (e) {} }, 400);
+      }); } catch (e) {}
     }
-    // al abrir una sala aparece el botón de invitar de CrazyGames; al cerrarla se esconde
+    { const st = document.createElement('style');
+      st.textContent = '.sinChat #bFrases, .sinChat #mpFrasesCapa { display: none !important; } .nombreCG #mpOtroNombre { display: none !important; }';
+      document.head.appendChild(st); }
+    { const f0 = fraseDe; fraseDe = function () { if (document.documentElement.classList.contains('sinChat')) return; return f0.apply(this, arguments); }; }
+    // la sala se informa a CrazyGames: así los amigos pueden invitar y entrar desde su página
+    const sala = c => { if (!sdk) return; const roomId = String(c);
+      try { sdk.game.updateRoom({ roomId, isJoinable: true, inviteParams: { roomId } }); }
+      catch (e) { try { sdk.game.showInviteButton({ roomId }); } catch (e2) {} } };
     { const r0 = recibir; recibir = function (m) { const r = r0.apply(this, arguments);
-        if (m && m.t === 'creada' && sdk) try { sdk.game.showInviteButton({ roomId: m.codigo }); } catch (e) {}
+        if (m && (m.t === 'creada' || m.t === 'unido') && m.codigo) sala(m.codigo);
         return r; }; }
-    { const t0 = terminarSala; terminarSala = function () { const r = t0.apply(this, arguments); if (sdk) try { sdk.game.hideInviteButton(); } catch (e) {} return r; }; }
+    { const t0 = terminarSala; terminarSala = function () { const r = t0.apply(this, arguments);
+        if (sdk) { try { sdk.game.leftRoom(); } catch (e) { try { sdk.game.hideInviteButton(); } catch (e2) {} } }
+        return r; }; }
     document.head.appendChild(s);
     if (CG_ANUNCIOS) window.__adsWeb = true;   // anuncios.js cuenta el tiempo como en la app
     const sonido = on => { try { const c = audio(); if (c) (on && !silencio) ? c.resume() : c.suspend(); } catch (e) {} };
@@ -68,7 +93,7 @@
     };
     // avisarle a CrazyGames cuándo se está jugando de verdad
     let jugandoAntes = false;
-    setInterval(() => { if (!sdk) return; let j = false; try { j = !!(jugando && !pausado && !document.hidden); } catch (e) {}
+    setInterval(() => { if (!sdk) return; let j = false; try { j = !!(jugando && !pausado); } catch (e) {}
       if (j !== jugandoAntes) { jugandoAntes = j; try { j ? sdk.game.gameplayStart() : sdk.game.gameplayStop(); } catch (e) {} } }, 1000);
   }
 }
