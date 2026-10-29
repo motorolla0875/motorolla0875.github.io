@@ -19,8 +19,8 @@
   // se desbloquea gratis (un botón de anuncio que no hace nada es motivo de rechazo).
   // Cuando pasen a "Full launch", poner CG_ANUNCIOS = true para activar los anuncios (entre partidas y con premio).
   const CG_ANUNCIOS = false;
-  // itch.io, Y8 (y CrazyGames en Basic launch): lo de la Tienda se desbloquea directo (sin el anuncio de prueba)
-  if (P === 'itch' || P === 'y8' || (P === 'crazygames' && !CG_ANUNCIOS)) {
+  // itch.io (y CrazyGames en Basic launch): lo de la Tienda se desbloquea directo (sin el anuncio de prueba)
+  if (P === 'itch' || (P === 'crazygames' && !CG_ANUNCIOS)) {
     window.mostrarAnuncioPremiado = cb => cb(true);
     const txt = { es: 'Todo se desbloquea gratis', en: 'Everything unlocks for free', pt: 'Tudo é desbloqueado de graça' };
     for (const l of Object.keys(txt)) if (TX[l]) TX[l].tiendaAyuda = txt[l];
@@ -129,6 +129,41 @@
       setTimeout(() => { if (!empezo) fin(); }, 4000);   // si no hay anuncio, se sigue jugando
       try { g.showBanner(); } catch (e) { fin(); }
     };
+  }
+  // Y8: anuncios con su SDK. Entre partidas en pausas naturales (al entrar a un mundo y al revivir, como mucho uno cada 3 minutos)
+  // y con premio en la Tienda (si no hay anuncio disponible, se desbloquea igual). IDs del panel de Y8.
+  if (P === 'y8') {
+    let y8s = null;
+    const sonidoY8 = on => { try { const c = audio(); if (c) on ? c.resume() : c.suspend(); } catch (e) {} };
+    window.addEventListener('y8sdk.ready', () => {
+      try { y8s = y8.sdk(); y8s.init({ appId: '6ae359d5f5f29e44a52a398e', autoLogin: false }, { gameId: '290209', preloadAdBreaks: 'on', sound: 'on', onReady: () => {} }); } catch (e) { y8s = null; }
+    }, { once: true });
+    const s = document.createElement('script'); s.async = true; s.src = 'https://cdn.y8.com/minimal-sdk/2-0/y8.min.js';
+    s.onload = () => { try { if (window.y8 && window.y8.emitReadyEvent) window.y8.emitReadyEvent(); } catch (e) {} };
+    document.head.appendChild(s);
+    const anuncio = (tipo, nombre, alPremio, cb) => {
+      if (!y8s) return cb(false);
+      let listo = false; const fin = ok => { if (listo) return; listo = true; sonidoY8(true); cb(ok); };
+      setTimeout(() => fin(false), 90000);
+      try {
+        Promise.resolve(y8s.showAd({ type: tipo, name: nombre,
+          beforeAd: () => sonidoY8(false), afterAd: () => sonidoY8(true),
+          beforeReward: show => show(), adDismissed: () => {}, adViewed: () => { if (alPremio) alPremio(); },
+          adBreakDone: () => setTimeout(() => fin(true), 200) })).catch(() => fin(false));
+      } catch (e) { fin(false); }
+    };
+    window.mostrarAnuncioIntersticial = cb => anuncio('next', 'pausa', null, () => cb());
+    window.mostrarAnuncioPremiado = cb => { let ok = false; anuncio('reward', 'tienda', () => { ok = true; }, hubo => cb(ok || !hubo)); };
+    let ultimo = 0;
+    const pausaNatural = cb => {
+      if (!y8s || Date.now() - ultimo < 180000 || (typeof sinAnuncios === 'function' && sinAnuncios())) return cb();
+      ultimo = Date.now(); window.mostrarAnuncioIntersticial(cb);
+    };
+    { const e0 = entrarMundo; entrarMundo = window.entrarMundo = function () {
+        const r = e0.apply(this, arguments);
+        if (window.mundoTipo !== 'tutorial') pausaNatural(() => {});
+        return r; }; }
+    try { const b = $('bRevivir'), r0 = b.onclick; b.onclick = function (ev) { pausaNatural(() => r0.call(b, ev)); }; } catch (e) {}
   }
   if (P === 'crazygames') {
     let sdk = null;
