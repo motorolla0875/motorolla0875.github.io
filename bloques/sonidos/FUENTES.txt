@@ -12,7 +12,6 @@ SFX Engine (sfxengine.com) - efectos generados con IA, libres de regalías para 
   paso*        <- herobrine-gravel-footstep-5iaxnohj.wav, minecraftt-walking-on-gra-pttfkudz.wav
   puerta*      <- minecraft-trap-door-sound-c6wwmkqe.wav, una-porta-che-si-apre-qoobyjmu.wav
   golpe*       <- minecraft-critical-hit-da-653votin.wav, minecraft-critical-hit-eciztawe.wav
-  agarrar      <- pickup-minecraft-sound-4656at7z.wav
   mision       <- minecraft-style-experienc-iqn7rd6k.wav
   fabricar     <- a-short-slightly-brighter-loo5wst5.wav
   ojon*        <- minecraft-zoimbe-sound-lpf6spxx.wav
@@ -26,3 +25,6 @@ Pixabay (pixabay.com, Licencia de Contenido de Pixabay):
 No se usan (posibles copias de sonidos originales de otro juego):
   chieuk-minecraft-villager-289282.mp3, freesound_community-creeper-36141.mp3,
   freesound_community-minecraft-villager-confused-sound-102005.mp3, new2009pro-minecraft-villager-sound-15065.mp3
+
+Hechos con código para Voxelium (propios, sin licencia de terceros):
+  agarrar      <- "tic de madera" sintetizado (octubre 2026)
