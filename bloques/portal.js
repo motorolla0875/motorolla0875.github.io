@@ -1,6 +1,6 @@
 'use strict';
-// ═════════ VERSIÓN PARA PORTALES WEB (itch.io, CrazyGames, GameDistribution, Microsoft Store) ═════════
-// El paquete de cada portal pone window.VOX_PORTAL = 'itch' | 'crazygames' | 'gamedistribution' | 'windows' en el <head>.
+// ═════════ VERSIÓN PARA PORTALES WEB (itch.io, CrazyGames, GameDistribution, GameMonetize, Microsoft Store) ═════════
+// El paquete de cada portal pone window.VOX_PORTAL = 'itch' | 'crazygames' | 'gamedistribution' | 'gamemonetize' | 'windows' en el <head>.
 // Para probar en la web: ?portal=itch o ?portal=crazygames
 // - En los portales no hay compras (sin Pro ni "quitar anuncios") ni botón de votar en Google Play.
 // - En CrazyGames los anuncios son los de su SDK (mismo reloj y cartel que en la app); en itch.io no hay anuncios.
@@ -27,7 +27,8 @@
   }
   // Microsoft Store (Windows): sin compras ni anuncios; lo de la Tienda se desbloquea gratis
   // y un botón "También en Android" muestra un código QR para bajar la app en el celular.
-  if (P === 'windows') {
+  // GameMonetize: tiene el mismo botón "También en Android" y además un botón directo a Google Play.
+  if (P === 'windows' || P === 'gamemonetize') {
     window.mostrarAnuncioPremiado = cb => cb(true);
     const txt = { es: 'Todo se desbloquea gratis', en: 'Everything unlocks for free', pt: 'Tudo é desbloqueado de graça' };
     for (const l of Object.keys(txt)) if (TX[l]) TX[l].tiendaAyuda = txt[l];
@@ -49,13 +50,16 @@
       #andCapa .caja { background: #f3f6ff; color: #0d153d; border: 3px solid #0d153d; border-radius: 18px; padding: 18px 22px; width: min(340px, 90vw); text-align: center; box-shadow: 0 6px 0 #0d153d; }
       #andCapa h3 { margin: 0 0 8px; font-size: 22px; } #andCapa p { margin: 8px 0 12px; font-size: 14px; }
       #andCapa img { width: 200px; height: 200px; image-rendering: pixelated; }
+      #andCapa .ok.gp { background: linear-gradient(#7dff9a, #2fbf5a); margin-right: 6px; }
       #andCapa .ok { display: inline-block; margin-top: 4px; padding: 8px 26px; background: linear-gradient(#ffe14a, #f5a62a); border: 2px solid #0d153d; border-radius: 12px; font-weight: 800; cursor: pointer; box-shadow: 0 3px 0 #0d153d; }`;
     document.head.appendChild(st);
     const c = document.createElement('div'); c.id = 'andChip'; c.innerHTML = '<span data-ih="andChip"></span>';
     const v = document.createElement('div'); v.id = 'andCapa'; v.hidden = true;
-    v.innerHTML = '<div class="caja"><h3 data-i="andTit"></h3><img alt="QR" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAIAAABqcO2fAAAFL0lEQVR42u3dwZEjNwwF0FlXn/focBy8w/FxE5ADmINZXHwAkt87z6hbrV8sNooEf7xery/4XH94BIg4iDiIOIg4iDiIOIg4Ig4iDiIO856TP/r551+Dt/jrn7//835O/ib3yd//puqpnnzy3f3c/aZ3z7kzG0ZxTFRAxEHEQcShxXP3b3c1hBO5SsjJtXLVm7unenL1qv+6+y22ZcMojokKiDiIOIg4tHiqPmj27TtXVcipuvrdk+9cWzKbDaM4Jiog4iDiIOIQ8LzjTVfVEE7e2av+pvMOv39O1cofoziIOIg4iDiIOHx9fb1pReWkGnCisx/LyX9V1TTudvR8Rv3EKI6JCog4iDiIOLQoq6jM7qDp3FcyW3Wpej65PirbsmEUx0QFRBxEHEQcAi4rKtvWM8ye2pO7n5Mnv+27b8uGURwTFRBxEHEQcQj48Xq93u6mcxWD/afb5M5TNoqDiIOIg4iDiMOxo4pK1Rt650nEszr31OTup/PXyVWKjOKYqICIg4iDiENA2RqVztUdnR1Itj2N2VN7On+vqjqeURwTFRBxEHEQcQi4XKNSVQ3IvUfnagi5/US57iuz3z2XKKM4iDgiDiIOIg5DWisqVXIVnk+VO5+oswpkjQqIOCIOIg4iDmsMd6btXElS9cl33+Id98vkvmnnr2MUx0QFRBxEHEQcAi4rKts6lFZdq2p9xaeeVvyOfW+M4piogIiDiIOIQ8CTeyPuPPm36uq5KkfudKQTVXWhu2x0flOjOCYqIOIg4iDi0OKoolK1p+bkrbmzG2quDvP9c3IVgztVV8+t4TGKg4iDiCPiIOKw2DN7+dzql9kqR+7qnXt89ne5MYqDiCPiIOIg4jAk2Eclt8ensxax/372n2jc2YfWKI6JCog4iDiIOLQo66NSZduekdlvkdsZNNv/pPO7G8UxUQERBxEHEYeA4K6f/SftdvZ93VZnuHvyVWch3eXHGhUQcUQcRBxEHNa43PVT9f67repycvWqDred1YnZk5pzO6eM4iDiiDiIOIg4DAn2Ual6r992Sk5nlSPXa2X2njt/QaM4Jiog4iDiIOIQcFRR+YwzX3L3U7UGo7OHzP5eNNaogIiDiCPiIOKw2GVFZf9qk9kqUG6XTa5607kzKLdPyiiOiQqIOIg4iDi0CPZRuXuPzv3X3T3fme0hk7v67HoYnWlBxBFxEHEQcVgjeHry3ek2d3JrXWZXblS5+wWrqi6znXCM4piogIiDiIOIQ8BRRaVqzcP+nq4nOs/oqXrOs11TZjsJG8UxUQERBxEHEYeAJ/fRs/1G7q6VW8uR+5zOakmuf05uHZRRHBMVEHEQcRBxCAju+sm9+3//nM6OH7O9TXK/zrZrGcVBxEHEEXEQcVisrDNtp9zql859SXf301nzmT3jqerqRnFMVEDEQcRBxCGgdY3KnbsOt517jmZXtsz+XrNdZ43iIOKIOIg4iDgMOVqj0vnW3LniYr/cupGTZ3hyP1WfnPvuRnFMVEDEQcRBxCGgrDNtrrPoybU610Xsv+e7a92dg2wUBxEHEQcRBxHnf+l5x5vu3EFz4uRaVfuSZrud7D+NyCiOiQqIOIg4iDi0eD7ja1SdkjO7g+ZkTci2jrtV62Hurm4UBxFHxEHEQcRhSFlFZVs/0qr3+qr1J539dTvPbu7scqOiAiKOiIOIg4jDGpcVldl+Gp37XDp32byjzjOVdKYFEUfEQcRBxGGNo7N+wCgOIg4iDiIOIg4ijoiDiIOIg4iDiMNv+BdoIom2Do9WGwAAAABJRU5ErkJggg=="><p data-i="andTxt"></p><div class="ok" data-i="andOk"></div></div>';
+    v.innerHTML = '<div class="caja"><h3 data-i="andTit"></h3><img alt="QR" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAIAAABqcO2fAAAFL0lEQVR42u3dwZEjNwwF0FlXn/focBy8w/FxE5ADmINZXHwAkt87z6hbrV8sNooEf7xery/4XH94BIg4iDiIOIg4iDiIOIg4Ig4iDiIO856TP/r551+Dt/jrn7//835O/ib3yd//puqpnnzy3f3c/aZ3z7kzG0ZxTFRAxEHEQcShxXP3b3c1hBO5SsjJtXLVm7unenL1qv+6+y22ZcMojokKiDiIOIg4tHiqPmj27TtXVcipuvrdk+9cWzKbDaM4Jiog4iDiIOIQ8LzjTVfVEE7e2av+pvMOv39O1cofoziIOIg4iDiIOHx9fb1pReWkGnCisx/LyX9V1TTudvR8Rv3EKI6JCog4iDiIOLQoq6jM7qDp3FcyW3Wpej65PirbsmEUx0QFRBxEHEQcAi4rKtvWM8ye2pO7n5Mnv+27b8uGURwTFRBxEHEQcQj48Xq93u6mcxWD/afb5M5TNoqDiIOIg4iDiMOxo4pK1Rt650nEszr31OTup/PXyVWKjOKYqICIg4iDiENA2RqVztUdnR1Itj2N2VN7On+vqjqeURwTFRBxEHEQcQi4XKNSVQ3IvUfnagi5/US57iuz3z2XKKM4iDgiDiIOIg5DWisqVXIVnk+VO5+oswpkjQqIOCIOIg4iDmsMd6btXElS9cl33+Id98vkvmnnr2MUx0QFRBxEHEQcAi4rKts6lFZdq2p9xaeeVvyOfW+M4piogIiDiIOIQ8CTeyPuPPm36uq5KkfudKQTVXWhu2x0flOjOCYqIOIg4iDi0OKoolK1p+bkrbmzG2quDvP9c3IVgztVV8+t4TGKg4iDiCPiIOKw2DN7+dzql9kqR+7qnXt89ne5MYqDiCPiIOIg4jAk2Eclt8ensxax/372n2jc2YfWKI6JCog4iDiIOLQo66NSZduekdlvkdsZNNv/pPO7G8UxUQERBxEHEYeA4K6f/SftdvZ93VZnuHvyVWch3eXHGhUQcUQcRBxEHNa43PVT9f67repycvWqDred1YnZk5pzO6eM4iDiiDiIOIg4DAn2Ual6r992Sk5nlSPXa2X2njt/QaM4Jiog4iDiIOIQcFRR+YwzX3L3U7UGo7OHzP5eNNaogIiDiCPiIOKw2GVFZf9qk9kqUG6XTa5607kzKLdPyiiOiQqIOIg4iDi0CPZRuXuPzv3X3T3fme0hk7v67HoYnWlBxBFxEHEQcVgjeHry3ek2d3JrXWZXblS5+wWrqi6znXCM4piogIiDiIOIQ8BRRaVqzcP+nq4nOs/oqXrOs11TZjsJG8UxUQERBxEHEYeAJ/fRs/1G7q6VW8uR+5zOakmuf05uHZRRHBMVEHEQcRBxCAju+sm9+3//nM6OH7O9TXK/zrZrGcVBxEHEEXEQcVisrDNtp9zql859SXf301nzmT3jqerqRnFMVEDEQcRBxCGgdY3KnbsOt517jmZXtsz+XrNdZ43iIOKIOIg4iDgMOVqj0vnW3LniYr/cupGTZ3hyP1WfnPvuRnFMVEDEQcRBxCGgrDNtrrPoybU610Xsv+e7a92dg2wUBxEHEQcRBxHnf+l5x5vu3EFz4uRaVfuSZrud7D+NyCiOiQqIOIg4iDi0eD7ja1SdkjO7g+ZkTci2jrtV62Hurm4UBxFHxEHEQcRhSFlFZVs/0qr3+qr1J539dTvPbu7scqOiAiKOiIOIg4jDGpcVldl+Gp37XDp32byjzjOVdKYFEUfEQcRBxGGNo7N+wCgOIg4iDiIOIg4ijoiDiIOIg4iDiMNv+BdoIom2Do9WGwAAAABJRU5ErkJggg=="><p data-i="andTxt"></p>' + (P === 'gamemonetize' ? '<div class="ok gp">Google Play</div> ' : '') + '<div class="ok" data-i="andOk"></div></div>';
     c.onclick = () => { v.hidden = false; };
-    v.addEventListener('click', e => { if (e.target === v || e.target.closest('.ok')) v.hidden = true; });
+    v.addEventListener('click', e => {
+      if (e.target.closest('.gp')) { try { window.open('https://play.google.com/store/apps/details?id=com.dmithbuilds.voxelium', '_blank'); } catch (er) {} return; }
+      if (e.target === v || e.target.closest('.ok')) v.hidden = true; });
     try { $('inicio').appendChild(c); document.body.appendChild(v); aplicarIdioma(); } catch (e) {}
   }
   // GameDistribution: anuncios con su SDK (entre partidas con el mismo reloj y cartel que en la app, y con premio en la Tienda).
@@ -88,6 +92,41 @@
       const fin = () => { if (listo) return; listo = true; premio = null; alTerminar = null; sonidoGD(true); cb(ok); };
       alTerminar = fin; setTimeout(fin, 90000);
       try { Promise.resolve(g.showAd('rewarded')).then(() => setTimeout(fin, 400), () => { ok = true; fin(); }); } catch (e) { ok = true; fin(); }
+    };
+  }
+  // GameMonetize: anuncios entre partidas con su SDK (sdk.showBanner). No tiene anuncios con premio,
+  // así que lo de la Tienda se desbloquea gratis (arriba). GM_ID es el "Game ID" del panel de GameMonetize.
+  if (P === 'gamemonetize') {
+    let alTerminar = null, empezo = false;
+    const sonidoGM = on => { try { const c = audio(); if (c) on ? c.resume() : c.suspend(); } catch (e) {} };
+    window.SDK_OPTIONS = { gameId: window.VOX_GM_ID || '', onEvent: ev => {
+      switch (ev.name) {
+        case 'SDK_GAME_PAUSE': empezo = true; sonidoGM(false); break;
+        case 'SDK_GAME_START': sonidoGM(true); if (alTerminar) { const f = alTerminar; alTerminar = null; setTimeout(f, 300); } break;
+      }
+    } };
+    const s = document.createElement('script'); s.id = 'gamemonetize-sdk'; s.src = 'https://api.gamemonetize.com/sdk.js';
+    document.head.appendChild(s);
+    const gm = () => (typeof window.sdk !== 'undefined' && window.sdk && typeof window.sdk.showBanner === 'function') ? window.sdk : null;
+    // GameMonetize no permite anuncios por tiempo: acá no se usa el reloj de anuncios.js.
+    // Los anuncios salen en pausas naturales (al entrar a un mundo y al revivir), como mucho uno cada 3 minutos.
+    let ultimo = 0;
+    const pausaNatural = cb => {
+      if (!gm() || Date.now() - ultimo < 180000 || (typeof sinAnuncios === 'function' && sinAnuncios())) return cb();
+      ultimo = Date.now(); window.mostrarAnuncioIntersticial(cb);
+    };
+    { const e0 = entrarMundo; entrarMundo = window.entrarMundo = function () {
+        const r = e0.apply(this, arguments);
+        if (window.mundoTipo !== 'tutorial') pausaNatural(() => {});
+        return r; }; }
+    try { const b = $('bRevivir'), r0 = b.onclick; b.onclick = function (ev) { pausaNatural(() => r0.call(b, ev)); }; } catch (e) {}
+    window.mostrarAnuncioIntersticial = cb => {
+      const g = gm(); if (!g) return cb();
+      let listo = false; empezo = false;
+      const fin = () => { if (listo) return; listo = true; alTerminar = null; sonidoGM(true); cb(); };
+      alTerminar = fin; setTimeout(fin, 90000);
+      setTimeout(() => { if (!empezo) fin(); }, 4000);   // si no hay anuncio, se sigue jugando
+      try { g.showBanner(); } catch (e) { fin(); }
     };
   }
   if (P === 'crazygames') {
