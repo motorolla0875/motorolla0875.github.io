@@ -1,6 +1,6 @@
 'use strict';
-// ═════════ VERSIÓN PARA PORTALES WEB (itch.io, CrazyGames) ═════════
-// El paquete de cada portal pone window.VOX_PORTAL = 'itch' | 'crazygames' en el <head>.
+// ═════════ VERSIÓN PARA PORTALES WEB (itch.io, CrazyGames, GameDistribution) ═════════
+// El paquete de cada portal pone window.VOX_PORTAL = 'itch' | 'crazygames' | 'gamedistribution' en el <head>.
 // Para probar en la web: ?portal=itch o ?portal=crazygames
 // - En los portales no hay compras (sin Pro ni "quitar anuncios") ni botón de votar en Google Play.
 // - En CrazyGames los anuncios son los de su SDK (mismo reloj y cartel que en la app); en itch.io no hay anuncios.
@@ -24,6 +24,38 @@
     window.mostrarAnuncioPremiado = cb => cb(true);
     const txt = { es: 'Todo se desbloquea gratis', en: 'Everything unlocks for free', pt: 'Tudo é desbloqueado de graça' };
     for (const l of Object.keys(txt)) if (TX[l]) TX[l].tiendaAyuda = txt[l];
+  }
+  // GameDistribution: anuncios con su SDK (entre partidas con el mismo reloj y cartel que en la app, y con premio en la Tienda).
+  // GD_ID es el "Game ID" que da GameDistribution al crear el juego en su panel.
+  if (P === 'gamedistribution') {
+    const GD_ID = window.VOX_GD_ID || '';
+    let premio = null, alTerminar = null;
+    const sonidoGD = on => { try { const c = audio(); if (c) on ? c.resume() : c.suspend(); } catch (e) {} };
+    window.GD_OPTIONS = { gameId: GD_ID, onEvent: ev => {
+      switch (ev.name) {
+        case 'SDK_GAME_PAUSE': sonidoGD(false); break;
+        case 'SDK_GAME_START': sonidoGD(true); if (alTerminar) { const f = alTerminar; alTerminar = null; setTimeout(f, 400); } break;
+        case 'SDK_REWARDED_WATCH_COMPLETE': if (premio) premio(); break;
+      }
+    } };
+    const s = document.createElement('script'); s.id = 'gamedistribution-jssdk'; s.src = 'https://html5.api.gamedistribution.com/main.min.js';
+    document.head.appendChild(s);
+    const gd = () => (typeof window.gdsdk !== 'undefined' && window.gdsdk && typeof window.gdsdk.showAd === 'function') ? window.gdsdk : null;
+    window.__adsWeb = true;   // anuncios.js cuenta el tiempo como en la app
+    window.mostrarAnuncioIntersticial = cb => {
+      const g = gd(); if (!g) return cb();
+      let listo = false; const fin = () => { if (listo) return; listo = true; alTerminar = null; sonidoGD(true); cb(); };
+      alTerminar = fin; setTimeout(fin, 90000);
+      try { Promise.resolve(g.showAd()).then(fin, fin); } catch (e) { fin(); }
+    };
+    // Tienda: desbloquear mirando un anuncio con premio (si no hay anuncio disponible, se desbloquea igual)
+    window.mostrarAnuncioPremiado = cb => {
+      const g = gd(); if (!g) return cb(true);
+      let ok = false, listo = false; premio = () => { ok = true; };
+      const fin = () => { if (listo) return; listo = true; premio = null; alTerminar = null; sonidoGD(true); cb(ok); };
+      alTerminar = fin; setTimeout(fin, 90000);
+      try { Promise.resolve(g.showAd('rewarded')).then(() => setTimeout(fin, 400), () => { ok = true; fin(); }); } catch (e) { ok = true; fin(); }
+    };
   }
   if (P === 'crazygames') {
     let sdk = null;
