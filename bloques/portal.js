@@ -52,8 +52,11 @@
           if (typeof window.__mp !== 'object' || $('cargando') && !$('cargando').hidden) return;
           if (sala) { clearInterval(t); try { window.__mp.unirse(String(sala)); } catch (e) {} return; }
           try { if (!jugando) { $('inicio').hidden = true; crearMundo('creativo'); return; } } catch (e) {}
-          clearInterval(t); setTimeout(() => { try { window.__mp.abrirSala(false); } catch (e) {} }, 1500);
+          // ya está jugando: abre la sala privada (reintenta hasta que el servidor la confirme)
+          if (window.__mp.MP.sala || ++intentos > 12) { clearInterval(t); return; }
+          if (intentos % 3 === 2) try { window.__mp.abrirSala(false); } catch (e) {}
         }, 1000);
+        let intentos = 0;
       }
       // si acepta una invitación con el juego ya abierto, va a esa sala sin recargar la página
       try { sdk.game.addJoinRoomListener(p => {
