@@ -37,12 +37,6 @@
       // chat: si CrazyGames lo apaga (disableChat), no se pueden mandar ni ver frases
       const chat = () => { try { const no = !!(sdk.game.settings && sdk.game.settings.disableChat); document.documentElement.classList.toggle('sinChat', no); } catch (e) {} };
       chat(); try { sdk.game.addSettingsChangeListener(chat); } catch (e) {}
-      // el nombre en las salas es el usuario de CrazyGames (así los amigos se reconocen)
-      const usarUsuario = u => { if (!u || !u.username) return; try { miNombre = String(u.username).slice(0, 20); } catch (e) { return; }
-        document.documentElement.classList.add('nombreCG'); try { $('mpNombre').textContent = miNombre; } catch (e) {}
-        try { if (window.__mp && __mp.MP.ws) mpEnviar({ t: 'hola', nombre: miNombre, skin: skinParaEnviar() }); } catch (e) {} };
-      try { sdk.user.getUser().then(usarUsuario).catch(() => {}); } catch (e) {}
-      try { sdk.user.addAuthListener(usarUsuario); } catch (e) {}
       // jugar con amigos: si entró desde una invitación, se une a esa sala; si es "multijugador al instante", abre una
       let sala = null, instant = false;
       try { sala = (sdk.game.inviteParams && sdk.game.inviteParams.roomId) || sdk.game.getInviteParam('roomId'); } catch (e) {}
@@ -67,7 +61,7 @@
       }); } catch (e) {}
     }
     { const st = document.createElement('style');
-      st.textContent = '.sinChat #bFrases, .sinChat #mpFrasesCapa { display: none !important; } .nombreCG #mpOtroNombre { display: none !important; }';
+      st.textContent = '.sinChat #bFrases, .sinChat #mpFrasesCapa { display: none !important; }';
       document.head.appendChild(st); }
     { const f0 = fraseDe; fraseDe = function () { if (document.documentElement.classList.contains('sinChat')) return; return f0.apply(this, arguments); }; }
     // la sala se informa a CrazyGames: así los amigos pueden invitar y entrar desde su página
