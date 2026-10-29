@@ -13,8 +13,12 @@
     st.textContent = '#calChip, #ajCal2 [data-c2="votar"] { display: none !important; }';
     document.head.appendChild(st);
   }
-  // itch.io: sin anuncios, lo de la Tienda se desbloquea directo (sin el anuncio de prueba)
-  if (P === 'itch') {
+  // CrazyGames empieza en "Basic launch", donde los anuncios están apagados: mientras tanto la Tienda
+  // se desbloquea gratis (un botón de anuncio que no hace nada es motivo de rechazo).
+  // Cuando pasen a "Full launch", poner CG_ANUNCIOS = true para activar los anuncios (entre partidas y con premio).
+  const CG_ANUNCIOS = false;
+  // itch.io (y CrazyGames en Basic launch): lo de la Tienda se desbloquea directo (sin el anuncio de prueba)
+  if (P === 'itch' || (P === 'crazygames' && !CG_ANUNCIOS)) {
     window.mostrarAnuncioPremiado = cb => cb(true);
     const txt = { es: 'Todo se desbloquea gratis', en: 'Everything unlocks for free', pt: 'Tudo é desbloqueado de graça' };
     for (const l of Object.keys(txt)) if (TX[l]) TX[l].tiendaAyuda = txt[l];
@@ -47,7 +51,7 @@
         return r; }; }
     { const t0 = terminarSala; terminarSala = function () { const r = t0.apply(this, arguments); if (sdk) try { sdk.game.hideInviteButton(); } catch (e) {} return r; }; }
     document.head.appendChild(s);
-    window.__adsWeb = true;   // anuncios.js cuenta el tiempo como en la app
+    if (CG_ANUNCIOS) window.__adsWeb = true;   // anuncios.js cuenta el tiempo como en la app
     const sonido = on => { try { const c = audio(); if (c) (on && !silencio) ? c.resume() : c.suspend(); } catch (e) {} };
     window.mostrarAnuncioIntersticial = cb => {
       if (!sdk) return cb();
@@ -55,7 +59,7 @@
       try { sdk.ad.requestAd('midgame', { adStarted: () => sonido(false), adFinished: fin, adError: fin }); } catch (e) { fin(); }
     };
     // Tienda: desbloquear mirando un anuncio con premio
-    window.mostrarAnuncioPremiado = cb => {
+    if (CG_ANUNCIOS) window.mostrarAnuncioPremiado = cb => {
       if (!sdk) return cb(true);
       let listo = false; const fin = ok => { if (listo) return; listo = true; sonido(true); cb(ok); };
       try { sdk.ad.requestAd('rewarded', { adStarted: () => sonido(false), adFinished: () => fin(true), adError: () => fin(false) }); } catch (e) { fin(false); }
