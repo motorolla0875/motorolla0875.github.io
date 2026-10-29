@@ -13,6 +13,12 @@
     st.textContent = '#calChip, #ajCal2 [data-c2="votar"] { display: none !important; }';
     document.head.appendChild(st);
   }
+  // itch.io: sin anuncios, lo de la Tienda se desbloquea directo (sin el anuncio de prueba)
+  if (P === 'itch') {
+    window.mostrarAnuncioPremiado = cb => cb(true);
+    const txt = { es: 'Todo se desbloquea gratis', en: 'Everything unlocks for free', pt: 'Tudo é desbloqueado de graça' };
+    for (const l of Object.keys(txt)) if (TX[l]) TX[l].tiendaAyuda = txt[l];
+  }
   if (P === 'crazygames') {
     let sdk = null;
     const s = document.createElement('script'); s.src = 'https://sdk.crazygames.com/crazygames-sdk-v3.js';
@@ -24,6 +30,12 @@
       if (!sdk) return cb();
       let listo = false; const fin = () => { if (listo) return; listo = true; sonido(true); cb(); };
       try { sdk.ad.requestAd('midgame', { adStarted: () => sonido(false), adFinished: fin, adError: fin }); } catch (e) { fin(); }
+    };
+    // Tienda: desbloquear mirando un anuncio con premio
+    window.mostrarAnuncioPremiado = cb => {
+      if (!sdk) return cb(true);
+      let listo = false; const fin = ok => { if (listo) return; listo = true; sonido(true); cb(ok); };
+      try { sdk.ad.requestAd('rewarded', { adStarted: () => sonido(false), adFinished: () => fin(true), adError: () => fin(false) }); } catch (e) { fin(false); }
     };
     // avisarle a CrazyGames cuándo se está jugando de verdad
     let jugandoAntes = false;
