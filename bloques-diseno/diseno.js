@@ -252,7 +252,7 @@ function dzFabricarHTML() {
     const bolsaSup = panelTab === 'bolsa' && cofreAbierto === null && !creativo(), fab = panelTab === 'fabricar' && cofreAbierto === null, ancha = bolsaSup || fab;
     v.classList.add('dzGrande'); v.classList.toggle('dzAncha', ancha);
     // la ventana grande va sin el zoom general (así entra más) y ocupa casi toda la pantalla
-    if (ancha) { v.style.zoom = innerHeight < 560 ? '.86' : '1'; const z = parseFloat(v.style.zoom); v.style.setProperty('width', Math.min(1240, innerWidth * .95) / z + 'px', 'important'); v.style.setProperty('height', (Math.min(780, innerHeight * .9 - 20)) / z + 'px', 'important'); }
+    if (ancha) { const chica = innerHeight < 560; v.style.zoom = innerHeight < 450 ? '.74' : chica ? '.86' : '1'; const z = parseFloat(v.style.zoom); v.style.setProperty('width', Math.min(1240, innerWidth * (chica ? .84 : .95)) / z + 'px', 'important'); v.style.setProperty('height', (Math.min(780, innerHeight * (chica ? .8 : .9) - (chica ? 6 : 20))) / z + 'px', 'important'); }
     else { v.style.width = ''; v.style.height = ''; v.style.zoom = ''; }
     let c = v.querySelector('.dzCartel'); if (!c) { c = document.createElement('div'); c.className = 'dzCartel'; c.innerHTML = '<span></span>'; v.appendChild(c); }
     c.firstChild.textContent = TR(cofreAbierto !== null ? 'dzCofreT' : panelTab === 'fabricar' ? 'dzFabT' : 'dzBolsaT');

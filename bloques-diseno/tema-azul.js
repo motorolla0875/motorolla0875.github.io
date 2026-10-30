@@ -151,6 +151,21 @@ const AZI = {
     #mundosCuerpo.azPanel { padding: 8px 12px 6px; } .azTiles { gap: 6px; margin-bottom: 8px; } .azTiles .btn { min-height: 62px; } .azTiles .btn svg { width: 22px; height: 22px; margin: 0; } .azTiles .btn small { display: none; }
     .azFila { padding: 6px 8px; gap: 10px; } .azSub { margin-bottom: 4px; letter-spacing: 3px; } .azLogo { display: none; } .azVolver { width: 48px !important; height: 48px; }
   }
+  /* celulares acostados (iPhone ~ 393 de alto o menos): todo más compacto y con aire alrededor */
+  @media (max-height: 450px) { .dzFicha .dato { display: none; } .dzFicha .big { width: 46px !important; height: 46px !important; } }
+  @media (max-height: 500px) {
+    #mundosCuerpo.azPanel { width: min(1000px, calc(80vw / var(--uM, 1))) !important; padding: 6px 12px 4px; border-radius: 16px; }
+    #mundosCuerpo > .titulo { font-size: 22px !important; } .azSub { display: none; } .azCubos i { width: 6px; height: 6px; }
+    #mundosDer.azTiles { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 5px !important; margin: 4px 0 6px !important; }
+    .azTiles .btn { min-height: 0 !important; height: 40px; flex-direction: row !important; gap: 5px; font-size: 10px !important; padding: 2px 4px !important; line-height: 1.05 !important; } .azTiles .btn svg { width: 16px !important; height: 16px !important; flex: none; }
+    .azSec { font-size: 13px; margin: 0 0 4px; } .azSec svg { width: 16px; height: 16px; }
+    #listaMundos .mundoFila.azFila { padding: 5px 8px !important; gap: 10px !important; margin-bottom: 5px; } .azMini { width: 82px; }
+    .azEntrar { padding: 6px 14px !important; font-size: 13px !important; } .azPie { margin-top: 2px; font-size: 12px; }
+    .azVolver { width: 40px !important; height: 40px; top: max(8px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right)); }
+    .dzFicha { overflow-y: auto; } .dzFicha .acc { position: sticky; bottom: 0; margin-top: auto; padding-top: 4px; background: linear-gradient(rgba(10,26,64,0), #0b1a40 35%); }
+    #pausa > *, #nuevo > * { zoom: calc(var(--uM, 1) * .8) !important; }
+    #inicio .btn:not(#bJugar) { font-size: 14px !important; margin: 0 !important; padding: 3px 18px 3px 22px !important; }
+  }
 `; document.head.appendChild(st); }
 
 // ─── MIS MUNDOS: panel con título, mosaicos, lista con miniatura y botón Entrar ───
