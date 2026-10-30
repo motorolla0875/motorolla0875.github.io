@@ -15,11 +15,15 @@
   #inicio .btn:not(#bJugar):hover, #inicio .btn:not(#bJugar):active { transform: scale(1.06) !important; }
   .azLogo img.logoImg { width: 100%; }
   #introFin img.logoImg { width: min(62vw, 560px); margin: 0 auto; }
+  /* celular acostado: igual que en la computadora (todo en columna), pero más chico para que entre */
   @media (max-height: 500px) {
-    #inicio .logoTitulo .logoSvg { height: 21vh !important; } #inicio .lema { letter-spacing: 5px !important; font-size: 10px !important; }
-    #azMenu { flex-direction: row; flex-wrap: wrap; justify-content: center; max-width: 92vw; gap: 2px 4px; margin-top: 1vh; }
-    #inicio #azMenu .btn { font-size: 13px !important; padding: 4px 12px !important; }
-    #inicio .sub { margin-bottom: 1.4vh !important; font-size: 10px !important; letter-spacing: 2px !important; }
+    #inicio { justify-content: center !important; padding-top: max(4px, env(safe-area-inset-top)) !important; padding-bottom: max(4px, env(safe-area-inset-bottom)) !important; }
+    #inicio .logoTitulo .logoSvg { height: 15vh !important; }
+    #inicio .lema { letter-spacing: 5px !important; font-size: 2.6vh !important; margin: 0 !important; line-height: 1.2; }
+    #inicio .sub { font-size: 2.6vh !important; letter-spacing: 2px !important; margin: .3vh 0 1.8vh !important; line-height: 1.2; }
+    #inicio #bJugar { font-size: 5vh !important; padding: 1vh 4vh 1vh 3.2vh !important; margin: 0 0 1.2vh !important; }
+    #azMenu { margin-top: 0; }
+    #inicio #azMenu .btn { font-size: 3.7vh !important; padding: .35vh 14px !important; line-height: 1.15 !important; letter-spacing: 1.5px !important; }
   }
 `; document.head.appendChild(st); }
 const logoSrc = '../bloques-diseno/logo-voxelium.webp';
