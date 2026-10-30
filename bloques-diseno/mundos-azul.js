@@ -144,3 +144,25 @@ function azIconos() { const der = $('mundosDer'); if (!der) return;
   for (const b of der.querySelectorAll('.btn')) if (!b.querySelector('svg')) b.insertAdjacentHTML('afterbegin', icono(b)); }
 { const p1 = pintarMundos; pintarMundos = function () { const r = p1.apply(this, arguments); azIconos(); return r; }; }
 { let p = 0; new MutationObserver(() => { if (p) return; p = 1; requestAnimationFrame(() => { p = 0; azIconos(); }); }).observe(document.getElementById('mundos'), { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] }); }
+
+// ═════════ Pie de Mis mundos igual que Mundo nuevo: flechas azules en una sola fila, junto a "N mundos" ═════════
+{ const st = document.createElement('style'); st.textContent = `
+  #azPieFila { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; margin-top: 4px; }
+  #azPieFila #mundosPag { grid-column: 2; margin: 0 !important; gap: 12px; }
+  #azPieFila #mundosPag[hidden] { display: flex !important; visibility: hidden; }
+  #azPieFila .azPie { grid-column: 3; margin: 0 !important; }
+  #mundos #mundosPag .pg { width: 40px; height: 36px; border: none !important; border-radius: 10px !important; color: #fff;
+    background: linear-gradient(180deg, #3d9bff, #1667e6) !important; box-shadow: inset 0 2px 0 rgba(200,230,255,.5), 0 0 0 2px #2a7df0 !important; filter: none !important; }
+  #mundos #mundosPag .pg svg { width: 20px; height: 20px; } 
+  #mundos #mundosPag .pg.off { opacity: .3; }
+  #mundos #mundosPag .num { font-weight: 800; font-size: 15px; color: #fff; text-shadow: none; min-width: 0; }
+  #mundos #listaMundos .mundoFila.azFila:last-child, #mundos #listaMundos .mundoFila.azFila:nth-last-child(1 of :not(.oculta)) { margin-bottom: 0; }
+  @media (max-height: 500px) { #azPieFila { margin-top: 3px; } #mundos #mundosPag .pg { width: 32px; height: 26px; } #mundos #mundosPag .num { font-size: 12px; } #mundos #mundosPag { gap: 8px; } }
+`; document.head.appendChild(st); }
+function azPieFila() { const izq = $('mundosIzq'), pag = $('mundosPag'), pie = document.querySelector('#mundos .azPie'); if (!izq || !pag || !pie) return;
+  let f = $('azPieFila'); if (!f) { f = document.createElement('div'); f.id = 'azPieFila'; f.innerHTML = '<div></div>'; }
+  if (f.parentNode !== izq.parentNode || f.previousElementSibling !== izq) izq.after(f);
+  if (pag.parentNode !== f) f.appendChild(pag); if (pie.parentNode !== f) f.appendChild(pie);
+  for (const g of pag.querySelectorAll('.pg')) if (!g.dataset.az) { g.dataset.az = 1; g.innerHTML = `<svg viewBox="0 0 24 24" fill="#fff"><path d="${g.dataset.pag === '-1' ? 'M15 4L7 12l8 8z' : 'M9 4l8 8-8 8z'}"/></svg>`; } }
+{ const p2 = pintarMundos; pintarMundos = function () { const r = p2.apply(this, arguments); azPieFila(); return r; }; }
+setTimeout(() => { try { azPieFila(); paginarMundos(); } catch (e) {} }, 500);
