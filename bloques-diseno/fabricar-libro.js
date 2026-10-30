@@ -45,6 +45,10 @@ Object.assign(TX.pt, { fbPuede: 'Pode fabricar', fbFalta: 'Faltam materiais', fb
   .fbFicha .fbMats { display: none; }
   .fbFicha .acc { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
   .fbB { display: flex; align-items: center; justify-content: center; height: 44px; padding: 0 16px; border-radius: 12px; border: 3px solid #0d153d; font-weight: 900; font-size: 17px; color: #fff; text-shadow: 0 2px 0 rgba(13,21,61,.55); cursor: pointer; background: #3a86e8; }
+  .fbB { position: relative; overflow: hidden; } .fbB > span { position: relative; z-index: 1; }
+  .fbB .fbBarra { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: #0d153d; opacity: .45; z-index: 0; }
+  .fbB.cargando { pointer-events: none; } .fbB.cargando .fbBarra { animation: fbLlenar var(--fbT, .6s) linear var(--fbD, 0ms) forwards; }
+  @keyframes fbLlenar { from { width: 0; } to { width: 100%; } }
   .fbB.ve { background: #2fb65a; } .fbB.off { background: #8a93b4; opacity: .7; cursor: default; } .fbB:not(.off):active { transform: translateY(2px); }
   @media (max-height: 560px) {
     .fbFab { gap: 8px; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr) minmax(0, .95fr); }
@@ -71,7 +75,7 @@ function fbHTML() {
     <div class="fbFicha"><h3>${esc(nom(id))}</h3><div class="big" style="${fbBg(id)}"></div>
       <div class="dato">${TR('fbCant')}<b>${r[0][1]}</b></div><div class="dato">${TR('fbTipo')}<b>${fbTipo(id)}</b></div><div class="dato">${TR('fbTienes')}<b>${inv[id] || 0}</b></div>${it.pico || it.espada ? `<div class="dato">${TR('fbNivel')}<b>${it.pico || it.espada} / 5</b></div>` : ''}
       ${mats}
-      <div class="acc"><div class="fbB ve${ok ? '' : ' off'}" data-fbhacer="1">${TR('fbHacer')}</div><div class="fbB${cu >= 2 ? '' : ' off'}" data-fbhacer="5">${TR('fbHacer5')}</div></div></div></div>`;
+      <div class="acc"><div class="fbB ve${ok ? '' : ' off'}${fbCargaCls(1)}" data-fbhacer="1"${fbCargaSty(1)}><i class="fbBarra"></i><span>${TR('fbHacer')}</span></div><div class="fbB${cu >= 2 ? '' : ' off'}${fbCargaCls(5)}" data-fbhacer="5"${fbCargaSty(5)}><i class="fbBarra"></i><span>${TR('fbHacer5')}</span></div></div></div></div>`;
 }
 { const p0 = pintarPanel; pintarPanel = function () {
     const res = p0.apply(this, arguments);
@@ -89,15 +93,28 @@ function fbHTML() {
     } else if (v.classList.contains('fbFue')) { v.style.width = ''; v.style.height = ''; v.style.zoom = ''; }
     v.classList.toggle('fbFue', fab);
     return res; }; }
+// al tocar Fabricar se llena una barrita en el botón (un instante) y recién ahí aparece lo fabricado
+// (si la ventana se vuelve a dibujar mientras tanto, la barrita sigue desde donde iba)
+let fbCarga = null;
+const fbCargaCls = n => fbCarga && fbCarga.n === n ? ' cargando' : '';
+const fbCargaSty = n => fbCarga && fbCarga.n === n ? ` style="--fbT:${fbCarga.dur}ms;--fbD:-${Math.round(performance.now() - fbCarga.t0)}ms"` : '';
+function fbConBarra(n) { if (fbCarga) return; const b = document.querySelector(`.fbB[data-fbhacer="${n}"]`); if (!b || b.classList.contains('off')) return;
+  const dur = n > 1 ? 900 : 550; fbCarga = { n, dur, t0: performance.now() };
+  b.style.setProperty('--fbT', dur + 'ms'); b.style.setProperty('--fbD', '0ms'); b.classList.add('cargando');
+  try { if (typeof son === 'function') son(300, .05, 'square', .05); } catch (e) {}
+  setTimeout(() => { fbCarga = null; fbHacer(n); }, dur); }
 const fbHacer = n => { const r = RECETAS[fbSel]; if (!r) return; let k = 0; while (k < n && puedeHacer(r)) { fabricar(r); k++; } pintarPanel(); };
 $('panel').addEventListener('pointerdown', e => {
   let d;
   if (d = e.target.closest('[data-fbsel]')) { e.stopPropagation(); fbSel = +d.dataset.fbsel; pintarPanel(); return; }
-  if (d = e.target.closest('[data-fbhacer]')) { e.stopPropagation(); if (!d.classList.contains('off')) fbHacer(+d.dataset.fbhacer); return; }
+  if (d = e.target.closest('[data-fbhacer]')) { e.stopPropagation(); fbConBarra(+d.dataset.fbhacer); return; }
 }, true);
 addEventListener('keydown', e => {
   if ($('panel').hidden || panelTab !== 'fabricar' || creativo()) return;
-  if (e.code === 'Enter' || e.code === 'NumpadEnter') { e.preventDefault(); fbHacer(1); }
-  else if (e.code === 'KeyF') { e.preventDefault(); fbHacer(5); }
+  if (e.code === 'Enter' || e.code === 'NumpadEnter') { e.preventDefault(); fbConBarra(1); }
+  else if (e.code === 'KeyF') { e.preventDefault(); fbConBarra(5); }
   else if (e.code === 'ArrowDown' || e.code === 'ArrowUp') { e.preventDefault(); const it = [...document.querySelectorAll('.fbIt')], i = it.findIndex(x => x.classList.contains('sel')), j = Math.max(0, Math.min(it.length - 1, i + (e.code === 'ArrowDown' ? 1 : -1))); if (it[j]) { fbSel = +it[j].dataset.fbsel; pintarPanel(); const n = document.querySelector('.fbIt.sel'); if (n) n.scrollIntoView({ block: 'nearest' }); } }
 });
+
+// el video timelapse se saca del menú de pausa
+{ const st = document.createElement('style'); st.textContent = '#bVideo { display: none !important; }'; document.head.appendChild(st); }
