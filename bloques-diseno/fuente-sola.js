@@ -23,3 +23,20 @@ function orbiTodo() {
 }
 orbiTodo(); setTimeout(orbiTodo, 300); setTimeout(orbiTodo, 1500); setTimeout(orbiTodo, 4000);
 { let pend = 0; new MutationObserver(() => { if (pend) return; pend = 1; requestAnimationFrame(() => { pend = 0; orbiTodo(); }); }).observe(document.documentElement, { childList: true, subtree: true }); }
+
+// ═════════ Botones con un poco de transparencia (se ve el juego detrás) ═════════
+{ const ALFA = .78;
+  const st = document.createElement('style'); st.textContent = `.btn.azTr { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }`; document.head.appendChild(st);
+  const aRgba = s => s.replace(/rgba?\(([^)]+)\)/g, (m, v) => { const p = v.split(',').map(x => x.trim()); const a = p.length > 3 ? +p[3] : 1; return `rgba(${p[0]}, ${p[1]}, ${p[2]}, ${Math.min(a, ALFA)})`; });
+  function trBtn(b) {
+    if (b.closest('svg')) return;
+    b.style.removeProperty('background-image'); b.style.removeProperty('background-color');
+    const cs = getComputedStyle(b), img = cs.backgroundImage, col = cs.backgroundColor;
+    const clave = img + '|' + col; if (b.dataset.trK === clave) return;
+    if (img && img !== 'none') b.style.setProperty('background-image', aRgba(img), 'important');
+    if (col && col !== 'rgba(0, 0, 0, 0)') b.style.setProperty('background-color', aRgba(col), 'important');
+    b.dataset.trK = getComputedStyle(b).backgroundImage + '|' + getComputedStyle(b).backgroundColor; b.classList.add('azTr');
+  }
+  const todos = () => { for (const b of document.querySelectorAll('.btn')) { try { trBtn(b); } catch (e) {} } };
+  todos(); setTimeout(todos, 500); setTimeout(todos, 2000);
+  let p = 0; new MutationObserver(() => { if (p) return; p = 1; setTimeout(() => { p = 0; todos(); }, 120); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] }); }
