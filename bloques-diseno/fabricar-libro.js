@@ -118,3 +118,6 @@ addEventListener('keydown', e => {
 
 // el video timelapse se saca del menú de pausa
 { const st = document.createElement('style'); st.textContent = '#bVideo { display: none !important; }'; document.head.appendChild(st); }
+// (además de ocultarlo, se quita el botón de la pausa por si alguna regla lo volvía a mostrar)
+{ const quitar = () => { const v = document.getElementById('bVideo'); if (v) { const f = v.parentNode; v.remove(); if (f && f.classList && f.classList.contains('filaBtn') && !f.children.length) f.remove(); } };
+  quitar(); setTimeout(quitar, 500); setTimeout(quitar, 2500); }
