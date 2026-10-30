@@ -24,21 +24,39 @@ function orbiTodo() {
 orbiTodo(); setTimeout(orbiTodo, 300); setTimeout(orbiTodo, 1500); setTimeout(orbiTodo, 4000);
 { let pend = 0; new MutationObserver(() => { if (pend) return; pend = 1; requestAnimationFrame(() => { pend = 0; orbiTodo(); }); }).observe(document.documentElement, { childList: true, subtree: true }); }
 
-// ═════════ Botones con un poco de transparencia (se ve el juego detrás) ═════════
-{ const ALFA = .78;
-  const st = document.createElement('style'); st.textContent = `.btn.azTr { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }`; document.head.appendChild(st);
-  const aRgba = s => s.replace(/rgba?\(([^)]+)\)/g, (m, v) => { const p = v.split(',').map(x => x.trim()); const a = p.length > 3 ? +p[3] : 1; return `rgba(${p[0]}, ${p[1]}, ${p[2]}, ${Math.min(a, ALFA)})`; });
-  function trBtn(b) {
+// ═════════ Botones lisos en todo el juego (como los de Personaje) ═════════
+// Cada botón conserva su color (azul, verde, violeta, rojo, amarillo…) pero en color pleno: sin degradé ni brillo,
+// borde azul oscuro y esquinas redondeadas. Inicio, Mis mundos y Mundo nuevo ya tienen su propia regla.
+{ const st = document.createElement('style'); st.textContent = `
+  .btn.azLiso, .tab.azLiso, .cerrar.azLiso { border: 3px solid #0d153d !important; border-radius: 12px !important; box-shadow: none !important; filter: none !important; clip-path: none !important;
+    backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  .btn.azLiso:not(.azOscuro), .cerrar.azLiso { text-shadow: 0 2px 0 rgba(13,21,61,.55) !important; }
+  .btn.azLiso.azOscuro { text-shadow: none !important; color: #3a1a08 !important; }
+  .tab.azLiso { border-width: 2px !important; border-radius: 10px !important; }
+  .btn.azLiso:active { transform: translateY(2px); }
+`; document.head.appendChild(st);
+  const colores = s => (s.match(/rgba?\([^)]+\)/g) || []).map(c => c.match(/[\d.]+/g).map(Number)).filter(c => (c[3] ?? 1) > .05);
+  function lisoBtn(b) {
     if (b.closest('svg')) return;
-    if (b.closest('#inicio, #mundos, #nuevo') || b.classList.contains('azEntrar') || b.id === 'bNuevo') { if (b.dataset.trK) { b.style.removeProperty('background-image'); b.style.removeProperty('background-color'); delete b.dataset.trK; b.classList.remove('azTr'); } return; } // sólidos, como Entrar y Crear mundo nuevo
-    b.style.removeProperty('background-image'); b.style.removeProperty('background-color');
-    const cs = getComputedStyle(b), img = cs.backgroundImage, col = cs.backgroundColor;
-    const clave = img + '|' + col; if (b.dataset.trK === clave) return;
-    if (img && img !== 'none') b.style.setProperty('background-image', aRgba(img), 'important');
-    if (col && col !== 'rgba(0, 0, 0, 0)') b.style.setProperty('background-color', aRgba(col), 'important');
-    b.dataset.trK = getComputedStyle(b).backgroundImage + '|' + getComputedStyle(b).backgroundColor; b.classList.add('azTr');
+    // se guarda el fondo propio del botón (algunos traen su color puesto: verde, violeta…) para no perderlo
+    if (b.dataset.lsO === undefined) b.dataset.lsO = b.style.getPropertyValue('background') || '';
+    const restaurar = () => { b.style.removeProperty('background'); if (b.dataset.lsO) b.style.setProperty('background', b.dataset.lsO); };
+    if (b.closest('#inicio, #mundos, #nuevo')) { if (b.dataset.lsK) { restaurar(); delete b.dataset.lsK; b.classList.remove('azLiso', 'azOscuro'); } return; }
+    restaurar();
+    const cs = getComputedStyle(b), img = cs.backgroundImage, col = cs.backgroundColor, clave = img + '|' + col + '|' + b.className.replace(/ ?az(Liso|Oscuro)/g, '');
+    if (b.dataset.lsK === clave) { if (b.dataset.lsC) b.style.setProperty('background', b.dataset.lsC, 'important'); return; }
+    let cc = colores(img && img !== 'none' ? img : ''); if (!cc.length) cc = colores(col);
+    if (!cc.length) { b.dataset.lsK = clave; b.dataset.lsC = ''; return; }
+    // el color del centro del degradé (o el promedio si son dos)
+    const m = cc.length >= 3 ? cc[Math.floor(cc.length / 2)] : cc.length === 2 ? cc[0].map((v, k) => (v + cc[1][k]) / 2) : cc[0];
+    const r = Math.round(m[0]), g = Math.round(m[1]), bl = Math.round(m[2]), a = Math.max(m[3] ?? 1, .92);
+    // los azules/celestes de siempre pasan al mismo azul del inicio
+    const c = (bl > r + 60 && g > r && bl > g) ? '#3a86e8' : `rgba(${r}, ${g}, ${bl}, ${a})`;
+    b.dataset.lsK = clave; b.dataset.lsC = c; b.style.setProperty('background', c, 'important'); b.classList.add('azLiso');
+    // letra oscura en botones claros (amarillos, blancos)
+    b.classList.toggle('azOscuro', (r * .299 + g * .587 + bl * .114) > 170);
   }
-  const todos = () => { for (const b of document.querySelectorAll('.btn')) { try { trBtn(b); } catch (e) {} } };
+  const todos = () => { for (const b of document.querySelectorAll('.btn, .ventana .tab, .mVentana .tab, .cerrar')) { try { lisoBtn(b); } catch (e) {} } };
   todos(); setTimeout(todos, 500); setTimeout(todos, 2000);
   let p = 0; new MutationObserver(() => { if (p) return; p = 1; setTimeout(() => { p = 0; todos(); }, 120); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] }); }
 
