@@ -263,3 +263,27 @@ setTimeout(() => { const j = $('bJugar'); if (j && !j.querySelector('svg')) j.in
     .azVolver, #mundos .azVolver { width: 40px !important; height: 40px !important; }
   }
 `; document.head.appendChild(st); }
+// ═════════ MISIÓN: se muestra unos segundos y se pliega en un botón; tocándolo se abre en grande al centro ═════════
+{ const ico = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#cfe6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h11a2 2 0 0 1 2 2v1h-4"/><path d="M17 6v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-1h11v1a3 3 0 0 0 3 3"/><path d="M8 3a2 2 0 0 0-2 2v12"/><path d="M9.5 8.5h4M9.5 12h4"/></svg>');
+  const st = document.createElement('style'); st.textContent = `
+  #mision { transition: max-width .35s ease, opacity .25s; }
+  #mision.azPlegada { font-size: 0 !important; line-height: 0 !important; width: 46px !important; height: 46px !important; max-width: 46px !important; padding: 0 !important; border-radius: 12px !important; overflow: hidden;
+    background: rgba(8,20,46,.6) url("${ico}") center / 26px no-repeat !important; box-shadow: inset 0 0 0 2px #2f6fd6, 0 0 14px rgba(47,140,255,.45) !important; }
+  #mision.azPlegada * { display: none !important; } #mision.azPlegada::after { display: none !important; }
+  #mision.azPlegada::before { content: ''; position: absolute; top: 5px; right: 5px; width: 8px; height: 8px; border-radius: 50%; background: #ffd23a; box-shadow: 0 0 6px #ffd23a; }
+  #mision.azPlegada { position: fixed; }
+`; document.head.appendChild(st);
+  let clave = '', t = 0;
+  setInterval(() => { const el = $('mision'); if (!el) return;
+    if (typeof jugando === 'undefined' || !jugando) { clave = ''; el.classList.remove('azPlegada'); clearTimeout(t); return; }
+    const k = (typeof mundoId !== 'undefined' ? mundoId : '') + ':' + (typeof mision !== 'undefined' ? mision : '');
+    if (k !== clave) { clave = k; el.classList.remove('azPlegada'); clearTimeout(t); t = setTimeout(() => el.classList.add('azPlegada'), 9000); }
+  }, 500); }
+{ const st = document.createElement('style'); st.textContent = `
+  #misionCuerpo { color: #e8f0ff !important; }
+  #misionCuerpo .grande { color: #fff !important; text-shadow: 0 2px 0 #071330, 0 0 12px rgba(47,140,255,.5); }
+  #misionCuerpo .caja { background: linear-gradient(180deg, rgba(34,72,140,.4), rgba(16,36,80,.45)) !important; border: none !important; box-shadow: inset 0 0 0 2px #2f6fd6 !important; color: #fff !important; }
+  #misionCuerpo .caja small { color: #7fd0ff !important; }
+  #misionCuerpo .prog { background: rgba(255,255,255,.12) !important; } #misionCuerpo .prog i { background: linear-gradient(90deg, #2f8cff, #7fd0ff) !important; }
+  #misionCuerpo .lista { color: #9fc4ff !important; } #misionCuerpo .lista b { color: #cfe3ff; }
+`; document.head.appendChild(st); }
