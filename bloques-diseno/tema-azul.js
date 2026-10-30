@@ -26,12 +26,14 @@ const AZI = {
 { const st = document.createElement('style'); st.textContent = `
   @font-face { font-family: 'Pixelify'; font-weight: 700; font-display: swap; src: url(../bloques-diseno/fonts/pixelify-sans-latin-700-normal.woff2) format('woff2'); unicode-range: U+0000-00FF,U+2000-206F; }
   @font-face { font-family: 'Pixelify'; font-weight: 700; font-display: swap; src: url(../bloques-diseno/fonts/pixelify-sans-latin-ext-700-normal.woff2) format('woff2'); unicode-range: U+0100-02BA,U+1E00-1EFF; }
-  :root { --azP: linear-gradient(180deg, rgba(14,32,70,.92), rgba(8,20,46,.94)); --azB: #2f6fd6; --azGlow: 0 0 0 1px rgba(110,180,255,.25), 0 0 24px rgba(40,120,255,.25), 0 20px 50px rgba(0,0,0,.55);
-    --azBtn: linear-gradient(180deg, #3d9bff, #1667e6); --azTile: linear-gradient(180deg, rgba(26,52,104,.9), rgba(16,34,72,.92)); }
+  :root { --azP: linear-gradient(180deg, rgba(14,32,70,.61), rgba(8,20,46,.62)); --azB: #2f6fd6; --azGlow: 0 0 0 1px rgba(110,180,255,.25), 0 0 24px rgba(40,120,255,.25), 0 20px 50px rgba(0,0,0,.55);
+    --azBtn: linear-gradient(180deg, #3d9bff, #1667e6); --azTile: linear-gradient(180deg, rgba(26,52,104,.59), rgba(16,34,72,.61)); }
   /* letras */
   .titulo:not(.logoTitulo), .dzCartel span { font-family: 'Pixelify', 'Baloo 2', sans-serif !important; font-weight: 700 !important; letter-spacing: 1px !important;
     background: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; color: #fff !important; filter: none !important; text-shadow: 0 3px 0 #061433, 0 0 18px rgba(60,140,255,.35) !important; text-transform: uppercase; }
   .dzInfo h3, .dzIt .n, .dzMats h5 { font-family: 'Baloo 2', sans-serif !important; font-weight: 800 !important; text-transform: uppercase; color: #fff !important; background: none !important; -webkit-background-clip: border-box !important; filter: none !important; text-shadow: 0 2px 0 #061433 !important; }
+  /* vidrio: los paneles azules dejan ver el juego detrás, desenfocado */
+  .ventana, .mVentana, #mundosCuerpo.azPanel, .dzInfo, .dzGrid, .dzPj, .azFila, .azTiles .btn, #barra, .barraHud, #mision, .boton, .bChico, #pausa .btn:not(#bSeguir):not(#bTienda):not(#bGuardarSalir) { backdrop-filter: blur(10px) saturate(1.15); -webkit-backdrop-filter: blur(10px) saturate(1.15); }
   .azSub { font: 800 clamp(12px, 1.6vw, 17px) 'Baloo 2', sans-serif; letter-spacing: 5px; text-transform: uppercase; color: #9fc4ff; text-align: center; margin: -4px 0 10px; }
   .azCubos { display: inline-flex; gap: 2px; vertical-align: middle; margin: 0 10px; } .azCubos i { width: 9px; height: 9px; background: #2f8cff; box-shadow: 0 0 8px #2f8cff; } .azCubos i:nth-child(2) { background: #7fd0ff; transform: translate(4px, -6px); }
   .lema, .sub, .texto { text-shadow: 0 2px 6px rgba(0,0,0,.8) !important; }
@@ -46,7 +48,7 @@ const AZI = {
   #inicio #bJugar::before { display: none; } #inicio #bJugar svg { width: 1em; height: 1em; flex: none; }
   #inicio #bJugar:hover, #inicio #bJugar:active { transform: translateY(2px); color: #fff !important; box-shadow: 0 0 0 2px #a6d6ff inset, 0 4px 0 #0b3a8f, 0 0 34px rgba(47,140,255,.75) !important; }
   #inicio .btn:not(#bJugar):hover, #inicio .btn:not(#bJugar):active { color: #7fd0ff !important; } #inicio .btn::before { background: #2f8cff !important; box-shadow: 0 0 10px #2f8cff !important; }
-  #inicio { background: linear-gradient(90deg, rgba(4,10,26,.85) 0%, rgba(4,10,26,.55) 30%, rgba(4,10,26,0) 58%), radial-gradient(ellipse at 85% 0%, rgba(255,240,200,.22), rgba(255,240,200,0) 45%) !important; }
+  #inicio { background: linear-gradient(90deg, rgba(4,10,26,.56) 0%, rgba(4,10,26,.55) 30%, rgba(4,10,26,0) 58%), radial-gradient(ellipse at 85% 0%, rgba(255,240,200,.22), rgba(255,240,200,0) 45%) !important; }
 
   /* botones: azul brillante, esquinas apenas redondeadas */
   .btn { font-family: 'Baloo 2', sans-serif !important; font-weight: 800 !important; text-transform: uppercase; letter-spacing: .5px; clip-path: none !important; border-radius: 10px !important;
@@ -66,13 +68,13 @@ const AZI = {
   .vCab .tab { font-family: 'Baloo 2', sans-serif !important; font-weight: 800 !important; text-transform: uppercase; border-radius: 10px !important; background: var(--azTile) !important; color: #9fb8e0 !important; box-shadow: inset 0 0 0 2px #2a4f94 !important; }
   .vCab .tab.on { background: var(--azBtn) !important; color: #fff !important; box-shadow: inset 0 2px 0 rgba(200,230,255,.5), 0 0 0 2px #2a7df0 !important; }
   .vCab .cerrar, .dzX { border-radius: 12px !important; background: var(--azTile) !important; box-shadow: inset 0 0 0 2px #3a6fc4, 0 6px 14px rgba(0,0,0,.45) !important; font: 800 20px 'Baloo 2', sans-serif !important; color: #cfe3ff !important; }
-  .ventana .slot, .mVentana .slot { background-color: rgba(10,24,56,.9) !important; box-shadow: inset 0 0 0 2px #2a4f94 !important; }
+  .ventana .slot, .mVentana .slot { background-color: rgba(10,24,56,.59) !important; box-shadow: inset 0 0 0 2px #2a4f94 !important; }
   .vPie { border-top: 2px solid rgba(60,110,200,.35) !important; } .vPie small { color: #9fb8e0 !important; }
   .receta, .fila, .plano { border-bottom: 2px solid rgba(60,110,200,.3) !important; } .receta .nom small, .fila .nom small, .plano .nom small { color: #9fb8e0 !important; }
   .receta .hacer, .mb, #guia .gb, #planBar .gb, .receta .hacer, .mb.verde { background: var(--azBtn) !important; border-radius: 8px !important; }
-  .opcG div, .ajOpc div { background: rgba(26,52,104,.9) !important; box-shadow: inset 0 0 0 2px #2a4f94; border-radius: 8px !important; } .opcG div.on, .ajOpc div.on { background: var(--azBtn) !important; box-shadow: none; }
+  .opcG div, .ajOpc div { background: rgba(26,52,104,.59) !important; box-shadow: inset 0 0 0 2px #2a4f94; border-radius: 8px !important; } .opcG div.on, .ajOpc div.on { background: var(--azBtn) !important; box-shadow: none; }
   .ajFila { background: var(--azP) !important; box-shadow: inset 0 0 0 2px #2a4f94 !important; } .ajFila input { accent-color: #3d9bff !important; }
-  .catTabs .ct { background: rgba(26,52,104,.9) !important; border-color: #2a4f94 !important; color: #cfe3ff !important; } .catTabs .ct.on { background: #2f8cff !important; border-color: #7fd0ff !important; color: #fff !important; }
+  .catTabs .ct { background: rgba(26,52,104,.59) !important; border-color: #2a4f94 !important; color: #cfe3ff !important; } .catTabs .ct.on { background: #2f8cff !important; border-color: #7fd0ff !important; color: #fff !important; }
   body.enMenu .capa:not(#grabando):not(#precarga):not(#inicio), .capa.trans:not(#inicio) { background: radial-gradient(ellipse at 50% 45%, rgba(4,12,30,.15), rgba(2,8,22,.7)) !important; backdrop-filter: blur(2px) !important; -webkit-backdrop-filter: blur(2px) !important; }
 
   /* cartel del título de la bolsa: sin placa, título grande con cubitos */
@@ -94,15 +96,15 @@ const AZI = {
   .dzPapel { box-shadow: 0 14px 28px rgba(0,0,0,.5), inset 0 0 50px rgba(150,110,60,.35), 0 0 0 2px rgba(127,208,255,.25) !important; }
 
   /* juego */
-  #barra { background: rgba(8,20,46,.82) !important; box-shadow: inset 0 0 0 2px #2f6fd6, 0 0 16px rgba(40,120,255,.25) !important; }
+  #barra { background: rgba(8,20,46,.54) !important; box-shadow: inset 0 0 0 2px #2f6fd6, 0 0 16px rgba(40,120,255,.25) !important; }
   #barra .slot.sel { box-shadow: inset 0 0 0 3px #7fd0ff, 0 0 12px rgba(127,208,255,.7) !important; background-color: rgba(60,160,255,.2) !important; }
-  .boton, .bChico { background: rgba(8,20,46,.78) !important; box-shadow: inset 0 0 0 2px #2f6fd6 !important; }
+  .boton, .bChico { background: rgba(8,20,46,.51) !important; box-shadow: inset 0 0 0 2px #2f6fd6 !important; }
   .boton.on, .bChico.on { background: var(--azBtn) !important; }
-  .barraHud, #mision, #dia, #guia, #planBar, #crono, #mecBar { background: rgba(8,20,46,.82) !important; box-shadow: inset 0 0 0 2px #2f6fd6 !important; }
+  .barraHud, #mision, #dia, #guia, #planBar, #crono, #mecBar { background: rgba(8,20,46,.54) !important; box-shadow: inset 0 0 0 2px #2f6fd6 !important; }
   #mision small { color: #7fd0ff !important; }
   #aviso { font-family: 'Pixelify', 'Baloo 2', sans-serif !important; color: #fff !important; text-shadow: 0 3px 0 #061433, 0 0 18px rgba(60,140,255,.6) !important; }
   #logroToast { background: var(--azP) !important; box-shadow: inset 0 0 0 2px #2f6fd6, 0 0 18px rgba(40,120,255,.35) !important; color: #e8f0ff !important; } #logroToast small { color: #7fd0ff !important; font-family: 'Baloo 2', sans-serif !important; }
-  #calChip { background: rgba(8,20,46,.85) !important; box-shadow: inset 0 0 0 2px #2f6fd6 !important; } #calChip b { color: #7fd0ff !important; }
+  #calChip { background: rgba(8,20,46,.56) !important; box-shadow: inset 0 0 0 2px #2f6fd6 !important; } #calChip b { color: #7fd0ff !important; }
   .dzK { background: #dbe8ff !important; color: #0a1a38 !important; box-shadow: 0 3px 0 #6f86b0 !important; }
 
   /* ═══ MIS MUNDOS como la referencia ═══ */
@@ -237,4 +239,14 @@ if (typeof paginarMundos === 'function') { const _pm = paginarMundos; paginarMun
 }; try { paginarMundos(); } catch (e) {} }
 
 setTimeout(() => { const j = $('bJugar'); if (j && !j.querySelector('svg')) j.insertAdjacentHTML('afterbegin', AZI.play); }, 400);
-{ const st = document.createElement('style'); st.textContent = `.azVolver, #mundos .azVolver { background: linear-gradient(180deg, rgba(22,52,110,.92), rgba(10,26,64,.95)) !important; border: 2px solid #3f86f0 !important; border-radius: 12px !important; box-shadow: 0 0 18px rgba(47,140,255,.35), 0 4px 0 #061433 !important; color: #cfe3ff !important; }`; document.head.appendChild(st); }
+{ const st = document.createElement('style'); st.textContent = `.azVolver, #mundos .azVolver { background: linear-gradient(180deg, rgba(22,52,110,.61), rgba(10,26,64,.63)) !important; border: 2px solid #3f86f0 !important; border-radius: 12px !important; box-shadow: 0 0 18px rgba(47,140,255,.35), 0 4px 0 #061433 !important; color: #cfe3ff !important; }`; document.head.appendChild(st); }
+// vidrio: dentro de las ventanas los recuadros van más claros (si no, se suman dos capas y queda oscuro)
+{ const st = document.createElement('style'); st.textContent = `
+  .ventana .dzChip, .ventana .dzPj, .ventana .dzGrid, .ventana .dzInfo, .ventana .dzMats, .ventana .dzIt:not(.sel), .azFila, .azTiles .btn:not(#bNuevo) { background: linear-gradient(180deg, rgba(34,72,140,.3), rgba(16,36,80,.36)) !important; }
+  .ventana .dzPj { background: radial-gradient(ellipse at 50% 42%, rgba(60,140,255,.2), rgba(0,0,0,0) 60%), linear-gradient(180deg, rgba(34,72,140,.3), rgba(16,36,80,.36)) !important; }
+  .ventana .slot, .mVentana .slot { background-color: rgba(10,24,56,.42) !important; }
+  .ventana .dzGrid .dzS, .ventana .dzGrid > * { backdrop-filter: none; }
+  body.enMenu .capa:not(#grabando):not(#precarga):not(#inicio), .capa.trans:not(#inicio) { background: radial-gradient(ellipse at 50% 45%, rgba(4,12,30,.05), rgba(2,8,22,.45)) !important; }
+`; document.head.appendChild(st); }
+// con los paneles transparentes, los avisos del juego se verían detrás: se ocultan mientras hay un menú abierto
+{ const st = document.createElement('style'); st.textContent = `body:has(.capa:not([hidden]):not(#grabando):not(#precarga):not(#inicio)) #aviso, body:has(.ventana:not([hidden])) #aviso { opacity: 0 !important; transition: opacity .15s; }`; document.head.appendChild(st); }
