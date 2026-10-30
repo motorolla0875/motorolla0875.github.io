@@ -250,3 +250,16 @@ setTimeout(() => { const j = $('bJugar'); if (j && !j.querySelector('svg')) j.in
 `; document.head.appendChild(st); }
 // con los paneles transparentes, los avisos del juego se verían detrás: se ocultan mientras hay un menú abierto
 { const st = document.createElement('style'); st.textContent = `body:has(.capa:not([hidden]):not(#grabando):not(#precarga):not(#inicio)) #aviso, body:has(.ventana:not([hidden])) #aviso { opacity: 0 !important; transition: opacity .15s; }`; document.head.appendChild(st); }
+// ajustes pedidos: sin cubitos/diamantes junto a los títulos, sin logo en Mis Mundos, título de ventana dentro con el mismo aire arriba y abajo, botón volver siempre dentro de la pantalla
+{ const st = document.createElement('style'); st.textContent = `
+  .azCubos, .dzCartel::before, .dzCartel::after { display: none !important; }
+  .azLogo { display: none !important; }
+  .dzCartel { top: 14px !important; padding: 0 20px !important; line-height: 1 !important; }
+  .ventana.dzGrande, .ventana.dzAncha { padding-top: 58px !important; }
+  .azVolver, #mundos .azVolver { zoom: 1 !important; top: max(10px, env(safe-area-inset-top)) !important; right: calc(max(10px, env(safe-area-inset-right)) + 2px) !important; left: auto !important; }
+  @media (max-height: 500px) {
+    .dzCartel { top: 10px !important; } .dzCartel span { font-size: 20px !important; }
+    .ventana.dzGrande, .ventana.dzAncha { padding-top: 40px !important; }
+    .azVolver, #mundos .azVolver { width: 40px !important; height: 40px !important; }
+  }
+`; document.head.appendChild(st); }

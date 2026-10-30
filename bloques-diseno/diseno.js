@@ -288,14 +288,25 @@ addEventListener('keydown', e => {
 // ═════════ CÁMARA DE CINE EN EL MENÚ ═════════
 // En lugar de girar sobre sí misma, la cámara da una vuelta lenta alrededor del lugar, un poco más alta, mirando al centro,
 // con un leve acercarse y alejarse. Solo mientras no estás jugando.
-{ let cen = null, t0 = 0, ult = performance.now();
-  const piso = (x, z) => { for (let y = 70; y > 0; y--) if (__b.get(Math.floor(x), y, Math.floor(z))) return y + 1; return 30; };
+{ let cen = null, t0 = 0, ult = performance.now(), fase = 0;
+  const DUR = 20; // segundos en cada lugar
+  const piso = (x, z) => { for (let y = (typeof SY === 'number' ? SY - 1 : 70); y > 0; y--) if (__b.get(Math.floor(x), y, Math.floor(z))) return y + 1; return 30; };
+  // un lugar al azar del mundo (no donde quedó el jugador), que tenga suelo
+  const lugar = () => { const T = typeof SX === 'number' ? SX : 256, m = Math.min(40, T * .2);
+    let mejor = null; for (let k = 0; k < 14; k++) { const x = m + Math.random() * (T - 2 * m), z = m + Math.random() * ((typeof SZ === 'number' ? SZ : T) - 2 * m), y = piso(x, z); if (!mejor || y > mejor.y) mejor = { x, z, y }; if (y > 34 && Math.random() < .5) break; }
+    return mejor; };
+  const velo = document.createElement('div'); velo.style.cssText = 'position:fixed;inset:0;background:#02050f;opacity:0;pointer-events:none;z-index:1;transition:opacity .9s'; document.body.appendChild(velo);
   const cuadro = ahora => { requestAnimationFrame(cuadro); const dt = Math.min(.05, (ahora - ult) / 1000); ult = ahora;
-    if (typeof jugando === 'undefined' || jugando || !window.__b) { cen = null; return; }
+    if (typeof jugando === 'undefined' || jugando || !window.__b) { cen = null; velo.style.opacity = 0; return; }
     const J = __b.J;
-    if (!cen) { const fx = J.x - Math.sin(J.yaw) * 18, fz = J.z - Math.cos(J.yaw) * 18; cen = { x: fx, z: fz, y: piso(fx, fz) }; t0 = 0; }
-    t0 += dt; const ang = t0 * .045, r = 24 + Math.sin(t0 * .13) * 5, alto = 11 + Math.sin(t0 * .21) * 2.5;
+    if (!cen) { cen = lugar(); t0 = 0; fase = Math.random() * 6.28; }
+    t0 += dt;
+    if (t0 > DUR - 1) velo.style.opacity = 1;
+    if (t0 > DUR) { cen = lugar(); t0 = 0; fase = Math.random() * 6.28; setTimeout(() => velo.style.opacity = 0, 150); }
+    const ang = fase + t0 * .05, r = 24 + Math.sin(t0 * .13) * 5, alto = 11 + Math.sin(t0 * .21) * 2.5;
     const x = cen.x + Math.sin(ang) * r, z = cen.z + Math.cos(ang) * r, y = Math.max(cen.y + alto, piso(x, z) + 3);
     J.x = x; J.z = z; J.y = y - (typeof OJOS === 'number' ? OJOS : 1.6);
     J.yaw = Math.atan2(x - cen.x, z - cen.z); J.pitch = -Math.atan2(y - (cen.y + 2), r) * .9; };
   requestAnimationFrame(cuadro); }
+// en el menú siempre es de noche (cielo con estrellas); al jugar vuelve la hora real del mundo
+if (typeof oscuridad === 'function') { const _osc = oscuridad; oscuridad = function () { return (typeof jugando !== 'undefined' && !jugando) ? .8 : _osc(); }; }
