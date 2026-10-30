@@ -30,6 +30,7 @@ orbiTodo(); setTimeout(orbiTodo, 300); setTimeout(orbiTodo, 1500); setTimeout(or
   const aRgba = s => s.replace(/rgba?\(([^)]+)\)/g, (m, v) => { const p = v.split(',').map(x => x.trim()); const a = p.length > 3 ? +p[3] : 1; return `rgba(${p[0]}, ${p[1]}, ${p[2]}, ${Math.min(a, ALFA)})`; });
   function trBtn(b) {
     if (b.closest('svg')) return;
+    if (b.closest('#inicio') || b.classList.contains('azEntrar') || b.id === 'bNuevo') { if (b.dataset.trK) { b.style.removeProperty('background-image'); b.style.removeProperty('background-color'); delete b.dataset.trK; b.classList.remove('azTr'); } return; } // sólidos, como Entrar y Crear mundo nuevo
     b.style.removeProperty('background-image'); b.style.removeProperty('background-color');
     const cs = getComputedStyle(b), img = cs.backgroundImage, col = cs.backgroundColor;
     const clave = img + '|' + col; if (b.dataset.trK === clave) return;
