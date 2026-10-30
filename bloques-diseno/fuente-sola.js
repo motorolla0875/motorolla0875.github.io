@@ -40,3 +40,33 @@ orbiTodo(); setTimeout(orbiTodo, 300); setTimeout(orbiTodo, 1500); setTimeout(or
   const todos = () => { for (const b of document.querySelectorAll('.btn')) { try { trBtn(b); } catch (e) {} } };
   todos(); setTimeout(todos, 500); setTimeout(todos, 2000);
   let p = 0; new MutationObserver(() => { if (p) return; p = 1; setTimeout(() => { p = 0; todos(); }, 120); }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'hidden'] }); }
+
+// ═════════ Ventanas (fabricar, bolsa, ajustes, logros… todo lo que se abre) con fondo transparente ═════════
+{ const st = document.createElement('style'); st.textContent = `
+  .ventana, .mVentana { background: rgba(242,245,255,.72) !important; backdrop-filter: blur(10px) saturate(1.2); -webkit-backdrop-filter: blur(10px) saturate(1.2); }
+  .ventana .vCab, .mVentana .vCab { background: transparent !important; }
+  #listaMundos .mundoFila .azFoto { flex: none; width: 68px; height: 38px; border-radius: 7px; background: #3a5a2a center / cover no-repeat; box-shadow: 0 0 0 2px rgba(255,255,255,.35); }
+  #listaMundos .mundoFila .azFoto.sin { background-image: linear-gradient(180deg, #8fd0ff 0 48%, #4fb04a 48% 70%, #8a5a32 70%); }
+`; document.head.appendChild(st); }
+
+// ═════════ Foto de cada mundo: se saca sola mientras juegas y se muestra en Mis mundos ═════════
+{ const CLAVE = id => 'voxFoto_' + id;
+  function sacarFotoMundo() {
+    try { if (typeof jugando === 'undefined' || !jugando || !mundoId || mundoId === 'tutorial' || mundoId === 'enlinea') return;
+      const vis = manoG.visible, mv = marco.visible; marco.visible = false; manoG.visible = false; render.render(escena, cam); manoG.visible = vis; marco.visible = mv;
+      const src = render.domElement, c = document.createElement('canvas'); c.width = 192; c.height = 108; const g = c.getContext('2d');
+      const r = Math.max(192 / src.width, 108 / src.height), w = src.width * r, h = src.height * r; g.drawImage(src, (192 - w) / 2, (108 - h) / 2, w, h);
+      const url = c.toDataURL('image/jpeg', .7); if (url.length > 2000) localStorage.setItem(CLAVE(mundoId), url);
+    } catch (e) {} }
+  // a los 4 segundos de entrar y después cada 45 segundos
+  let t0 = 0, antes = false;
+  setInterval(() => { const j = typeof jugando !== 'undefined' && jugando;
+    if (j && !antes) t0 = Date.now(); antes = j;
+    if (j) { const d = Date.now() - t0; if ((d > 4000 && d < 5100) || d % 45000 < 1000) sacarFotoMundo(); } }, 1000);
+  { const s0 = salirAlMenu; salirAlMenu = function () { sacarFotoMundo(); return s0.apply(this, arguments); }; }
+  const ponerFotos = () => { for (const fila of document.querySelectorAll('#listaMundos .mundoFila')) {
+      if (fila.querySelector('.azFoto')) continue; const b = fila.querySelector('[data-entrar]'); if (!b) continue;
+      let u = null; try { u = localStorage.getItem(CLAVE(b.dataset.entrar)); } catch (e) {}
+      const d = document.createElement('div'); d.className = 'azFoto' + (u ? '' : ' sin'); if (u) d.style.backgroundImage = `url("${u}")`; fila.insertBefore(d, fila.firstChild); } };
+  { const p0 = pintarMundos; pintarMundos = function () { const r = p0.apply(this, arguments); ponerFotos(); return r; }; }
+  ponerFotos(); }
