@@ -34,6 +34,23 @@ Object.assign(TX.pt, { pnCuerpo: 'Corpo', pnRopa: 'Roupa', pnAcc: 'Acessórios',
     #skinCapa.pn #skinCuerpo h4 { margin: 6px 0 3px; font-size: 11px; } #pnTabs { margin: 4px 0 0; padding: 4px 0; } #pnTabs > div { padding: 4px 2px; font-size: 11px; }
     #skinCapa.pn .vPie .mb { padding: 4px 10px !important; font-size: 12px !important; }
   }
+  /* marco azul medio transparente, como Mis mundos: el paisaje ocupa toda la pantalla y el panel flota a la derecha */
+  #skinCapa.pn { background: #0b1530 url('../bloques-diseno/fondos/personaje.jpg') center / cover no-repeat !important; }
+  #skinCapa.pn #pnEscena { background: none !important; } #pnEscena::after { display: none; }
+  #pnMarco { grid-column: 2; grid-row: 1 / 4; margin: max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) 4px; border-radius: 18px; z-index: 0;
+    background: linear-gradient(180deg, rgba(14,32,70,.62), rgba(8,20,46,.64)); box-shadow: inset 0 0 0 2px #2f6fd6, 0 0 0 1px rgba(110,180,255,.25), 0 0 24px rgba(40,120,255,.25), 0 20px 50px rgba(0,0,0,.45);
+    backdrop-filter: blur(10px) saturate(1.15); -webkit-backdrop-filter: blur(10px) saturate(1.15); }
+  #skinCapa.pn .vCab, #skinCapa.pn .vCuerpo, #skinCapa.pn .vPie { position: relative; z-index: 1; background: transparent !important; color: #fff !important; margin: 0 calc(max(12px, env(safe-area-inset-right)) + 2px) 0 6px !important; }
+  #skinCapa.pn .vCab { margin-top: max(10px, env(safe-area-inset-top)) !important; padding: 10px 12px 4px !important; }
+  #skinCapa.pn .vPie { margin-bottom: max(10px, env(safe-area-inset-bottom)) !important; padding: 8px 12px 10px !important; border-top: 2px solid rgba(110,180,255,.25) !important; }
+  #skinCapa.pn .vCuerpo { padding: 0 12px 8px !important; }
+  #skinCapa.pn .vTit { color: #ffd23a !important; font-weight: 900 !important; font-size: clamp(18px, 3.6vh, 28px) !important; text-shadow: 0 2px 0 #0d153d; }
+  #skinCapa.pn #skinCuerpo, #skinCapa.pn #skinCuerpo div:not([data-c]):not(.on) { color: #e8f0ff; }
+  #skinCapa.pn #skinCuerpo h4 { color: #9fc4ff !important; }
+  #skinCapa.pn .campo, #skinCapa.pn #skinNombre { background: rgba(8,20,46,.7) !important; color: #fff !important; border: 2px solid #3a6fc4 !important; border-radius: 10px !important; }
+  #skinCapa.pn #pnTabs { background: transparent !important; backdrop-filter: blur(6px); }
+  #skinCapa.pn .secPro { background: rgba(255,200,60,.14) !important; border-color: #ffc531 !important; color: #fff !important; }
+  #skinCapa.pn .paleta div.on { outline: 3px solid #fff !important; }
 `; document.head.appendChild(st); }
 
 let pnTab = 'cuerpo';
@@ -43,6 +60,7 @@ function pnArmar() {
   const C = $('skinCapa'); if (!C || C.classList.contains('pn')) return;
   C.classList.add('pn'); const V = C.querySelector('.mVentana'), cv = $('skinVista');
   const E = document.createElement('div'); E.id = 'pnEscena'; E.innerHTML = '<div class="pnNom"></div>'; V.insertBefore(E, V.firstChild); E.insertBefore(cv, E.firstChild);
+  const M = document.createElement('div'); M.id = 'pnMarco'; V.insertBefore(M, E.nextSibling);
 }
 // las secciones del editor se reparten en pestañas
 function pnPestanas() {
