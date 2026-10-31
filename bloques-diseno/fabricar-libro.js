@@ -121,3 +121,5 @@ addEventListener('keydown', e => {
 // (además de ocultarlo, se quita el botón de la pausa por si alguna regla lo volvía a mostrar)
 { const quitar = () => { const v = document.getElementById('bVideo'); if (v) { const f = v.parentNode; v.remove(); if (f && f.classList && f.classList.contains('filaBtn') && !f.children.length) f.remove(); } };
   quitar(); setTimeout(quitar, 500); setTimeout(quitar, 2500); }
+// el video de introducción se quita: no aparece al entrar ni en Ajustes
+{ const st = document.createElement('style'); st.textContent = '#bVerIntro, #introCapa, #introFin { display: none !important; }'; document.head.appendChild(st); }
