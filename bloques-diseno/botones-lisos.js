@@ -40,3 +40,7 @@
   #mapasTabs .mb.on, #subirCapa .mb.on, .catTabs .ct.on { background: #3a86e8 !important; }
   #subirCapa .mb.verde { background: #2fb65a !important; }
 `; document.head.appendChild(st); }
+// etiqueta OFICIAL de los mapas: amarillo liso con el mismo borde que los botones
+{ const st = document.createElement('style'); st.textContent = `
+  .oficial { background: #ffc531 !important; color: #3a1a08 !important; border: 2px solid #0d153d !important; border-radius: 6px !important; box-shadow: none !important; padding: 1px 7px !important; }
+`; document.head.appendChild(st); }
