@@ -34,3 +34,9 @@
   #recTabs .mb.on { background: #3a86e8 !important; }
   @media (max-height: 500px) { #recTabs .mb { padding: 4px 4px !important; font-size: 12px !important; } }
 `; document.head.appendChild(st); }
+// Mapas (Nuevas / Populares, Subir a Mapas) y las categorías de la bolsa en creativo: mismos botones lisos
+{ const st = document.createElement('style'); st.textContent = `
+  #mapasTabs .mb, #subirCapa .mb, .catTabs .ct { background: #7c86ad !important; border: 3px solid #0d153d !important; border-radius: 12px !important; color: #fff !important; text-shadow: 0 2px 0 rgba(13,21,61,.55) !important; filter: none !important; box-shadow: none !important; }
+  #mapasTabs .mb.on, #subirCapa .mb.on, .catTabs .ct.on { background: #3a86e8 !important; }
+  #subirCapa .mb.verde { background: #2fb65a !important; }
+`; document.head.appendChild(st); }
