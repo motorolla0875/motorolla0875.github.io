@@ -2,9 +2,42 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<script>if (/github\.io$/.test(location.hostname)) location.replace('https://voxelium.app/jugar/' + location.search);</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Voxelium: Block Crafting</title>
+<script>if (/github\.io$/.test(location.hostname)) location.replace('https://voxelium.app/' + location.search);</script>
+<title>Voxelium: juego de construir con bloques gratis online</title>
+<meta name="description" content="Juega gratis a Voxelium en tu navegador: construye con bloques, explora mundos enormes, sobrevive a la noche, crea tus propias criaturas y juega con amigos. Sin descargar, en PC y celular.">
+<meta name="keywords" content="juego de bloques, juego de construir, sandbox, survival, creativo, juego online gratis, juego de navegador, construir casas, crafting, voxel, juego sin descargar, multijugador">
+<link rel="canonical" href="https://voxelium.app/">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#3a86e8">
+<meta name="application-name" content="Voxelium">
+<meta name="apple-mobile-web-app-title" content="Voxelium">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Voxelium">
+<meta property="og:title" content="Voxelium: construye, explora y sobrevive">
+<meta property="og:description" content="Juego de bloques gratis en el navegador. Mundos enormes, modo creativo y supervivencia, criaturas propias y multijugador.">
+<meta property="og:url" content="https://voxelium.app/">
+<meta property="og:image" content="https://voxelium.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Voxelium: construye, explora y sobrevive">
+<meta name="twitter:description" content="Juego de bloques gratis en el navegador. Mundos enormes, creativo, supervivencia y multijugador.">
+<meta name="twitter:image" content="https://voxelium.app/og-image.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"VideoGame","name":"Voxelium: Block Crafting","alternateName":"Voxelium",
+ "url":"https://voxelium.app/","image":"https://voxelium.app/og-image.jpg",
+ "description":"Juego de construir con bloques gratis: explora mundos enormes, construye en modo creativo, sobrevive a la noche, crea tus propias criaturas y juega con amigos en línea.",
+ "genre":["Sandbox","Survival","Construcción"],"gamePlatform":["Web","Android","iOS"],"playMode":["SinglePlayer","MultiPlayer"],
+ "applicationCategory":"Game","operatingSystem":"Web, Android, iOS","inLanguage":["es","en","pt","tr","id","ar"],
+ "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+ "author":{"@type":"Organization","name":"dmith.builds","url":"https://dmith.app"},
+ "publisher":{"@type":"Organization","name":"dmith.builds","url":"https://dmith.app"}}
+</script>
+<noscript><h1>Voxelium: juego de construir con bloques</h1><p>Voxelium es un juego gratis de bloques para el navegador, Android e iPhone. Construye en modo creativo, sobrevive a la noche en supervivencia, explora mundos enormes con pueblos, ríos y montañas, crea tus propias criaturas con mods y juega con amigos en línea. Para jugar, activa JavaScript.</p></noscript>
 <link rel="icon" type="image/png" sizes="32x32" href="icono-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icono-192.png">
 <link rel="apple-touch-icon" href="icono-180.png">
@@ -142,28 +175,61 @@
 </head>
 <body>
 <div id="precarga">
-  <div class="pc-estudio"><div class="pc-marca"><i></i><i></i><i></i><i></i></div><div class="pc-nombre">dmith<span>.</span>builds</div><div class="pc-sub" id="pcPresenta">presenta</div></div>
-  <div class="pc-juego" id="pcJuego"><div class="pc-logo"><svg class="logoSvg" viewBox="95 55 810 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Voxelium"><defs><linearGradient id="oroP" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff59a"/><stop offset=".42" stop-color="#ffd43a"/><stop offset=".55" stop-color="#ffb52a"/><stop offset="1" stop-color="#f0701a"/></linearGradient><filter id="brilloP" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="9"/></filter></defs><g font-family="'Baloo 2', sans-serif" font-weight="800" font-size="148" text-anchor="middle" font-style="italic" stroke-linejoin="round"><text x="500" y="205" fill="none" stroke="#7fe3ff" stroke-width="34" filter="url(#brilloP)" opacity=".9">VOXELIUM</text><text x="500" y="205" fill="none" stroke="#7fe3ff" stroke-width="30">VOXELIUM</text><text x="500" y="205" fill="none" stroke="#0d1a4a" stroke-width="20">VOXELIUM</text><text x="500" y="205" fill="#c8501a" stroke="#c8501a" stroke-width="5">VOXELIUM</text><text x="500" y="201" fill="url(#oroP)">VOXELIUM</text></g></svg></div><div class="pc-lema">Block Crafting</div><div class="pc-barra" id="pcBarra"></div><div class="pc-texto" id="pcTexto"></div></div>
+  <div class="cg-centro">
+    <div class="cg-escena">
+      <div class="cg-anillo"></div>
+      <div class="cg-cubo"><i class="f fr"></i><i class="f at"></i><i class="f iz"></i><i class="f de"></i><i class="f ar"></i><i class="f ab"></i></div>
+      <div class="cg-sombra"></div>
+    </div>
+    <div class="cg-pct" id="cgPct">0%</div>
+    <div class="cg-texto" id="cgTexto"></div>
+  </div>
 </div>
+<style>
+  /* ===== Carga nueva: un bloque de pasto del juego girando y una luz verde que da vueltas ===== */
+  #precarga { background: radial-gradient(ellipse at 50% 45%, #1b3a6e, #0b1530 75%) !important; }
+  #precarga::before { opacity: .35; filter: blur(3px); }
+  #precarga::after { background: radial-gradient(ellipse at 50% 50%, rgba(4,10,26,.15), rgba(4,10,26,.65)) !important; }
+  .cg-centro { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .cg-escena { position: relative; width: min(62vmin, 360px); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; perspective: 900px; }
+  .cg-cubo { --l: min(25vmin, 150px); position: relative; width: var(--l); height: var(--l); transform-style: preserve-3d; animation: cgGira 5s linear infinite, cgFlota 2.4s ease-in-out infinite; }
+  .cg-cubo .f { position: absolute; inset: 0; background-size: 100% 100%; image-rendering: pixelated; backface-visibility: hidden; }
+  .cg-cubo .fr { transform: translateZ(calc(var(--l) / 2)); background-image: url(diseno/carga/pastoCostado.png); }
+  .cg-cubo .at { transform: rotateY(180deg) translateZ(calc(var(--l) / 2)); background-image: url(diseno/carga/pastoCostado.png); filter: brightness(.7); }
+  .cg-cubo .iz { transform: rotateY(-90deg) translateZ(calc(var(--l) / 2)); background-image: url(diseno/carga/pastoCostado.png); filter: brightness(.8); }
+  .cg-cubo .de { transform: rotateY(90deg) translateZ(calc(var(--l) / 2)); background-image: url(diseno/carga/pastoCostado.png); filter: brightness(.9); }
+  .cg-cubo .ar { transform: rotateX(90deg) translateZ(calc(var(--l) / 2)); background-image: url(diseno/carga/pastoArriba.png); filter: brightness(1.12); }
+  .cg-cubo .ab { transform: rotateX(-90deg) translateZ(calc(var(--l) / 2)); background-image: url(diseno/carga/tierra.png); filter: brightness(.55); }
+  @keyframes cgGira { from { transform: rotateX(-24deg) rotateY(0deg); } to { transform: rotateX(-24deg) rotateY(360deg); } }
+  @keyframes cgFlota { 0%, 100% { translate: 0 -4%; } 50% { translate: 0 4%; } }
+  /* la luz verde: un anillo que gira alrededor del bloque */
+  .cg-anillo { position: absolute; inset: 0; border-radius: 50%; transform: rotateX(68deg); animation: cgAnillo 1.3s linear infinite;
+    background: conic-gradient(from 0deg, rgba(110,255,120,0) 0deg, rgba(110,255,120,0) 200deg, rgba(110,255,120,.35) 280deg, #b6ff9a 350deg, #ffffff 360deg);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 9px)); mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 9px));
+    filter: drop-shadow(0 0 8px #6cff6a) drop-shadow(0 0 18px rgba(80,255,90,.7)); }
+  @keyframes cgAnillo { from { transform: rotateX(68deg) rotateZ(0deg); } to { transform: rotateX(68deg) rotateZ(360deg); } }
+  .cg-sombra { position: absolute; left: 30%; right: 30%; bottom: 14%; height: 8%; border-radius: 50%; background: radial-gradient(rgba(0,0,0,.45), rgba(0,0,0,0) 70%); animation: cgSombra 2.4s ease-in-out infinite; }
+  @keyframes cgSombra { 0%, 100% { transform: scale(.85); opacity: .7; } 50% { transform: scale(1.05); opacity: 1; } }
+  .cg-pct { margin-top: 6px; font-weight: 800; font-size: clamp(18px, 3.4vmin, 26px); color: #b6ff9a; text-shadow: 0 0 12px rgba(80,255,90,.7), 0 2px 0 #0d153d; letter-spacing: 1px; }
+  .cg-texto { margin-top: 4px; min-height: 1.3em; font-weight: 700; font-size: clamp(12px, 2.4vmin, 15px); color: rgba(255,255,255,.8); text-shadow: 0 2px 0 #0d153d; }
+</style>
 <script>
-// precarga: corre antes que todo el juego; se va sola cuando el juego terminó de cargar (y como mínimo 3 segundos)
+// carga: arranca directo (sin "dmith.builds presenta" ni video); se va sola cuando el juego terminó de cargar
+try { localStorage.setItem('voxIntroVista', '1'); } catch (e) {}
 (function () {
   var t0 = Date.now(), L = 'es';
   try { L = localStorage.getItem('bloxIdioma') || ((navigator.language || 'es').slice(0, 2)); } catch (e) {}
   if (L === 'in') L = 'id'; if (['es', 'en', 'pt', 'tr', 'id', 'ar'].indexOf(L) < 0) L = 'en';
   if (L === 'ar') { document.documentElement.dir = 'rtl'; document.documentElement.lang = 'ar'; }
-  var TX = { es: ['presenta', ['Juntando bloques…', 'Plantando árboles…', 'Llenando los mares…', 'Despertando a los animales…', 'Escondiendo tesoros…']], en: ['presents', ['Gathering blocks…', 'Planting trees…', 'Filling the seas…', 'Waking up the animals…', 'Hiding treasure…']], pt: ['apresenta', ['Juntando blocos…', 'Plantando árvores…', 'Enchendo os mares…', 'Acordando os animais…', 'Escondendo tesouros…']], tr: ['sunar', ['Bloklar toplanıyor…', 'Ağaçlar dikiliyor…', 'Denizler dolduruluyor…', 'Hayvanlar uyandırılıyor…', 'Hazineler saklanıyor…']], id: ['mempersembahkan', ['Mengumpulkan blok…', 'Menanam pohon…', 'Mengisi lautan…', 'Membangunkan hewan…', 'Menyembunyikan harta…']], ar: ['تقدّم', ['نجمع المكعبات…', 'نزرع الأشجار…', 'نملأ البحار…', 'نوقظ الحيوانات…', 'نخبّئ الكنوز…']] }[L];
-  document.getElementById('pcPresenta').textContent = TX[0];
-  var barra = document.getElementById('pcBarra'), texto = document.getElementById('pcTexto'), N = 10, k;
-  for (k = 0; k < N; k++) barra.appendChild(document.createElement('i'));
-  var listo = false, avance = 0, frase = 0;
-  function pintar() { var n = Math.round(avance * N); for (var i = 0; i < N; i++) barra.children[i].classList.toggle('on', i < n); }
+  var FR = { es: ['Juntando bloques…', 'Plantando árboles…', 'Llenando los mares…', 'Despertando a los animales…', 'Escondiendo tesoros…'], en: ['Gathering blocks…', 'Planting trees…', 'Filling the seas…', 'Waking up the animals…', 'Hiding treasure…'], pt: ['Juntando blocos…', 'Plantando árvores…', 'Enchendo os mares…', 'Acordando os animais…', 'Escondendo tesouros…'], tr: ['Bloklar toplanıyor…', 'Ağaçlar dikiliyor…', 'Denizler dolduruluyor…', 'Hayvanlar uyanıyor…', 'Hazineler saklanıyor…'], id: ['Mengumpulkan blok…', 'Menanam pohon…', 'Mengisi lautan…', 'Membangunkan hewan…', 'Menyembunyikan harta…'], ar: ['جمع المكعبات…', 'زراعة الأشجار…', 'ملء البحار…', 'إيقاظ الحيوانات…', 'إخفاء الكنوز…'] }[L];
+  var pct = document.getElementById('cgPct'), texto = document.getElementById('cgTexto'), listo = false, avance = 0, frase = -1;
   var reloj = setInterval(function () {
-    var t = (Date.now() - t0) / 1000; if (t < 1.8) return;
-    var meta = listo ? 1 : Math.min(.9, (t - 1.8) / 2.5); avance += (meta - avance) * .35; if (meta - avance < .02) avance = meta; pintar();
-    var f = Math.min(TX[1].length - 1, Math.floor((t - 1.8) / .7)); if (f !== frase || !texto.textContent) { frase = f; texto.textContent = TX[1][f]; }
-    if (listo && avance >= 1 && Date.now() - t0 > 3000) { clearInterval(reloj); var p = document.getElementById('precarga'); setTimeout(function () { p.classList.add('fuera'); setTimeout(function () { p.remove(); }, 500); }, 250); }
-  }, 120);
+    var t = (Date.now() - t0) / 1000;
+    var meta = listo ? 1 : Math.min(.92, t / 3.2); avance += (meta - avance) * .3; if (meta - avance < .01) avance = meta;
+    pct.textContent = Math.round(avance * 100) + '%';
+    var f = Math.min(FR.length - 1, Math.floor(t / .8)); if (f !== frase) { frase = f; texto.textContent = FR[f]; }
+    if (listo && avance >= 1 && Date.now() - t0 > 1500) { clearInterval(reloj); var p = document.getElementById('precarga'); setTimeout(function () { p.classList.add('fuera'); setTimeout(function () { p.remove(); }, 500); }, 200); }
+  }, 100);
   window.addEventListener('load', function () {
     var f = document.fonts && document.fonts.load ? Promise.all([document.fonts.load('800 20px "Baloo 2"'), document.fonts.load('600 20px "Baloo 2"')]) : Promise.resolve();
     f.catch(function () {}).then(function () { setTimeout(function () { listo = true; }, 200); });
@@ -2140,5 +2206,19 @@ window.__b = { J, get, set: ponerBloque, B, I, apuntar, tocar, romper, entrarMun
 <script src="portal.js"></script>
 <script src="sintienda.js"></script>
 <script src="nativo.js"></script>
+<script src="diseno/fuente-sola.js?v=1793445341"></script>
+<script src="diseno/mundos-azul.js?v=1793445341"></script>
+<script src="diseno/nuevo-azul.js?v=1793445341"></script>
+<script src="diseno/inicio-azul.js?v=1793445341"></script>
+<script src="diseno/botones-lisos.js?v=1793445341"></script>
+<script src="diseno/fabricar-libro.js?v=1793445341"></script>
+<script src="diseno/sonido-boton.js?v=1793445341"></script>
+<script src="diseno/sin-mando.js?v=1793445341"></script>
+<script src="diseno/mundo-grande.js?v=1793445341"></script>
+<script src="diseno/aviso-herramienta.js?v=1793445341"></script>
+<script src="diseno/personaje-nuevo.js?v=1793445341"></script>
+<script src="diseno/mods-azul.js?v=1793445341"></script>
+<script src="diseno/crear-criatura.js?v=1793445341"></script>
+<script src="diseno/arbol-cae.js?v=1793445341"></script>
 </body>
 </html>
