@@ -1,0 +1,1469 @@
+=== Language: kn-IN ===
+App name: Skate Comic - ಸ್ಕೇಟ್ ಆಟಗಳು
+Short description: 3D ಸ್ಕೇಟ್ ಆಟ: ಬೆರಳಿನ ಟ್ರಿಕ್ಸ್, 8 ಟ್ರ್ಯಾಕ್‌ಗಳು, ರೇಸ್ ಮತ್ತು ಸ್ನೇಹಿತರೊಂದಿಗೆ ಆಟ
+Full description:
+Skate Comic: 3D ಸ್ಕೇಟ್ ಆಟಗಳು
+
+ನಿನ್ನ ಬೋರ್ಡ್ ಹಿಡಿದು ಸ್ಕೇಟಿಂಗ್‌ಗೆ ಹೊರಡು! Skate Comic ಕಾಮಿಕ್ ಶೈಲಿಯ 3D ಸ್ಕೇಟ್ ಆಟ. ಇಲ್ಲಿ ಬೆರಳಿನಿಂದ ಟ್ರಿಕ್ಸ್ ಮಾಡಬಹುದು, ನಗರದ ಟ್ರ್ಯಾಕ್‌ಗಳಲ್ಲಿ ಸುತ್ತಬಹುದು, ಮಿಷನ್‌ಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸಬಹುದು ಮತ್ತು ಇತರ ಸ್ಕೇಟರ್‌ಗಳೊಂದಿಗೆ ಸ್ಪರ್ಧಿಸಬಹುದು.
+
+ಜಿಗಿಯಲು ಸ್ವೈಪ್ ಮಾಡು, ಟ್ರಿಕ್ಸ್‌ಗಾಗಿ ಬೆರಳನ್ನು ತಿರುಗಿಸು, ಮತ್ತು ರ‍್ಯಾಂಪ್‌ಗಳು, ರೇಲಿಂಗ್‌ಗಳು, ಮೆಟ್ಟಿಲುಗಳು ಮತ್ತು ಅಡೆತಡೆಗಳಿಂದ ತುಂಬಿದ ಬೀದಿಗಳಲ್ಲಿ ollie, flip, grind, manual ಮತ್ತು wallride ಗಳನ್ನು ಸೇರಿಸಿ ಕಾಂಬೋ ಮಾಡು.
+
+ಅನ್ವೇಷಿಸಲು ಸ್ಕೇಟ್ ಟ್ರ್ಯಾಕ್‌ಗಳು
+
+ವಿಭಿನ್ನ ಸ್ಥಳಗಳಲ್ಲಿ ಸುತ್ತಾಡು: ನಗರ, ನಗರ 2, ಇಳಿಜಾರು, ಬಂದರು, ಹೆದ್ದಾರಿ, ಬೆಟ್ಟ, ಸುರಂಗಗಳು, ಶಾಪಿಂಗ್ ಮಾಲ್ ಮತ್ತು ಇನ್ನಷ್ಟು.
+
+ಹೊಸ ಸ್ಪಾಟ್‌ಗಳನ್ನು ಹುಡುಕು, ರೇಲಿಂಗ್‌ಗಳ ಮೇಲೆ ಜಾರು, ಸುರಂಗಗಳಲ್ಲಿ wallride ಮಾಡು, ಕಾರಂಜಿಗಳ ನಡುವೆ ಜಿಗಿ ಮತ್ತು ಸವಾಲುಗಳನ್ನು ಹುಡುಕಲು ಪ್ರತಿ ಮೂಲೆಯನ್ನೂ ಅನ್ವೇಷಿಸು.
+
+ಲೆಕ್ಕವಿಲ್ಲದಷ್ಟು ಸ್ಕೇಟ್ ಟ್ರಿಕ್ ಕಾಂಬೋಗಳು
+
+ಬಗೆಬಗೆಯ ಟ್ರಿಕ್ಸ್ ಕಲಿತು ಅವುಗಳಲ್ಲಿ ಪರಿಣತಿ ಪಡೆ:
+
+ಜಿಗಿತಗಳು ಮತ್ತು ತಿರುವುಗಳು: Ollie, Nollie, 180 ಮತ್ತು 360.
+
+Flips: Kickflip, Heelflip, Hardflip ಮತ್ತು Varial.
+
+Shove-its ಮತ್ತು grabs: Indy ಮತ್ತು Melon.
+
+Grinds: 50-50, 5-0 ಮತ್ತು Nosegrind.
+
+ಪ್ರತಿ ಟ್ರ್ಯಾಕ್‌ನ ಅಡೆತಡೆಗಳನ್ನು ಬಳಸಿಕೊಳ್ಳಲು manual ಮತ್ತು wallride.
+
+ಸ್ಕೇಟ್ ಶಾಲೆ ನಿನಗೆ ಪ್ರತಿ ಮೂವ್ ಅನ್ನು ಹಂತ ಹಂತವಾಗಿ ಕಲಿಸುತ್ತದೆ. ಜೊತೆಗೆ, ಯಾವ ಟ್ರಿಕ್ಸ್ ಈಗಾಗಲೇ ಕರಗತವಾಗಿವೆ ಮತ್ತು ಯಾವುದನ್ನು ಇನ್ನೂ ಕಲಿಯಬೇಕು ಎಂದು ನಿನ್ನ ಟ್ರಿಕ್ ಪುಸ್ತಕದಲ್ಲಿ ನೋಡು.
+
+ಮಿಷನ್‌ಗಳು ಮತ್ತು ಸವಾಲುಗಳು
+
+ಪ್ರತಿ ಟ್ರ್ಯಾಕ್‌ನಲ್ಲಿ 2 ನಿಮಿಷದ ಸೆಷನ್‌ಗಳಲ್ಲಿ ಪೂರ್ಣಗೊಳಿಸಬೇಕಾದ 5 ಗುರಿಗಳಿವೆ. VHS ಟೇಪ್‌ಗಳನ್ನು ಸಂಗ್ರಹಿಸು, SKATE ಪದವನ್ನು ರಚಿಸು, ಅಂಕಗಳನ್ನು ಗಳಿಸು ಮತ್ತು ಪ್ರತಿ ಸ್ಥಳದ ಸವಾಲುಗಳನ್ನು ಗೆಲ್ಲು.
+
+ಗುರಿಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸು, ಪದಕಗಳನ್ನು ಗೆಲ್ಲು ಮತ್ತು ನಿನ್ನ ಕೌಶಲ್ಯಗಳನ್ನು ಸುಧಾರಿಸುತ್ತಾ ಹೊಸ ಟ್ರ್ಯಾಕ್‌ಗಳನ್ನು ಅನ್‌ಲಾಕ್ ಮಾಡು.
+
+ರೇಸ್‌ಗಳು ಮತ್ತು ಮಲ್ಟಿಪ್ಲೇಯರ್
+
+ಟರ್ಬೋ ಮತ್ತು ಸ್ಟಾರ್ಟಿಂಗ್ ಗ್ರಿಡ್ ಜೊತೆಗೆ 10 ಸ್ಕೇಟರ್‌ಗಳ ವಿರುದ್ಧ ರೇಸ್.
+
+ಸ್ನೇಹಿತರೊಂದಿಗೆ ಆಡಲು ರೂಮ್‌ಗಳು: 6 ಸ್ಕೇಟರ್‌ಗಳವರೆಗೆ ಸೇರಿಸು ಮತ್ತು WhatsApp ಮೂಲಕ ಸ್ನೇಹಿತರನ್ನು ಆಹ್ವಾನಿಸು.
+
+ಪಾಯಿಂಟ್ಸ್ ಮೋಡ್: ಸಾಧ್ಯವಾದಷ್ಟು ಹೆಚ್ಚು ಸ್ಕೋರ್ ಗಳಿಸಲು ನಿನಗೆ 2 ನಿಮಿಷಗಳಿವೆ.
+
+ನಿನ್ನ ಸವಾಲನ್ನು ಆರಿಸು, ಟ್ರಿಕ್ಸ್ ಸುಧಾರಿಸು ಮತ್ತು ನಿನ್ನದೇ ದಾಖಲೆಗಳನ್ನು ಮುರಿಯಲು ಸ್ಪರ್ಧಿಸು.
+
+ನಿನ್ನದೇ ಲೆವೆಲ್‌ಗಳನ್ನು ರಚಿಸು
+
+ರೇಲಿಂಗ್‌ಗಳು, ಮೆಟ್ಟಿಲುಗಳು ಮತ್ತು ರ‍್ಯಾಂಪ್‌ಗಳೊಂದಿಗೆ ನಿನ್ನದೇ ನಗರ ಸ್ಕೇಟ್‌ಪಾರ್ಕ್ ವಿನ್ಯಾಸ ಮಾಡು. ಮಾರ್ಗಗಳನ್ನು ರಚಿಸು, ನಿನ್ನ ಸ್ಕೇಟರ್‌ನೊಂದಿಗೆ ಪರೀಕ್ಷಿಸು ಮತ್ತು ಒಂದು ಕೋಡ್ ಮೂಲಕ ನಿನ್ನ ರಚನೆಗಳನ್ನು ಸ್ನೇಹಿತರೊಂದಿಗೆ ಹಂಚಿಕೊ.
+
+ನಿನ್ನ ಸ್ಕೇಟರ್ ಅನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡು
+
+ಬಗೆಬಗೆಯ ಟಿ-ಶರ್ಟ್‌ಗಳು, ಪ್ಯಾಂಟ್‌ಗಳು, ಶೂಗಳು, ಟೋಪಿಗಳು ಮತ್ತು ಬೋರ್ಡ್‌ಗಳೊಂದಿಗೆ ನಿನ್ನದೇ ಶೈಲಿ ರಚಿಸು. ನಿನ್ನ ನೆಚ್ಚಿನ ಕಾಂಬಿನೇಷನ್ ಆರಿಸಿ, ಚಕ್ರಗಳ ಮೇಲೆ ನಗರವನ್ನೆಲ್ಲಾ ಸುತ್ತುತ್ತಾ ಸಂಗೀತವನ್ನು ಆನಂದಿಸು.
+
+SKATE COMIC PRO
+
+ಉಚಿತವಾಗಿ ಆಡಲು ಶುರು ಮಾಡು. ಆಟದಲ್ಲಿ ಜಾಹೀರಾತುಗಳಿವೆ ಮತ್ತು ಮಾಸಿಕ, ವಾರ್ಷಿಕ ಅಥವಾ ಒಮ್ಮೆ ಪಾವತಿಸಿ ಶಾಶ್ವತವಾಗಿ ಬಳಸುವ PRO ಆಯ್ಕೆಯೂ ಇದೆ.
+
+PRO ಜೊತೆಗೆ ಜಾಹೀರಾತುಗಳಿಲ್ಲದೆ ಆಡಬಹುದು, ಮಿತಿಯಿಲ್ಲದ ಉದ್ದದ ಲೆವೆಲ್‌ಗಳನ್ನು ರಚಿಸಬಹುದು ಮತ್ತು ನಿನ್ನ ಸಂಪೂರ್ಣ ಸಂಗೀತವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಬಹುದು. ಉಚಿತ ಆವೃತ್ತಿಯಲ್ಲಿ 3 ಹಾಡುಗಳವರೆಗೆ ಅಪ್‌ಲೋಡ್ ಮಾಡಬಹುದು.
+
+ಚಂದಾದಾರಿಕೆಗಳು, ನೀನು ಆಯ್ಕೆ ಮಾಡಿದ ಪ್ಲಾನ್‌ನ ಷರತ್ತುಗಳ ಪ್ರಕಾರ, ನಿನ್ನ Google Play ಖಾತೆಯಿಂದ ರದ್ದುಗೊಳಿಸುವವರೆಗೆ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ನವೀಕರಣಗೊಳ್ಳುತ್ತವೆ.
+
+ಸ್ಕೇಟಿಂಗ್‌ಗೆ ಹೊರಡು!
+
+ಟ್ರ್ಯಾಕ್‌ಗಳನ್ನು ಅನ್ವೇಷಿಸು, ಹೊಸ ಟ್ರಿಕ್ಸ್ ಕಲಿ, ಮಿಷನ್‌ಗಳನ್ನು ಪೂರ್ಣಗೊಳಿಸು, ಸ್ನೇಹಿತರೊಂದಿಗೆ ಸ್ಪರ್ಧಿಸು ಮತ್ತು ನಿನ್ನದೇ ಲೆವೆಲ್‌ಗಳನ್ನು ರಚಿಸು.
+
+Skate Comic ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ ನಿನ್ನ ಸ್ಕೇಟ್ ಶೈಲಿಯನ್ನು ಬೀದಿಗಳಿಗೆ ತೆಗೆದುಕೊಂಡು ಹೋಗು.
+
+=== Language: ko-KR ===
+App name: Skate Comic - 스케이트보드 게임
+Short description: 3D 스케이트보드 게임: 손가락 트릭, 8개 트랙, 레이스, 친구와 함께
+Full description:
+Skate Comic: 3D 스케이트보드 게임
+
+보드를 챙겨서 스케이트 타러 나가요! Skate Comic은 만화 스타일의 3D 스케이트보드 게임으로, 손가락으로 트릭을 하고, 도시 트랙을 누비고, 미션을 클리어하고, 다른 스케이터들과 경쟁할 수 있어요.
+
+스와이프해서 점프하고, 손가락을 돌려 트릭을 쓰고, 램프, 난간, 계단, 장애물로 가득한 거리에서 ollie, flip, grind, manual, wallride를 조합해 보세요.
+
+탐험할 스케이트 트랙
+
+다양한 장소를 달려 보세요: 시티, 시티 2, 내리막길, 항구, 고속도로, 언덕, 터널, 쇼핑몰 등 다양한 곳이 기다려요.
+
+새로운 스팟을 발견하고, 난간을 타고 미끄러지고, 터널에서 wallride를 하고, 분수 사이를 점프하며 구석구석 탐험해 도전 과제를 찾아보세요.
+
+무궁무진한 스케이트 트릭 조합
+
+다양한 트릭을 배우고 마스터하세요:
+
+점프와 회전: Ollie, Nollie, 180, 360.
+
+Flip: Kickflip, Heelflip, Hardflip, Varial.
+
+Shove-it과 그랩: Indy, Melon.
+
+Grind: 50-50, 5-0, Nosegrind.
+
+각 트랙의 장애물을 활용하는 manual과 wallride.
+
+스케이트 스쿨에서 기술을 단계별로 배울 수 있어요. 또한 트릭 북에서 이미 마스터한 트릭과 아직 배워야 할 트릭을 확인해 보세요.
+
+미션과 도전
+
+각 트랙에는 2분 세션 동안 완료해야 하는 5개의 목표가 있어요. VHS 테이프를 모으고, SKATE 글자를 완성하고, 점수를 따고, 각 장소의 도전을 정복하세요.
+
+목표를 완료하고 메달을 획득하며, 실력을 키우는 동시에 새로운 트랙을 잠금 해제하세요.
+
+레이스와 멀티플레이
+
+터보와 출발 그리드가 있는 10명의 스케이터와의 레이스.
+
+친구와 함께하는 방: 최대 6명의 스케이터를 모으고 WhatsApp으로 친구를 초대하세요.
+
+포인트 모드: 2분 안에 최대한 높은 점수를 얻으세요.
+
+도전을 고르고, 트릭을 갈고닦고, 자신의 기록을 뛰어넘으세요.
+
+나만의 레벨 만들기
+
+난간, 계단, 램프로 나만의 도시 스케이트파크를 디자인하세요. 코스를 짜고, 내 스케이터로 테스트하고, 코드로 친구들에게 작품을 공유하세요.
+
+나만의 스케이터 꾸미기
+
+다양한 티셔츠, 바지, 운동화, 모자, 보드로 나만의 스타일을 만드세요. 가장 좋아하는 조합을 고르고 음악을 즐기며 바퀴 위에서 도시를 누벼 보세요.
+
+SKATE COMIC PRO
+
+무료로 플레이를 시작하세요. 게임에는 광고가 포함되어 있으며, 월간, 연간 또는 1회 결제로 영구 이용하는 플랜이 있는 PRO 옵션을 제공합니다.
+
+PRO를 이용하면 광고 없이 플레이하고, 더 긴 레벨을 제한 없이 만들고, 모든 음악을 불러올 수 있어요. 무료 버전에서는 최대 3곡까지 불러올 수 있어요.
+
+구독은 Google Play 계정에서 취소할 때까지 가입한 플랜의 조건에 따라 자동으로 갱신됩니다.
+
+스케이트 타러 나가요!
+
+트랙을 탐험하고, 새 트릭을 배우고, 미션을 완료하고, 친구들과 경쟁하고, 나만의 레벨을 만들어 보세요.
+
+Skate Comic을 다운로드하고 거리에서 나만의 스케이트 스타일을 뽐내세요.
+
+=== Language: ky-KG ===
+App name: Skate Comic - Скейт оюну
+Short description: 3D скейт оюну: манжа менен трюктар, 8 трасса, жарыштар жана достор
+Full description:
+Skate Comic: 3D скейт оюндары
+
+Тактаңды ал да, тебүүгө чык! Skate Comic — комикс стилиндеги 3D скейт оюну: бул жерде манжаң менен трюктарды жасап, шаар трассаларын кыдырып, миссияларды аткарып, башка скейтерлер менен жарыша аласың.
+
+Секирүү үчүн сүйрө, трюк жасоо үчүн манжаңды айлант жана пандустарга, тосмолорго, тепкичтерге жана тоскоолдуктарга толгон көчөлөрдө ollie, flip, grind, manual жана wallride трюктарын айкалыштыр.
+
+ИЗИЛДӨӨ ҮЧҮН СКЕЙТ ТРАССАЛАРЫ
+
+Ар түрдүү локацияларды кыдыр: Шаар, Шаар 2, Эңиш, Порт, Автомагистраль, Дөбө, Туннелдер, Соода борбору жана башкалар.
+
+Жаңы спотторду тап, тосмолор менен сыйгалан, туннелдерде wallride жаса, фонтандардын ортосунан секир жана сыноолорду табуу үчүн ар бир бурчту изилде.
+
+СКЕЙТ ТРЮКТАРЫНЫН САНСЫЗ АЙКАЛЫШТАРЫ
+
+Ар түрдүү трюктарды үйрөнүп, өздөштүр:
+
+Секирүүлөр жана айлануулар: Ollie, Nollie, 180 жана 360.
+
+Флиптер: Kickflip, Heelflip, Hardflip жана Varial.
+
+Shove-it жана грэбдер: Indy жана Melon.
+
+Грайнддар: 50-50, 5-0 жана Nosegrind.
+
+Ар бир трассанын тоскоолдуктарын пайдалануу үчүн manual жана wallride.
+
+Скейт мектеби кыймылдарды кадам-кадам менен үйрөтөт. Ошондой эле Трюктар китебиңден кайсыларын өздөштүргөнүңдү жана кайсыларын дагы үйрөнүшүң керек экенин көрө аласың.
+
+МИССИЯЛАР ЖАНА СЫНООЛОР
+
+Ар бир трассада 2 мүнөттүк сессияларда аткарыла турган 5 максат бар. VHS кассеталарын чогулт, SKATE сөзүн түз, упай топто жана ар бир локациянын сыноолорунан өт.
+
+Максаттарды аткар, медалдарды утуп ал жана чеберчилигиңди өркүндөтүү менен жаңы трассаларды ач.
+
+ЖАРЫШТАР ЖАНА МУЛЬТИПЛЕЕР
+
+Турбо жана старт тору менен 10 скейтерге каршы жарыштар.
+
+Достор менен ойноо үчүн бөлмөлөр: 6 скейтерге чейин чогулт жана досторуңду WhatsApp аркылуу чакыр.
+
+Упай режими: мүмкүн болушунча көп упай топтоо үчүн 2 мүнөтүң бар.
+
+Сыноонду тандап, трюктарыңды өркүндөт жана өз натыйжаларыңдан ашуу үчүн жарыш.
+
+ӨЗ ДЕҢГЭЭЛДЕРИҢДИ ТҮЗ
+
+Тосмолор, тепкичтер жана пандустар менен өз шаардык скейтпаркыңды долбоорло. Маршруттарды түз, аларды скейтериң менен сынап көр жана чыгармаларыңды достор менен код аркылуу бөлүш.
+
+СКЕЙТЕРИҢДИ ЖЕКЕЛЕШТИР
+
+Ар түрдүү футболкалар, шымдар, кроссовкалар, баш кийимдер жана такталар менен өз стилиңди түз. Сүйүктүү айкалышыңды танда да, дөңгөлөктөр менен шаарды кыдырып жүрүп, музыкадан ырахат ал.
+
+SKATE COMIC PRO
+
+Акысыз ойной башта. Оюнда жарнама бар жана айлык, жылдык же бир жолку түбөлүк төлөм пландары менен PRO мүмкүнчүлүгү сунушталат.
+
+PRO менен жарнамасыз ойноп, узунураак жана чексиз деңгээлдерди түзүп, бардык музыкаңды жүктөй аласың. Акысыз версияда 3 ырга чейин жүктөөгө болот.
+
+Жазылуулар тандалган пландын шарттарына ылайык, аларды Google Play аккаунтуңдан жокко чыгарганга чейин автоматтык түрдө жаңыланат.
+
+ТЕБҮҮГӨ ЧЫК!
+
+Трассаларды изилде, жаңы трюктарды үйрөн, миссияларды аткар, достор менен жарыш жана өз деңгээлдериңди түз.
+
+Skate Comic'ти жүктөп ал да, скейт стилиңди көчөлөргө алып чык.
+
+=== Language: lo-LA ===
+App name: Skate Comic - ເກມສະເກັດບອດ
+Short description: ເກມສະເກັດ 3D: ເຮັດທຣິກດ້ວຍນິ້ວ, 8 ສະໜາມ, ແຂ່ງຂັນ ແລະ ຫຼິ້ນກັບໝູ່
+Full description:
+Skate Comic: ເກມສະເກັດບອດ 3D
+
+ຈັບບອດຂອງເຈົ້າແລ້ວອອກໄປໄຖກັນເລີຍ! Skate Comic ແມ່ນເກມສະເກັດບອດ 3D ສະໄຕລ໌ກາຕູນຄອມມິກ ທີ່ເຈົ້າສາມາດເຮັດທຣິກດ້ວຍນິ້ວ, ທ່ອງສະໜາມໃນເມືອງ, ຜ່ານພາລະກິດ ແລະ ແຂ່ງກັບສະເກັດເຕີຄົນອື່ນໆ.
+
+ປັດເພື່ອກະໂດດ, ໝຸນນິ້ວເພື່ອເຮັດທຣິກ ແລະ ຄອມໂບ ollie, flip, grind, manual ແລະ wallride ເທິງຖະໜົນທີ່ເຕັມໄປດ້ວຍທາງລາດ, ຮາວຈັບ, ຂັ້ນໄດ ແລະ ສິ່ງກີດຂວາງ.
+
+ສະໜາມສະເກັດໃຫ້ສຳຫຼວດ
+
+ທ່ອງໄປໃນສາກທີ່ແຕກຕ່າງກັນ: ເມືອງ, ເມືອງ 2, ທາງລົງ, ທ່າເຮືອ, ທາງດ່ວນ, ເນີນພູ, ອຸໂມງ, ສູນການຄ້າ ແລະ ອື່ນໆອີກຫຼາຍ.
+
+ຄົ້ນພົບສະປອດໃໝ່, ໄຖຕາມຮາວຈັບ, wallride ໃນອຸໂມງ, ກະໂດດຂ້າມນ້ຳພຸ ແລະ ສຳຫຼວດທຸກມຸມເພື່ອຊອກຫາສິ່ງທ້າທາຍ.
+
+ຄອມໂບທຣິກສະເກັດຫຼາຍນັບບໍ່ຖ້ວນ
+
+ຮຽນຮູ້ ແລະ ເກັ່ງທຣິກຫຼາກຫຼາຍ:
+
+ກະໂດດ ແລະ ໝຸນ: Ollie, Nollie, 180 ແລະ 360.
+
+Flips: Kickflip, Heelflip, Hardflip ແລະ Varial.
+
+Shove-its ແລະ grabs: Indy ແລະ Melon.
+
+Grinds: 50-50, 5-0 ແລະ Nosegrind.
+
+Manual ແລະ wallride ເພື່ອໃຊ້ປະໂຫຍດຈາກສິ່ງກີດຂວາງໃນແຕ່ລະສະໜາມ.
+
+ໂຮງຮຽນສະເກັດຈະສອນທ່າຕ່າງໆໃຫ້ເຈົ້າເທື່ອລະຂັ້ນ. ນອກຈາກນີ້, ເບິ່ງປຶ້ມທຣິກຂອງເຈົ້າວ່າທຣິກໃດທີ່ເຈົ້າເກັ່ງແລ້ວ ແລະ ທຣິກໃດທີ່ຍັງຕ້ອງຮຽນ.
+
+ພາລະກິດ ແລະ ສິ່ງທ້າທາຍ
+
+ແຕ່ລະສະໜາມມີ 5 ເປົ້າໝາຍໃຫ້ເຮັດໃຫ້ສຳເລັດໃນຮອບລະ 2 ນາທີ. ເກັບເທບ VHS, ສະກົດຄຳວ່າ SKATE, ເກັບຄະແນນ ແລະ ຜ່ານສິ່ງທ້າທາຍຂອງແຕ່ລະສາກ.
+
+ເຮັດເປົ້າໝາຍໃຫ້ສຳເລັດ, ຮັບຫຼຽນລາງວັນ ແລະ ປົດລັອກສະໜາມໃໝ່ ໃນຂະນະທີ່ພັດທະນາຝີມືຂອງເຈົ້າ.
+
+ແຂ່ງຂັນ ແລະ ຫຼາຍຜູ້ຫຼິ້ນ
+
+ແຂ່ງກັບສະເກັດເຕີ 10 ຄົນ ພ້ອມເທີໂບ ແລະ ກຣິດອອກຕົວ.
+
+ຫ້ອງຫຼິ້ນກັບໝູ່: ລວມສະເກັດເຕີໄດ້ສູງສຸດ 6 ຄົນ ແລະ ຊວນໝູ່ຜ່ານ WhatsApp.
+
+ໂໝດຄະແນນ: ເຈົ້າມີເວລາ 2 ນາທີເພື່ອເຮັດຄະແນນໃຫ້ສູງທີ່ສຸດ.
+
+ເລືອກສິ່ງທ້າທາຍ, ພັດທະນາທຣິກ ແລະ ແຂ່ງຂັນເພື່ອທຳລາຍສະຖິຕິຂອງຕົນເອງ.
+
+ສ້າງດ່ານຂອງເຈົ້າເອງ
+
+ອອກແບບສະເກັດພາກໃນເມືອງຂອງເຈົ້າເອງດ້ວຍຮາວຈັບ, ຂັ້ນໄດ ແລະ ທາງລາດ. ສ້າງເສັ້ນທາງ, ທົດລອງກັບສະເກັດເຕີຂອງເຈົ້າ ແລະ ແບ່ງປັນຜົນງານໃຫ້ໝູ່ດ້ວຍລະຫັດ.
+
+ແຕ່ງຕົວສະເກັດເຕີຂອງເຈົ້າ
+
+ສ້າງສະໄຕລ໌ຂອງເຈົ້າເອງດ້ວຍເສື້ອຢືດ, ໂສ້ງ, ເກີບຜ້າໃບ, ໝວກ ແລະ ບອດຫຼາກຫຼາຍແບບ. ເລືອກຊຸດທີ່ມັກ ແລ້ວເພີດເພີນກັບເພງໃນຂະນະທີ່ໄຖໄປທົ່ວເມືອງ.
+
+SKATE COMIC PRO
+
+ເລີ່ມຫຼິ້ນໄດ້ຟຣີ. ເກມມີໂຄສະນາ ແລະ ມີຕົວເລືອກ PRO ແບບລາຍເດືອນ, ລາຍປີ ຫຼື ຈ່າຍຄັ້ງດຽວໃຊ້ໄດ້ຕະຫຼອດໄປ.
+
+ດ້ວຍ PRO ເຈົ້າສາມາດຫຼິ້ນໂດຍບໍ່ມີໂຄສະນາ, ສ້າງດ່ານທີ່ຍາວຂຶ້ນແບບບໍ່ຈຳກັດ ແລະ ອັບໂຫຼດເພງຂອງເຈົ້າໄດ້ທັງໝົດ. ເວີຊັນຟຣີອັບໂຫຼດໄດ້ສູງສຸດ 3 ເພງ.
+
+ການສະໝັກສະມາຊິກຈະຕໍ່ອາຍຸອັດຕະໂນມັດຈົນກວ່າເຈົ້າຈະຍົກເລີກຈາກບັນຊີ Google Play ຂອງເຈົ້າ, ຕາມເງື່ອນໄຂຂອງແພັກເກດທີ່ສະໝັກ.
+
+ອອກໄປໄຖກັນເລີຍ!
+
+ສຳຫຼວດສະໜາມ, ຮຽນຮູ້ທຣິກໃໝ່, ເຮັດພາລະກິດໃຫ້ສຳເລັດ, ແຂ່ງກັບໝູ່ ແລະ ສ້າງດ່ານຂອງເຈົ້າເອງ.
+
+ດາວໂຫຼດ Skate Comic ແລ້ວນຳສະໄຕລ໌ສະເກັດຂອງເຈົ້າອອກສູ່ຖະໜົນ.
+
+=== Language: lt ===
+App name: Skate Comic - Skeito žaidimai
+Short description: 3D riedlenčių žaidimas: triukai pirštu, 8 trasos, lenktynės ir draugai
+Full description:
+Skate Comic: 3D riedlenčių žaidimai
+
+Griebk savo lentą ir važiuok čiuožti! Skate Comic – komiksų stiliaus 3D riedlenčių žaidimas, kuriame pirštu darai triukus, važinėji miesto trasomis, vykdai misijas ir varžaisi su kitais riedlentininkais.
+
+Perbrauk, kad pašoktum, suk pirštą, kad atliktum triukus, ir derink ollie, flip, grind, manual ir wallride triukus gatvėse, pilnose rampų, turėklų, laiptų ir kliūčių.
+
+RIEDLENČIŲ TRASOS, KURIAS VERTA ATRASTI
+
+Važinėk po skirtingas vietas: Miestas, Miestas 2, Nuokalnė, Uostas, Greitkelis, Kalva, Tuneliai, Prekybos centras ir dar daugiau.
+
+Atrask naujus spotus, slysk turėklais, daryk wallride tuneliuose, šokinėk tarp fontanų ir išnaršyk kiekvieną kampelį ieškodamas iššūkių.
+
+DAUGYBĖ RIEDLENČIŲ TRIUKŲ KOMBINACIJŲ
+
+Išmok ir įvaldyk įvairius triukus:
+
+Šuoliai ir sukiniai: Ollie, Nollie, 180 ir 360.
+
+Flipai: Kickflip, Heelflip, Hardflip ir Varial.
+
+Shove-it ir grabai: Indy ir Melon.
+
+Grindai: 50-50, 5-0 ir Nosegrind.
+
+Manual ir wallride triukai, kad išnaudotum kiekvienos trasos kliūtis.
+
+Riedlenčių mokykla išmokys judesių žingsnis po žingsnio. Be to, pasižiūrėk savo Triukų knygą ir sužinok, kuriuos triukus jau įvaldei, o kurių dar reikia išmokti.
+
+MISIJOS IR IŠŠŪKIAI
+
+Kiekvienoje trasoje yra 5 tikslai, kuriuos reikia įvykdyti per 2 minučių sesijas. Rink VHS kasetes, sudėk žodį SKATE, kaupk taškus ir įveik kiekvienos vietos iššūkius.
+
+Vykdyk tikslus, laimėk medalius ir atrakink naujas trasas tobulindamas savo įgūdžius.
+
+LENKTYNĖS IR KELIŲ ŽAIDĖJŲ REŽIMAS
+
+Lenktynės prieš 10 riedlentininkų su turbo ir starto rikiuote.
+
+Kambariai žaisti su draugais: suburk iki 6 riedlentininkų ir pakviesk draugus per WhatsApp.
+
+Taškų režimas: turi 2 minutes surinkti kuo daugiau taškų.
+
+Pasirink iššūkį, tobulink triukus ir varžykis, kad pagerintum savo rezultatus.
+
+KURK SAVO LYGIUS
+
+Susikurk savo miesto riedlenčių parką su turėklais, laiptais ir rampomis. Kurk maršrutus, išbandyk juos su savo riedlentininku ir dalinkis kūriniais su draugais naudodamas kodą.
+
+PRITAIKYK SAVO RIEDLENTININKĄ
+
+Susikurk savo stilių su įvairiais marškinėliais, kelnėmis, sportbačiais, kepurėmis ir lentomis. Išsirink mėgstamiausią derinį ir mėgaukis muzika važinėdamas po miestą.
+
+SKATE COMIC PRO
+
+Pradėk žaisti nemokamai. Žaidime yra reklamų, o PRO parinktis siūloma su mėnesio ar metų planu arba vienkartiniu mokėjimu visam laikui.
+
+Su PRO gali žaisti be reklamų, kurti ilgesnius lygius be apribojimų ir įkelti visą savo muziką. Nemokamoje versijoje galima įkelti iki 3 dainų.
+
+Prenumeratos atnaujinamos automatiškai, kol jų neatšauksi savo Google Play paskyroje, pagal pasirinkto plano sąlygas.
+
+VAŽIUOK ČIUOŽTI!
+
+Tyrinėk trasas, mokykis naujų triukų, vykdyk misijas, varžykis su draugais ir kurk savo lygius.
+
+Atsisiųsk Skate Comic ir parodyk savo riedlenčių stilių gatvėse.
+
+=== Language: lv ===
+App name: Skate Comic - Skeitborda spēle
+Short description: 3D skeitborda spēle: triki ar pirkstu, 8 trases, sacīkstes un draugi
+Full description:
+Skate Comic: 3D skeitborda spēles
+
+Ķer savu dēli un brauc skeitot! Skate Comic ir komiksu stila 3D skeitborda spēle, kurā tu izpildi trikus ar pirkstu, brauc pa pilsētas trasēm, pildi misijas un sacenties ar citiem skeiteriem.
+
+Pavelc, lai lēktu, griez pirkstu, lai izpildītu trikus, un kombinē ollie, flip, grind, manual un wallride trikus ielās, kas pilnas ar rampām, margām, kāpnēm un šķēršļiem.
+
+SKEITA TRASES, KO IZPĒTĪT
+
+Izbrauc dažādas vietas: Pilsēta, Pilsēta 2, Nobrauciens, Osta, Šoseja, Kalns, Tuneļi, Tirdzniecības centrs un vēl citas.
+
+Atklāj jaunus spotus, slīdi pa margām, izpildi wallride tuneļos, lec starp strūklakām un izpēti katru stūrīti, lai atrastu izaicinājumus.
+
+MILZUMS SKEITA TRIKU KOMBINĀCIJU
+
+Apgūsti un pārvaldi dažādus trikus:
+
+Lēcieni un pagriezieni: Ollie, Nollie, 180 un 360.
+
+Flipi: Kickflip, Heelflip, Hardflip un Varial.
+
+Shove-it un grabi: Indy un Melon.
+
+Grindi: 50-50, 5-0 un Nosegrind.
+
+Manual un wallride triki, lai izmantotu katras trases šķēršļus.
+
+Skeita skola iemāca kustības soli pa solim. Turklāt ieskaties savā Triku grāmatā, lai redzētu, kurus trikus jau proti un kuri vēl jāapgūst.
+
+MISIJAS UN IZAICINĀJUMI
+
+Katrā trasē ir 5 mērķi, kas jāizpilda 2 minūšu sesijās. Savāc VHS kasetes, saliec vārdu SKATE, krāj punktus un pārvari katras vietas izaicinājumus.
+
+Izpildi mērķus, izcīni medaļas un atbloķē jaunas trases, uzlabojot savas prasmes.
+
+SACĪKSTES UN DAUDZSPĒLĒTĀJU REŽĪMS
+
+Sacīkstes pret 10 skeiteriem ar turbo un starta režģi.
+
+Istabas spēlēšanai ar draugiem: sapulcini līdz 6 skeiteriem un uzaicini draugus caur WhatsApp.
+
+Punktu režīms: tev ir 2 minūtes, lai iegūtu pēc iespējas vairāk punktu.
+
+Izvēlies savu izaicinājumu, uzlabo trikus un sacenties, lai pārspētu savus rezultātus.
+
+VEIDO SAVUS LĪMEŅUS
+
+Izveido savu pilsētas skeitparku ar margām, kāpnēm un rampām. Būvē maršrutus, izmēģini tos ar savu skeiteri un dalies ar saviem darbiem ar draugiem, izmantojot kodu.
+
+PIELĀGO SAVU SKEITERI
+
+Radi savu stilu ar dažādiem T-krekliem, biksēm, kedām, cepurēm un dēļiem. Izvēlies savu mīļāko kombināciju un baudi mūziku, braucot pa pilsētu.
+
+SKATE COMIC PRO
+
+Sāc spēlēt bez maksas. Spēlē ir reklāmas, un tā piedāvā PRO iespēju ar mēneša vai gada plānu vai vienreizēju maksājumu uz visiem laikiem.
+
+Ar PRO vari spēlēt bez reklāmām, veidot garākus līmeņus bez ierobežojumiem un augšupielādēt visu savu mūziku. Bezmaksas versijā var augšupielādēt līdz 3 dziesmām.
+
+Abonementi tiek automātiski atjaunoti, līdz tu tos atcel savā Google Play kontā, saskaņā ar izvēlētā plāna noteikumiem.
+
+DODIES SKEITOT!
+
+Izpēti trases, apgūsti jaunus trikus, pildi misijas, sacenties ar draugiem un veido savus līmeņus.
+
+Lejupielādē Skate Comic un aiznes savu skeita stilu uz ielām.
+
+=== Language: mk-MK ===
+App name: Skate Comic - Скејт игри
+Short description: 3D скејт игра: трикови со прст, 8 патеки, трки и игра со другари
+Full description:
+Skate Comic: скејт игри во 3D
+
+Грабни ја даската и излези да возиш! Skate Comic е 3D скејт игра во стрип стил во која изведуваш трикови со прст, возиш по градски патеки, исполнуваш мисии и се натпреваруваш со други скејтери.
+
+Повлечи за скок, заврти го прстот за трик и комбинирај ollie, flip, grind, manual и wallride на улици полни со рампи, огради, скали и пречки.
+
+СКЕЈТ ПАТЕКИ ЗА ИСТРАЖУВАЊЕ
+
+Провозај се низ различни локации: Градот, Град 2, Спустот, Пристаништето, Автопатот, Ридот, Тунелите, Трговскиот центар и уште многу.
+
+Откривај нови спотови, лизгај се по огради, изведувај wallride во тунелите, скокај меѓу фонтаните и истражи го секое ќоше за да најдеш предизвици.
+
+КУП КОМБИНАЦИИ НА СКЕЈТ ТРИКОВИ
+
+Научи и совладај разни трикови:
+
+Скокови и вртења: Ollie, Nollie, 180 и 360.
+
+Flip трикови: Kickflip, Heelflip, Hardflip и Varial.
+
+Shove-it и grab трикови: Indy и Melon.
+
+Grind трикови: 50-50, 5-0 и Nosegrind.
+
+Manual и wallride за да ги искористиш пречките на секоја патека.
+
+Скејт школата те учи на движењата чекор по чекор. А во Книгата со трикови гледаш кои веќе си ги совладал, а кои уште треба да ги научиш.
+
+МИСИИ И ПРЕДИЗВИЦИ
+
+Секоја патека има 5 цели што треба да ги исполниш во возења од 2 минути. Собирај VHS касети, состави го зборот SKATE, освојувај поени и совладај ги предизвиците на секоја локација.
+
+Исполнувај цели, освојувај медали и отклучувај нови патеки додека ги подобруваш своите вештини.
+
+ТРКИ И МУЛТИПЛЕЕР
+
+Трки против 10 скејтери, со турбо и стартна решетка.
+
+Соби за игра со другари: собери до 6 скејтери и покани ги другарите преку WhatsApp.
+
+Режим Поени: имаш 2 минути да освоиш што повеќе поени.
+
+Избери предизвик, усоврши ги триковите и натпреварувај се за да ги надминеш сопствените резултати.
+
+СОЗДАЈ СВОИ НИВОА
+
+Дизајнирај свој градски скејтпарк со огради, скали и рампи. Состави патеки, испробај ги со својот скејтер и сподели ги креациите со другарите преку код.
+
+ПРИЛАГОДИ ГО СВОЈОТ СКЕЈТЕР
+
+Создај свој стил со различни маици, панталони, патики, капи и даски. Избери ја омилената комбинација и уживај во музиката додека крстариш низ градот на тркала.
+
+SKATE COMIC PRO
+
+Почни да играш бесплатно. Играта содржи реклами и нуди PRO опција со месечен, годишен или еднократен доживотен план.
+
+Со PRO играш без реклами, создаваш подолги нивоа без ограничување и ја прикачуваш целата своја музика. Бесплатната верзија овозможува прикачување до 3 песни.
+
+Претплатите автоматски се обновуваат сè додека не ги откажеш од својата Google Play сметка, во согласност со условите на избраниот план.
+
+ИЗЛЕЗИ ДА ВОЗИШ!
+
+Истражи ги патеките, научи нови трикови, исполнувај мисии, натпреварувај се со другари и создавај свои нивоа.
+
+Преземи Skate Comic и изнеси го својот скејт стил на улиците.
+
+=== Language: ml-IN ===
+App name: Skate Comic - സ്കേറ്റ് ഗെയിം
+Short description: 3D സ്കേറ്റ് ഗെയിം: വിരൽ ട്രിക്കുകൾ, 8 ട്രാക്കുകൾ, റേസുകൾ, കൂട്ടുകാരുമായി കളി
+Full description:
+Skate Comic: 3D സ്കേറ്റ് ഗെയിമുകൾ
+
+നിന്റെ ബോർഡ് എടുത്ത് സ്കേറ്റ് ചെയ്യാൻ ഇറങ്ങ്! Skate Comic കോമിക് സ്റ്റൈലിലുള്ള ഒരു 3D സ്കേറ്റ് ഗെയിമാണ്. ഇതിൽ വിരൽ കൊണ്ട് ട്രിക്കുകൾ ചെയ്യാം, നഗര ട്രാക്കുകളിലൂടെ കറങ്ങാം, മിഷനുകൾ പൂർത്തിയാക്കാം, മറ്റ് സ്കേറ്റർമാരുമായി മത്സരിക്കാം.
+
+ചാടാൻ സ്വൈപ്പ് ചെയ്യ്, ട്രിക്കുകൾക്കായി വിരൽ കറക്ക്, റാമ്പുകളും കൈവരികളും പടികളും തടസ്സങ്ങളും നിറഞ്ഞ തെരുവുകളിൽ ollie, flip, grind, manual, wallride എന്നിവ ചേർത്ത് കോമ്പോകൾ ചെയ്യ്.
+
+കണ്ടെത്താൻ സ്കേറ്റ് ട്രാക്കുകൾ
+
+വ്യത്യസ്ത ഇടങ്ങളിലൂടെ കറങ്ങ്: നഗരം, നഗരം 2, ഇറക്കം, തുറമുഖം, ഹൈവേ, കുന്ന്, തുരങ്കങ്ങൾ, ഷോപ്പിംഗ് മാൾ എന്നിവയും അതിലേറെയും.
+
+പുതിയ സ്പോട്ടുകൾ കണ്ടെത്ത്, കൈവരികളിലൂടെ തെന്നിനീങ്ങ്, തുരങ്കങ്ങളിൽ wallride ചെയ്യ്, ജലധാരകൾക്കിടയിലൂടെ ചാട്, വെല്ലുവിളികൾ കണ്ടെത്താൻ ഓരോ മൂലയും പര്യവേക്ഷണം ചെയ്യ്.
+
+എണ്ണമറ്റ സ്കേറ്റ് ട്രിക്ക് കോമ്പോകൾ
+
+പലതരം ട്രിക്കുകൾ പഠിച്ച് അവയിൽ മാസ്റ്ററാക്:
+
+ചാട്ടങ്ങളും കറക്കങ്ങളും: Ollie, Nollie, 180, 360.
+
+Flips: Kickflip, Heelflip, Hardflip, Varial.
+
+Shove-its, grabs: Indy, Melon.
+
+Grinds: 50-50, 5-0, Nosegrind.
+
+ഓരോ ട്രാക്കിലെയും തടസ്സങ്ങൾ പ്രയോജനപ്പെടുത്താൻ manual, wallride.
+
+സ്കേറ്റ് സ്കൂൾ നിന്നെ ഓരോ മൂവും പടിപടിയായി പഠിപ്പിക്കും. കൂടാതെ, ഏതൊക്കെ ട്രിക്കുകൾ ഇതിനകം വശമായെന്നും ഏതൊക്കെ ഇനി പഠിക്കാനുണ്ടെന്നും നിന്റെ ട്രിക്ക് ബുക്കിൽ നോക്ക്.
+
+മിഷനുകളും വെല്ലുവിളികളും
+
+ഓരോ ട്രാക്കിലും 2 മിനിറ്റ് സെഷനുകളിൽ പൂർത്തിയാക്കേണ്ട 5 ലക്ഷ്യങ്ങളുണ്ട്. VHS ടേപ്പുകൾ ശേഖരിക്ക്, SKATE എന്ന വാക്ക് ഉണ്ടാക്ക്, പോയിന്റുകൾ നേട്, ഓരോ ഇടത്തിലെയും വെല്ലുവിളികൾ മറികടക്ക്.
+
+ലക്ഷ്യങ്ങൾ പൂർത്തിയാക്ക്, മെഡലുകൾ നേട്, നിന്റെ കഴിവുകൾ മെച്ചപ്പെടുത്തുന്നതിനൊപ്പം പുതിയ ട്രാക്കുകൾ അൺലോക്ക് ചെയ്യ്.
+
+റേസുകളും മൾട്ടിപ്ലെയറും
+
+ടർബോയും സ്റ്റാർട്ടിംഗ് ഗ്രിഡും ഉള്ള, 10 സ്കേറ്റർമാർക്കെതിരായ റേസുകൾ.
+
+കൂട്ടുകാരുമായി കളിക്കാൻ റൂമുകൾ: 6 സ്കേറ്റർമാരെ വരെ ഒരുമിപ്പിക്ക്, WhatsApp വഴി കൂട്ടുകാരെ ക്ഷണിക്ക്.
+
+പോയിന്റ്സ് മോഡ്: പരമാവധി സ്കോർ നേടാൻ നിനക്ക് 2 മിനിറ്റ് ഉണ്ട്.
+
+നിന്റെ വെല്ലുവിളി തിരഞ്ഞെടുക്ക്, ട്രിക്കുകൾ മെച്ചപ്പെടുത്ത്, നിന്റെ സ്വന്തം റെക്കോർഡുകൾ തകർക്കാൻ മത്സരിക്ക്.
+
+നിന്റെ സ്വന്തം ലെവലുകൾ ഉണ്ടാക്ക്
+
+കൈവരികളും പടികളും റാമ്പുകളും ചേർത്ത് നിന്റെ സ്വന്തം നഗര സ്കേറ്റ്പാർക്ക് ഡിസൈൻ ചെയ്യ്. റൂട്ടുകൾ ഒരുക്ക്, നിന്റെ സ്കേറ്ററുമായി ടെസ്റ്റ് ചെയ്യ്, ഒരു കോഡ് വഴി നിന്റെ സൃഷ്ടികൾ കൂട്ടുകാരുമായി ഷെയർ ചെയ്യ്.
+
+നിന്റെ സ്കേറ്ററിനെ കസ്റ്റമൈസ് ചെയ്യ്
+
+പലതരം ടീ-ഷർട്ടുകൾ, പാന്റുകൾ, ഷൂസ്, തൊപ്പികൾ, ബോർഡുകൾ എന്നിവ കൊണ്ട് നിന്റെ സ്വന്തം സ്റ്റൈൽ ഉണ്ടാക്ക്. നിനക്കിഷ്ടമുള്ള കോമ്പിനേഷൻ തിരഞ്ഞെടുത്ത്, ചക്രങ്ങളിൽ നഗരം ചുറ്റുമ്പോൾ സംഗീതം ആസ്വദിക്ക്.
+
+SKATE COMIC PRO
+
+സൗജന്യമായി കളിച്ചു തുടങ്ങ്. ഗെയിമിൽ പരസ്യങ്ങളുണ്ട്, കൂടാതെ പ്രതിമാസ, വാർഷിക, അല്ലെങ്കിൽ ഒറ്റത്തവണ പണമടച്ച് എന്നേക്കും ഉപയോഗിക്കാവുന്ന PRO ഓപ്ഷനുമുണ്ട്.
+
+PRO ഉപയോഗിച്ച് പരസ്യങ്ങളില്ലാതെ കളിക്കാം, പരിധിയില്ലാതെ കൂടുതൽ നീളമുള്ള ലെവലുകൾ ഉണ്ടാക്കാം, നിന്റെ മുഴുവൻ സംഗീതവും അപ്‌ലോഡ് ചെയ്യാം. സൗജന്യ പതിപ്പിൽ 3 പാട്ടുകൾ വരെ അപ്‌ലോഡ് ചെയ്യാം.
+
+സബ്‌സ്‌ക്രിപ്‌ഷനുകൾ, നീ എടുത്ത പ്ലാനിന്റെ നിബന്ധനകൾ പ്രകാരം, നിന്റെ Google Play അക്കൗണ്ടിൽ നിന്ന് റദ്ദാക്കുന്നതുവരെ സ്വയമേവ പുതുക്കപ്പെടും.
+
+സ്കേറ്റ് ചെയ്യാൻ ഇറങ്ങ്!
+
+ട്രാക്കുകൾ പര്യവേക്ഷണം ചെയ്യ്, പുതിയ ട്രിക്കുകൾ പഠിക്ക്, മിഷനുകൾ പൂർത്തിയാക്ക്, കൂട്ടുകാരുമായി മത്സരിക്ക്, നിന്റെ സ്വന്തം ലെവലുകൾ ഉണ്ടാക്ക്.
+
+Skate Comic ഡൗൺലോഡ് ചെയ്ത് നിന്റെ സ്കേറ്റ് സ്റ്റൈൽ തെരുവുകളിലേക്ക് കൊണ്ടുപോ.
+
+=== Language: mn-MN ===
+App name: Skate Comic - Скейт тоглоом
+Short description: 3D скейт тоглоом: хуруугаар трик, 8 зам, уралдаан ба найзууд
+Full description:
+Skate Comic: 3D скейт тоглоомууд
+
+Самбараа аваад гулгахаар гар! Skate Comic бол комикс хэв маягтай 3D скейт тоглоом бөгөөд хуруугаараа трик хийж, хотын замуудаар аялж, даалгавар биелүүлж, бусад скейтерүүдтэй өрсөлдөх боломжтой.
+
+Үсрэхийн тулд шудар, трик хийхийн тулд хуруугаа эргүүл, налуу, хашлага, шат, саадаар дүүрэн гудамжинд ollie, flip, grind, manual, wallride-уудыг хослуул.
+
+СУДЛАХ СКЕЙТ ЗАМУУД
+
+Янз бүрийн байршлаар аял: Хот, Хот 2, Уруудах зам, Боомт, Хурдны зам, Толгод, Хонгилууд, Худалдааны төв болон бусад.
+
+Шинэ спот нээж, хашлага дээгүүр гулгаж, хонгилд wallride хийж, усан оргилууруудын хооронд үсэрч, сорилт олохын тулд булан бүрийг судал.
+
+ТООЛЖ БАРАХГҮЙ СКЕЙТ ТРИКИЙН ХОСЛОЛ
+
+Олон төрлийн трик сурч, эзэмш:
+
+Үсрэлт ба эргэлт: Ollie, Nollie, 180, 360.
+
+Флипүүд: Kickflip, Heelflip, Hardflip, Varial.
+
+Shove-it ба грабууд: Indy, Melon.
+
+Грайндууд: 50-50, 5-0, Nosegrind.
+
+Зам бүрийн саадыг ашиглах manual ба wallride.
+
+Скейтийн сургууль хөдөлгөөнүүдийг алхам алхмаар заана. Мөн Трикийн номоосоо аль нь эзэмшсэн, аль нь сурах шаардлагатай байгааг хараарай.
+
+ДААЛГАВАР БА СОРИЛТУУД
+
+Зам бүрт 2 минутын сессүүдэд биелүүлэх 5 зорилго бий. VHS хуурцаг цуглуулж, SKATE үгийг бүрдүүлж, оноо авч, байршил бүрийн сорилтыг даван туул.
+
+Зорилгоо биелүүлж, медаль хүртэж, ур чадвараа сайжруулахын хэрээр шинэ замуудыг нээ.
+
+УРАЛДААН БА ОЛОН ТОГЛОГЧТОЙ ГОРИМ
+
+Турбо болон гарааны сүлжээтэй, 10 скейтерийн эсрэг уралдаан.
+
+Найзуудтайгаа тоглох өрөөнүүд: 6 хүртэл скейтер цуглуулж, найзуудаа WhatsApp-аар урь.
+
+Онооны горим: аль болох өндөр оноо авахад 2 минут байна.
+
+Сорилтоо сонгож, трикүүдээ сайжруулж, өөрийнхөө амжилтыг давахаар өрсөлд.
+
+ӨӨРИЙН ҮЕ ШАТУУДЫГ БҮТЭЭ
+
+Хашлага, шат, налуутай өөрийн хотын скейтпаркийг зохион бүтээ. Маршрут бүтээж, скейтерээрээ туршиж, бүтээлээ найзуудтайгаа кодоор хуваалц.
+
+СКЕЙТЕРЭЭ ӨӨРИЙНХӨӨРӨӨ ТОХИРУУЛ
+
+Янз бүрийн подволк, өмд, пүүз, малгай, самбараар өөрийн стилийг бүтээ. Дуртай хослолоо сонгоод, дугуйн дээр хотоор аялахдаа хөгжим сонсож таашаа.
+
+SKATE COMIC PRO
+
+Үнэгүй тоглож эхэл. Тоглоомд зар сурталчилгаа байдаг бөгөөд сарын, жилийн эсвэл нэг удаагийн насан туршийн төлбөртэй PRO сонголтыг санал болгоно.
+
+PRO-той бол зар сурталчилгаагүй тоглож, илүү урт, хязгааргүй үе шат бүтээж, бүх хөгжмөө байршуулах боломжтой. Үнэгүй хувилбар 3 хүртэл дуу байршуулахыг зөвшөөрнө.
+
+Захиалгууд нь сонгосон төлөвлөгөөний нөхцлийн дагуу, Google Play бүртгэлээсээ цуцлах хүртэл автоматаар сунгагдана.
+
+ГУЛГАХААР ГАР!
+
+Замуудыг судалж, шинэ трик сурч, даалгавар биелүүлж, найзуудтайгаа өрсөлдөж, өөрийн үе шатуудыг бүтээ.
+
+Skate Comic-ийг татаж аваад скейтийн стилээ гудамжинд гарга.
+
+=== Language: mr-IN ===
+App name: Skate Comic - स्केट गेम्स
+Short description: 3D स्केट गेम: बोटाने ट्रिक्स, 8 ट्रॅक, रेस आणि मित्र
+Full description:
+Skate Comic: 3D स्केट गेम्स
+
+तुझा बोर्ड उचल आणि स्केटिंगला निघ! Skate Comic हा कॉमिक स्टाइलचा 3D स्केट गेम आहे, ज्यात तू बोटाने ट्रिक्स करतोस, शहरी ट्रॅकवर फिरतोस, मिशन पूर्ण करतोस आणि इतर स्केटर्सशी स्पर्धा करतोस.
+
+उडी मारण्यासाठी स्वाइप कर, ट्रिक्ससाठी बोट फिरव आणि रॅम्प, रेलिंग, जिने आणि अडथळ्यांनी भरलेल्या रस्त्यांवर ollie, flip, grind, manual आणि wallride एकत्र कर.
+
+एक्सप्लोर करण्यासाठी स्केट ट्रॅक
+
+वेगवेगळ्या ठिकाणी फिर: शहर, शहर 2, उतार, बंदर, हायवे, टेकडी, बोगदे, शॉपिंग मॉल आणि बरेच काही.
+
+नवीन स्पॉट शोध, रेलिंगवरून घसर, बोगद्यांमध्ये wallride कर, कारंज्यांमधून उडी मार आणि चॅलेंज शोधण्यासाठी प्रत्येक कोपरा पालथा घाल.
+
+स्केट ट्रिक्सचे असंख्य कॉम्बिनेशन
+
+विविध ट्रिक्स शिक आणि त्यात तरबेज हो:
+
+उड्या आणि फिरकी: Ollie, Nollie, 180 आणि 360.
+
+Flips: Kickflip, Heelflip, Hardflip आणि Varial.
+
+Shove-its आणि grabs: Indy आणि Melon.
+
+Grinds: 50-50, 5-0 आणि Nosegrind.
+
+प्रत्येक ट्रॅकमधील अडथळ्यांचा फायदा घेण्यासाठी Manuals आणि wallrides.
+
+स्केट स्कूल तुला मूव्ह्ज टप्प्याटप्प्याने शिकवते. शिवाय तुझे ट्रिक्स बुक बघ, कोणत्या ट्रिक्स तुला जमल्या आहेत आणि कोणत्या अजून शिकायच्या आहेत.
+
+मिशन आणि चॅलेंज
+
+प्रत्येक ट्रॅकमध्ये 2 मिनिटांच्या सेशनमध्ये पूर्ण करायची 5 उद्दिष्टे आहेत. VHS टेप गोळा कर, SKATE हा शब्द तयार कर, पॉइंट्स मिळव आणि प्रत्येक ठिकाणचे चॅलेंज पार कर.
+
+उद्दिष्टे पूर्ण कर, मेडल जिंक आणि कौशल्य वाढवत नवीन ट्रॅक अनलॉक कर.
+
+रेस आणि मल्टीप्लेयर
+
+टर्बो आणि स्टार्टिंग ग्रिडसह 10 स्केटर्सविरुद्ध रेस.
+
+मित्रांसोबत खेळण्यासाठी रूम: 6 स्केटर्सपर्यंत एकत्र कर आणि तुझ्या मित्रांना WhatsApp वर बोलाव.
+
+पॉइंट्स मोड: जास्तीत जास्त स्कोअर करण्यासाठी तुझ्याकडे 2 मिनिटे आहेत.
+
+तुझे चॅलेंज निवड, ट्रिक्स सुधार आणि स्वतःचेच रेकॉर्ड मोडण्यासाठी स्पर्धा कर.
+
+तुझे स्वतःचे लेव्हल तयार कर
+
+रेलिंग, जिने आणि रॅम्पसह तुझा स्वतःचा शहरी स्केटपार्क डिझाइन कर. मार्ग तयार कर, तुझ्या स्केटरसोबत टेस्ट कर आणि एका कोडद्वारे तुझी निर्मिती मित्रांसोबत शेअर कर.
+
+तुझा स्केटर कस्टमाइझ कर
+
+वेगवेगळे टी-शर्ट, पँट, शूज, टोप्या आणि बोर्ड वापरून तुझी स्वतःची स्टाइल तयार कर. आवडते कॉम्बिनेशन निवड आणि चाकांवरून शहर फिरताना संगीताचा आनंद घे.
+
+SKATE COMIC PRO
+
+मोफत खेळायला सुरुवात कर. गेममध्ये जाहिराती आहेत आणि मासिक, वार्षिक किंवा कायमस्वरूपी एकदाच पेमेंट अशा प्लॅनसह PRO पर्याय उपलब्ध आहे.
+
+PRO सह तू जाहिरातींशिवाय खेळू शकतोस, लांब आणि अमर्याद लेव्हल तयार करू शकतोस आणि तुझे सगळे संगीत लोड करू शकतोस. मोफत व्हर्जनमध्ये जास्तीत जास्त 3 गाणी लोड करता येतात.
+
+निवडलेल्या प्लॅनच्या अटींनुसार, तू तुझ्या Google Play खात्यातून रद्द करेपर्यंत सबस्क्रिप्शन आपोआप रिन्यू होत राहतात.
+
+स्केटिंगला निघ!
+
+ट्रॅक एक्सप्लोर कर, नवीन ट्रिक्स शिक, मिशन पूर्ण कर, मित्रांशी स्पर्धा कर आणि तुझे स्वतःचे लेव्हल तयार कर.
+
+Skate Comic डाउनलोड कर आणि तुझी स्केट स्टाइल रस्त्यांवर घेऊन ये.
+
+=== Language: ms ===
+App name: Skate Comic - Permainan Skate
+Short description: Permainan skate 3D: helah dengan jari, 8 trek, perlumbaan dan rakan-rakan
+Full description:
+Skate Comic: permainan skateboard 3D
+
+Capai papan anda dan jom main skate! Skate Comic ialah permainan skate 3D bergaya komik, di mana anda boleh melakukan helah dengan jari, meneroka trek bandar, menyelesaikan misi dan bersaing dengan pemain skate lain.
+
+Leret untuk melompat, pusingkan jari untuk melakukan helah dan gabungkan ollie, flip, grind, manual dan wallride di jalanan yang penuh dengan tanjakan, susur tangan, tangga dan halangan.
+
+TREK SKATE UNTUK DITEROKA
+
+Terokai pelbagai lokasi: Bandar, Bandar 2, Cerun, Pelabuhan, Lebuh Raya, Bukit, Terowong, Pusat Beli-belah dan banyak lagi.
+
+Temui spot baharu, gelongsor di susur tangan, lakukan wallride di dalam terowong, lompat antara air pancut dan terokai setiap sudut untuk mencari cabaran.
+
+BEGITU BANYAK KOMBINASI HELAH SKATE
+
+Pelajari dan kuasai pelbagai helah:
+
+Lompatan dan pusingan: Ollie, Nollie, 180 dan 360.
+
+Flip: Kickflip, Heelflip, Hardflip dan Varial.
+
+Shove-it dan grab: Indy dan Melon.
+
+Grind: 50-50, 5-0 dan Nosegrind.
+
+Manual dan wallride untuk memanfaatkan halangan di setiap trek.
+
+Sekolah Skate mengajar anda pergerakan langkah demi langkah. Selain itu, semak Buku Helah anda untuk melihat helah yang sudah anda kuasai dan yang masih perlu dipelajari.
+
+MISI DAN CABARAN
+
+Setiap trek mempunyai 5 objektif untuk diselesaikan dalam sesi 2 minit. Kumpul pita VHS, bentuk perkataan SKATE, raih mata dan atasi cabaran di setiap lokasi.
+
+Selesaikan objektif, menangi pingat dan buka kunci trek baharu sambil meningkatkan kemahiran anda.
+
+PERLUMBAAN DAN BERBILANG PEMAIN
+
+Berlumba menentang 10 pemain skate, dengan turbo dan grid permulaan.
+
+Bilik untuk bermain bersama rakan: kumpulkan sehingga 6 pemain skate dan jemput rakan anda melalui WhatsApp.
+
+Mod Mata: anda ada 2 minit untuk mendapatkan skor setinggi mungkin.
+
+Pilih cabaran anda, perbaiki helah anda dan bersaing untuk mengatasi keputusan anda sendiri.
+
+CIPTA TAHAP ANDA SENDIRI
+
+Reka taman skate bandar anda sendiri dengan susur tangan, tangga dan tanjakan. Bina laluan, uji dengan pemain skate anda dan kongsi ciptaan anda dengan rakan menggunakan kod.
+
+PERIBADIKAN PEMAIN SKATE ANDA
+
+Cipta gaya anda sendiri dengan pelbagai baju-T, seluar, kasut, topi dan papan. Pilih gabungan kegemaran anda dan nikmati muzik sambil menjelajah bandar di atas roda.
+
+SKATE COMIC PRO
+
+Mula bermain secara percuma. Permainan ini mengandungi iklan dan menawarkan pilihan PRO dengan pelan bulanan, tahunan atau bayaran sekali untuk selama-lamanya.
+
+Dengan PRO anda boleh bermain tanpa iklan, mencipta tahap yang lebih panjang tanpa had dan memuatkan semua muzik anda. Versi percuma membolehkan anda memuatkan sehingga 3 lagu.
+
+Langganan diperbaharui secara automatik sehingga anda membatalkannya daripada akaun Google Play anda, mengikut syarat pelan yang dilanggan.
+
+JOM MAIN SKATE!
+
+Terokai trek, pelajari helah baharu, selesaikan misi, bersaing dengan rakan dan cipta tahap anda sendiri.
+
+Muat turun Skate Comic dan bawa gaya skate anda ke jalanan.
+
+=== Language: ms-MY ===
+App name: Skate Comic - Permainan Skate
+Short description: Permainan skate 3D: helah dengan jari, 8 trek, perlumbaan dan rakan-rakan
+Full description:
+Skate Comic: permainan skateboard 3D
+
+Capai papan anda dan jom main skate! Skate Comic ialah permainan skate 3D bergaya komik, di mana anda boleh melakukan helah dengan jari, meneroka trek bandar, menyelesaikan misi dan bersaing dengan pemain skate lain.
+
+Leret untuk melompat, pusingkan jari untuk melakukan helah dan gabungkan ollie, flip, grind, manual dan wallride di jalanan yang penuh dengan tanjakan, susur tangan, tangga dan halangan.
+
+TREK SKATE UNTUK DITEROKA
+
+Terokai pelbagai lokasi: Bandar, Bandar 2, Cerun, Pelabuhan, Lebuh Raya, Bukit, Terowong, Pusat Beli-belah dan banyak lagi.
+
+Temui spot baharu, gelongsor di susur tangan, lakukan wallride di dalam terowong, lompat antara air pancut dan terokai setiap sudut untuk mencari cabaran.
+
+BEGITU BANYAK KOMBINASI HELAH SKATE
+
+Pelajari dan kuasai pelbagai helah:
+
+Lompatan dan pusingan: Ollie, Nollie, 180 dan 360.
+
+Flip: Kickflip, Heelflip, Hardflip dan Varial.
+
+Shove-it dan grab: Indy dan Melon.
+
+Grind: 50-50, 5-0 dan Nosegrind.
+
+Manual dan wallride untuk memanfaatkan halangan di setiap trek.
+
+Sekolah Skate mengajar anda pergerakan langkah demi langkah. Selain itu, semak Buku Helah anda untuk melihat helah yang sudah anda kuasai dan yang masih perlu dipelajari.
+
+MISI DAN CABARAN
+
+Setiap trek mempunyai 5 objektif untuk diselesaikan dalam sesi 2 minit. Kumpul pita VHS, bentuk perkataan SKATE, raih mata dan atasi cabaran di setiap lokasi.
+
+Selesaikan objektif, menangi pingat dan buka kunci trek baharu sambil meningkatkan kemahiran anda.
+
+PERLUMBAAN DAN BERBILANG PEMAIN
+
+Berlumba menentang 10 pemain skate, dengan turbo dan grid permulaan.
+
+Bilik untuk bermain bersama rakan: kumpulkan sehingga 6 pemain skate dan jemput rakan anda melalui WhatsApp.
+
+Mod Mata: anda ada 2 minit untuk mendapatkan skor setinggi mungkin.
+
+Pilih cabaran anda, perbaiki helah anda dan bersaing untuk mengatasi keputusan anda sendiri.
+
+CIPTA TAHAP ANDA SENDIRI
+
+Reka taman skate bandar anda sendiri dengan susur tangan, tangga dan tanjakan. Bina laluan, uji dengan pemain skate anda dan kongsi ciptaan anda dengan rakan menggunakan kod.
+
+PERIBADIKAN PEMAIN SKATE ANDA
+
+Cipta gaya anda sendiri dengan pelbagai baju-T, seluar, kasut, topi dan papan. Pilih gabungan kegemaran anda dan nikmati muzik sambil menjelajah bandar di atas roda.
+
+SKATE COMIC PRO
+
+Mula bermain secara percuma. Permainan ini mengandungi iklan dan menawarkan pilihan PRO dengan pelan bulanan, tahunan atau bayaran sekali untuk selama-lamanya.
+
+Dengan PRO anda boleh bermain tanpa iklan, mencipta tahap yang lebih panjang tanpa had dan memuatkan semua muzik anda. Versi percuma membolehkan anda memuatkan sehingga 3 lagu.
+
+Langganan diperbaharui secara automatik sehingga anda membatalkannya daripada akaun Google Play anda, mengikut syarat pelan yang dilanggan.
+
+JOM MAIN SKATE!
+
+Terokai trek, pelajari helah baharu, selesaikan misi, bersaing dengan rakan dan cipta tahap anda sendiri.
+
+Muat turun Skate Comic dan bawa gaya skate anda ke jalanan.
+
+=== Language: my-MM ===
+App name: Skate Comic - စကိတ်ဘုတ်ဂိမ်း
+Short description: 3D စကိတ်ဂိမ်း- လက်ချောင်း trick၊ လမ်းကြောင်း 8 ခု၊ ပြိုင်ပွဲ၊ သူငယ်ချင်းများ
+Full description:
+Skate Comic: 3D စကိတ်ဘုတ်ဂိမ်း
+
+သင့်ဘုတ်ကိုယူပြီး စကိတ်စီးဖို့ ထွက်လာခဲ့ပါ! Skate Comic သည် ကာတွန်းပုံစံ 3D စကိတ်ဘုတ်ဂိမ်းဖြစ်ပြီး လက်ချောင်းဖြင့် trick များလုပ်ခြင်း၊ မြို့ပြလမ်းကြောင်းများတွင် လှည့်လည်ခြင်း၊ မစ်ရှင်များကို ကျော်ဖြတ်ခြင်းနှင့် အခြားစကိတ်သမားများနှင့် ယှဉ်ပြိုင်ခြင်းတို့ ပြုလုပ်နိုင်ပါသည်။
+
+ခုန်ရန် ပွတ်ဆွဲပါ၊ trick လုပ်ရန် လက်ချောင်းကို လှည့်ပါ၊ ပြီးလျှင် ချိုင့်ကုန်းများ၊ လက်ရန်းများ၊ လှေကားများနှင့် အတားအဆီးများ ပြည့်နေသော လမ်းများပေါ်တွင် ollie, flip, grind, manual နှင့် wallride တို့ကို ပေါင်းစပ်ပါ။
+
+စူးစမ်းရန် စကိတ်လမ်းကြောင်းများ
+
+မတူညီသော နေရာများကို လှည့်လည်ပါ- မြို့, မြို့ 2, ဆင်ခြေလျှော, ဆိပ်ကမ်း, အဝေးပြေးလမ်း, တောင်ကုန်း, ဥမင်လိုဏ်ခေါင်းများ, ရှော့ပင်းမော နှင့် အခြားများစွာ။
+
+spot အသစ်များ ရှာဖွေပါ၊ လက်ရန်းများပေါ်တွင် လျှောပါ၊ ဥမင်ထဲတွင် wallride လုပ်ပါ၊ ရေပန်းများကြား ခုန်ပါ၊ စိန်ခေါ်မှုများ ရှာရန် နေရာတိုင်းကို စူးစမ်းပါ။
+
+မရေမတွက်နိုင်သော စကိတ် TRICK ပေါင်းစပ်မှုများ
+
+trick အမျိုးမျိုးကို လေ့လာပြီး ကျွမ်းကျင်အောင် လုပ်ပါ-
+
+ခုန်ခြင်းနှင့် လှည့်ခြင်း- Ollie, Nollie, 180 နှင့် 360။
+
+Flips- Kickflip, Heelflip, Hardflip နှင့် Varial။
+
+Shove-its နှင့် grabs- Indy နှင့် Melon။
+
+Grinds- 50-50, 5-0 နှင့် Nosegrind။
+
+လမ်းကြောင်းတစ်ခုစီရှိ အတားအဆီးများကို အသုံးချရန် manual နှင့် wallride။
+
+စကိတ်ကျောင်းက လှုပ်ရှားမှုတိုင်းကို အဆင့်ဆင့် သင်ပေးပါမည်။ ထို့အပြင် သင်ကျွမ်းကျင်ပြီးသား trick များနှင့် သင်ယူရန် ကျန်သေးသော trick များကို သင့် Trick စာအုပ်တွင် ကြည့်ပါ။
+
+မစ်ရှင်များနှင့် စိန်ခေါ်မှုများ
+
+လမ်းကြောင်းတစ်ခုစီတွင် 2 မိနစ်ကြာ ဆက်ရှင်များအတွင်း ပြီးမြောက်ရမည့် ပန်းတိုင် 5 ခု ပါဝင်သည်။ VHS တိပ်ခွေများ စုဆောင်းပါ၊ SKATE စကားလုံးကို ဖွဲ့ပါ၊ အမှတ်ရယူပြီး နေရာတစ်ခုစီ၏ စိန်ခေါ်မှုများကို ကျော်ဖြတ်ပါ။
+
+ပန်းတိုင်များ ပြီးမြောက်အောင်လုပ်ပါ၊ ဆုတံဆိပ်များ ရယူပါ၊ သင့်ကျွမ်းကျင်မှုကို မြှင့်တင်ရင်း လမ်းကြောင်းအသစ်များကို ဖွင့်ပါ။
+
+ပြိုင်ပွဲများနှင့် အများအပြားကစားခြင်း
+
+turbo နှင့် စတင်ရာမျဉ်းပါဝင်သော စကိတ်သမား 10 ဦးနှင့် ပြိုင်ပွဲများ။
+
+သူငယ်ချင်းများနှင့် ကစားရန် အခန်းများ- စကိတ်သမား 6 ဦးအထိ စုစည်းပြီး WhatsApp မှတစ်ဆင့် သူငယ်ချင်းများကို ဖိတ်ခေါ်ပါ။
+
+အမှတ်မုဒ်- အမှတ်အများဆုံးရရန် သင့်တွင် 2 မိနစ်ရှိသည်။
+
+သင့်စိန်ခေါ်မှုကို ရွေးပါ၊ trick များကို တိုးတက်အောင်လုပ်ပြီး ကိုယ်ပိုင်စံချိန်များကို ချိုးဖျက်ရန် ယှဉ်ပြိုင်ပါ။
+
+ကိုယ်ပိုင်အဆင့်များ ဖန်တီးပါ
+
+လက်ရန်းများ၊ လှေကားများနှင့် ချိုင့်ကုန်းများဖြင့် ကိုယ်ပိုင်မြို့ပြ skatepark ကို ဒီဇိုင်းဆွဲပါ။ လမ်းကြောင်းများ ဖန်တီးပါ၊ သင့်စကိတ်သမားဖြင့် စမ်းသပ်ပြီး ကုဒ်တစ်ခုဖြင့် သင့်ဖန်တီးမှုများကို သူငယ်ချင်းများနှင့် မျှဝေပါ။
+
+သင့်စကိတ်သမားကို စိတ်ကြိုက်ပြင်ဆင်ပါ
+
+တီရှပ်၊ ဘောင်းဘီ၊ ဖိနပ်၊ ဦးထုပ်နှင့် ဘုတ်အမျိုးမျိုးဖြင့် ကိုယ်ပိုင်စတိုင်ကို ဖန်တီးပါ။ နှစ်သက်ရာ တွဲဖက်မှုကို ရွေးပြီး ဘီးများပေါ်တွင် မြို့တစ်ခွင် လှည့်လည်ရင်း ဂီတကို ခံစားပါ။
+
+SKATE COMIC PRO
+
+အခမဲ့ စတင်ကစားပါ။ ဂိမ်းတွင် ကြော်ငြာများ ပါဝင်ပြီး လစဉ်၊ နှစ်စဉ် သို့မဟုတ် တစ်ကြိမ်ပေးချေပြီး ထာဝရသုံးနိုင်သော PRO ရွေးချယ်မှုကိုလည်း ပေးထားသည်။
+
+PRO ဖြင့် ကြော်ငြာမပါဘဲ ကစားနိုင်ပြီး ကန့်သတ်ချက်မရှိဘဲ ပိုရှည်သော အဆင့်များ ဖန်တီးနိုင်ကာ သင့်သီချင်းအားလုံးကို တင်နိုင်သည်။ အခမဲ့ဗားရှင်းတွင် သီချင်း 3 ပုဒ်အထိ တင်နိုင်သည်။
+
+စာရင်းသွင်းမှုများသည် ရွေးချယ်ထားသော အစီအစဉ်၏ စည်းကမ်းချက်များအတိုင်း သင့် Google Play အကောင့်မှ ပယ်ဖျက်သည်အထိ အလိုအလျောက် သက်တမ်းတိုးပါမည်။
+
+စကိတ်စီးဖို့ ထွက်လာခဲ့ပါ!
+
+လမ်းကြောင်းများကို စူးစမ်းပါ၊ trick အသစ်များ သင်ယူပါ၊ မစ်ရှင်များ ပြီးမြောက်အောင်လုပ်ပါ၊ သူငယ်ချင်းများနှင့် ယှဉ်ပြိုင်ပြီး ကိုယ်ပိုင်အဆင့်များ ဖန်တီးပါ။
+
+Skate Comic ကို ဒေါင်းလုဒ်လုပ်ပြီး သင့်စကိတ်စတိုင်ကို လမ်းမပေါ်သို့ ယူဆောင်သွားပါ။
+
+=== Language: ne-NP ===
+App name: Skate Comic - स्केट गेमहरू
+Short description: 3D स्केट गेम: औँलाले ट्रिक्स, ८ ट्र्याक, रेस र साथीहरू
+Full description:
+Skate Comic: 3D स्केट गेमहरू
+
+आफ्नो बोर्ड समात र स्केटिङ गर्न निस्क! Skate Comic कमिक शैलीको 3D स्केट गेम हो, जहाँ तिमी औँलाले ट्रिक्स गर्छौ, सहरी ट्र्याकहरूमा घुम्छौ, मिसनहरू पूरा गर्छौ र अरू स्केटरहरूसँग प्रतिस्पर्धा गर्छौ।
+
+उफ्रन स्वाइप गर, ट्रिक्सका लागि औँला घुमाऊ र र्‍याम्प, रेलिङ, भर्‍याङ र अवरोधले भरिएका सडकमा ollie, flip, grind, manual र wallride मिलाऊ।
+
+अन्वेषण गर्न स्केट ट्र्याकहरू
+
+फरक-फरक ठाउँहरू घुम: सहर, सहर २, ओरालो, बन्दरगाह, राजमार्ग, डाँडा, सुरुङहरू, सपिङ मल र अझ धेरै।
+
+नयाँ स्पटहरू खोज, रेलिङमा चिप्लिऊ, सुरुङमा wallride गर, फोहोराहरूबीच उफ्र र चुनौतीहरू भेट्टाउन हरेक कुना चहार।
+
+स्केट ट्रिक्सका अनगिन्ती कम्बिनेसन
+
+विभिन्न ट्रिक्स सिक र तिनमा माहिर बन:
+
+उफ्राइ र घुमाइ: Ollie, Nollie, 180 र 360।
+
+Flips: Kickflip, Heelflip, Hardflip र Varial।
+
+Shove-its र grabs: Indy र Melon।
+
+Grinds: 50-50, 5-0 र Nosegrind।
+
+हरेक ट्र्याकका अवरोधहरूको पूरा फाइदा उठाउन Manuals र wallrides।
+
+स्केट स्कूलले तिमीलाई चालहरू चरणबद्ध रूपमा सिकाउँछ। साथै आफ्नो ट्रिक्स बुक हेर, कुन ट्रिक्स सिकिसक्यौ र कुन अझै सिक्न बाँकी छन्।
+
+मिसन र चुनौतीहरू
+
+हरेक ट्र्याकमा २ मिनेटका सेसनमा पूरा गर्नुपर्ने ५ लक्ष्यहरू छन्। VHS टेपहरू जम्मा गर, SKATE शब्द बनाऊ, अंक कमाऊ र हरेक ठाउँका चुनौतीहरू पार गर।
+
+लक्ष्यहरू पूरा गर, पदक जित र सीप सुधार्दै नयाँ ट्र्याकहरू अनलक गर।
+
+रेस र मल्टिप्लेयर
+
+टर्बो र स्टार्टिङ ग्रिडसहित १० स्केटरहरूविरुद्ध रेस।
+
+साथीहरूसँग खेल्न कोठाहरू: ६ जनासम्म स्केटर जम्मा गर र साथीहरूलाई WhatsApp मार्फत बोलाऊ।
+
+पोइन्ट्स मोड: सबैभन्दा धेरै स्कोर बनाउन तिमीसँग २ मिनेट छ।
+
+आफ्नो चुनौती छान, ट्रिक्स सुधार र आफ्नै रेकर्ड तोड्न प्रतिस्पर्धा गर।
+
+आफ्नै लेभलहरू बनाऊ
+
+रेलिङ, भर्‍याङ र र्‍याम्पसहित आफ्नै सहरी स्केटपार्क डिजाइन गर। रुटहरू बनाऊ, आफ्नो स्केटरसँग परीक्षण गर र एउटा कोडमार्फत आफ्ना सिर्जनाहरू साथीहरूसँग सेयर गर।
+
+आफ्नो स्केटर कस्टमाइज गर
+
+फरक-फरक टि-सर्ट, प्यान्ट, जुत्ता, टोपी र बोर्डहरूले आफ्नै शैली बनाऊ। मनपर्ने कम्बिनेसन छान र पाङ्ग्रामा सहर घुम्दै सङ्गीतको मज्जा लेऊ।
+
+SKATE COMIC PRO
+
+निःशुल्क खेल्न सुरु गर। गेममा विज्ञापनहरू छन् र यसले मासिक, वार्षिक वा सधैँका लागि एकपटक भुक्तानी गर्ने योजनासहित PRO विकल्प दिन्छ।
+
+PRO सँग तिमी विज्ञापनबिना खेल्न, लामा र असीमित लेभलहरू बनाउन र आफ्नो सबै सङ्गीत लोड गर्न सक्छौ। निःशुल्क संस्करणमा बढीमा ३ वटा गीत लोड गर्न सकिन्छ।
+
+लिइएको योजनाका सर्तअनुसार, तिमीले आफ्नो Google Play खाताबाट रद्द नगरेसम्म सदस्यताहरू स्वतः नवीकरण भइरहन्छन्।
+
+स्केटिङ गर्न निस्क!
+
+ट्र्याकहरू अन्वेषण गर, नयाँ ट्रिक्स सिक, मिसनहरू पूरा गर, साथीहरूसँग प्रतिस्पर्धा गर र आफ्नै लेभलहरू बनाऊ।
+
+Skate Comic डाउनलोड गर र आफ्नो स्केट शैली सडकमा लैजाऊ।
+
+=== Language: nl-NL ===
+App name: Skate Comic - Skatespellen
+Short description: 3D-skatespel: vingertricks, 8 banen, races en vrienden
+Full description:
+Skate Comic: skatespellen in 3D
+
+Pak je board en ga skaten! Skate Comic is een 3D-skatespel in stripstijl, waarin je tricks doet met je vinger, door stedelijke banen rijdt, missies voltooit en het opneemt tegen andere skaters.
+
+Swipe om te springen, draai je vinger voor tricks en combineer ollies, flips, grinds, manuals en wallrides in straten vol schansen, leuningen, trappen en obstakels.
+
+SKATEBANEN OM TE ONTDEKKEN
+
+Rijd door verschillende locaties: De Stad, Stad 2, De Afdaling, De Haven, De Snelweg, De Heuvel, De Tunnels, Het Winkelcentrum en meer.
+
+Ontdek nieuwe spots, glij over leuningen, doe wallrides in de tunnels, spring tussen fonteinen en verken elke hoek om uitdagingen te vinden.
+
+SUPERVEEL SKATETRICK-COMBO'S
+
+Leer en beheers allerlei tricks:
+
+Sprongen en draaien: Ollie, Nollie, 180 en 360.
+
+Flips: Kickflip, Heelflip, Hardflip en Varial.
+
+Shove-its en grabs: Indy en Melon.
+
+Grinds: 50-50, 5-0 en Nosegrind.
+
+Manuals en wallrides om alles uit de obstakels van elke baan te halen.
+
+De Skateschool leert je de moves stap voor stap. Bekijk ook je Trickboek om te zien welke je al beheerst en welke je nog moet leren.
+
+MISSIES EN UITDAGINGEN
+
+Elke baan heeft 5 doelen die je voltooit in sessies van 2 minuten. Verzamel VHS-banden, vorm het woord SKATE, scoor punten en versla de uitdagingen van elke locatie.
+
+Voltooi doelen, win medailles en ontgrendel nieuwe banen terwijl je je skills verbetert.
+
+RACES EN MULTIPLAYER
+
+Races tegen 10 skaters, met turbo en startgrid.
+
+Kamers om met vrienden te spelen: verzamel tot 6 skaters en nodig je vrienden uit via WhatsApp.
+
+Puntenmodus: je hebt 2 minuten om de hoogst mogelijke score te halen.
+
+Kies je uitdaging, verbeter je tricks en strijd om je eigen records te verbreken.
+
+MAAK JE EIGEN LEVELS
+
+Ontwerp je eigen stedelijke skatepark met leuningen, trappen en schansen. Bouw routes, test ze met je skater en deel je creaties met vrienden via een code.
+
+PERSONALISEER JE SKATER
+
+Creëer je eigen stijl met verschillende T-shirts, broeken, sneakers, mutsen en boards. Kies je favoriete combinatie en geniet van de muziek terwijl je op wieltjes door de stad rolt.
+
+SKATE COMIC PRO
+
+Begin gratis met spelen. Het spel bevat advertenties en biedt een PRO-optie met een maand- of jaarabonnement of een eenmalige betaling voor altijd.
+
+Met PRO speel je zonder advertenties, maak je langere levels zonder limiet en laad je al je muziek. Met de gratis versie kun je tot 3 nummers laden.
+
+Abonnementen worden automatisch verlengd totdat je ze opzegt via je Google Play-account, volgens de voorwaarden van het gekozen abonnement.
+
+GA SKATEN!
+
+Verken de banen, leer nieuwe tricks, voltooi missies, neem het op tegen vrienden en maak je eigen levels.
+
+Download Skate Comic en breng je skatestijl naar de straat.
+
+=== Language: no-NO ===
+App name: Skate Comic - Skateboardspill
+Short description: Skateboardspill i 3D: triks med fingeren, 8 baner, race og venner
+Full description:
+Skate Comic: skateboardspill i 3D
+
+Grip brettet og kom deg ut og skate! Skate Comic er et skateboardspill i 3D i tegneseriestil, der du gjør triks med fingeren, kjører urbane baner, klarer oppdrag og konkurrerer mot andre skatere.
+
+Sveip for å hoppe, snurr fingeren for å gjøre triks, og kombiner ollies, flips, grinds, manuals og wallrides i gater fulle av ramper, rekkverk, trapper og hindringer.
+
+SKATEBANER Å UTFORSKE
+
+Kjør gjennom ulike miljøer: Byen, By 2, Nedoverbakken, Havna, Motorveien, Haugen, Tunnelene, Kjøpesenteret og mer.
+
+Oppdag nye spots, gli langs rekkverk, gjør wallrides i tunnelene, hopp mellom fontener og utforsk hvert hjørne for å finne utfordringer.
+
+MASSEVIS AV TRIKSKOMBINASJONER
+
+Lær og mestre en rekke triks:
+
+Hopp og rotasjoner: Ollie, Nollie, 180 og 360.
+
+Flips: Kickflip, Heelflip, Hardflip og Varial.
+
+Shove-its og grabs: Indy og Melon.
+
+Grinds: 50-50, 5-0 og Nosegrind.
+
+Manuals og wallrides for å utnytte hindringene på hver bane.
+
+Skateskolen lærer deg bevegelsene steg for steg. Sjekk også Triksboka di for å se hvilke du allerede mestrer, og hvilke du har igjen å lære.
+
+OPPDRAG OG UTFORDRINGER
+
+Hver bane har 5 mål som skal klares i økter på 2 minutter. Samle VHS-kassetter, stav ordet SKATE, skaff poeng og klar utfordringene i hvert miljø.
+
+Fullfør mål, vinn medaljer og lås opp nye baner mens du blir bedre.
+
+RACE OG FLERSPILLER
+
+Race mot 10 skatere, med turbo og startgrid.
+
+Rom for å spille med venner: samle opptil 6 skatere og inviter vennene dine via WhatsApp.
+
+Poengmodus: du har 2 minutter på deg til å få høyest mulig poengsum.
+
+Velg utfordringen din, forbedre triksene dine og konkurrer for å slå dine egne resultater.
+
+LAG DINE EGNE NIVÅER
+
+Design din egen urbane skatepark med rekkverk, trapper og ramper. Bygg løyper, test dem med skateren din og del kreasjonene dine med venner via en kode.
+
+TILPASS SKATEREN DIN
+
+Skap din egen stil med ulike t-skjorter, bukser, sko, luer og brett. Velg favorittkombinasjonen din og nyt musikken mens du ruller gjennom byen.
+
+SKATE COMIC PRO
+
+Begynn å spille gratis. Spillet inneholder reklame og tilbyr et PRO-alternativ med månedlig eller årlig abonnement eller en engangsbetaling for alltid.
+
+Med PRO kan du spille uten reklame, lage lengre nivåer uten grenser og laste opp all musikken din. Gratisversjonen lar deg laste opp opptil 3 låter.
+
+Abonnementene fornyes automatisk til du sier dem opp fra Google Play-kontoen din, i henhold til vilkårene for den valgte planen.
+
+UT OG SKATE!
+
+Utforsk banene, lær nye triks, fullfør oppdrag, konkurrer med venner og lag dine egne nivåer.
+
+Last ned Skate Comic og ta skatestilen din ut i gatene.
+
+=== Language: pa ===
+App name: Skate Comic - ਸਕੇਟ ਗੇਮਾਂ
+Short description: 3D ਸਕੇਟ ਗੇਮ: ਉਂਗਲ ਨਾਲ ਟ੍ਰਿਕਸ, 8 ਟ੍ਰੈਕ, ਰੇਸ ਅਤੇ ਦੋਸਤ
+Full description:
+Skate Comic: 3D ਸਕੇਟ ਗੇਮਾਂ
+
+ਆਪਣਾ ਬੋਰਡ ਚੁੱਕ ਅਤੇ ਸਕੇਟਿੰਗ ਲਈ ਨਿਕਲ ਪੈ! Skate Comic ਕਾਮਿਕ ਸਟਾਈਲ ਵਾਲੀ ਇੱਕ 3D ਸਕੇਟ ਗੇਮ ਹੈ, ਜਿਸ ਵਿੱਚ ਤੂੰ ਉਂਗਲ ਨਾਲ ਟ੍ਰਿਕਸ ਕਰਦਾ ਹੈਂ, ਸ਼ਹਿਰੀ ਟ੍ਰੈਕਾਂ 'ਤੇ ਘੁੰਮਦਾ ਹੈਂ, ਮਿਸ਼ਨ ਪੂਰੇ ਕਰਦਾ ਹੈਂ ਅਤੇ ਹੋਰ ਸਕੇਟਰਾਂ ਨਾਲ ਮੁਕਾਬਲਾ ਕਰਦਾ ਹੈਂ।
+
+ਛਾਲ ਮਾਰਨ ਲਈ ਸਵਾਈਪ ਕਰ, ਟ੍ਰਿਕਸ ਲਈ ਉਂਗਲ ਘੁਮਾ ਅਤੇ ਰੈਂਪਾਂ, ਰੇਲਿੰਗਾਂ, ਪੌੜੀਆਂ ਅਤੇ ਰੁਕਾਵਟਾਂ ਨਾਲ ਭਰੀਆਂ ਗਲੀਆਂ ਵਿੱਚ ollie, flip, grind, manual ਅਤੇ wallride ਨੂੰ ਮਿਲਾ।
+
+ਖੋਜਣ ਲਈ ਸਕੇਟ ਟ੍ਰੈਕ
+
+ਵੱਖ-ਵੱਖ ਥਾਵਾਂ 'ਤੇ ਜਾ: ਸ਼ਹਿਰ, ਸ਼ਹਿਰ 2, ਢਲਾਣ, ਬੰਦਰਗਾਹ, ਹਾਈਵੇ, ਪਹਾੜੀ, ਸੁਰੰਗਾਂ, ਸ਼ਾਪਿੰਗ ਮਾਲ ਅਤੇ ਹੋਰ ਬਹੁਤ ਕੁਝ।
+
+ਨਵੇਂ ਸਪਾਟ ਲੱਭ, ਰੇਲਿੰਗਾਂ 'ਤੇ ਤਿਲਕ, ਸੁਰੰਗਾਂ ਵਿੱਚ wallride ਕਰ, ਫੁਹਾਰਿਆਂ ਵਿਚਕਾਰ ਛਾਲ ਮਾਰ ਅਤੇ ਚੈਲੇਂਜ ਲੱਭਣ ਲਈ ਹਰ ਕੋਨਾ ਛਾਣ ਮਾਰ।
+
+ਸਕੇਟ ਟ੍ਰਿਕਸ ਦੇ ਅਣਗਿਣਤ ਕੌਂਬੀਨੇਸ਼ਨ
+
+ਕਈ ਤਰ੍ਹਾਂ ਦੀਆਂ ਟ੍ਰਿਕਸ ਸਿੱਖ ਅਤੇ ਉਹਨਾਂ ਵਿੱਚ ਮਾਹਿਰ ਬਣ:
+
+ਛਾਲਾਂ ਅਤੇ ਸਪਿਨ: Ollie, Nollie, 180 ਅਤੇ 360।
+
+Flips: Kickflip, Heelflip, Hardflip ਅਤੇ Varial।
+
+Shove-its ਅਤੇ grabs: Indy ਅਤੇ Melon।
+
+Grinds: 50-50, 5-0 ਅਤੇ Nosegrind।
+
+ਹਰ ਟ੍ਰੈਕ ਦੀਆਂ ਰੁਕਾਵਟਾਂ ਦਾ ਪੂਰਾ ਫਾਇਦਾ ਉਠਾਉਣ ਲਈ Manuals ਅਤੇ wallrides।
+
+ਸਕੇਟ ਸਕੂਲ ਤੈਨੂੰ ਮੂਵਜ਼ ਕਦਮ-ਦਰ-ਕਦਮ ਸਿਖਾਉਂਦਾ ਹੈ। ਨਾਲ ਹੀ ਆਪਣੀ ਟ੍ਰਿਕਸ ਬੁੱਕ ਦੇਖ ਕਿ ਕਿਹੜੀਆਂ ਟ੍ਰਿਕਸ ਤੂੰ ਸਿੱਖ ਲਈਆਂ ਹਨ ਅਤੇ ਕਿਹੜੀਆਂ ਅਜੇ ਬਾਕੀ ਹਨ।
+
+ਮਿਸ਼ਨ ਅਤੇ ਚੈਲੇਂਜ
+
+ਹਰ ਟ੍ਰੈਕ ਵਿੱਚ 2 ਮਿੰਟ ਦੇ ਸੈਸ਼ਨਾਂ ਵਿੱਚ ਪੂਰੇ ਕਰਨ ਲਈ 5 ਟੀਚੇ ਹਨ। VHS ਟੇਪਾਂ ਇਕੱਠੀਆਂ ਕਰ, SKATE ਸ਼ਬਦ ਬਣਾ, ਪੁਆਇੰਟ ਕਮਾ ਅਤੇ ਹਰ ਥਾਂ ਦੇ ਚੈਲੇਂਜ ਪਾਰ ਕਰ।
+
+ਟੀਚੇ ਪੂਰੇ ਕਰ, ਮੈਡਲ ਜਿੱਤ ਅਤੇ ਆਪਣੀਆਂ ਸਕਿੱਲਾਂ ਸੁਧਾਰਦੇ ਹੋਏ ਨਵੇਂ ਟ੍ਰੈਕ ਅਨਲੌਕ ਕਰ।
+
+ਰੇਸ ਅਤੇ ਮਲਟੀਪਲੇਅਰ
+
+ਟਰਬੋ ਅਤੇ ਸਟਾਰਟਿੰਗ ਗ੍ਰਿਡ ਦੇ ਨਾਲ 10 ਸਕੇਟਰਾਂ ਖ਼ਿਲਾਫ਼ ਰੇਸ।
+
+ਦੋਸਤਾਂ ਨਾਲ ਖੇਡਣ ਲਈ ਰੂਮ: 6 ਸਕੇਟਰਾਂ ਤੱਕ ਇਕੱਠੇ ਕਰ ਅਤੇ ਆਪਣੇ ਦੋਸਤਾਂ ਨੂੰ WhatsApp 'ਤੇ ਸੱਦਾ ਦੇ।
+
+ਪੁਆਇੰਟਸ ਮੋਡ: ਸਭ ਤੋਂ ਵੱਧ ਸਕੋਰ ਕਰਨ ਲਈ ਤੇਰੇ ਕੋਲ 2 ਮਿੰਟ ਹਨ।
+
+ਆਪਣਾ ਚੈਲੇਂਜ ਚੁਣ, ਆਪਣੀਆਂ ਟ੍ਰਿਕਸ ਸੁਧਾਰ ਅਤੇ ਆਪਣੇ ਹੀ ਰਿਕਾਰਡ ਤੋੜਨ ਲਈ ਮੁਕਾਬਲਾ ਕਰ।
+
+ਆਪਣੇ ਖੁਦ ਦੇ ਲੈਵਲ ਬਣਾ
+
+ਰੇਲਿੰਗਾਂ, ਪੌੜੀਆਂ ਅਤੇ ਰੈਂਪਾਂ ਨਾਲ ਆਪਣਾ ਸ਼ਹਿਰੀ ਸਕੇਟਪਾਰਕ ਡਿਜ਼ਾਈਨ ਕਰ। ਰੂਟ ਬਣਾ, ਆਪਣੇ ਸਕੇਟਰ ਨਾਲ ਟੈਸਟ ਕਰ ਅਤੇ ਇੱਕ ਕੋਡ ਰਾਹੀਂ ਆਪਣੀਆਂ ਰਚਨਾਵਾਂ ਦੋਸਤਾਂ ਨਾਲ ਸਾਂਝੀਆਂ ਕਰ।
+
+ਆਪਣੇ ਸਕੇਟਰ ਨੂੰ ਕਸਟਮਾਈਜ਼ ਕਰ
+
+ਵੱਖ-ਵੱਖ ਟੀ-ਸ਼ਰਟਾਂ, ਪੈਂਟਾਂ, ਜੁੱਤੀਆਂ, ਟੋਪੀਆਂ ਅਤੇ ਬੋਰਡਾਂ ਨਾਲ ਆਪਣਾ ਸਟਾਈਲ ਬਣਾ। ਆਪਣਾ ਮਨਪਸੰਦ ਕੌਂਬੀਨੇਸ਼ਨ ਚੁਣ ਅਤੇ ਪਹੀਆਂ 'ਤੇ ਸ਼ਹਿਰ ਘੁੰਮਦੇ ਹੋਏ ਸੰਗੀਤ ਦਾ ਮਜ਼ਾ ਲੈ।
+
+SKATE COMIC PRO
+
+ਮੁਫ਼ਤ ਵਿੱਚ ਖੇਡਣਾ ਸ਼ੁਰੂ ਕਰ। ਗੇਮ ਵਿੱਚ ਇਸ਼ਤਿਹਾਰ ਹਨ ਅਤੇ ਇਹ ਮਹੀਨਾਵਾਰ, ਸਾਲਾਨਾ ਜਾਂ ਹਮੇਸ਼ਾ ਲਈ ਇੱਕ ਵਾਰ ਭੁਗਤਾਨ ਵਾਲੇ ਪਲਾਨਾਂ ਨਾਲ PRO ਵਿਕਲਪ ਦਿੰਦੀ ਹੈ।
+
+PRO ਨਾਲ ਤੂੰ ਬਿਨਾਂ ਇਸ਼ਤਿਹਾਰਾਂ ਦੇ ਖੇਡ ਸਕਦਾ ਹੈਂ, ਲੰਬੇ ਅਤੇ ਬੇਹੱਦ ਲੈਵਲ ਬਣਾ ਸਕਦਾ ਹੈਂ ਅਤੇ ਆਪਣਾ ਸਾਰਾ ਸੰਗੀਤ ਲੋਡ ਕਰ ਸਕਦਾ ਹੈਂ। ਮੁਫ਼ਤ ਵਰਜ਼ਨ ਵਿੱਚ ਵੱਧ ਤੋਂ ਵੱਧ 3 ਗੀਤ ਲੋਡ ਕੀਤੇ ਜਾ ਸਕਦੇ ਹਨ।
+
+ਲਏ ਗਏ ਪਲਾਨ ਦੀਆਂ ਸ਼ਰਤਾਂ ਮੁਤਾਬਕ, ਸਬਸਕ੍ਰਿਪਸ਼ਨਾਂ ਆਪਣੇ-ਆਪ ਰੀਨਿਊ ਹੁੰਦੀਆਂ ਰਹਿੰਦੀਆਂ ਹਨ, ਜਦੋਂ ਤੱਕ ਤੂੰ ਉਹਨਾਂ ਨੂੰ ਆਪਣੇ Google Play ਖਾਤੇ ਤੋਂ ਰੱਦ ਨਹੀਂ ਕਰਦਾ।
+
+ਸਕੇਟਿੰਗ ਲਈ ਨਿਕਲ ਪੈ!
+
+ਟ੍ਰੈਕ ਖੋਜ, ਨਵੀਆਂ ਟ੍ਰਿਕਸ ਸਿੱਖ, ਮਿਸ਼ਨ ਪੂਰੇ ਕਰ, ਦੋਸਤਾਂ ਨਾਲ ਮੁਕਾਬਲਾ ਕਰ ਅਤੇ ਆਪਣੇ ਖੁਦ ਦੇ ਲੈਵਲ ਬਣਾ।
+
+Skate Comic ਡਾਊਨਲੋਡ ਕਰ ਅਤੇ ਆਪਣਾ ਸਕੇਟ ਸਟਾਈਲ ਗਲੀਆਂ ਵਿੱਚ ਲੈ ਜਾ।
+
+=== Language: pl-PL ===
+App name: Skate Comic - Deskorolka
+Short description: Gra deskorolkowa 3D: triki palcem, 8 tras, wyścigi i gra ze znajomymi
+Full description:
+Skate Comic: gry deskorolkowe 3D
+
+Łap deskę i ruszaj na miasto! Skate Comic to deskorolkowa gra 3D w komiksowym stylu, w której robisz triki palcem, przemierzasz miejskie trasy, wykonujesz misje i rywalizujesz z innymi skaterami.
+
+Przesuń palcem, żeby skoczyć, zakręć palcem, żeby zrobić trik, i łącz ollie, flip, grind, manual i wallride na ulicach pełnych ramp, poręczy, schodów i przeszkód.
+
+TRASY DESKOROLKOWE DO ODKRYCIA
+
+Jeźdź po różnych miejscach: Miasto, Miasto 2, Zjazd, Port, Autostrada, Wzgórze, Tunele, Galeria Handlowa i wiele więcej.
+
+Odkrywaj nowe spoty, ślizgaj się po poręczach, rób wallride w tunelach, skacz między fontannami i zaglądaj w każdy zakątek w poszukiwaniu wyzwań.
+
+MNÓSTWO KOMBINACJI TRIKÓW
+
+Naucz się i opanuj wiele trików:
+
+Skoki i obroty: Ollie, Nollie, 180 i 360.
+
+Flipy: Kickflip, Heelflip, Hardflip i Varial.
+
+Shove-it i graby: Indy i Melon.
+
+Grindy: 50-50, 5-0 i Nosegrind.
+
+Manual i wallride, żeby wykorzystać przeszkody na każdej trasie.
+
+Szkoła Skate'a uczy cię ruchów krok po kroku. Zajrzyj też do Księgi Trików, żeby zobaczyć, które już opanowałeś, a których musisz się jeszcze nauczyć.
+
+MISJE I WYZWANIA
+
+Każda trasa ma 5 celów do wykonania w 2-minutowych sesjach. Zbieraj kasety VHS, ułóż słowo SKATE, zdobywaj punkty i pokonuj wyzwania na każdej mapie.
+
+Wykonuj cele, zdobywaj medale i odblokowuj nowe trasy, rozwijając swoje umiejętności.
+
+WYŚCIGI I MULTIPLAYER
+
+Wyścigi przeciwko 10 skaterom, z turbo i polem startowym.
+
+Pokoje do gry ze znajomymi: zbierz do 6 skaterów i zaproś znajomych przez WhatsApp.
+
+Tryb Punktów: masz 2 minuty, żeby zdobyć jak najwięcej punktów.
+
+Wybierz wyzwanie, dopracuj triki i rywalizuj, żeby pobić własne wyniki.
+
+TWÓRZ WŁASNE POZIOMY
+
+Zaprojektuj własny miejski skatepark z poręczami, schodami i rampami. Buduj trasy, testuj je swoim skaterem i dziel się dziełami ze znajomymi za pomocą kodu.
+
+PERSONALIZUJ SWOJEGO SKATERA
+
+Stwórz własny styl dzięki różnym koszulkom, spodniom, butom, czapkom i deskom. Wybierz ulubiony zestaw i słuchaj muzyki, przemierzając miasto na kółkach.
+
+SKATE COMIC PRO
+
+Zacznij grać za darmo. Gra zawiera reklamy i oferuje opcję PRO z planem miesięcznym, rocznym lub jednorazową płatnością na zawsze.
+
+Z PRO grasz bez reklam, tworzysz dłuższe poziomy bez limitu i wgrywasz całą swoją muzykę. Wersja darmowa pozwala wgrać do 3 utworów.
+
+Subskrypcje odnawiają się automatycznie, dopóki nie anulujesz ich na swoim koncie Google Play, zgodnie z warunkami wybranego planu.
+
+RUSZAJ NA DESKĘ!
+
+Odkrywaj trasy, ucz się nowych trików, wykonuj misje, rywalizuj ze znajomymi i twórz własne poziomy.
+
+Pobierz Skate Comic i przenieś swój styl na ulice.
+
+=== Language: pt-BR ===
+App name: Skate Comic - Jogos de Skate
+Short description: Jogo de skate 3D: manobras com o dedo, 8 pistas, corridas e amigos
+Full description:
+Skate Comic: jogos de skate em 3D
+
+Pegue seu skate e bora andar! Skate Comic é um jogo de skate em 3D com estilo de história em quadrinhos, onde você pode fazer manobras com o dedo, percorrer pistas urbanas, cumprir missões e competir com outros skatistas.
+
+Deslize para pular, gire o dedo para fazer manobras e combine ollies, flips, grinds, manuals e wallrides em ruas cheias de rampas, corrimãos, escadas e obstáculos.
+
+PISTAS DE SKATE PARA EXPLORAR
+
+Percorra cenários diferentes: A Cidade, Cidade 2, A Descida, O Porto, A Rodovia, O Morro, Os Túneis, O Shopping e muito mais.
+
+Descubra novos picos, deslize nos corrimãos, faça wallrides nos túneis, salte entre fontes e explore cada canto para encontrar desafios.
+
+MUITAS COMBINAÇÕES DE MANOBRAS DE SKATE
+
+Aprenda e domine uma variedade de manobras:
+
+Saltos e giros: Ollie, Nollie, 180 e 360.
+
+Flips: Kickflip, Heelflip, Hardflip e Varial.
+
+Shove-its e grabs: Indy e Melon.
+
+Grinds: 50-50, 5-0 e Nosegrind.
+
+Manuals e wallrides para aproveitar os obstáculos de cada pista.
+
+A Escola de Skate ensina os movimentos passo a passo. Além disso, confira seu Livro de Manobras para ver quais você já domina e quais ainda faltam aprender.
+
+MISSÕES E DESAFIOS
+
+Cada pista tem 5 objetivos para completar em sessões de 2 minutos. Junte fitas VHS, forme a palavra SKATE, ganhe pontos e supere os desafios de cada cenário.
+
+Complete objetivos, ganhe medalhas e desbloqueie novas pistas enquanto melhora suas habilidades.
+
+CORRIDAS E MULTIJOGADOR
+
+Corridas contra 10 skatistas, com turbo e grid de largada.
+
+Salas para jogar com amigos: reúna até 6 skatistas e convide seus amigos pelo WhatsApp.
+
+Modo Pontos: você tem 2 minutos para conseguir a maior pontuação possível.
+
+Escolha seu desafio, melhore suas manobras e compita para superar seus próprios recordes.
+
+CRIE SEUS PRÓPRIOS NÍVEIS
+
+Monte seu próprio skatepark urbano com corrimãos, escadas e rampas. Crie percursos, teste com seu skatista e compartilhe suas criações com amigos usando um código.
+
+PERSONALIZE SEU SKATISTA
+
+Crie seu próprio estilo com camisetas, calças, tênis, bonés e shapes diferentes. Escolha sua combinação favorita e curta a música enquanto percorre a cidade sobre rodas.
+
+SKATE COMIC PRO
+
+Comece a jogar de graça. O jogo inclui anúncios e oferece uma opção PRO com planos mensal, anual ou de pagamento único vitalício.
+
+Com o PRO você pode jogar sem anúncios, criar níveis mais longos e sem limite e carregar todas as suas músicas. A versão gratuita permite carregar até 3 músicas.
+
+As assinaturas são renovadas automaticamente até que você as cancele na sua conta do Google Play, de acordo com as condições do plano contratado.
+
+BORA ANDAR DE SKATE!
+
+Explore as pistas, aprenda novas manobras, cumpra missões, compita com amigos e crie seus próprios níveis.
+
+Baixe Skate Comic e leve seu estilo de skate para as ruas.
+
+=== Language: pt-PT ===
+App name: Skate Comic - Jogos de Skate
+Short description: Jogo de skate 3D: truques com o dedo, 8 pistas, corridas e amigos
+Full description:
+Skate Comic: jogos de skate em 3D
+
+Pega na tua prancha e vai andar de skate! Skate Comic é um jogo de skate em 3D com estilo de banda desenhada, onde podes fazer truques com o dedo, percorrer pistas urbanas, cumprir missões e competir com outros skaters.
+
+Desliza para saltar, roda o dedo para fazer truques e combina ollies, flips, grinds, manuals e wallrides em ruas cheias de rampas, corrimãos, escadas e obstáculos.
+
+PISTAS DE SKATE PARA EXPLORAR
+
+Percorre cenários diferentes: A Cidade, Cidade 2, A Descida, O Porto, A Autoestrada, O Monte, Os Túneis, O Centro Comercial e muito mais.
+
+Descobre novos spots, desliza pelos corrimãos, faz wallrides nos túneis, salta entre fontes e explora cada recanto para encontrar desafios.
+
+IMENSAS COMBINAÇÕES DE TRUQUES DE SKATE
+
+Aprende e domina uma grande variedade de truques:
+
+Saltos e rotações: Ollie, Nollie, 180 e 360.
+
+Flips: Kickflip, Heelflip, Hardflip e Varial.
+
+Shove-its e grabs: Indy e Melon.
+
+Grinds: 50-50, 5-0 e Nosegrind.
+
+Manuals e wallrides para aproveitar os obstáculos de cada pista.
+
+A Escola de Skate ensina-te os movimentos passo a passo. Além disso, consulta o teu Livro de Truques para veres quais já dominas e quais ainda te faltam aprender.
+
+MISSÕES E DESAFIOS
+
+Cada pista inclui 5 objetivos para completar em sessões de 2 minutos. Apanha cassetes VHS, forma a palavra SKATE, consegue pontos e supera os desafios de cada cenário.
+
+Completa objetivos, ganha medalhas e desbloqueia novas pistas enquanto melhoras as tuas habilidades.
+
+CORRIDAS E MULTIJOGADOR
+
+Corridas contra 10 skaters, com turbo e grelha de partida.
+
+Salas para jogar com amigos: junta até 6 skaters e convida os teus amigos pelo WhatsApp.
+
+Modo Pontos: tens 2 minutos para conseguir a maior pontuação possível.
+
+Escolhe o teu desafio, melhora os teus truques e compete para superar os teus próprios recordes.
+
+CRIA OS TEUS PRÓPRIOS NÍVEIS
+
+Desenha o teu próprio skatepark urbano com corrimãos, escadas e rampas. Monta percursos, experimenta-os com o teu skater e partilha as tuas criações com amigos através de um código.
+
+PERSONALIZA O TEU SKATER
+
+Cria o teu próprio estilo com diferentes t-shirts, calças, sapatilhas, gorros e pranchas. Escolhe a tua combinação favorita e desfruta da música enquanto percorres a cidade sobre rodas.
+
+SKATE COMIC PRO
+
+Começa a jogar grátis. O jogo inclui anúncios e oferece uma opção PRO com planos mensal, anual ou de pagamento único vitalício.
+
+Com o PRO podes jogar sem anúncios, criar níveis mais longos e sem limite, e carregar toda a tua música. A versão gratuita permite carregar até 3 músicas.
+
+As subscrições renovam-se automaticamente até as cancelares na tua conta Google Play, de acordo com as condições do plano contratado.
+
+VAI ANDAR DE SKATE!
+
+Explora as pistas, aprende novos truques, cumpre missões, compete com amigos e cria os teus próprios níveis.
+
+Descarrega Skate Comic e leva o teu estilo de skate para as ruas.
+
+=== Language: rm ===
+App name: Skate Comic - Gieu da skate
+Short description: Gieu da skate 3D: tricks cun il det, 8 pistas, cursas ed amis
+Full description:
+Skate Comic: gieus da skate en 3D
+
+Prenda tia tabla e va a far skate! Skate Comic è in gieu da skate en 3D en stil da comic, nua che ti pos far tricks cun il det, percurrer pistas urbanas, cumplenir missiuns e concurrer cun auters skaters.
+
+Stritga per siglir, gira il det per far tricks e cumbinescha ollies, flips, grinds, manuals e wallrides en vias plainas da rampas, ringhieras, stgalas ed obstachels.
+
+PISTAS DA SKATE DA SCUVRIR
+
+Percurra differentas scenas: La Citad, Citad 2, La Descendida, Il Port, L'Autostrada, La Collina, Ils Tunnels, Il Center da Cumpras e bler auter.
+
+Scuvra novs spots, sglischa sin ringhieras, fa wallrides en ils tunnels, siglia tranter funtaunas ed explorescha mintga chantun per chattar sfidas.
+
+FITG BLERAS CUMBINAZIUNS DA TRICKS DA SKATE
+
+Emprenda e dominescha ina vasta tscherna da tricks:
+
+Sigls e rotaziuns: Ollie, Nollie, 180 e 360.
+
+Flips: Kickflip, Heelflip, Hardflip e Varial.
+
+Shove-its e grabs: Indy e Melon.
+
+Grinds: 50-50, 5-0 e Nosegrind.
+
+Manuals e wallrides per profitar dals obstachels da mintga pista.
+
+La Scola da Skate ta mussa ils moviments pass per pass. Ultra da quai pos ti consultar tes Cudesch da Tricks per vesair tge tricks che ti dominas gia e tgeninas che ti stos anc emprender.
+
+MISSIUNS E SFIDAS
+
+Mintga pista cuntegna 5 finamiras da cumplenir en sessiuns da 2 minutas. Rimna cassettas VHS, furma il pled SKATE, gudogna puncts e supera las sfidas da mintga scena.
+
+Cumplenescha finamiras, gudogna medaglias e deblocchescha novas pistas cun meglierar tias abilitads.
+
+CURSAS E MULTIGIOCATUR
+
+Cursas cunter 10 skaters, cun turbo e grilla da partenza.
+
+Stanzas per giugar cun amis: rimna fin 6 skaters ed envida tes amis via WhatsApp.
+
+Modus Puncts: ti has 2 minutas per cuntanscher il pli aut puntadi pussaivel.
+
+Tscherna tia sfida, meglierescha tes tricks e concurra per surpassar tes agens resultats.
+
+CREESCHA TES AGENS NIVELS
+
+Designescha tes agen skatepark urban cun ringhieras, stgalas e rampas. Construescha percurs, emprova els cun tes skater e parta tias creaziuns cun amis cun in code.
+
+PERSONALISESCHA TES SKATER
+
+Creescha tes agen stil cun differents t-shirts, chautschas, calzers da sport, chapitschas e tablas. Tscherna tia cumbinaziun preferida e giauda la musica entant che ti percurras la citad sin rodas.
+
+SKATE COMIC PRO
+
+Cumenza a giugar gratuitamain. Il gieu cuntegna reclamas e porscha ina opziun PRO cun plans mensils, annuals u cun in pajament unic per adina.
+
+Cun PRO pos ti giugar senza reclamas, crear nivels pli lungs e senza limita e chargiar si tut tia musica. La versiun gratuita permetta da chargiar si fin 3 chanzuns.
+
+Ils abunaments vegnan renovads automaticamain fin che ti als annulleschas en tes conto da Google Play, tenor las cundiziuns dal plan tschernì.
+
+VA A FAR SKATE!
+
+Explorescha las pistas, emprenda novs tricks, cumplenescha missiuns, concurra cun amis e creescha tes agens nivels.
+
+Chargia giu Skate Comic e porta tes stil da skate sin las vias.
