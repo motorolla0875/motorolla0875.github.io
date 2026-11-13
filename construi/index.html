@@ -337,6 +337,71 @@
     body.is-touch #tut p { font-size: 13px !important; }
     body.is-touch #tut .toy { padding: 6px 12px !important; font-size: 13px !important; }
   }
+
+  /* ===== Reino de Mascotas ===== */
+  #petHud { display: none; }
+  body.pets #petHud { display: block; }
+  body.pets #topBox, body.pets #shopBtn { display: none !important; }
+  #petTop { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); display: flex; gap: 8px; pointer-events: none; }
+  #petTop div { background: rgba(30,40,25,.85); color: #fff; border-radius: 14px; padding: 5px 14px; display: flex; align-items: center; gap: 7px; font-size: 22px; font-weight: 700; }
+  .gem { width: 18px; height: 18px; background: linear-gradient(135deg, #b8f6ff, #3cc8f0 55%, #1e8aa0); transform: rotate(45deg); border-radius: 3px; box-shadow: inset 0 0 0 2px #1e8aa0; flex: none; }
+  .coinS { display: inline-block; width: 15px; height: 15px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe680, #f0b429 60%, #c98a12); vertical-align: -2px; margin: 0 3px 0 6px; }
+  #petBtns { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
+  #petBtns .toy { width: 92px; padding: 9px 6px; font-size: 14px; }
+  #pUpBtn { background: var(--lg-gold) !important; } #pIdxBtn { background: #4fa0e6 !important; } #pShopBtn { background: #b45aff !important; }
+  #eggBtns { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); display: none; gap: 10px; pointer-events: auto; }
+  #eggBtns .toy, #gateBtn { padding: 13px 20px; font-size: 19px; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,.2) !important; }
+  #egg3 { background: var(--lg-gold) !important; }
+  #gateBtn { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); display: none; pointer-events: auto; background: var(--lg-gold) !important; }
+  .popTxt { position: absolute; transform: translate(-50%, -50%); font: 700 24px var(--font); text-shadow: 0 2px 0 rgba(30,40,25,.6); pointer-events: none; animation: popUp 1.1s ease-out forwards; }
+  .popTxt.gem::after { content: ''; display: inline-block; width: 14px; height: 14px; margin-left: 4px; background: #5ae6ff; transform: rotate(45deg); border-radius: 2px; }
+  @keyframes popUp { 0% { opacity: 0; transform: translate(-50%, -20%) scale(.6); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); } 100% { opacity: 0; transform: translate(-50%, -160%) scale(1); } }
+  #fade { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; transition: opacity .35s; z-index: 25; }
+  #fade.on { opacity: 1; }
+  #hatch { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: radial-gradient(circle, rgba(255,255,255,.35), rgba(20,25,18,.65)); z-index: 12; pointer-events: auto; }
+  #hatch.open { display: flex; }
+  #hatchEggs { display: flex; gap: 22px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  .hEgg { width: 130px; height: 165px; border-radius: 50% 50% 46% 46% / 58% 58% 42% 42%; box-shadow: inset -12px -16px 0 rgba(0,0,0,.08), 0 10px 30px rgba(0,0,0,.25); animation: eggShake 1.3s ease-in-out; }
+  @keyframes eggShake { 0%, 100% { transform: rotate(0) scale(1); } 15% { transform: rotate(-12deg); } 30% { transform: rotate(12deg); } 45% { transform: rotate(-16deg); } 60% { transform: rotate(16deg) scale(1.05); } 75% { transform: rotate(-20deg) scale(1.1); } 90% { transform: scale(1.25); } }
+  .hCard { position: relative; width: 170px; background: var(--lg-cream); border-radius: 18px; padding: 12px 10px 14px; text-align: center; box-shadow: 0 0 0 4px var(--rc), 0 0 40px var(--rc); animation: cardIn .45s cubic-bezier(.2,1.6,.4,1); color: var(--lg-dark); }
+  .hCard img { width: 120px; height: 120px; } .hCard b { display: block; font-size: 18px; } .hCard span { display: inline-block; margin: 4px 0; padding: 2px 10px; border-radius: 10px; background: var(--rc); color: #fff; font-weight: 700; font-size: 13px; } .hCard small { display: block; font-size: 13px; }
+  .hCard .new { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #e2493b; color: #fff; font-style: normal; font-weight: 700; padding: 2px 10px; border-radius: 10px; font-size: 13px; }
+  @keyframes cardIn { from { transform: scale(.2) rotate(-10deg); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  #petsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 8px; }
+  .pCard { position: relative; background: #fff; border: 1px solid var(--lg-line); border-bottom: 4px solid var(--rc); border-radius: 12px; padding: 4px 3px 6px; display: flex; flex-direction: column; align-items: center; cursor: pointer; font: 600 11px var(--font); color: var(--lg-dark); }
+  .pCard img { width: 60px; height: 60px; } .pCard b { line-height: 1.05; text-align: center; } .pCard small { color: #6a6f7c; }
+  .pCard.eq { background: var(--lg-sel); border-color: var(--lg-selline); border-bottom-color: var(--rc); }
+  .pCard.vg { background: linear-gradient(#fff6c8, #fff); } .pCard.vr { background: linear-gradient(135deg, #ffd6e6, #fff3c8, #d6f6ff, #ead6ff); }
+  .pCard .chk { position: absolute; top: 4px; right: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--lg-green); }
+  .pCard .chk::after { content: ''; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  #petsInfo { margin: 0 0 8px; font-weight: 600; }
+  #petCard .card { width: min(320px, 92vw); text-align: center; }
+  #pcBody img { width: 130px; height: 130px; } #pcBody h3 { margin: 2px 0 6px; font-size: 20px; text-transform: none; letter-spacing: 0; color: var(--lg-dark); } #pcBody p { margin: 8px 0; }
+  .rTag { display: inline-block; padding: 2px 10px; border-radius: 10px; color: #fff; font-weight: 700; font-size: 13px; }
+  #petCard .menuGrid { margin-top: 8px; }
+  .gemB { background: #3cb4dc !important; }
+  .vTag { display: inline-block; font-style: normal; font-size: 11px; padding: 1px 7px; border-radius: 8px; color: #5a3c00; background: #ffd23c; vertical-align: 2px; }
+  .vTag.vr { background: linear-gradient(90deg,#ff8fb1,#ffd23c,#7fe08a,#7fc8ff,#c8a0ff); color: #3a2a50; }
+  body.pets #help { display: none !important; }
+  .upIcon { width: 44px; height: 44px; border-radius: 12px; flex: none; background: var(--lg-gold); position: relative; }
+  .u_slots { background: #ff8fb1; } .u_coins { background: #ffc828; } .u_luck { background: #5adc78; } .u_speed { background: #4fa0e6; }
+  .idxRow { background: #fff; border: 1px solid var(--lg-line); border-radius: 12px; padding: 8px 10px; margin-bottom: 8px; }
+  .idxRow h4 { margin: 0 0 6px; }
+  .idxPets { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 6px; }
+  .idxPets div { text-align: center; border-bottom: 3px solid var(--rc); border-radius: 8px; }
+  .idxPets img { width: 52px; height: 52px; } .idxPets small { display: block; font-size: 10px; line-height: 1.1; }
+  .idxPets .unk img { filter: brightness(0) opacity(.35); }
+  .idxRow .toy { padding: 7px 12px; font-size: 13px; }
+  .card .note { margin: 0 0 8px; }
+  @media (orientation: landscape) and (max-height: 520px) {
+    body.is-touch #petTop { top: 6px !important; } body.is-touch #petTop div { font-size: 16px !important; padding: 3px 10px !important; }
+    body.is-touch #petBtns { right: 8px !important; top: 46% !important; gap: 5px !important; } body.is-touch #petBtns .toy { width: 78px !important; padding: 6px 4px !important; font-size: 12px !important; }
+    body.is-touch #eggBtns, body.is-touch #gateBtn { bottom: 16px !important; } body.is-touch #eggBtns .toy, body.is-touch #gateBtn { padding: 9px 14px !important; font-size: 15px !important; }
+    body.is-touch.pets #runBtn { right: 104px !important; }
+    body.is-touch .hEgg { width: 100px; height: 128px; } body.is-touch .hCard { width: 140px; padding: 8px; } body.is-touch .hCard img { width: 90px; height: 90px; }
+    body.is-touch #petsGrid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)) !important; } body.is-touch .pCard img { width: 46px; height: 46px; }
+    body.is-touch #pcBody img { width: 80px; height: 80px; }
+  }
 </style>
 </head>
 <body>
@@ -362,6 +427,12 @@
   <div id="topBox"><div class="row"><span class="coin"></span><span id="coins">0</span></div><span id="count"></span></div>
   <div id="toast"></div>
   <div id="banner"></div>
+  <div id="petHud">
+    <div id="petTop"><div><span class="coin"></span><span id="pCoins">0</span></div><div><span class="gem"></span><span id="pGems">0</span></div></div>
+    <div id="petBtns"><button id="pPetsBtn" class="toy">Mascotas</button><button id="pUpBtn" class="toy">Mejoras</button><button id="pIdxBtn" class="toy">Índice</button><button id="pShopBtn" class="toy">Tienda</button></div>
+    <div id="eggBtns"><button id="egg1" class="toy">Abrir huevo</button><button id="egg3" class="toy">Abrir x3</button></div>
+    <button id="gateBtn" class="toy">Abrir zona</button>
+  </div>
   <div id="tools"><button id="shapeBtn">Forma</button><button id="rotBtn">Girar</button><button id="undoBtn">Deshacer</button><button id="paintBtn">Pintar</button><button id="fillBtn">Rellenar</button><button id="flyBtn">Volar</button></div>
   <div id="structHint"></div>
   <div id="hotbar"></div>
@@ -388,6 +459,13 @@
 <div id="shop" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><p style="margin:0 0 6px">Ganás monedas jugando (5 por minuto) y con el regalo de cada día.</p><div id="shopList"></div></div></div></div>
 <div id="land" class="panel"><div class="card" style="width:min(420px,94vw)"><header><h2>Ampliar terreno</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="landBody"></div><button id="landBuy" class="toy">Comprar con monedas</button></div></div></div>
 <div id="confirm" class="panel"><div class="card" style="width:min(400px,94vw)"><header><h2>¿Limpiar todo?</h2></header><div class="body"><p>¿Sacar TODOS los bloques de tu terreno?</p><div class="menuGrid"><button id="clearYes" class="toy" style="background:#d9473b">Sí, limpiar</button><button class="toy gray" data-close>Cancelar</button></div></div></div></div>
+<div id="petsPanel" class="panel"><div class="card"><header><h2>Mascotas</h2><button id="petsBest" class="toy" style="padding:7px 12px;font-size:14px">Equipar mejores</button><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><p id="petsInfo"></p><div id="petsGrid"></div></div></div></div>
+<div id="petCard" class="panel"><div class="card"><div class="body" style="padding-top:14px"><div id="pcBody"></div><div class="menuGrid"><button id="pcEquip" class="toy">Equipar</button><button id="pcFuse" class="toy gold">Fusionar 5</button><button id="pcRelease" class="toy gray">Soltar</button><button id="pcClose" class="toy gray">Cerrar</button></div></div></div></div>
+<div id="upPanel" class="panel"><div class="card"><header><h2>Mejoras</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="upList"></div></div></div></div>
+<div id="idxPanel" class="panel"><div class="card"><header><h2>Índice</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="idxList"></div></div></div></div>
+<div id="pshopPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="pshopList"></div></div></div></div>
+<div id="hatch"><div id="hatchEggs"></div></div>
+<div id="fade"></div>
 <div id="rotate"><div class="ph"></div><div id="rotTxt">Girá el celular para jugar</div></div>
 <div id="tut"><p id="tutText"></p><button id="tutNext" class="toy">Siguiente</button></div>
   <div id="stickZone" class="touch"></div>
@@ -1552,7 +1630,7 @@ const SND_DATA = {"g0": "SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAA
 const CELLS = 32, MAXH = 32, X0 = -CELLS / 2, Z0 = -CELLS / 2;
 const LAND_SIZES = [16, 20, 24, 28, 32], LAND_PRICES = [0, 300, 800, 1600, 3000];
 const BLOCK_LIMIT = 1500, BLOCK_LIMIT_PASS = 4500, FILL_MAX = 512, UNDO_STEPS = 40;
-const DAY_LENGTH = 600, COINS_PER_MIN = 5, COINS_DAILY = 50;
+const DAY_LENGTH = 1800, COINS_PER_MIN = 5, COINS_DAILY = 50;
 const TNT_RADIUS = 2.3, TNT_FUSE = 3, TNT_CHAIN = 0.6;
 const TEST_MODE = /pruebas/.test(location.hash);
 
@@ -2137,6 +2215,7 @@ function playerCells(x, y, z) {
 
 // ----- la acción de la herramienta en un punto de la pantalla -----
 function act(clientX, clientY, alt) {
+  if (inPets) { petTap(clientX, clientY); return; }
   if (!inGame) return;
   const p = pickCell(clientX, clientY);
   if (!p) return;
@@ -2367,7 +2446,7 @@ scene.traverse((o) => { if (o.material && o.material.uniforms && o.material.unif
 function updateDay(dt) {
   dayT = (dayT + dt / DAY_LENGTH) % 1;
   const sunUp = Math.sin((dayT - 0.25) * Math.PI * 2); // -1..1
-  const day = THREE.MathUtils.smoothstep(sunUp, -0.15, 0.25); // 0 noche, 1 día
+  const day = THREE.MathUtils.smoothstep(sunUp, -0.72, -0.38); // 0 noche, 1 día (la noche es corta)
   const night = 1 - day;
   if (skyMat) { skyMat.uniforms.top.value.copy(NIGHT_SKY.top).lerp(DAY_SKY.top, day); skyMat.uniforms.bottom.value.copy(NIGHT_SKY.bottom).lerp(DAY_SKY.bottom, day); }
   scene.fog.color.setRGB(0.12 + 0.63 * day, 0.16 + 0.73 * day, 0.3 + 0.7 * day);
@@ -2590,7 +2669,7 @@ function updateHud() {
 let catTab = 'blocks';
 const CAT_TABS = [['blocks', 'Bloques'], ['premium', 'Premium'], ['daily', 'Colección'], ['deco', 'Muebles'], ['special', 'Especiales'], ['struct', 'Estructuras']].map(([a, n]) => [a, tr(n)]);
 function openCatalog(tab) { if (tab) catTab = tab; renderCatalog(); $('catalog').classList.add('open'); sfx('click'); }
-function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm']) $(id).classList.remove('open'); }
+function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard']) $(id).classList.remove('open'); }
 function renderCatalog() {
   const tabs = $('catTabs'); tabs.innerHTML = '';
   for (const [id, name] of CAT_TABS) { const b = document.createElement('button'); b.textContent = name; b.className = catTab === id ? 'on' : ''; b.onclick = () => { catTab = id; renderCatalog(); }; tabs.appendChild(b); }
@@ -2849,7 +2928,7 @@ let minuteT = 0;
 
 // ===== teclado =====
 addEventListener('keydown', (e) => {
-  if (mode !== 'play' || e.repeat) return;
+  if (mode !== 'play' || e.repeat || (!inGame && e.code !== 'KeyP' && e.code !== 'Escape')) return;
   const k = e.code;
   if (photo) { if (k === 'KeyP' || k === 'Escape') setPhoto(false); return; }
   if (k === 'KeyQ') setTool(tool === 'break' ? 'build' : 'break');
@@ -2922,7 +3001,7 @@ function buildTick(dt, t) {
   const gs = Math.hypot(vel.x, vel.z), ss = Math.sign(Math.sin(phase));
   if (mode === 'play' && onGround && !sitting && gs > 0.8 && ss !== lastStepSign) stepSound();
   lastStepSign = ss;
-  beltTick(dt); zoneTick();
+  beltTick(dt); zoneTick(); petsZone(); petsTick(dt, t); portalTick(dt);
   return night;
 }
 
@@ -3200,12 +3279,28 @@ postSign(-4.4, PLAZA.z - PLAZA.r + 0.2, 0, [tr('Construí Todo'), tr('subite a l
 // próximo juego: cinta hacia el este que termina en una estación "pronto"
 addBelt(PLAZA.x + PLAZA.r - 1.2, PLAZA.z - 1.6, PLAZA.x + 30, PLAZA.z - 1.6, '#4fb3ee');
 addBelt(PLAZA.x + 30, PLAZA.z + 1.6, PLAZA.x + PLAZA.r - 1.2, PLAZA.z + 1.6, '#e6a91e');
-arch(PLAZA.x + 31.6, PLAZA.z, Math.PI / 2, [tr('PRÓXIMAMENTE'), tr('Juego 2')], '#4fb3ee');
+arch(PLAZA.x + 31.6, PLAZA.z, Math.PI / 2, [tr('REINO DE MASCOTAS'), tr('Juego 2')], '#4fb3ee');
+// portales: textura de remolino
+function swirlTex(c) {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 128; const g = cv.getContext('2d');
+  const rg = g.createRadialGradient(64, 64, 4, 64, 64, 64); rg.addColorStop(0, '#ffffff'); rg.addColorStop(0.5, c); rg.addColorStop(1, 'rgba(255,255,255,.2)');
+  g.fillStyle = rg; g.beginPath(); g.arc(64, 64, 64, 0, 7); g.fill();
+  g.strokeStyle = 'rgba(255,255,255,.85)'; g.lineWidth = 7; g.lineCap = 'round';
+  for (let k = 0; k < 4; k++) { g.beginPath(); for (let a = 0; a < 3.2; a += 0.1) { const r = 6 + a * 17, an = a + k * Math.PI / 2; g.lineTo(64 + Math.cos(an) * r, 64 + Math.sin(an) * r); } g.stroke(); }
+  return new THREE.CanvasTexture(cv);
+}
+const portals = [];
 {
-  // plataforma de la estación del juego 2 (todavía cerrada)
+  // estación 2: plataforma con el portal al Reino de Mascotas
   const cx = PLAZA.x + 34.5, cz = PLAZA.z;
   const pad = new THREE.Mesh(new THREE.CylinderGeometry(3.4, 3.4, 0.12, 40), toyMat('#4fb3ee')); pad.position.set(cx, 0.06, cz); pad.receiveShadow = true; hub.add(pad);
   for (let i = 0; i < 9; i++) { const a = -Math.PI / 2 + 0.6 + i * (Math.PI * 2 - 1.2) / 8; const x = cx + Math.cos(a + Math.PI / 2) * 3.1, z = cz + Math.sin(a + Math.PI / 2) * 3.1; addMesh(rbox(0.35, 0.9, 0.35, 0.12), toyMat(i % 2 ? '#ffd83d' : '#faf6eb'), x, 0.45, z); colliders.push({ x, z, r: 0.22 }); }
+  const pg = new THREE.Group(); pg.position.set(cx + 1.2, 0, cz); pg.rotation.y = Math.PI / 2; hub.add(pg);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.24, 14, 40), toyMat('#ff78c8')); ring.position.y = 1.9; ring.castShadow = true; pg.add(ring);
+  const sw = new THREE.Mesh(new THREE.CircleGeometry(1.35, 40), new THREE.MeshBasicMaterial({ map: swirlTex('#b48cff'), transparent: true, opacity: 0.9, side: THREE.DoubleSide })); sw.position.y = 1.9; pg.add(sw);
+  // patitas de huellas para que se entienda que es de mascotas
+  for (const s of [-1, 1]) { const b = new THREE.Mesh(new THREE.SphereGeometry(0.35, 14, 10), toyMat('#ffd83d')); b.position.set(s * 1.6, 3.6, 0); pg.add(b); }
+  portals.push({ g: pg, sw, x: cx + 1.2, z: cz, r: 1.4, to: 'pets' });
 }
 
 // las cintas mueven al muñeco (si está parado arriba)
@@ -3255,6 +3350,768 @@ function goPlaza() {
 translatePage();
 if (LANG !== 'es') { const pc = document.querySelector('#help .pc'); if (pc) pc.innerHTML = DICT.HELP_PC[LANG === 'pt' ? 1 : 0]; }
 
+// =====================================================================
+// ===== JUEGO 2: REINO DE MASCOTAS (el Pet Kingdom de Roblox) =====
+// =====================================================================
+// Se entra por el portal de la estación 2. El mundo de mascotas está lejos de la plaza (hacia el sur)
+// y tiene 5 zonas en fila: Pradera, Bosque, Playa, Nieve y Reino Mágico.
+Object.assign(DICT, {
+  'REINO DE MASCOTAS': ['PET KINGDOM', 'REINO DOS PETS'], 'Reino de Mascotas': ['Pet Kingdom', 'Reino dos Pets'],
+  'entrá al portal': ['step into the portal', 'entre no portal'],
+  'Pradera Soleada': ['Sunny Meadow', 'Campo Ensolarado'], 'Bosque Susurro': ['Whisper Forest', 'Floresta Sussurro'],
+  'Playa del Sol': ['Sunset Beach', 'Praia do Sol'], 'Picos Helados': ['Frosty Peaks', 'Picos Gelados'], 'Reino Mágico': ['Magic Kingdom', 'Reino Mágico'],
+  'Común': ['Common', 'Comum'], 'Rara': ['Rare', 'Rara'], 'Épica': ['Epic', 'Épica'], 'Legendaria': ['Legendary', 'Lendária'], 'Mítica': ['Mythic', 'Mítica'], 'Exclusiva': ['Exclusive', 'Exclusiva'],
+  'Dorada': ['Golden', 'Dourada'], 'Arcoíris': ['Rainbow', 'Arco-íris'],
+  'Mascotas': ['Pets', 'Pets'], 'Mejoras': ['Upgrades', 'Melhorias'], 'Índice': ['Index', 'Índice'],
+  'Abrir huevo': ['Open egg', 'Abrir ovo'], 'Abrir x3': ['Open x3', 'Abrir x3'], 'Abrir zona': ['Unlock zone', 'Abrir zona'],
+  'Equipar mejores': ['Equip best', 'Equipar melhores'], 'Equipar': ['Equip', 'Equipar'], 'Quitar': ['Unequip', 'Tirar'],
+  'Fusionar 5': ['Fuse 5', 'Fundir 5'], 'Soltar': ['Release', 'Soltar'],
+  'Poder': ['Power', 'Poder'], 'Equipadas: {0} / {1}': ['Equipped: {0} / {1}', 'Equipados: {0} / {1}'],
+  '{0} / {1} mascotas': ['{0} / {1} pets', '{0} / {1} pets'],
+  'Más mascotas': ['More pets', 'Mais pets'], 'Más monedas': ['More coins', 'Mais moedas'], 'Suerte en huevos': ['Egg luck', 'Sorte nos ovos'], 'Velocidad': ['Walk speed', 'Velocidade'],
+  '+1 mascota equipada': ['+1 equipped pet', '+1 pet equipado'], 'Monedas x1.5 / x2 / x3': ['Coins x1.5 / x2 / x3', 'Moedas x1.5 / x2 / x3'],
+  'Mascotas raras más seguido': ['Rare pets more often', 'Pets raros com mais frequência'], 'Caminá más rápido': ['Walk faster', 'Ande mais rápido'],
+  'Nivel {0} / {1}': ['Level {0} / {1}', 'Nível {0} / {1}'], '{0} gemas': ['{0} gems', '{0} gemas'], 'Máximo': ['Max', 'Máximo'],
+  'Reclamar {0} gemas': ['Claim {0} gems', 'Pegar {0} gemas'], 'Reclamado': ['Claimed', 'Pego'],
+  'Juntá las 5 mascotas de la zona para ganar gemas.': ['Collect all 5 pets of a zone to earn gems.', 'Junte os 5 pets da zona para ganhar gemas.'],
+  'Pases': ['Passes', 'Passes'], 'Mascotas exclusivas': ['Exclusive pets', 'Pets exclusivos'],
+  'Abrir 3 huevos': ['Triple Hatch', 'Abrir 3 ovos'], 'Abrí 3 huevos a la vez.': ['Open 3 eggs at once.', 'Abra 3 ovos de uma vez.'],
+  'Huevos con suerte': ['Lucky Eggs', 'Ovos da sorte'], 'Suerte x2 en todos los huevos.': ['x2 luck on every egg.', 'Sorte x2 em todos os ovos.'],
+  'Monedas dobles': ['Double Coins', 'Moedas em dobro'], 'Todas las monedas x2.': ['All coins x2.', 'Todas as moedas x2.'],
+  'Más lugares': ['Extra Pets', 'Mais vagas'], '+3 mascotas equipadas.': ['+3 equipped pets.', '+3 pets equipados.'],
+  'Gatita Real': ['Royal Kitty', 'Gatinha Real'], 'Dragón Galaxia': ['Galaxy Dragon', 'Dragão Galáxia'],
+  'No sale de los huevos.': ["Doesn't hatch from eggs.", 'Não sai dos ovos.'],
+  '¡Nueva mascota!': ['New pet!', 'Pet novo!'], '¡NUEVA!': ['NEW!', 'NOVO!'],
+  'Te faltan {0} monedas.': ['You need {0} more coins.', 'Faltam {0} moedas.'], 'Te faltan {0} gemas.': ['You need {0} more gems.', 'Faltam {0} gemas.'],
+  'Tenés el inventario lleno. Fusioná o soltá mascotas.': ['Your inventory is full. Fuse or release pets.', 'Seu inventário está cheio. Funda ou solte pets.'],
+  'Necesitás 5 iguales para fusionar.': ['You need 5 of the same to fuse.', 'Você precisa de 5 iguais para fundir.'],
+  '¡Fusión! Salió una {0}.': ['Fused! You got a {0} one.', 'Fusão! Saiu um {0}.'],
+  '¡Zona nueva: {0}!': ['New zone: {0}!', 'Zona nova: {0}!'],
+  'Premio del día: +{0} gemas y +{1} monedas': ['Daily reward: +{0} gems and +{1} coins', 'Prêmio do dia: +{0} gemas e +{1} moedas'],
+  'Tocá un montón de monedas y tus mascotas lo rompen.': ['Tap a coin pile and your pets break it.', 'Toque num monte de moedas e seus pets quebram.'],
+  'Equipá tus mascotas para que te ayuden.': ['Equip your pets so they help you.', 'Equipe seus pets para te ajudarem.'],
+  'Tenés que quedarte con al menos una equipada.': ['Keep at least one equipped.', 'Fique com pelo menos um equipado.'],
+  'Ya tenés el máximo de mascotas equipadas.': ['You already have the max equipped.', 'Você já tem o máximo equipado.'],
+  'Mejor zona': ['Best zone', 'Melhor zona'], 'Volver a la plaza': ['Back to the plaza', 'Voltar para a praça'],
+  'Bloqueada': ['Locked', 'Bloqueada'], 'Cerrar': ['Close', 'Fechar'], 'Juego 2': ['Game 2', 'Jogo 2'],
+});
+
+// ----- datos (mismos números que el juego de Roblox) -----
+const rgbS = (r, g, b) => '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
+const PW = '#fafafc', PPINK = '#ff96be';
+const PETS = [
+  ['kitty', 'Gatito', 'Kitty', 'Gatinho', 'common', 1, 0, rgbS(150, 155, 165), PW, rgbS(25, 25, 30), 'cat', ['patch', 'tongue']],
+  ['puppy', 'Perrito', 'Puppy', 'Cachorrinho', 'rare', 2, 0.3, rgbS(215, 160, 100), rgbS(255, 235, 205), rgbS(60, 35, 20), 'dog', ['tongue']],
+  ['bunny', 'Conejito', 'Bunny', 'Coelhinho', 'epic', 4, 0.12, PW, PPINK, rgbS(200, 60, 110), 'bunny', []],
+  ['honeybear', 'Osito de Miel', 'Honey Bear', 'Ursinho de Mel', 'legendary', 10, 0.028, rgbS(245, 185, 60), rgbS(255, 230, 160), rgbS(70, 40, 15), 'bear', ['glow']],
+  ['angelcat', 'Gato Ángel', 'Angel Cat', 'Gato Anjo', 'mythic', 30, 0.002, rgbS(255, 205, 40), rgbS(255, 245, 190), rgbS(110, 60, 15), 'cat', ['angel', 'glow'], 1],
+  ['fox', 'Zorrito', 'Fox', 'Raposinha', 'common', 6, 0, rgbS(240, 120, 45), PW, rgbS(40, 30, 20), 'fox', ['patch']],
+  ['raccoon', 'Mapache', 'Raccoon', 'Guaxinim', 'rare', 12, 0.3, rgbS(140, 140, 150), rgbS(235, 235, 240), rgbS(20, 20, 25), 'bear', ['mask', 'stripes']],
+  ['owl', 'Búho', 'Owl', 'Coruja', 'epic', 25, 0.12, rgbS(160, 110, 65), rgbS(245, 220, 170), rgbS(240, 170, 20), 'fox', ['beak', 'angel'], 1],
+  ['stag', 'Ciervo Lunar', 'Moon Stag', 'Cervo Lunar', 'legendary', 60, 0.028, rgbS(90, 100, 170), rgbS(210, 225, 255), rgbS(60, 140, 255), 'dog', ['unicorn', 'glow']],
+  ['dragon', 'Dragón Hoja', 'Leaf Dragon', 'Dragão Folha', 'mythic', 180, 0.002, rgbS(95, 210, 60), rgbS(200, 255, 120), rgbS(20, 90, 30), 'none', ['bat', 'horns'], 1],
+  ['duck', 'Patito', 'Duckling', 'Patinho', 'common', 36, 0, rgbS(255, 225, 70), rgbS(255, 245, 190), rgbS(20, 20, 25), 'none', ['beak']],
+  ['turtle', 'Tortuga', 'Turtle', 'Tartaruga', 'rare', 72, 0.3, rgbS(120, 200, 110), rgbS(90, 150, 70), rgbS(20, 40, 20), 'none', ['shell']],
+  ['shark', 'Tiburón', 'Shark', 'Tubarão', 'epic', 150, 0.12, rgbS(90, 150, 220), PW, rgbS(15, 30, 60), 'none', ['fin', 'patch']],
+  ['coralcat', 'Gato Coral', 'Coral Cat', 'Gato Coral', 'legendary', 360, 0.028, rgbS(255, 120, 110), rgbS(255, 220, 190), rgbS(20, 110, 140), 'cat', ['glow', 'stripes']],
+  ['seadragon', 'Dragón Marino', 'Sea Dragon', 'Dragão Marinho', 'mythic', 1080, 0.002, rgbS(40, 200, 210), rgbS(190, 255, 250), rgbS(10, 60, 110), 'none', ['bat', 'horns', 'fin'], 1],
+  ['penguin', 'Pingüino', 'Penguin', 'Pinguim', 'common', 216, 0, rgbS(50, 55, 75), PW, rgbS(15, 15, 20), 'none', ['beak', 'patch']],
+  ['polarbear', 'Oso Polar', 'Polar Bear', 'Urso Polar', 'rare', 430, 0.3, rgbS(240, 245, 255), rgbS(200, 220, 240), rgbS(20, 20, 30), 'bear', []],
+  ['arcticfox', 'Zorro Ártico', 'Arctic Fox', 'Raposa Ártica', 'epic', 900, 0.12, rgbS(225, 240, 255), rgbS(160, 210, 255), rgbS(40, 110, 220), 'fox', ['patch']],
+  ['snowowl', 'Búho de Nieve', 'Snow Owl', 'Coruja das Neves', 'legendary', 2200, 0.028, PW, rgbS(180, 220, 255), rgbS(240, 190, 30), 'fox', ['beak', 'angel', 'glow'], 1],
+  ['crystalcat', 'Gato de Cristal', 'Crystal Cat', 'Gato de Cristal', 'mythic', 6500, 0.002, rgbS(120, 200, 255), rgbS(220, 245, 255), rgbS(20, 60, 170), 'cat', ['crystal', 'glow'], 1],
+  ['candybear', 'Osito Caramelo', 'Candy Bear', 'Ursinho Doce', 'common', 1300, 0, rgbS(255, 130, 170), rgbS(255, 225, 235), rgbS(90, 20, 50), 'bear', []],
+  ['fairybunny', 'Conejita Hada', 'Fairy Bunny', 'Coelhinha Fada', 'rare', 2600, 0.3, rgbS(200, 170, 255), rgbS(255, 230, 250), rgbS(100, 40, 170), 'bunny', ['angel'], 1],
+  ['royallion', 'León Real', 'Royal Lion', 'Leão Real', 'epic', 5400, 0.12, rgbS(250, 190, 70), rgbS(200, 110, 40), rgbS(80, 40, 10), 'bear', ['crown']],
+  ['phoenix', 'Fénix', 'Phoenix', 'Fênix', 'legendary', 13000, 0.028, rgbS(255, 90, 50), rgbS(255, 210, 60), rgbS(90, 20, 10), 'fox', ['beak', 'angel', 'glow'], 1],
+  ['unicorncat', 'Unicornio Arcoíris', 'Rainbow Unicorn', 'Unicórnio Arco-íris', 'mythic', 39000, 0.002, rgbS(255, 140, 210), rgbS(255, 225, 245), rgbS(110, 30, 130), 'cat', ['unicorn', 'rainbow', 'glow'], 1],
+  ['royalcat', 'Gatita Real', 'Royal Kitty', 'Gatinha Real', 'exclusive', 150, 0, rgbS(170, 110, 255), rgbS(255, 235, 255), rgbS(80, 20, 150), 'cat', ['crown', 'glow']],
+  ['galaxydragon', 'Dragón Galaxia', 'Galaxy Dragon', 'Dragão Galáxia', 'exclusive', 25000, 0, rgbS(60, 40, 140), rgbS(150, 220, 255), rgbS(255, 230, 120), 'none', ['bat', 'horns', 'galaxy', 'glow'], 1],
+].map(([id, es, en, pt, rarity, power, chance, color, color2, eye, ears, extra, fly]) => ({ id, name: LANG === 'en' ? en : LANG === 'pt' ? pt : es, rarity, power, chance, color, color2, eye, ears, extra, fly: !!fly }));
+const PBY = {}; PETS.forEach((p) => { PBY[p.id] = p; });
+const PZONES = [
+  { id: 'meadow', es: 'Pradera Soleada', price: 0, egg: 100, pileHp: 8, pileCoins: 6, chestHp: 150, chestCoins: 150, chestGems: 8, ground: '#6ec846', ground2: '#87dc55', eggColor: '#fcf4de', eggSpots: '#46a0ff', style: 'star', pets: ['kitty', 'puppy', 'bunny', 'honeybear', 'angelcat'] },
+  { id: 'forest', es: 'Bosque Susurro', price: 2000, egg: 1000, pileHp: 64, pileCoins: 60, chestHp: 1200, chestCoins: 1500, chestGems: 16, ground: '#46a046', ground2: '#5ab450', eggColor: '#faf5eb', eggSpots: '#965ae6', style: 'paw', pets: ['fox', 'raccoon', 'owl', 'stag', 'dragon'] },
+  { id: 'beach', es: 'Playa del Sol', price: 20000, egg: 10000, pileHp: 500, pileCoins: 600, chestHp: 9500, chestCoins: 15000, chestGems: 25, ground: '#f5dc96', ground2: '#fae6aa', eggColor: '#96dcff', eggSpots: '#ffffff', style: 'dots', pets: ['duck', 'turtle', 'shark', 'coralcat', 'seadragon'] },
+  { id: 'snow', es: 'Picos Helados', price: 200000, egg: 100000, pileHp: 4000, pileCoins: 6000, chestHp: 76000, chestCoins: 150000, chestGems: 40, ground: '#ebf5ff', ground2: '#d7ebff', eggColor: '#ebf8ff', eggSpots: '#5ac8ff', style: 'star', pets: ['penguin', 'polarbear', 'arcticfox', 'snowowl', 'crystalcat'] },
+  { id: 'kingdom', es: 'Reino Mágico', price: 2000000, egg: 1000000, pileHp: 32000, pileCoins: 60000, chestHp: 600000, chestCoins: 1500000, chestGems: 60, ground: '#96dc6e', ground2: '#b4a0ff', eggColor: '#ffebfa', eggSpots: '#ff78c8', style: 'rainbow', pets: ['candybear', 'fairybunny', 'royallion', 'phoenix', 'unicorncat'] },
+];
+PZONES.forEach((z) => { z.name = tr(z.es); });
+const RARITY = {
+  common: { es: 'Común', c: '#afb4be' }, rare: { es: 'Rara', c: '#46a0ff' }, epic: { es: 'Épica', c: '#b45aff' },
+  legendary: { es: 'Legendaria', c: '#ffb914' }, mythic: { es: 'Mítica', c: '#ff3c78' }, exclusive: { es: 'Exclusiva', c: '#28d2c8' },
+};
+const P_UPS = [
+  { id: 'slots', es: 'Más mascotas', d: '+1 mascota equipada', levels: [20, 80, 300] },
+  { id: 'coins', es: 'Más monedas', d: 'Monedas x1.5 / x2 / x3', levels: [30, 150, 600] },
+  { id: 'luck', es: 'Suerte en huevos', d: 'Mascotas raras más seguido', levels: [40, 200, 800] },
+  { id: 'speed', es: 'Velocidad', d: 'Caminá más rápido', levels: [15, 60, 250] },
+];
+const P_PASSES = [
+  { id: 'TripleHatch', es: 'Abrir 3 huevos', d: 'Abrí 3 huevos a la vez.', gems: 500 },
+  { id: 'LuckyEggs', es: 'Huevos con suerte', d: 'Suerte x2 en todos los huevos.', gems: 700 },
+  { id: 'DoubleCoins', es: 'Monedas dobles', d: 'Todas las monedas x2.', gems: 600 },
+  { id: 'ExtraPets', es: 'Más lugares', d: '+3 mascotas equipadas.', gems: 800 },
+];
+const P_EXCL = [{ id: 'royalcat', gems: 300 }, { id: 'galaxydragon', gems: 3000 }];
+const MULT = [1, 1.5, 2, 3], SPEEDS = [1, 1.25, 1.5, 1.75];
+const INDEX_GEMS = [50, 120, 250, 500, 1000];
+const MAX_PETS = 80, PILES_PER_ZONE = 14, RESPAWN = 6, PLAYER_POWER = 2, GEM_CHANCE = 0.08;
+
+// ----- lugar del mundo de mascotas -----
+const PW_Z0 = -84, ZONE_L = 22, PW_X = 16; // la zona i va de z = PW_Z0 - i*22 a PW_Z0 - (i+1)*22
+const PW_ENTRY = new THREE.Vector3(0, 0, -81);
+const zoneZ = (i) => PW_Z0 - i * ZONE_L; // borde de entrada de la zona i
+function zoneOf(z) { return Math.max(0, Math.min(4, Math.floor((PW_Z0 - z) / ZONE_L))); }
+
+// ----- estado guardado -----
+const PSAVE = 'pets_v1';
+const ps = { coins: 0, gems: 0, pets: [], uid: 1, unlocked: 1, up: { slots: 0, coins: 0, luck: 0, speed: 0 }, passes: {}, seen: {}, idx: {}, lastDay: '' };
+try { const s = JSON.parse(localStorage.getItem(PSAVE) || 'null'); if (s) Object.assign(ps, s); } catch (e) { /* nada */ }
+if (!ps.pets.length) ps.pets.push({ u: ps.uid++, id: 'kitty', v: '', eq: true }), ps.seen.kitty = 1;
+if (TEST_MODE) { ps.coins = Math.max(ps.coins, 5e6); ps.gems = Math.max(ps.gems, 9999); }
+let psTimer = 0;
+function psSave() { clearTimeout(psTimer); psTimer = setTimeout(() => { try { localStorage.setItem(PSAVE, JSON.stringify(ps)); } catch (e) { /* nada */ } }, 600); }
+
+const petPower = (o) => PBY[o.id].power * (o.v === 'g' ? 3 : o.v === 'r' ? 10 : 1);
+const maxSlots = () => 3 + ps.up.slots + (ps.passes.ExtraPets ? 3 : 0);
+const coinMult = () => MULT[ps.up.coins] * (ps.passes.DoubleCoins ? 2 : 1);
+const luckMult = () => MULT[ps.up.luck] * (ps.passes.LuckyEggs ? 2 : 1);
+function petSpeed() { return inPets ? SPEEDS[ps.up.speed] : 1; }
+function fmt(n) {
+  n = Math.floor(n);
+  if (n < 1000) return '' + n;
+  const u = [[1e12, 'T'], [1e9, 'B'], [1e6, 'M'], [1e3, 'K']];
+  for (const [v, s] of u) if (n >= v) { const x = n / v; return (x < 10 ? x.toFixed(1) : Math.floor(x)) + s; }
+  return '' + n;
+}
+
+// =====================================================================
+// ===== modelo de mascota: cubito de juguete, cara con ojos y boca =====
+// =====================================================================
+const rainbowMats = [];
+function petModel(id, v, forIcon) {
+  const p = PBY[id];
+  const g = new THREE.Group(), body = new THREE.Group(); body.name = 'pbody'; g.add(body);
+  const golden = v === 'g', rainbow = v === 'r';
+  const M = (c, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.42 }, o));
+  let m1 = golden ? M('#ffc828', { roughness: 0.25, emissive: new THREE.Color('#5a3c00'), emissiveIntensity: 0.25 }) : M(p.color);
+  const m2 = golden ? M('#ffeb8c', { roughness: 0.3 }) : M(p.color2);
+  if (rainbow) { m1 = M('#ff5a8c', { roughness: 0.3, emissive: new THREE.Color('#ff5a8c'), emissiveIntensity: 0.25 }); rainbowMats.push(m1); }
+  if (p.extra.includes('crystal')) { m1.transparent = true; m1.opacity = 0.78; m1.roughness = 0.12; m1.emissive = new THREE.Color(p.color); m1.emissiveIntensity = 0.3; }
+  if (p.extra.includes('galaxy')) { m1.emissive = new THREE.Color('#3c2896'); m1.emissiveIntensity = 0.6; }
+  const dark = M('#1c1a22', { roughness: 0.3 }), white = M('#ffffff'), pink = M('#ff8ca0');
+  const add = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0, par = body) => { const me = new THREE.Mesh(geo, mat); me.position.set(x, y, z); me.rotation.set(rx, ry, rz); me.castShadow = !forIcon; par.add(me); return me; };
+  // cuerpo y cabeza grande (estilo chibi), el frente mira a +z
+  add(rbox(0.6, 0.46, 0.6, 0.15), m1, 0, 0.33, -0.02);
+  add(rbox(0.36, 0.28, 0.04, 0.06), m2, 0, 0.3, 0.28);
+  const head = new THREE.Group(); head.position.set(0, 0.82, 0.06); body.add(head); head.name = 'phead';
+  add(rbox(0.74, 0.62, 0.64, 0.2), m1, 0, 0, 0, 0, 0, 0, head);
+  // ojos grandes con brillito y boca sonriente
+  for (const s of [-1, 1]) {
+    const e = add(new THREE.SphereGeometry(0.085, 14, 10), p.eye === '#1c1a22' ? dark : M(p.eye, { roughness: 0.2 }), s * 0.16, 0.04, 0.32, 0, 0, 0, head); e.scale.set(0.85, 1.15, 0.45);
+    add(new THREE.SphereGeometry(0.028, 8, 6), white, s * 0.16 + 0.03, 0.09, 0.355, 0, 0, 0, head);
+    const ck = add(new THREE.CircleGeometry(0.05, 12), pink, s * 0.27, -0.09, 0.322, 0, 0, 0, head); ck.material = pink;
+  }
+  const mouth = add(new THREE.TorusGeometry(0.05, 0.013, 6, 14, Math.PI), dark, 0, -0.1, 0.325, 0, 0, Math.PI, head);
+  // patas
+  for (const [x, z] of [[-0.18, 0.15], [0.18, 0.15], [-0.18, -0.18], [0.18, -0.18]]) add(new THREE.CylinderGeometry(0.075, 0.085, 0.16, 10), m1, x, 0.08, z);
+  // orejas
+  if (p.ears === 'cat' || p.ears === 'fox') {
+    const big = p.ears === 'fox' ? 1.25 : 1;
+    for (const s of [-1, 1]) { const ear = add(new THREE.ConeGeometry(0.11 * big, 0.24 * big, 4), m1, s * 0.22, 0.38, -0.02, 0, Math.PI / 4, s * -0.2, head); add(new THREE.ConeGeometry(0.06 * big, 0.14 * big, 4), m2, s * 0.22, 0.36, 0.04, 0, Math.PI / 4, s * -0.2, head); ear.name = 'ear'; }
+  } else if (p.ears === 'dog') {
+    for (const s of [-1, 1]) add(rbox(0.12, 0.3, 0.1, 0.04), m2, s * 0.4, -0.02, 0, 0, 0, s * 0.25, head);
+  } else if (p.ears === 'bunny') {
+    for (const s of [-1, 1]) { add(rbox(0.12, 0.42, 0.07, 0.05), m1, s * 0.14, 0.48, -0.04, -0.1, 0, s * -0.12, head); add(rbox(0.06, 0.3, 0.02, 0.02), m2, s * 0.14, 0.47, 0.0, -0.1, 0, s * -0.12, head); }
+  } else if (p.ears === 'bear') {
+    for (const s of [-1, 1]) { add(new THREE.SphereGeometry(0.11, 12, 8), m1, s * 0.27, 0.31, -0.05, 0, 0, 0, head); add(new THREE.CircleGeometry(0.06, 10), m2, s * 0.27, 0.31, 0.06, 0, 0, 0, head); }
+  }
+  // cola
+  if (!p.extra.includes('shell') && !p.extra.includes('fin')) add(new THREE.SphereGeometry(0.09, 10, 8), p.ears === 'bunny' ? white : m1, 0, 0.36, -0.36);
+  // extras
+  const has = (x) => p.extra.includes(x);
+  if (has('patch')) add(new THREE.CircleGeometry(0.13, 14), m2, -0.16, 0.02, 0.322, 0, 0, 0, head).renderOrder = 1;
+  if (has('tongue')) add(rbox(0.06, 0.07, 0.02, 0.02), M('#ff698c'), 0, -0.16, 0.325, 0, 0, 0, head);
+  if (has('mask')) add(rbox(0.66, 0.14, 0.02, 0.03), dark, 0, 0.04, 0.315, 0, 0, 0, head).renderOrder = -1;
+  if (has('stripes')) for (const x of [-0.12, 0.12]) add(rbox(0.05, 0.47, 0.62, 0.02), M(new THREE.Color(p.color).multiplyScalar(0.7)), x, 0.33, -0.02);
+  if (has('beak')) add(new THREE.ConeGeometry(0.07, 0.16, 8), M('#ff9b28'), 0, -0.06, 0.38, Math.PI / 2, 0, 0, head);
+  if (has('shell')) { const sh = add(new THREE.SphereGeometry(0.36, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), m2, 0, 0.5, -0.04); sh.scale.set(1, 0.7, 1.05); }
+  if (has('fin')) add(new THREE.ConeGeometry(0.14, 0.32, 4), m1, 0, 0.66, -0.2, -0.3, 0, 0);
+  if (has('horns')) for (const s of [-1, 1]) add(new THREE.ConeGeometry(0.05, 0.2, 8), m2, s * 0.18, 0.36, -0.08, -0.3, 0, s * -0.25, head);
+  if (has('unicorn')) add(new THREE.ConeGeometry(0.06, 0.28, 10), M('#ffd23c', { roughness: 0.3 }), 0, 0.38, 0.12, 0.35, 0, 0, head);
+  if (has('crown')) { const c = add(new THREE.CylinderGeometry(0.18, 0.18, 0.12, 6, 1, true), M('#ffc828', { roughness: 0.3, side: THREE.DoubleSide }), 0, 0.37, 0, 0, 0, 0, head); for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; add(new THREE.ConeGeometry(0.035, 0.09, 4), c.material, Math.cos(a) * 0.17, 0.47, Math.sin(a) * 0.17, 0, 0, 0, head); } }
+  if (has('rainbow')) { const cols = ['#ff5a8c', '#ffa03c', '#ffe646', '#5adc78', '#50aaff', '#aa6eff']; cols.forEach((c, i) => add(new THREE.SphereGeometry(0.06, 8, 6), M(c), (i - 2.5) * 0.09, 0.33, -0.3, 0, 0, 0, head)); }
+  if (has('angel') || has('bat')) {
+    for (const s of [-1, 1]) {
+      const wg = new THREE.Group(); wg.position.set(s * 0.28, 0.5, -0.18); wg.name = s < 0 ? 'wingL' : 'wingR'; body.add(wg);
+      if (has('angel')) { const w = add(new THREE.SphereGeometry(0.22, 12, 8), white, s * 0.18, 0.06, 0, 0, 0, s * 0.4, wg); w.scale.set(1.2, 0.7, 0.25); }
+      else { const w = add(new THREE.ConeGeometry(0.22, 0.42, 3), m2, s * 0.2, 0.02, 0, 0, Math.PI / 2, s * -1.2, wg); w.scale.z = 0.25; }
+    }
+  }
+  if (has('glow') && !forIcon) {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64; const gg = cv.getContext('2d');
+    const rg = gg.createRadialGradient(32, 32, 4, 32, 32, 32); rg.addColorStop(0, 'rgba(255,255,255,.55)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
+    gg.fillStyle = rg; gg.fillRect(0, 0, 64, 64);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), color: golden ? '#ffd23c' : p.color2, transparent: true, depthWrite: false }));
+    sp.scale.setScalar(1.7); sp.position.y = 0.6; g.add(sp);
+  }
+  g.userData.fly = p.fly;
+  return g;
+}
+
+// ícono de la mascota (para las tarjetas)
+const PET_ICONS = {};
+function petIcon(id, v) {
+  const key = id + (v || '');
+  if (PET_ICONS[key]) return PET_ICONS[key];
+  const obj = petModel(id, v, true);
+  obj.rotation.y = -0.5; obj.position.y = -1.05; obj.scale.setScalar(1.75);
+  iconScene.add(obj);
+  const oc = renderer.getClearColor(new THREE.Color()), oa = renderer.getClearAlpha();
+  renderer.setRenderTarget(iconRT); renderer.setClearColor(0, 0); renderer.clear(); renderer.render(iconScene, iconCam);
+  const px = new Uint8Array(96 * 96 * 4); renderer.readRenderTargetPixels(iconRT, 0, 0, 96, 96, px);
+  renderer.setRenderTarget(null); renderer.setClearColor(oc, oa);
+  iconScene.remove(obj);
+  const cv = document.createElement('canvas'); cv.width = cv.height = 96; const c2 = cv.getContext('2d'); const img = c2.createImageData(96, 96);
+  for (let y = 0; y < 96; y++) img.data.set(px.subarray((95 - y) * 384, (96 - y) * 384), y * 384);
+  c2.putImageData(img, 0, 0);
+  return (PET_ICONS[key] = cv.toDataURL());
+}
+
+// =====================================================================
+// ===== el mundo de mascotas =====
+// =====================================================================
+const petWorld = new THREE.Group();
+scene.add(petWorld);
+const piles = [];       // montones de monedas y cofres
+const pileHit = [];     // cajas invisibles para tocar
+const eggStands = [];
+const gates = [];
+function pwMesh(geo, mat, x, y, z, par = petWorld) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; par.add(m); return m; }
+const tm = (c, r = 0.5, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: r }, o));
+function checkerTex(a, b) {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 64; const g = cv.getContext('2d');
+  g.fillStyle = a; g.fillRect(0, 0, 64, 64); g.fillStyle = b; g.fillRect(0, 0, 32, 32); g.fillRect(32, 32, 32, 32);
+  const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+}
+function eggTex(z) {
+  const cv = document.createElement('canvas'); cv.width = 256; cv.height = 128; const g = cv.getContext('2d');
+  g.fillStyle = z.eggColor; g.fillRect(0, 0, 256, 128);
+  const cols = z.style === 'rainbow' ? ['#ff5a8c', '#ffa03c', '#ffe646', '#5adc78', '#50aaff', '#aa6eff'] : [z.eggSpots];
+  if (z.style === 'rainbow') cols.forEach((c, i) => { g.fillStyle = c; g.fillRect(0, 20 + i * 15, 256, 9); });
+  for (let i = 0; i < 14; i++) {
+    const x = (i * 53) % 256, y = 18 + ((i * 37) % 92);
+    g.fillStyle = cols[i % cols.length];
+    if (z.style === 'star') { g.save(); g.translate(x, y); g.beginPath(); for (let k = 0; k < 10; k++) { const r = k % 2 ? 6 : 14, a = k / 10 * Math.PI * 2; g.lineTo(Math.cos(a) * r, Math.sin(a) * r); } g.fill(); g.restore(); }
+    else if (z.style === 'paw') { g.beginPath(); g.arc(x, y + 4, 9, 0, 7); g.fill(); for (let k = 0; k < 3; k++) { g.beginPath(); g.arc(x - 9 + k * 9, y - 9, 4, 0, 7); g.fill(); } }
+    else if (z.style === 'dots') { g.beginPath(); g.arc(x, y, 10, 0, 7); g.fill(); }
+  }
+  const t = new THREE.CanvasTexture(cv); return t;
+}
+function signTex(text, sub, color) {
+  const cv = document.createElement('canvas'); cv.width = 512; cv.height = 256; const g = cv.getContext('2d');
+  const draw = () => {
+    g.clearRect(0, 0, 512, 256); g.fillStyle = '#faf6eb'; g.beginPath(); g.moveTo(40, 0); g.arcTo(512, 0, 512, 256, 40); g.arcTo(512, 256, 0, 256, 40); g.arcTo(0, 256, 0, 0, 40); g.arcTo(0, 0, 512, 0, 40); g.fill();
+    g.lineWidth = 16; g.strokeStyle = color; g.stroke();
+    g.fillStyle = '#1e2819'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    let fs = 70; g.font = `700 ${fs}px Fredoka, sans-serif`; while (g.measureText(text).width > 450) { fs -= 4; g.font = `700 ${fs}px Fredoka, sans-serif`; }
+    g.fillText(text, 256, sub ? 100 : 128);
+    if (sub) { g.font = '700 50px Fredoka, sans-serif'; g.fillStyle = '#b07a00'; g.fillText(sub, 256, 180); }
+    t.needsUpdate = true;
+  };
+  const t = new THREE.CanvasTexture(cv); draw(); signs.push(draw); return t;
+}
+function coinMesh(r = 0.22) { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.08, 16), tm('#ffc828', 0.3, { emissive: new THREE.Color('#6a4a00'), emissiveIntensity: 0.3 })); return m; }
+
+(function buildPetWorld() {
+  // patio de entrada con el portal de vuelta
+  const entry = new THREE.Mesh(new THREE.PlaneGeometry(PW_X * 2, 8), new THREE.MeshStandardMaterial({ map: (() => { const t = checkerTex('#f3ead2', '#ffe79a'); t.repeat.set(8, 2); return t; })(), roughness: 0.6 }));
+  entry.rotation.x = -Math.PI / 2; entry.position.set(0, 0.02, -80); entry.receiveShadow = true; petWorld.add(entry);
+  PZONES.forEach((z, i) => {
+    const z0 = zoneZ(i), zc = z0 - ZONE_L / 2;
+    const tex = checkerTex(z.ground, z.ground2); tex.repeat.set(PW_X, ZONE_L / 2);
+    const fl = new THREE.Mesh(new THREE.PlaneGeometry(PW_X * 2, ZONE_L), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.75 }));
+    fl.rotation.x = -Math.PI / 2; fl.position.set(0, 0.02, zc); fl.receiveShadow = true; petWorld.add(fl);
+    // vallas de los costados
+    for (const s of [-1, 1]) { pwMesh(rbox(0.3, 0.7, ZONE_L, 0.12), tm(i % 2 ? '#ffd83d' : '#faf6eb'), s * (PW_X + 0.15), 0.35, zc); }
+    decorate(i, z, z0);
+    // huevo
+    const ex = 0, ez = z0 - 4.2;
+    pwMesh(new THREE.CylinderGeometry(1.4, 1.6, 0.5, 28), tm('#faf6eb'), ex, 0.25, ez);
+    pwMesh(new THREE.CylinderGeometry(1.15, 1.15, 0.2, 28), tm(z.eggSpots === '#ffffff' ? '#46a0ff' : z.eggSpots), ex, 0.6, ez);
+    const egg = pwMesh(new THREE.SphereGeometry(0.85, 28, 20), new THREE.MeshStandardMaterial({ map: eggTex(z), roughness: 0.35 }), ex, 1.75, ez);
+    egg.scale.set(1, 1.28, 1);
+    const sign = pwMesh(rbox(2.4, 1.2, 0.14, 0.08), new THREE.MeshStandardMaterial({ map: signTex(tr('Abrir huevo'), fmt(z.egg), '#2ea046'), roughness: 0.5 }), ex, 3.75, ez);
+    colliders.push({ x: ex, z: ez, r: 1.55 });
+    eggStands.push({ i, x: ex, z: ez, egg });
+    // portón al principio de cada zona (menos la primera)
+    if (i > 0) {
+      const gz = z0;
+      const bar = pwMesh(new THREE.BoxGeometry(PW_X * 2, 3, 0.2), tm(z.eggSpots === '#ffffff' ? '#46a0ff' : z.eggSpots, 0.4, { transparent: true, opacity: 0.35, depthWrite: false }), 0, 1.5, gz);
+      bar.castShadow = false;
+      const post = (x) => { pwMesh(new THREE.CylinderGeometry(0.35, 0.4, 4.4, 16), tm('#faf6eb'), x, 2.2, gz); pwMesh(new THREE.SphereGeometry(0.42, 14, 10), tm('#ffd83d'), x, 4.5, gz); };
+      post(-3.4); post(3.4);
+      const sg = pwMesh(rbox(5.2, 1.6, 0.2, 0.1), new THREE.MeshStandardMaterial({ map: signTex(z.name, fmt(z.price), '#e6a91e'), roughness: 0.5 }), 0, 4.1, gz);
+      gates.push({ i, z: gz, bar, sign: sg });
+    }
+  });
+  // portal de vuelta a la plaza
+  const pg = new THREE.Group(); pg.position.set(0, 0, -78.2); petWorld.add(pg);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.22, 14, 40), tm('#2ea046')); ring.position.y = 1.9; ring.castShadow = true; pg.add(ring);
+  const sw = new THREE.Mesh(new THREE.CircleGeometry(1.35, 40), new THREE.MeshBasicMaterial({ map: swirlTex('#7fe08a'), transparent: true, opacity: 0.85, side: THREE.DoubleSide })); sw.position.y = 1.9; sw.name = 'swirl'; pg.add(sw);
+  portals.push({ g: pg, sw, x: 0, z: -78.2, to: 'plaza' });
+  const back = pwMesh(rbox(2.6, 0.7, 0.1, 0.06), new THREE.MeshStandardMaterial({ map: signTex(tr('Volver a la plaza'), '', '#2ea046'), roughness: 0.5 }), 0, 3.55, -78.2); back.rotation.y = Math.PI;
+})();
+
+function decorate(i, z, z0) {
+  const R = rnd(i * 17 + 3);
+  const spot = () => { let x, zz; do { x = (R() * 2 - 1) * (PW_X - 1.2); zz = z0 - 1 - R() * (ZONE_L - 2); } while (Math.abs(x) < 6 || Math.abs(zz - (z0 - 4.2)) < 3); return [x, zz]; };
+  for (let k = 0; k < 7; k++) {
+    const [x, zz] = spot();
+    const g = new THREE.Group(); g.position.set(x > 0 ? PW_X - 1 - R() * 1.5 : -PW_X + 1 + R() * 1.5, 0, zz); petWorld.add(g);
+    if (i === 0) { pwMesh(new THREE.SphereGeometry(0.7, 14, 10), tm('#4fae3a'), 0, 0.5, 0, g); for (let f = 0; f < 3; f++) pwMesh(new THREE.SphereGeometry(0.13, 8, 6), tm(['#ff6fa8', '#ffe14d', '#ffffff'][f]), Math.cos(f * 2) * 0.5, 0.95, Math.sin(f * 2) * 0.5, g); }
+    if (i === 1) { pwMesh(new THREE.CylinderGeometry(0.22, 0.3, 1.6, 8), tm('#7a5232'), 0, 0.8, 0, g); pwMesh(new THREE.ConeGeometry(1.1, 1.8, 8), tm('#2f7d38'), 0, 2.2, 0, g); pwMesh(new THREE.ConeGeometry(0.85, 1.4, 8), tm('#3a9445'), 0, 3.1, 0, g); }
+    if (i === 2) { const t = pwMesh(new THREE.CylinderGeometry(0.16, 0.24, 3, 8), tm('#b98a5a'), 0, 1.5, 0, g); t.rotation.z = 0.15; for (let l = 0; l < 5; l++) { const lf = pwMesh(new THREE.ConeGeometry(0.35, 1.6, 4), tm('#3fae4a'), Math.cos(l * 1.26) * 0.6 + 0.2, 3, Math.sin(l * 1.26) * 0.6, g); lf.rotation.set(Math.sin(l * 1.26) * 1.2, 0, -Math.cos(l * 1.26) * 1.2); lf.scale.z = 0.3; } }
+    if (i === 3) { pwMesh(new THREE.CylinderGeometry(0.2, 0.28, 1.2, 8), tm('#7a5232'), 0, 0.6, 0, g); pwMesh(new THREE.ConeGeometry(1, 1.7, 8), tm('#2f6d48'), 0, 1.9, 0, g); pwMesh(new THREE.ConeGeometry(0.6, 0.8, 8), tm('#ffffff'), 0, 2.55, 0, g); }
+    if (i === 4) { pwMesh(new THREE.CylinderGeometry(0.06, 0.06, 1.8, 8), tm('#ffffff'), 0, 0.9, 0, g); const l = pwMesh(new THREE.CylinderGeometry(0.55, 0.55, 0.16, 20), tm(['#ff78c8', '#78c8ff', '#ffe646'][k % 3]), 0, 1.9, 0, g); l.rotation.x = Math.PI / 2; }
+    colliders.push({ x: g.position.x, z: g.position.z, r: 0.5 });
+  }
+  if (i === 2) { const w = new THREE.Mesh(new THREE.PlaneGeometry(4, ZONE_L), tm('#4fb6ee', 0.15, { transparent: true, opacity: 0.85 })); w.rotation.x = -Math.PI / 2; w.position.set(PW_X - 2, 0.04, z0 - ZONE_L / 2); petWorld.add(w); }
+  if (i === 3) for (let k = 0; k < 2; k++) { const g = new THREE.Group(); g.position.set(k ? 9 : -9, 0, z0 - 15); petWorld.add(g); pwMesh(new THREE.SphereGeometry(0.6, 14, 10), tm('#ffffff'), 0, 0.55, 0, g); pwMesh(new THREE.SphereGeometry(0.42, 14, 10), tm('#ffffff'), 0, 1.4, 0, g); pwMesh(new THREE.ConeGeometry(0.07, 0.3, 8), tm('#ff8a28'), 0, 1.42, 0.45, g).rotation.x = Math.PI / 2; colliders.push({ x: g.position.x, z: g.position.z, r: 0.6 }); }
+  if (i === 4) for (const s of [-1, 1]) { const g = new THREE.Group(); g.position.set(s * 11, 0, z0 - 16); petWorld.add(g); pwMesh(new THREE.CylinderGeometry(1, 1.1, 4, 16), tm('#ffb4dc'), 0, 2, 0, g); pwMesh(new THREE.ConeGeometry(1.3, 1.8, 16), tm('#8c5ad2'), 0, 4.9, 0, g); colliders.push({ x: g.position.x, z: g.position.z, r: 1.15 }); }
+}
+
+// montones de monedas y cofres
+function pileSpot(i) {
+  const z0 = zoneZ(i), R = Math.random;
+  for (let t = 0; t < 40; t++) {
+    const x = (R() * 2 - 1) * (PW_X - 3.5), zz = z0 - 2 - R() * (ZONE_L - 4);
+    if (Math.hypot(x, zz - (z0 - 4.2)) < 3.4) continue;
+    if (piles.some((p) => p.alive && Math.hypot(p.x - x, p.z - zz) < 2.2)) continue;
+    return [x, zz];
+  }
+  return [(R() * 2 - 1) * 8, z0 - 12];
+}
+function makePile(i, chest) {
+  const z = PZONES[i], g = new THREE.Group(); petWorld.add(g);
+  const sc = 0.85 + i * 0.12;
+  if (chest) {
+    pwMesh(rbox(1.3, 0.8, 0.9, 0.12), tm('#9b6236'), 0, 0.4, 0, g);
+    pwMesh(rbox(1.34, 0.36, 0.94, 0.14), tm('#b5773f'), 0, 0.98, 0, g);
+    for (const x of [-0.45, 0.45]) pwMesh(rbox(0.12, 1.2, 0.98, 0.04), tm('#ffc828', 0.3), x, 0.62, 0, g);
+    pwMesh(rbox(0.22, 0.26, 0.06, 0.04), tm('#ffc828', 0.3), 0, 0.72, 0.47, g);
+    pwMesh(new THREE.OctahedronGeometry(0.14), tm('#5ae6ff', 0.2, { emissive: new THREE.Color('#1e8aa0'), emissiveIntensity: 0.4 }), 0, 1.35, 0, g);
+  } else {
+    for (let k = 0; k < 7; k++) { const c = coinMesh(0.24); c.position.set((k % 3 - 1) * 0.3 + (k > 2 ? 0.15 : 0), 0.06 + Math.floor(k / 3) * 0.09 + (k > 5 ? 0.1 : 0), (k % 2) * 0.22 - 0.1); c.rotation.z = (k % 3) * 0.08; c.castShadow = true; g.add(c); }
+    const top = coinMesh(0.3); top.position.y = 0.5; top.rotation.x = Math.PI / 2; g.add(top); top.name = 'spin';
+  }
+  g.scale.setScalar(chest ? sc * 1.1 : sc);
+  const hit = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshBasicMaterial({ visible: false })); hit.position.y = 0.7; g.add(hit);
+  const bar = makeBar(); bar.position.y = chest ? 2 : 1.4; g.add(bar);
+  const p = { i, chest, g, hit, bar, x: 0, z: 0, hp: 1, max: 1, alive: false, respawn: 0 };
+  hit.userData.pile = p; pileHit.push(hit);
+  piles.push(p);
+  spawnPile(p);
+  return p;
+}
+function spawnPile(p) {
+  const z = PZONES[p.i];
+  const [x, zz] = pileSpot(p.i);
+  p.x = x; p.z = zz; p.g.position.set(x, 0, zz); p.g.visible = true; p.alive = true;
+  p.max = p.hp = p.chest ? z.chestHp : z.pileHp;
+  p.bar.visible = false; drawBar(p);
+  p.g.scale.multiplyScalar(0.01); p.grow = 0;
+}
+function makeBar() {
+  const cv = document.createElement('canvas'); cv.width = 128; cv.height = 24;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), depthTest: false, transparent: true }));
+  sp.scale.set(1.4, 0.26, 1); sp.userData.cv = cv; sp.renderOrder = 5; return sp;
+}
+function drawBar(p) {
+  const cv = p.bar.userData.cv, g = cv.getContext('2d');
+  g.clearRect(0, 0, 128, 24); g.fillStyle = 'rgba(30,40,25,.85)'; g.beginPath(); g.roundRect ? g.roundRect(0, 0, 128, 24, 12) : g.rect(0, 0, 128, 24); g.fill();
+  g.fillStyle = p.chest ? '#5ae6ff' : '#ffc828'; const w = Math.max(0, p.hp / p.max) * 120; g.beginPath(); g.roundRect ? g.roundRect(4, 4, Math.max(8, w), 16, 8) : g.rect(4, 4, w, 16); g.fill();
+  p.bar.material.map.needsUpdate = true;
+}
+PZONES.forEach((z, i) => { for (let k = 0; k < PILES_PER_ZONE; k++) makePile(i, k < 2); });
+
+// =====================================================================
+// ===== mascotas que te siguen =====
+// =====================================================================
+const followers = []; // { o (dato), obj, pos, target, hopT }
+const petsRoot = new THREE.Group(); scene.add(petsRoot);
+function refreshFollowers() {
+  const want = ps.pets.filter((o) => o.eq);
+  for (let i = followers.length - 1; i >= 0; i--) { const f = followers[i]; if (!want.includes(f.o)) { petsRoot.remove(f.obj); followers.splice(i, 1); } }
+  for (const o of want) if (!followers.some((f) => f.o === o)) {
+    const obj = petModel(o.id, o.v); obj.scale.setScalar(0.9); petsRoot.add(obj);
+    obj.position.copy(player.position).add(new THREE.Vector3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5) * 2));
+    followers.push({ o, obj, target: null, hop: Math.random() * 6, atk: 0 });
+  }
+  followers.sort((a, b) => ps.pets.indexOf(a.o) - ps.pets.indexOf(b.o));
+}
+let attackTarget = null;
+function petsTick(dt, t) {
+  for (const m of rainbowMats) m.color.setHSL((t * 0.25) % 1, 0.85, 0.62), m.emissive.copy(m.color);
+  // montones: respawn, aparecer, girar moneda
+  for (const p of piles) {
+    if (!p.alive) { p.respawn -= dt; if (p.respawn <= 0) spawnPile(p); continue; }
+    if (p.grow < 1) { p.grow = Math.min(1, p.grow + dt * 3); const sc = (p.chest ? (0.85 + p.i * 0.12) * 1.1 : 0.85 + p.i * 0.12) * (0.3 + 0.7 * p.grow + Math.sin(p.grow * Math.PI) * 0.15); p.g.scale.setScalar(sc); }
+    const sp = p.g.getObjectByName('spin'); if (sp) { sp.rotation.z += dt * 2; sp.position.y = 0.55 + Math.sin(t * 3 + p.x) * 0.06; }
+  }
+  if (attackTarget && !attackTarget.alive) attackTarget = null;
+  // si estás al lado de un montón y no elegiste otro, lo atacan solos
+  if (!attackTarget && inPets) {
+    let best = null, bd = 3.2;
+    for (const p of piles) if (p.alive && p.i < ps.unlocked) { const d = Math.hypot(p.x - player.position.x, p.z - player.position.z); if (d < bd) { bd = d; best = p; } }
+    if (best) attackTarget = best;
+  }
+  if (attackTarget && Math.hypot(attackTarget.x - player.position.x, attackTarget.z - player.position.z) > 26) attackTarget = null;
+  const fwd = new THREE.Vector3(Math.sin(facing), 0, Math.cos(facing)), right = new THREE.Vector3(fwd.z, 0, -fwd.x);
+  let dps = 0;
+  followers.forEach((f, i) => {
+    const o = f.obj, fly = o.userData.fly;
+    let goal;
+    if (attackTarget && inPets) {
+      const a = i / Math.max(1, followers.length) * Math.PI * 2;
+      goal = new THREE.Vector3(attackTarget.x + Math.cos(a) * 1.25, 0, attackTarget.z + Math.sin(a) * 1.25);
+    } else {
+      const row = Math.floor(i / 3), col = i % 3 - 1;
+      goal = player.position.clone().addScaledVector(fwd, -1.5 - row * 1.1).addScaledVector(right, col * 1.1);
+    }
+    goal.y = player.position.y;
+    const d = goal.clone().sub(o.position); d.y = 0;
+    const dist = d.length(), moving = dist > 0.15;
+    const sp = Math.max(9, dist * 3);
+    if (dist > 30) o.position.copy(goal); // si quedó muy lejos aparece al lado
+    else if (moving) o.position.addScaledVector(d.normalize(), Math.min(dist, sp * dt));
+    // mirar hacia donde va (o al montón)
+    const look = attackTarget && inPets && dist < 0.4 ? Math.atan2(attackTarget.x - o.position.x, attackTarget.z - o.position.z) : moving ? Math.atan2(d.x, d.z) : facing;
+    o.rotation.y = angleLerp(o.rotation.y, look, 1 - Math.exp(-10 * dt));
+    f.hop += dt * (moving ? 12 : 3);
+    const atk = attackTarget && inPets && dist < 0.5;
+    const base = player.position.y * 0 + goal.y + (fly ? 1.4 + Math.sin(t * 3 + i) * 0.15 : 0);
+    o.position.y = base + (fly ? 0 : (moving ? Math.abs(Math.sin(f.hop)) * 0.35 : atk ? Math.abs(Math.sin(t * 9 + i)) * 0.3 : 0));
+    const body = o.getObjectByName('pbody'); if (body) body.rotation.x = atk ? Math.sin(t * 18 + i) * 0.25 : 0;
+    const wl = o.getObjectByName('wingL'), wr = o.getObjectByName('wingR');
+    if (wl) { const fl = Math.sin(t * (fly ? 14 : 4) + i) * 0.5; wl.rotation.z = fl; wr.rotation.z = -fl; }
+    if (atk) dps += petPower(f.o);
+  });
+  if (attackTarget && inPets && dps > 0) damage(attackTarget, dps * dt);
+  // monedas que vuelan hacia vos
+  for (let i = flyCoins.length - 1; i >= 0; i--) {
+    const c = flyCoins[i]; c.t += dt;
+    const k = Math.min(1, c.t / 0.55), dest = player.position.clone().add(new THREE.Vector3(0, 1.2, 0));
+    c.m.position.lerpVectors(c.from, dest, k * k); c.m.position.y += Math.sin(k * Math.PI) * 2.2; c.m.rotation.x += dt * 9;
+    if (k >= 1) { petsRoot.remove(c.m); flyCoins.splice(i, 1); }
+  }
+  // portales giran
+  for (const pt of portals) if (pt.sw) pt.sw.rotation.z -= dt * 2;
+  petHudTick();
+}
+const flyCoins = [];
+function damage(p, n) {
+  if (!p.alive) return;
+  p.hp -= n; p.bar.visible = true; drawBar(p);
+  if (p.hp <= 0) breakPile(p);
+}
+let coinSndT = 0;
+function breakPile(p) {
+  p.alive = false; p.g.visible = false; p.respawn = RESPAWN; if (attackTarget === p) attackTarget = null;
+  const z = PZONES[p.i];
+  const coins = Math.round((p.chest ? z.chestCoins : z.pileCoins) * coinMult());
+  let gems = p.chest ? z.chestGems : (Math.random() < GEM_CHANCE ? 1 + (Math.random() < 0.3 ? 1 : 0) : 0);
+  ps.coins += coins; ps.gems += gems; psSave();
+  const from = new THREE.Vector3(p.x, 0.6, p.z);
+  for (let k = 0; k < (p.chest ? 12 : 6); k++) { const m = coinMesh(0.16); m.position.copy(from); petsRoot.add(m); flyCoins.push({ m, from: from.clone().add(new THREE.Vector3((Math.random() - 0.5) * 1.5, 0, (Math.random() - 0.5) * 1.5)), t: -k * 0.04 }); }
+  popText('+' + fmt(coins), from, '#ffd23c'); if (gems) popText('+' + gems + ' 💎'.replace('💎', ''), from.clone().add(new THREE.Vector3(0, 0.6, 0)), '#5ae6ff', true);
+  sfx('coin'); if (p.chest) setTimeout(() => sfx('coin'), 120);
+  puff(from, p.chest ? '#b5773f' : '#ffc828');
+}
+// textito que sube (+monedas)
+function popText(txt, pos, color, gem) {
+  const el = document.createElement('div'); el.className = 'popTxt' + (gem ? ' gem' : ''); el.textContent = txt; el.style.color = color;
+  document.getElementById('hud').appendChild(el);
+  const v = pos.clone().add(new THREE.Vector3(0, 1.4, 0)).project(camera);
+  el.style.left = ((v.x + 1) / 2 * innerWidth) + 'px'; el.style.top = ((1 - v.y) / 2 * innerHeight) + 'px';
+  setTimeout(() => el.remove(), 1100);
+}
+
+// tocar un montón: tus mascotas van a romperlo y vos le pegás también
+const pRay = new THREE.Raycaster();
+function petTap(cx, cy) {
+  pRay.setFromCamera(new THREE.Vector2(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1), camera);
+  const hits = pRay.intersectObjects(pileHit.filter((h) => h.userData.pile.alive && h.userData.pile.i < ps.unlocked), false);
+  if (!hits.length) return;
+  const p = hits[0].object.userData.pile;
+  attackTarget = p;
+  facing = Math.atan2(p.x - player.position.x, p.z - player.position.z);
+  if (Math.hypot(p.x - player.position.x, p.z - player.position.z) < 4) { damage(p, PLAYER_POWER * MULT[ps.up.coins]); swing(0.3); sfx('click'); }
+}
+
+// =====================================================================
+// ===== huevos =====
+// =====================================================================
+function rollPet(i) {
+  const z = PZONES[i], luck = luckMult();
+  const list = z.pets.map((id) => PBY[id]);
+  let r = Math.random(), acc = 0;
+  for (let k = list.length - 1; k >= 1; k--) { acc += list[k].chance * luck; if (r < acc) return list[k].id; }
+  return list[0].id;
+}
+function rollVariant() { const r = Math.random(); if (r < 0.003 * luckMult()) return 'r'; if (r < 0.033 * luckMult()) return 'g'; return ''; }
+let hatching = false;
+function openEgg(i, n) {
+  if (hatching) return;
+  const z = PZONES[i];
+  n = n === 3 && ps.passes.TripleHatch ? 3 : 1;
+  const cost = z.egg * n;
+  if (ps.coins < cost) { toast(tr('Te faltan {0} monedas.', fmt(cost - ps.coins))); sfx('click'); return; }
+  if (ps.pets.length + n > MAX_PETS) { toast('Tenés el inventario lleno. Fusioná o soltá mascotas.'); return; }
+  ps.coins -= cost;
+  const got = [];
+  for (let k = 0; k < n; k++) {
+    const id = rollPet(i), v = rollVariant(), isNew = !ps.seen[id];
+    ps.seen[id] = 1;
+    const o = { u: ps.uid++, id, v, eq: false };
+    ps.pets.push(o); got.push({ o, isNew });
+  }
+  autoEquip(); psSave();
+  showHatch(z, got);
+}
+// si hay lugar libre, la mascota nueva se equipa sola; si es mejor que la más débil, la reemplaza
+function autoEquip() {
+  const eq = ps.pets.filter((o) => o.eq);
+  for (const o of ps.pets) {
+    if (o.eq) continue;
+    if (eq.length < maxSlots()) { o.eq = true; eq.push(o); continue; }
+    const weak = eq.reduce((a, b) => (petPower(a) <= petPower(b) ? a : b));
+    if (petPower(o) > petPower(weak)) { weak.eq = false; o.eq = true; eq.splice(eq.indexOf(weak), 1, o); }
+  }
+  refreshFollowers();
+}
+function equipBest() {
+  const sorted = ps.pets.slice().sort((a, b) => petPower(b) - petPower(a));
+  ps.pets.forEach((o) => { o.eq = false; });
+  sorted.slice(0, maxSlots()).forEach((o) => { o.eq = true; });
+  refreshFollowers(); psSave(); renderPetsPanel(); sfx('click');
+}
+function showHatch(z, got) {
+  hatching = true;
+  const box = $('hatch'); box.classList.add('open');
+  const eggs = $('hatchEggs'); eggs.innerHTML = '';
+  got.forEach((g) => {
+    const e = document.createElement('div'); e.className = 'hEgg';
+    e.style.background = `radial-gradient(circle at 35% 30%, #fff8 0 12%, transparent 13%), radial-gradient(circle at 70% 60%, ${z.eggSpots} 0 9%, transparent 10%), radial-gradient(circle at 30% 70%, ${z.eggSpots} 0 7%, transparent 8%), radial-gradient(circle at 60% 25%, ${z.eggSpots} 0 6%, transparent 7%), ${z.eggColor}`;
+    eggs.appendChild(e);
+  });
+  sfx('click');
+  let shakes = 0;
+  const shk = setInterval(() => { sfx('wood'); if (++shakes >= 3) clearInterval(shk); }, 380);
+  setTimeout(() => {
+    eggs.innerHTML = '';
+    let best = 'common';
+    const order = ['common', 'rare', 'epic', 'legendary', 'mythic'];
+    got.forEach(({ o, isNew }) => {
+      const p = PBY[o.id], r = RARITY[p.rarity];
+      if (order.indexOf(p.rarity) > order.indexOf(best)) best = p.rarity;
+      const c = document.createElement('div'); c.className = 'hCard';
+      c.style.setProperty('--rc', r.c);
+      c.innerHTML = `${isNew ? `<i class="new">${tr('¡NUEVA!')}</i>` : ''}<img src="${petIcon(o.id, o.v)}" alt=""><b>${p.name + (o.v ? ` <em class="vTag v${o.v}">${tr(o.v === 'g' ? 'Dorada' : 'Arcoíris')}</em>` : '')}</b><span>${tr(r.es)}</span><small>${tr('Poder')}: ${fmt(petPower(o))}</small>`;
+      eggs.appendChild(c);
+    });
+    if (best === 'legendary' || best === 'mythic') { sfx('ping'); setTimeout(() => sfx('pop'), 200); happy(); } else sfx('pop');
+    happyT = 1.6;
+    setTimeout(() => { box.classList.remove('open'); hatching = false; }, 2600);
+  }, 1300);
+}
+
+// =====================================================================
+// ===== interfaz del juego de mascotas =====
+// =====================================================================
+function rarityTag(p) { const r = RARITY[p.rarity]; return `<span class="rTag" style="background:${r.c}">${tr(r.es)}</span>`; }
+let petSel = null;
+function renderPetsPanel() {
+  const eqN = ps.pets.filter((o) => o.eq).length;
+  $('petsInfo').textContent = tr('Equipadas: {0} / {1}', eqN, maxSlots()) + ' · ' + tr('{0} / {1} mascotas', ps.pets.length, MAX_PETS);
+  const grid = $('petsGrid'); grid.innerHTML = '';
+  const sorted = ps.pets.slice().sort((a, b) => (b.eq - a.eq) || (petPower(b) - petPower(a)));
+  for (const o of sorted) {
+    const p = PBY[o.id];
+    const el = document.createElement('button'); el.className = 'pCard' + (o.eq ? ' eq' : '') + (o.v ? ' v' + o.v : '');
+    el.style.setProperty('--rc', RARITY[p.rarity].c);
+    el.innerHTML = `<img src="${petIcon(o.id, o.v)}" alt=""><b>${p.name}</b><small>${fmt(petPower(o))}</small>${o.eq ? '<i class="chk"></i>' : ''}`;
+    el.onclick = () => openPetCard(o);
+    grid.appendChild(el);
+  }
+}
+function openPetCard(o) {
+  petSel = o;
+  const p = PBY[o.id];
+  const same = ps.pets.filter((x) => x.id === o.id && x.v === o.v).length;
+  $('pcBody').innerHTML = `<img src="${petIcon(o.id, o.v)}" alt=""><h3>${p.name + (o.v ? ` <em class="vTag v${o.v}">${tr(o.v === 'g' ? 'Dorada' : 'Arcoíris')}</em>` : '')}</h3>${rarityTag(p)}<p>${tr('Poder')}: <b>${fmt(petPower(o))}</b></p>`;
+  $('pcEquip').textContent = tr(o.eq ? 'Quitar' : 'Equipar');
+  $('pcFuse').textContent = tr('Fusionar 5') + ` (${same}/5)`;
+  $('pcFuse').style.display = o.v === 'r' ? 'none' : '';
+  $('petCard').classList.add('open');
+}
+$('pcEquip').onclick = () => {
+  const o = petSel; if (!o) return;
+  if (o.eq) { if (ps.pets.filter((x) => x.eq).length <= 1) { toast('Tenés que quedarte con al menos una equipada.'); return; } o.eq = false; }
+  else { if (ps.pets.filter((x) => x.eq).length >= maxSlots()) { toast('Ya tenés el máximo de mascotas equipadas.'); return; } o.eq = true; }
+  refreshFollowers(); psSave(); $('petCard').classList.remove('open'); renderPetsPanel(); sfx('click');
+};
+$('pcFuse').onclick = () => {
+  const o = petSel; if (!o || o.v === 'r') return;
+  const same = ps.pets.filter((x) => x.id === o.id && x.v === o.v).sort((a, b) => a.eq - b.eq).slice(0, 5);
+  if (same.length < 5) { toast(tr('Necesitás 5 iguales para fusionar.')); return; }
+  const wasEq = same.some((x) => x.eq);
+  ps.pets = ps.pets.filter((x) => !same.includes(x));
+  const nv = o.v === 'g' ? 'r' : 'g';
+  const n = { u: ps.uid++, id: o.id, v: nv, eq: wasEq };
+  ps.pets.push(n);
+  refreshFollowers(); psSave(); $('petCard').classList.remove('open'); renderPetsPanel();
+  toast(tr('¡Fusión! Salió una {0}.', tr(nv === 'g' ? 'Dorada' : 'Arcoíris'))); sfx('pop'); happy();
+};
+$('pcRelease').onclick = () => {
+  const o = petSel; if (!o) return;
+  if (o.eq && ps.pets.filter((x) => x.eq).length <= 1) { toast('Tenés que quedarte con al menos una equipada.'); return; }
+  ps.pets = ps.pets.filter((x) => x !== o);
+  refreshFollowers(); psSave(); $('petCard').classList.remove('open'); renderPetsPanel(); sfx('click');
+};
+$('pcClose').onclick = () => $('petCard').classList.remove('open');
+$('petsBest').onclick = equipBest;
+
+function renderUps() {
+  const box = $('upList'); box.innerHTML = '';
+  for (const u of P_UPS) {
+    const lv = ps.up[u.id], max = u.levels.length, price = u.levels[lv];
+    const r = document.createElement('div'); r.className = 'shopRow';
+    r.innerHTML = `<span class="upIcon u_${u.id}"></span><div><b>${tr(u.es)}</b><small>${tr(u.d)} · ${tr('Nivel {0} / {1}', lv, max)}</small></div>`;
+    const b = document.createElement('button'); b.className = 'toy' + (lv >= max ? ' owned' : ' gemB');
+    b.textContent = lv >= max ? tr('Máximo') : tr('{0} gemas', price); b.disabled = lv >= max;
+    b.onclick = () => { if (ps.gems < price) { toast(tr('Te faltan {0} gemas.', price - ps.gems)); return; } ps.gems -= price; ps.up[u.id]++; psSave(); renderUps(); autoEquip(); sfx('coin'); happy(); };
+    r.appendChild(b); box.appendChild(r);
+  }
+}
+function renderIdx() {
+  const box = $('idxList'); box.innerHTML = `<p class="note">${tr('Juntá las 5 mascotas de la zona para ganar gemas.')}</p>`;
+  PZONES.forEach((z, i) => {
+    const row = document.createElement('div'); row.className = 'idxRow';
+    const all = z.pets.every((id) => ps.seen[id]);
+    row.innerHTML = `<h4>${z.name}</h4><div class="idxPets">${z.pets.map((id) => `<div class="${ps.seen[id] ? '' : 'unk'}" style="--rc:${RARITY[PBY[id].rarity].c}"><img src="${petIcon(id, '')}" alt=""><small>${ps.seen[id] ? PBY[id].name : '?'}</small></div>`).join('')}</div>`;
+    const b = document.createElement('button'); b.className = 'toy' + (ps.idx[i] ? ' owned' : all ? ' gemB' : ' owned');
+    b.textContent = ps.idx[i] ? tr('Reclamado') : tr('Reclamar {0} gemas', INDEX_GEMS[i]); b.disabled = !all || ps.idx[i];
+    b.onclick = () => { ps.idx[i] = 1; ps.gems += INDEX_GEMS[i]; psSave(); renderIdx(); sfx('coin'); happy(); };
+    row.appendChild(b); box.appendChild(row);
+  });
+}
+function renderPShop() {
+  const box = $('pshopList'); box.innerHTML = `<h3>${tr('Pases')}</h3>`;
+  const row = (icon, name, desc, price, have, buy) => {
+    const r = document.createElement('div'); r.className = 'shopRow';
+    r.innerHTML = `${icon ? `<img src="${icon}" alt="">` : '<span class="passIcon"></span>'}<div><b>${name}</b><small>${desc}</small></div>`;
+    const b = document.createElement('button'); b.className = 'toy' + (have ? ' owned' : ' gemB'); b.textContent = have ? tr('Ya lo tenés') : tr('{0} gemas', price); b.disabled = have;
+    b.onclick = () => { if (ps.gems < price) { toast(tr('Te faltan {0} gemas.', price - ps.gems)); return; } ps.gems -= price; buy(); psSave(); renderPShop(); sfx('coin'); happy(); };
+    r.appendChild(b); box.appendChild(r);
+  };
+  const icons = { TripleHatch: 'bunny', LuckyEggs: 'honeybear', DoubleCoins: 'duck', ExtraPets: 'puppy' };
+  for (const p of P_PASSES) row(petIcon(icons[p.id], 'g'), tr(p.es), tr(p.d), p.gems, !!ps.passes[p.id], () => { ps.passes[p.id] = 1; autoEquip(); updateEggBtn(true); });
+  const h = document.createElement('h3'); h.textContent = tr('Mascotas exclusivas'); box.appendChild(h);
+  for (const e of P_EXCL) { const p = PBY[e.id]; row(petIcon(e.id, ''), p.name, `${tr(RARITY.exclusive.es)} · ${tr('Poder')} ${fmt(p.power)} · ${tr('No sale de los huevos.')}`, e.gems, false, () => { ps.pets.push({ u: ps.uid++, id: e.id, v: '', eq: false }); ps.seen[e.id] = 1; autoEquip(); }); }
+}
+function openP(id, render) { closePanels(); render(); $(id).classList.add('open'); sfx('click'); }
+$('pPetsBtn').onclick = () => openP('petsPanel', renderPetsPanel);
+$('pUpBtn').onclick = () => openP('upPanel', renderUps);
+$('pIdxBtn').onclick = () => openP('idxPanel', renderIdx);
+$('pShopBtn').onclick = () => openP('pshopPanel', renderPShop);
+
+// botón grande para abrir huevos / portones
+let nearEgg = -1, nearGate = -1, eggBtnKey = '';
+function updateEggBtn(force) {
+  const eb = $('eggBtns'), gb = $('gateBtn');
+  const key = nearEgg + '|' + nearGate + '|' + ps.passes.TripleHatch + '|' + ps.unlocked;
+  if (key === eggBtnKey && !force) return; eggBtnKey = key;
+  if (nearEgg >= 0) {
+    const z = PZONES[nearEgg];
+    eb.style.display = 'flex';
+    $('egg1').innerHTML = `${tr('Abrir huevo')} <span class="coinS"></span>${fmt(z.egg)}`;
+    $('egg3').style.display = ps.passes.TripleHatch ? '' : 'none';
+    $('egg3').innerHTML = `${tr('Abrir x3')} <span class="coinS"></span>${fmt(z.egg * 3)}`;
+  } else eb.style.display = 'none';
+  if (nearGate >= 0) { const z = PZONES[nearGate]; gb.style.display = ''; gb.innerHTML = `${tr('Abrir zona')}: ${z.name} <span class="coinS"></span>${fmt(z.price)}`; }
+  else gb.style.display = 'none';
+}
+$('egg1').onclick = () => openEgg(nearEgg, 1);
+$('egg3').onclick = () => openEgg(nearEgg, 3);
+$('gateBtn').onclick = () => {
+  const i = nearGate; if (i < 0) return; const z = PZONES[i];
+  if (ps.coins < z.price) { toast(tr('Te faltan {0} monedas.', fmt(z.price - ps.coins))); return; }
+  ps.coins -= z.price; ps.unlocked = Math.max(ps.unlocked, i + 1); psSave(); updateGates(); sfx('pop'); happy();
+  banner(z.name.toUpperCase()); toast(tr('¡Zona nueva: {0}!', z.name));
+};
+function updateGates() { for (const g of gates) { const open = g.i < ps.unlocked; g.bar.visible = !open; g.sign.visible = !open; } }
+updateGates();
+let lastCoins = -1, lastGems = -1;
+function petHudTick() {
+  if (!inPets) return;
+  if (ps.coins !== lastCoins) { $('pCoins').textContent = fmt(ps.coins); lastCoins = ps.coins; }
+  if (ps.gems !== lastGems) { $('pGems').textContent = fmt(ps.gems); lastGems = ps.gems; }
+  const p = player.position;
+  nearEgg = -1; for (const e of eggStands) if (e.i < ps.unlocked && Math.hypot(p.x - e.x, p.z - e.z) < 3.6) nearEgg = e.i;
+  nearGate = -1; for (const g of gates) if (g.i === ps.unlocked && Math.abs(p.z - g.z) < 2.6) nearGate = g.i;
+  updateEggBtn();
+}
+// teclado: E abre el huevo de al lado
+addEventListener('keydown', (e) => { if (!inPets || e.repeat) return; if (e.code === 'KeyE' && nearEgg >= 0) { e.stopImmediatePropagation(); openEgg(nearEgg, 1); } if (e.code === 'KeyR' && nearEgg >= 0) openEgg(nearEgg, 3); }, true);
+
+// ===== límites del mundo de mascotas (no pasar los portones cerrados) =====
+var inPets = false;
+function clampPets() {
+  const p = player.position;
+  if (p.z > -76) return false;
+  p.x = Math.max(-PW_X + 0.6, Math.min(PW_X - 0.6, p.x));
+  const minZ = ps.unlocked >= 5 ? zoneZ(5) + 0.6 : zoneZ(ps.unlocked) + 0.5;
+  if (p.z < minZ) { p.z = minZ; vel.z = 0; }
+  if (p.z > -77.5) p.z = -77.5;
+  return true;
+}
+function petsZone() {
+  const now = mode === 'play' && player.position.z < -76;
+  if (now !== inPets) {
+    inPets = now;
+    document.body.classList.toggle('pets', now);
+    if (now) {
+      lastCoins = lastGems = -1; eggBtnKey = '';
+      banner(tr('REINO DE MASCOTAS'));
+      const d = today();
+      if (ps.lastDay !== d) { ps.lastDay = d; const g = 20, c = PZONES[ps.unlocked - 1].egg * 2; ps.gems += g; ps.coins += c; psSave(); setTimeout(() => { toast(tr('Premio del día: +{0} gemas y +{1} monedas', g, fmt(c))); sfx('coin'); }, 1500); }
+      else setTimeout(() => toast('Tocá un montón de monedas y tus mascotas lo rompen.'), 1500);
+    } else attackTarget = null;
+  }
+}
+
+// ===== portales: estación 2 de la plaza ↔ mundo de mascotas =====
+function travel(to) {
+  const f = $('fade'); f.classList.add('on'); sfx('pop');
+  setTimeout(() => {
+    standUp(); flying = false; vel.set(0, 0, 0); vy = 0;
+    if (to === 'pets') { player.position.copy(PW_ENTRY); facing = Math.PI; camYaw = 0; }
+    else { player.position.set(29, BELT_H, 43.6); facing = -Math.PI / 2; camYaw = Math.PI / 2; }
+    camera.position.copy(player.position).add(new THREE.Vector3(Math.sin(camYaw) * 7, 3, Math.cos(camYaw) * 7));
+    followers.forEach((fl) => fl.obj.position.copy(player.position));
+    setTimeout(() => f.classList.remove('on'), 120);
+  }, 380);
+}
+let portalCool = 0;
+function portalTick(dt) {
+  portalCool -= dt;
+  if (mode !== 'play' || portalCool > 0) return;
+  for (const pt of portals) if (Math.hypot(player.position.x - pt.x, player.position.z - pt.z) < (pt.r || 1.2)) { portalCool = 2; travel(pt.to); return; }
+}
+refreshFollowers();
+
 function tick() {
   const dt = Math.min(clock.getDelta(), 0.05);
   const t = clock.elapsedTime;
@@ -3270,7 +4127,7 @@ function tick() {
   let mag = Math.min(1, Math.hypot(ix, iz));
   if (stunTime > 0) { stunTime -= dt; ix = iz = 0; mag = 0; } // después del golpe, un ratito sin control
   const running = keys.ShiftLeft || keys.ShiftRight || touchRun;
-  const speed = (running ? 10 : 6.4) * mag * (flying ? 1.6 : 1); // como Roblox: rápido
+  const speed = (running ? 10 : 6.4) * mag * (flying ? 1.6 : 1) * petSpeed(); // como Roblox: rápido
   if (mag > 0.05) {
     const dir = new THREE.Vector3(ix, 0, iz).normalize().applyAxisAngle(new THREE.Vector3(0, 1, 0), camYaw);
     vel.x = dir.x * speed; vel.z = dir.z * speed;
@@ -3305,7 +4162,7 @@ function tick() {
   }
   // no salir del campo
   const r = Math.hypot(player.position.x, player.position.z);
-  if (r > FIELD - 2) { player.position.x *= (FIELD - 2) / r; player.position.z *= (FIELD - 2) / r; }
+  if (!clampPets() && r > FIELD - 2) { player.position.x *= (FIELD - 2) / r; player.position.z *= (FIELD - 2) / r; }
   player.rotation.y = facing;
 
   // animación de los huesos
