@@ -402,6 +402,16 @@
     body.is-touch #petsGrid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)) !important; } body.is-touch .pCard img { width: 46px; height: 46px; }
     body.is-touch #pcBody img { width: 80px; height: 80px; }
   }
+
+  /* online */
+  #netBadge { position: absolute; left: 12px; bottom: 96px; background: rgba(30,40,25,.78); color: #fff; font: 600 12px var(--font); padding: 4px 10px; border-radius: 10px; pointer-events: none; display: none; }
+  #netBadge.on { display: block; }
+  #netBadge::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #4cc35a; margin-right: 6px; }
+  #netBadge.off::before { background: #e2493b; }
+  #nameRow { display: flex; gap: 6px; align-items: center; padding: 0 16px 4px; }
+  #nameRow label { font: 600 13px var(--font); color: #6a6f7c; }
+  #nameIn { flex: 1; min-width: 0; border: 1px solid var(--lg-line); border-radius: 10px; padding: 6px 10px; font: 600 15px var(--font); background: #fff; color: var(--lg-dark); }
+  @media (orientation: landscape) and (max-height: 520px) { body.is-touch #nameRow { padding: 0 10px 2px !important; } body.is-touch #nameIn { padding: 3px 8px; font-size: 13px; } body.is-touch #netBadge { bottom: auto; top: 44px; } }
 </style>
 </head>
 <body>
@@ -416,6 +426,7 @@
       <button id="randomBtn" class="toy yellow small">Al azar</button>
       <button id="resetBtn" class="toy small">Original</button>
     </header>
+    <div id="nameRow"><label for="nameIn">Nombre</label><input id="nameIn" maxlength="16" autocomplete="off" spellcheck="false"></div>
     <div id="tabs"></div>
     <div id="panelBody"></div>
     <div id="playBox"><button id="playBtn" class="toy yellow"><span id="playLabel"><span id="playFace"></span>JUGAR</span></button></div>
@@ -424,7 +435,8 @@
 
 <div id="hud">
   <div id="leftBtns"><button id="closetBtn" class="toy"><span id="closetFace"></span><span class="lbl">Vestuario</span></button><button id="menuBtn" class="toy">Menú</button><button id="shopBtn" class="toy">Tienda</button></div>
-  <div id="topBox"><div class="row"><span class="coin"></span><span id="coins">0</span></div><span id="count"></span></div>
+  <div id="topBox"><div class="row"><span class="coin"></span><span id="coins">0</span><span class="gem" style="margin-left:10px"></span><span id="gemsTop">0</span></div><span id="count"></span></div>
+  <div id="netBadge"></div>
   <div id="toast"></div>
   <div id="banner"></div>
   <div id="petHud">
@@ -453,6 +465,7 @@
   <button id="mDemoHouse" class="toy">Casa moderna</button><button id="mDemoCastle" class="toy">Castillo</button>
   <button id="mDemoSky" class="toy wide">Mundo flotante</button>
   <button id="mCloset" class="toy gold">Vestuario</button><button id="mPlaza" class="toy gold">Ir a la plaza</button>
+  <button id="mMyPlot" class="toy gold wide">Ir a mi terreno</button>
   <button id="mHelp" class="toy gray">Ayuda</button><button id="lngBtn" class="toy gray">Idioma</button>
   <button id="mClear" class="toy gray wide">Limpiar terreno</button>
 </div></div></div></div>
@@ -492,6 +505,16 @@ const LANG = (() => {
 document.documentElement.lang = LANG;
 // clave: texto en español → [inglés, portugués]
 const DICT = {
+  'Ir a mi terreno': ['Go to my plot', 'Ir ao meu terreno'],
+  'Nombre': ['Name', 'Nome'],
+  'En línea · {0} jugadores': ['Online · {0} players', 'Online · {0} jogadores'],
+  'En línea': ['Online', 'Online'],
+  'Sin conexión': ['Offline', 'Sem conexão'],
+  '{0} entró al mundo': ['{0} joined the world', '{0} entrou no mundo'],
+  '¡{0} sacó {1}!': ['{0} hatched {1}!', '{0} chocou {1}!'],
+  'Terreno de {0}': ["{0}'s plot", 'Terreno de {0}'],
+  'Ese nombre no se puede usar.': ["That name can't be used.", 'Esse nome não pode ser usado.'],
+  'Gemas': ['Gems', 'Gemas'],
   // ---- generales ----
   'Cargando...': ['Loading...', 'Carregando...'],
   'Arrastrá para girarlo': ['Drag to spin', 'Arraste para girar'],
@@ -759,7 +782,7 @@ const bladeGeo = new THREE.BufferGeometry();
 }
 // lugares sin pasto alto ni adornos: el terreno, la plaza y las cintas
 function reservedAt(x, z) {
-  if (Math.abs(x) < 17.4 && Math.abs(z) < 17.4) return true;              // terreno de construcción
+  for (const zz of [0, -40, -80, -120]) for (const xx of [0, -40, 40, -80, 80]) if (Math.abs(x - xx) < 18.4 && Math.abs(z - zz) < 18.4) return true; // terrenos del barrio
   if (Math.hypot(x, z - 42) < 9.6) return true;                            // plaza
   if (Math.abs(x) < 5 && z > 15 && z < 36) return true;                    // cintas a Construí Todo
   if (x > 5 && x < 64 && Math.abs(z - 42) < 4.2) return true;              // cintas al juego 2
@@ -990,15 +1013,20 @@ const SCALE = 0.58, FOOT = -0.35;
 const HAND_STYLE = 'manopla'; // 'dedos' = manos con dedos separados (como antes)
 const player = new THREE.Group();
 scene.add(player);
-const MAT = {}; // materiales por grupo
+function newMats() {
+  const M = {};
+  const mk = (c, r = 0.85) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: 0 });
+  M.skin = mk(0xffffff); M.skinJoint = mk(0xffffff);
+  M.shirt = mk(0xffffff); M.shirtTrim = mk(0xffffff);
+  M.pants = mk(0xffffff); M.pantsJoint = mk(0xffffff);
+  M.shoe = mk(0xffffff, 0.92); M.sole = mk(0xf6f6f4, 0.7); M.bootSole = mk(0x3a2c22, 0.8);
+  M.hair = mk(0xffffff, 0.75); M.hat = mk(0xffffff, 0.8); M.hatDark = mk(0xffffff, 0.8);
+  M.metal = new THREE.MeshStandardMaterial({ color: 0xf7c935, roughness: 0.45, metalness: 0 });
+  M.gem = new THREE.MeshStandardMaterial({ color: 0xe23b5a, roughness: 0.3 });
+  return M;
+}
+let MAT = newMats(); // materiales por grupo
 const mk = (c, r = 0.85) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: 0 });
-MAT.skin = mk(0xffffff); MAT.skinJoint = mk(0xffffff);
-MAT.shirt = mk(0xffffff); MAT.shirtTrim = mk(0xffffff);
-MAT.pants = mk(0xffffff); MAT.pantsJoint = mk(0xffffff);
-MAT.shoe = mk(0xffffff, 0.92); MAT.sole = mk(0xf6f6f4, 0.7); MAT.bootSole = mk(0x3a2c22, 0.8);
-MAT.hair = mk(0xffffff, 0.75); MAT.hat = mk(0xffffff, 0.8); MAT.hatDark = mk(0xffffff, 0.8);
-MAT.metal = new THREE.MeshStandardMaterial({ color: 0xf7c935, roughness: 0.45, metalness: 0 });
-MAT.gem = new THREE.MeshStandardMaterial({ color: 0xe23b5a, roughness: 0.3 });
 
 function b64ToBuffer(b64) {
   const bin = atob(b64);
@@ -1022,9 +1050,9 @@ function rbox(w, h, d, r, seg = 4) {
   return g;
 }
 
-const P = {}; // piezas por nombre (para mostrar u ocultar)
-const J = {}; // articulaciones
-(function buildPlayer() {
+let P = {}; // piezas por nombre (para mostrar u ocultar)
+let J = {}; // articulaciones
+function buildAvatar(parentGroup) {
   const HIP_Y = 0.7;
   const ARM = { c: [0.84, 1.195], ax: [0.454, -0.891], half: 0.309 };
   const LEG = { cx: 0.21, top: 0.69, bot: -0.09 };
@@ -1166,7 +1194,7 @@ const J = {}; // articulaciones
   // cara
   const plane = new THREE.Mesh(new THREE.PlaneGeometry(FACE.w, FACE.h), new THREE.MeshStandardMaterial({ map: FACE.tex, transparent: true, roughness: 0.6, depthWrite: false }));
   plane.position.set(0, FACE.cy - 2.05, 0.446);
-  head.add(plane);
+  head.add(plane); plane.name = 'facePlane';
 
   // grupos para lo que se agrega (pelo, gorro, ropa extra)
   J.hairGroup = new THREE.Group(); head.add(J.hairGroup);
@@ -1182,8 +1210,10 @@ const J = {}; // articulaciones
   holder.add(root);
   holder.scale.setScalar(SCALE);
   holder.position.y = -FOOT * SCALE;
-  player.add(holder);
-})();
+  parentGroup.add(holder);
+  return holder;
+}
+buildAvatar(player);
 
 // pone una forma en un grupo, usando coordenadas del modelo (mundo) para ubicarla
 function put(group, geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) {
@@ -1412,7 +1442,7 @@ function buildClothes() {
 }
 
 function hexColor(h) { return new THREE.Color(h); }
-function applyLook() {
+function applyLook(noSave) {
   MAT.skin.color = hexColor(look.skin);
   MAT.skinJoint.color = hexColor(look.skin).multiplyScalar(0.88);
   MAT.shirt.color = hexColor(look.shirtColor);
@@ -1426,7 +1456,7 @@ function applyLook() {
   buildHair(look.hair);
   buildHat(look.hat);
   buildClothes();
-  saveLook();
+  if (!noSave) { saveLook(); if (typeof netSend === 'function') netSend({ t: 'look', look }); }
 }
 applyLook();
 
@@ -1667,7 +1697,12 @@ const SND_DATA = {"g0": "SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAA
 // ===== CONSTRUIR: el mismo juego "Build ANYTHING!" de Roblox =====
 // =====================================================================
 // Un bloque mide 1 (el muñeco mide 2). El terreno máximo es de 32 x 32 y está en el centro del mundo.
-const CELLS = 32, MAXH = 32, X0 = -CELLS / 2, Z0 = -CELLS / 2;
+const CELLS = 32, MAXH = 32;
+// barrio de terrenos: 20 lugares (5 columnas x 4 filas). Cada jugador de la sala tiene el suyo.
+const SLOTS = (() => { const a = []; for (const z of [0, -40, -80, -120]) for (const x of [0, -40, 40, -80, 80]) a.push([x, z]); return a.sort((p, q) => Math.hypot(p[0], p[1]) - Math.hypot(q[0], q[1])); })();
+let mySlot = 0;
+let X0 = SLOTS[0][0] - CELLS / 2, Z0 = SLOTS[0][1] - CELLS / 2;
+const plotCenter = () => [X0 + CELLS / 2, Z0 + CELLS / 2];
 const LAND_SIZES = [16, 20, 24, 28, 32], LAND_PRICES = [0, 300, 800, 1600, 3000];
 const BLOCK_LIMIT = 1500, BLOCK_LIMIT_PASS = 4500, FILL_MAX = 512, UNDO_STEPS = 40;
 const DAY_LENGTH = 1800, COINS_PER_MIN = 5, COINS_DAILY = 50;
@@ -1810,7 +1845,7 @@ const STRUCTURES = (() => {
 const SAVE_KEY = 'construi_v1';
 const st = {
   coins: 0, land: 0, owned: {}, passes: {}, hotbar: HOTBAR_DEFAULT.slice(), slot: 0,
-  days: 0, lastDay: '', played: 0, music: 1, volume: 0.5, tutorial: false, blocks: [],
+  gems: 0, days: 0, lastDay: '', played: 0, music: 1, volume: 0.5, tutorial: false, blocks: [],
 };
 try {
   const s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
@@ -2058,8 +2093,10 @@ function rebuild(key) {
 function flushDirty() { for (const k of dirty) rebuild(k); dirty.clear(); }
 
 // pone o saca un bloque en la grilla (sin deshacer). Devuelve el estado anterior.
+let netOps = [], netMute = false;
 function setCell(x, y, z, t, sh = 0, r = 0) {
   const k = cid(x, y, z);
+  if (!netMute) netOps.push(x, y, z, t, BLOCKS[t] && BLOCKS[t].deco ? 0 : sh, r);
   const prev = { t: gT[k] - 1, s: gS[k], r: gR[k] };
   if (gT[k]) { // sacar lo que había
     const ot = gT[k] - 1;
@@ -2117,12 +2154,28 @@ function drawPlot() {
 
 // ===== cargar lo guardado =====
 function loadBlocks() {
+  netMute = true;
   const a = st.blocks || [];
   for (let i = 0; i + 5 < a.length + 1; i += 6) {
     const [x, y, z, t, s, r] = a.slice(i, i + 6);
     if (inGrid(x, y, z) && BLOCKS[t]) setCell(x, y, z, t, s, r);
   }
   flushDirty();
+  netMute = false;
+}
+// mudar mi terreno al lugar que me dio la sala (se mueve todo lo construido)
+function relocatePlot(slot) {
+  if (slot === mySlot) return;
+  const ox = X0, oz = Z0;
+  mySlot = slot; X0 = SLOTS[slot][0] - CELLS / 2; Z0 = SLOTS[slot][1] - CELLS / 2;
+  const dx = X0 - ox, dz = Z0 - oz;
+  for (const k in cellsOf) dirty.add(+k);
+  flushDirty();
+  for (const k in decoObjs) { decoObjs[k].position.x += dx; decoObjs[k].position.z += dz; }
+  // si estaba en el terreno viejo, lo lleva al nuevo
+  const p = player.position;
+  if (Math.abs(p.x - (ox + CELLS / 2)) < 17.5 && Math.abs(p.z - (oz + CELLS / 2)) < 17.5) { p.x += dx; p.z += dz; }
+  drawPlot();
 }
 let saveTimer = 0;
 function save(now) {
@@ -2413,14 +2466,21 @@ function solidH(x, y, z) {
   return gS[k] === 0 ? 1 : 0.5;
 }
 const PR = 0.28, PH = 1.8;
-function collides(px, py, pz) {
-  const x0 = Math.floor(px - PR - X0), x1 = Math.floor(px + PR - X0), z0 = Math.floor(pz - PR - Z0), z1 = Math.floor(pz + PR - Z0);
+function collidesGrid(px, py, pz, ox, oz, hf) {
+  const x0 = Math.floor(px - PR - ox), x1 = Math.floor(px + PR - ox), z0 = Math.floor(pz - PR - oz), z1 = Math.floor(pz + PR - oz);
+  if (x1 < 0 || z1 < 0 || x0 >= CELLS || z0 >= CELLS) return -1;
   const y0 = Math.floor(py), y1 = Math.floor(py + PH);
   let top = -1;
   for (let x = x0; x <= x1; x++) for (let z = z0; z <= z1; z++) for (let y = Math.max(0, y0); y <= y1; y++) {
-    const h = solidH(x, y, z);
+    const h = hf(x, y, z);
     if (h > 0 && py < y + h - 0.001 && py + PH > y) top = Math.max(top, y + h);
   }
+  return top;
+}
+function collides(px, py, pz) {
+  let top = collidesGrid(px, py, pz, X0, Z0, solidH);
+  // terrenos de los otros jugadores de la sala
+  if (typeof remotePlotsCollide === 'function') top = Math.max(top, remotePlotsCollide(px, py, pz));
   return top; // -1 = libre; si no, la altura de arriba de lo que choca
 }
 let flying = false;
@@ -2696,6 +2756,7 @@ function updateToolUI() {
 }
 function updateHud() {
   $('coins').textContent = st.coins.toLocaleString(LANG);
+  const ge = $('gemsTop'); if (ge) ge.textContent = (st.gems || 0).toLocaleString(LANG);
   $('count').textContent = tr('{0} / {1} bloques', blockCount, blockLimit());
 }
 
@@ -2775,7 +2836,7 @@ function openLand() {
 $('landBuy').onclick = () => {
   const price = LAND_PRICES[st.land + 1]; if (price == null) return;
   if (st.coins < price) { toast(tr('Te faltan {0} monedas. Ganás jugando y con el regalo diario.', price - st.coins)); return; }
-  st.coins -= price; st.land++; drawPlot(); save(); updateHud(); closePanels(); sfx('coin'); happy();
+  st.coins -= price; st.land++; drawPlot(); save(); updateHud(); closePanels(); sfx('coin'); happy(); if (typeof netSend === 'function') netSend({ t: 'tierra', tierra: st.land });
   toast(tr('¡Tu terreno ahora es de {0} x {0}!', LAND_SIZES[st.land]));
 };
 
@@ -3134,7 +3195,8 @@ function updateHeld() {
 }
 // golpe con el brazo (al picar más fuerte, al poner más suave)
 let swingT = 0, swingDur = 0.3;
-function swing(d) { swingDur = d; swingT = d; }
+function swing(d) { swingDur = d; swingT = d; netSwing = performance.now(); }
+let netSwing = 0;
 // pose final de cada cuadro: sentado, brazo que sostiene algo y golpe
 function applyPose(dt) {
   if (!bones) return;
@@ -3353,7 +3415,8 @@ function beltTick(dt) {
 var inGame = null; // var: se usa desde antes en la barra
 function zoneTick() {
   const p = player.position;
-  const inside = mode === 'play' && Math.abs(p.x) < 17.5 && Math.abs(p.z) < 17.5;
+  const [pcx, pcz] = plotCenter();
+  const inside = mode === 'play' && Math.abs(p.x - pcx) < 17.5 && Math.abs(p.z - pcz) < 17.5;
   if (inside !== inGame) {
     inGame = inside;
     document.body.classList.toggle('outside', !inside);
@@ -3453,12 +3516,13 @@ function zoneOf(z) { return Math.max(0, Math.min(4, Math.floor((PW_Z0 - z) / ZON
 
 // ----- estado guardado -----
 const PSAVE = 'pets_v1';
-const ps = { coins: 0, gems: 0, pets: [], uid: 1, unlocked: 1, up: { slots: 0, coins: 0, luck: 0, speed: 0 }, passes: {}, seen: {}, idx: {}, lastDay: '' };
+const ps = { coins: 0, pets: [], uid: 1, unlocked: 1, up: { slots: 0, coins: 0, luck: 0, speed: 0 }, passes: {}, seen: {}, idx: {}, lastDay: '' };
 try { const s = JSON.parse(localStorage.getItem(PSAVE) || 'null'); if (s) Object.assign(ps, s); } catch (e) { /* nada */ }
 if (!ps.pets.length) ps.pets.push({ u: ps.uid++, id: 'kitty', v: '', eq: true }), ps.seen.kitty = 1;
-if (TEST_MODE) { ps.coins = Math.max(ps.coins, 5e6); ps.gems = Math.max(ps.gems, 9999); }
+if (ps.gems) { st.gems = (st.gems || 0) + ps.gems; delete ps.gems; } // las gemas pasaron a la billetera común
+if (TEST_MODE) { ps.coins = Math.max(ps.coins, 5e6); st.gems = Math.max(st.gems, 9999); }
 let psTimer = 0;
-function psSave() { clearTimeout(psTimer); psTimer = setTimeout(() => { try { localStorage.setItem(PSAVE, JSON.stringify(ps)); } catch (e) { /* nada */ } }, 600); }
+function psSave() { save(); clearTimeout(psTimer); psTimer = setTimeout(() => { try { localStorage.setItem(PSAVE, JSON.stringify(ps)); } catch (e) { /* nada */ } }, 600); }
 
 const petPower = (o) => PBY[o.id].power * (o.v === 'g' ? 3 : o.v === 'r' ? 10 : 1);
 const maxSlots = () => 3 + ps.up.slots + (ps.passes.ExtraPets ? 3 : 0);
@@ -3831,7 +3895,7 @@ function breakPile(p) {
   const z = PZONES[p.i];
   const coins = Math.round((p.chest ? z.chestCoins : z.pileCoins) * coinMult());
   let gems = p.chest ? z.chestGems : (Math.random() < GEM_CHANCE ? 1 + (Math.random() < 0.3 ? 1 : 0) : 0);
-  ps.coins += coins; ps.gems += gems; psSave();
+  ps.coins += coins; st.gems += gems; if (p.chest) st.coins += 5; psSave(); save(); // los cofres también dan monedas comunes
   const from = new THREE.Vector3(p.x, 0.6, p.z);
   for (let k = 0; k < (p.chest ? 12 : 6); k++) { const m = coinMesh(0.16); m.position.copy(from); petsRoot.add(m); flyCoins.push({ m, from: from.clone().add(new THREE.Vector3((Math.random() - 0.5) * 1.5, 0, (Math.random() - 0.5) * 1.5)), t: -k * 0.04 }); }
   popText('+' + fmt(coins), toWorld(from), '#ffd23c'); if (gems) popText('+' + gems, toWorld(from.clone().add(new THREE.Vector3(0, 0.6, 0))), '#5ae6ff', true);
@@ -4001,7 +4065,7 @@ function renderUps() {
     r.innerHTML = `<span class="upIcon u_${u.id}"></span><div><b>${tr(u.es)}</b><small>${tr(u.d)} · ${tr('Nivel {0} / {1}', lv, max)}</small></div>`;
     const b = document.createElement('button'); b.className = 'toy' + (lv >= max ? ' owned' : ' gemB');
     b.textContent = lv >= max ? tr('Máximo') : tr('{0} gemas', price); b.disabled = lv >= max;
-    b.onclick = () => { if (ps.gems < price) { toast(tr('Te faltan {0} gemas.', price - ps.gems)); return; } ps.gems -= price; ps.up[u.id]++; psSave(); renderUps(); autoEquip(); sfx('coin'); happy(); };
+    b.onclick = () => { if (st.gems < price) { toast(tr('Te faltan {0} gemas.', price - st.gems)); return; } st.gems -= price; ps.up[u.id]++; psSave(); renderUps(); autoEquip(); sfx('coin'); happy(); };
     r.appendChild(b); box.appendChild(r);
   }
 }
@@ -4013,7 +4077,7 @@ function renderIdx() {
     row.innerHTML = `<h4>${z.name}</h4><div class="idxPets">${z.pets.map((id) => `<div class="${ps.seen[id] ? '' : 'unk'}" style="--rc:${RARITY[PBY[id].rarity].c}"><img src="${petIcon(id, '')}" alt=""><small>${ps.seen[id] ? PBY[id].name : '?'}</small></div>`).join('')}</div>`;
     const b = document.createElement('button'); b.className = 'toy' + (ps.idx[i] ? ' owned' : all ? ' gemB' : ' owned');
     b.textContent = ps.idx[i] ? tr('Reclamado') : tr('Reclamar {0} gemas', INDEX_GEMS[i]); b.disabled = !all || ps.idx[i];
-    b.onclick = () => { ps.idx[i] = 1; ps.gems += INDEX_GEMS[i]; psSave(); renderIdx(); sfx('coin'); happy(); };
+    b.onclick = () => { ps.idx[i] = 1; st.gems += INDEX_GEMS[i]; psSave(); renderIdx(); sfx('coin'); happy(); };
     row.appendChild(b); box.appendChild(row);
   });
 }
@@ -4023,7 +4087,7 @@ function renderPShop() {
     const r = document.createElement('div'); r.className = 'shopRow';
     r.innerHTML = `${icon ? `<img src="${icon}" alt="">` : '<span class="passIcon"></span>'}<div><b>${name}</b><small>${desc}</small></div>`;
     const b = document.createElement('button'); b.className = 'toy' + (have ? ' owned' : ' gemB'); b.textContent = have ? tr('Ya lo tenés') : tr('{0} gemas', price); b.disabled = have;
-    b.onclick = () => { if (ps.gems < price) { toast(tr('Te faltan {0} gemas.', price - ps.gems)); return; } ps.gems -= price; buy(); psSave(); renderPShop(); sfx('coin'); happy(); };
+    b.onclick = () => { if (st.gems < price) { toast(tr('Te faltan {0} gemas.', price - st.gems)); return; } st.gems -= price; buy(); psSave(); renderPShop(); sfx('coin'); happy(); };
     r.appendChild(b); box.appendChild(r);
   };
   const icons = { TripleHatch: 'bunny', LuckyEggs: 'honeybear', DoubleCoins: 'duck', ExtraPets: 'puppy' };
@@ -4067,7 +4131,7 @@ let lastCoins = -1, lastGems = -1;
 function petHudTick() {
   if (!inPets) return;
   if (ps.coins !== lastCoins) { $('pCoins').textContent = fmt(ps.coins); lastCoins = ps.coins; }
-  if (ps.gems !== lastGems) { $('pGems').textContent = fmt(ps.gems); lastGems = ps.gems; }
+  if (st.gems !== lastGems) { $('pGems').textContent = fmt(st.gems); lastGems = st.gems; }
   const p = PL();
   nearEgg = -1; for (const e of eggStands) if (e.i < ps.unlocked && Math.hypot(p.x - e.x, p.z - e.z) < 3.6) nearEgg = e.i;
   nearGate = -1; for (const g of gates) if (g.i === ps.unlocked && Math.abs(p.z - g.z) < 2.6) nearGate = g.i;
@@ -4099,7 +4163,7 @@ function petsZone() {
       lastCoins = lastGems = -1; eggBtnKey = '';
       banner(tr('REINO DE MASCOTAS'));
       const d = today();
-      if (ps.lastDay !== d) { ps.lastDay = d; const g = 20, c = PZONES[ps.unlocked - 1].egg * 2; ps.gems += g; ps.coins += c; psSave(); setTimeout(() => { toast(tr('Premio del día: +{0} gemas y +{1} monedas', g, fmt(c))); sfx('coin'); }, 1500); }
+      if (ps.lastDay !== d) { ps.lastDay = d; const g = 20, c = PZONES[ps.unlocked - 1].egg * 2; st.gems += g; ps.coins += c; psSave(); setTimeout(() => { toast(tr('Premio del día: +{0} gemas y +{1} monedas', g, fmt(c))); sfx('coin'); }, 1500); }
       else setTimeout(() => toast('Tocá un montón de monedas y tus mascotas lo rompen.'), 1500);
     } else attackTarget = null;
     // las mascotas viven en su mundo: afuera no te siguen
@@ -4110,6 +4174,444 @@ function petsZone() {
 
 function portalTick() { /* sin portales: el mundo de mascotas está al final de la cinta */ }
 refreshFollowers();
+
+// =====================================================================
+// ===== ONLINE: guardado en el servidor y jugadores en vivo =====
+// =====================================================================
+// El servidor (tintix-server, /api/mj) guarda el progreso y reparte las posiciones de la sala 10 veces por segundo.
+// Para que los otros se vean SÚPER suaves, cada celular los muestra un poquito en el pasado (un cuarto de segundo)
+// y va pasando de una posición a la siguiente sin saltos: así no se ven cortados aunque internet tenga baches.
+const NET_URL = (() => { const m = location.search.match(/[?&]srv=([^&]+)/); return m ? decodeURIComponent(m[1]) : 'https://tintix.mireparto.io/api/mj'; })();
+const NET_WS = NET_URL.replace(/^http/, 'ws') + '/ws';
+const DELAY_WS = 260, DELAY_POLL = 450; // cuánto en el pasado se muestra a los demás (ms)
+const MY_ID = (() => {
+  let id = ''; try { id = localStorage.getItem('mj_id') || ''; } catch (e) { /* nada */ }
+  if (!/^[a-zA-Z0-9_-]{8,40}$/.test(id)) { id = 'j' + Math.random().toString(36).slice(2, 12) + Date.now().toString(36); try { localStorage.setItem('mj_id', id); } catch (e) { /* nada */ } }
+  return id;
+})();
+let myName = '';
+try { myName = localStorage.getItem('mj_nombre') || ''; } catch (e) { /* nada */ }
+if (!myName) myName = (LANG === 'en' ? 'Player' : LANG === 'pt' ? 'Jogador' : 'Jugador') + Math.floor(1000 + Math.random() * 9000);
+
+// ---------- guardado en la nube ----------
+const SAVE_KEYS = ['construi_v1', 'pets_v1', 'muneco-look', 'mj_nombre'];
+function localBundle() { const d = {}; for (const k of SAVE_KEYS) { try { const v = localStorage.getItem(k); if (v != null) d[k] = v; } catch (e) { /* nada */ } } return d; }
+let lastCloud = '';
+async function cloudLoad() {
+  try {
+    const r = await fetch(NET_URL + '/cargar', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: MY_ID }) });
+    const j = await r.json();
+    if (!j.ok || !j.datos || !j.datos.keys) return;
+    const localAct = +(localStorage.getItem('mj_act') || 0);
+    if (j.act > localAct + 1000 && !sessionStorage.getItem('mj_reload')) {
+      // en el servidor hay algo más nuevo (jugaste en otro celular): se usa eso
+      for (const k in j.datos.keys) localStorage.setItem(k, j.datos.keys[k]);
+      localStorage.setItem('mj_act', String(j.act));
+      sessionStorage.setItem('mj_reload', '1');
+      location.reload();
+    }
+  } catch (e) { /* sin internet: se sigue con lo del celular */ }
+}
+async function cloudSave(force) {
+  try { localStorage.setItem('mj_nombre', myName); } catch (e) { /* nada */ }
+  const keys = localBundle(), txt = JSON.stringify(keys);
+  if (!force && txt === lastCloud) return;
+  lastCloud = txt;
+  try {
+    const r = await fetch(NET_URL + '/guardar', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: MY_ID, nombre: myName, datos: { keys } }), keepalive: txt.length < 60000 });
+    const j = await r.json();
+    if (j.ok) localStorage.setItem('mj_act', String(j.act));
+  } catch (e) { lastCloud = ''; }
+}
+cloudLoad();
+setInterval(() => cloudSave(false), 15000);
+addEventListener('pagehide', () => cloudSave(false));
+document.addEventListener('visibilitychange', () => { if (document.hidden) cloudSave(false); });
+
+// ---------- nombre en el vestuario ----------
+{
+  const inp = $('nameIn'), lbl = document.querySelector('#nameRow label');
+  if (lbl) lbl.textContent = tr('Nombre');
+  if (inp) {
+    inp.value = myName;
+    inp.addEventListener('keydown', (e) => e.stopPropagation());
+    inp.addEventListener('change', async () => {
+      const v = inp.value.trim().slice(0, 16);
+      if (!v) { inp.value = myName; return; }
+      try { const r = await fetch(NET_URL + '/nombre', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ nombre: v }) }); const j = await r.json(); if (!j.ok) { toast('Ese nombre no se puede usar.'); inp.value = myName; return; } myName = j.nombre; }
+      catch (e) { myName = v; }
+      inp.value = myName; try { localStorage.setItem('mj_nombre', myName); } catch (e) { /* nada */ }
+      netSend({ t: 'nombre', nombre: myName }); cloudSave(true);
+    });
+  }
+}
+
+// ---------- conexión ----------
+var ws = null, netMode = '', netQueue = [], netOn = false, pollBusy = false, netRetry = 0, srvOff = null;
+function netSend(m) { if (!netOn) return; if (netMode === 'ws' && ws && ws.readyState === 1) ws.send(JSON.stringify(m)); else if (netMode === 'poll') { netQueue.push(m); if (netQueue.length > 60) netQueue.splice(0, netQueue.length - 60); } }
+function helloMsg() {
+  return { t: 'hola', id: MY_ID, nombre: myName, look, tierra: st.land, bloques: st.blocks || [], mascotas: myPets() };
+}
+function myPets() { return typeof ps !== 'undefined' ? ps.pets.filter((o) => o.eq).map((o) => [o.id, o.v]) : []; }
+function netConnect() {
+  if (netMode) return;
+  netMode = 'connecting';
+  let opened = false;
+  try { ws = /[?&]nows/.test(location.search) ? null : new WebSocket(NET_WS); } catch (e) { ws = null; }
+  if (!ws) { startPoll(); return; }
+  const to = setTimeout(() => { if (!opened) { try { ws.close(); } catch (e) { /* nada */ } ws = null; startPoll(); } }, 4000);
+  ws.onopen = () => { opened = true; clearTimeout(to); netMode = 'ws'; netOn = true; ws.send(JSON.stringify(helloMsg())); };
+  ws.onmessage = (ev) => { let m; try { m = JSON.parse(ev.data); } catch (e) { return; } onNet(m); };
+  ws.onclose = () => { clearTimeout(to); if (!opened) { if (netMode === 'connecting') startPoll(); return; } netLost(); };
+  ws.onerror = () => {};
+}
+async function startPoll() {
+  if (netMode === 'poll') return;
+  netMode = 'poll';
+  try {
+    const r = await fetch(NET_URL + '/entrar', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(helloMsg()) });
+    const j = await r.json(); if (!j.ok) throw 0;
+    netOn = true; (j.msgs || []).forEach(onNet);
+  } catch (e) { netMode = ''; netLost(); }
+}
+async function pollTick() {
+  if (netMode !== 'poll' || !netOn || pollBusy) return;
+  pollBusy = true;
+  const msgs = netQueue; netQueue = [];
+  try {
+    const r = await fetch(NET_URL + '/sync', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id: MY_ID, msgs }) });
+    const j = await r.json();
+    if (!j.ok) { pollBusy = false; netLost(); return; }
+    (j.msgs || []).forEach(onNet);
+  } catch (e) { /* bache de internet: se reintenta */ }
+  pollBusy = false;
+}
+function netLost() {
+  netOn = false; netMode = ''; ws = null;
+  for (const id of [...remotes.keys()]) removeRemote(id);
+  updateBadge();
+  clearTimeout(netRetry); netRetry = setTimeout(netConnect, 3000);
+}
+let roomSize = 1;
+function updateBadge() {
+  const b = $('netBadge'); if (!b) return;
+  b.classList.toggle('on', mode === 'play');
+  b.classList.toggle('off', !netOn);
+  b.textContent = !netOn ? tr('Sin conexión') : remotes.size ? tr('En línea · {0} jugadores', remotes.size + 1) : tr('En línea');
+}
+
+// ---------- mensajes de la sala ----------
+var netStats = {};
+function onNet(m) {
+  netStats[m.t] = (netStats[m.t] || 0) + 1;
+  switch (m.t) {
+    case 'bienv':
+      srvOff = null; sampleClock(m.hora);
+      relocatePlot(m.lugar);
+      for (const o of m.otros) addRemote(o);
+      netOps = []; // lo de antes ya lo tiene el servidor (vino en el saludo)
+      updateBadge(); break;
+    case 'llega': addRemote(m.j); toast(tr('{0} entró al mundo', m.j.nombre)); updateBadge(); break;
+    case 'chau': removeRemote(m.id); updateBadge(); break;
+    case 'snap': sampleClock(m.hora); for (const e of m.l) { const r = remotes.get(e[0]); if (r) pushSnap(r, m.hora, e); } break;
+    case 'blk': { const r = remotes.get(m.id); if (r) applyOps(r, m.ops); break; }
+    case 'todo': { const r = remotes.get(m.id); if (r) { clearRemotePlot(r); applyOps(r, m.bloques.map((v, i) => v)); } break; }
+    case 'look': { const r = remotes.get(m.id); if (r) { r.look = m.look; rebuildAvatar(r); } break; }
+    case 'nombre': { const r = remotes.get(m.id); if (r) { r.nombre = m.nombre; setTag(r); drawRemotePlotFloor(r); } break; }
+    case 'tierra': { const r = remotes.get(m.id); if (r) { r.tierra = m.tierra; drawRemotePlotFloor(r); } break; }
+    case 'masc': { const r = remotes.get(m.id); if (r) { r.mascotas = m.mascotas; rebuildRemotePets(r); } break; }
+    case 'evt': if (m.e === 'hatch' && PBY[m.d]) { toast(tr('¡{0} sacó {1}!', m.nombre, PBY[m.d].name)); sfx('ping'); } break;
+  }
+}
+// reloj del servidor: la diferencia más chica vista (= el mensaje que llegó más rápido) es la mejor
+function sampleClock(hora) {
+  const est = hora - performance.now();
+  if (srvOff === null || est > srvOff) srvOff = est;
+  else srvOff += (est - srvOff) * 0.01; // corrige de a poco si los relojes se van separando
+}
+
+// ---------- jugadores remotos ----------
+var remotes = new Map();
+const remoteRoot = new THREE.Group(); scene.add(remoteRoot);
+function makeAvatar(lk) {
+  const save = { MAT, P, J, look };
+  MAT = newMats(); P = {}; J = {}; look = Object.assign({}, DEFAULT_LOOK, lk || {});
+  const g = new THREE.Group();
+  buildAvatar(g);
+  applyLook(true);
+  const av = { g, J, P, MAT };
+  ({ MAT, P, J, look } = save);
+  // la cara: una copia quieta de la cara "normal"
+  const old = faceKey; drawFace((lk && lk.face) || 'normal', 0, 0);
+  const cv = document.createElement('canvas'); cv.width = FACE.canvas.width; cv.height = FACE.canvas.height; cv.getContext('2d').drawImage(FACE.canvas, 0, 0);
+  faceKey = ''; // que la cara propia se vuelva a dibujar en el próximo cuadro
+  g.traverse((o) => { if (o.name === 'facePlane') { o.material = o.material.clone(); o.material.map = new THREE.CanvasTexture(cv); } });
+  return av;
+}
+function setTag(r) {
+  const cv = document.createElement('canvas'); cv.width = 256; cv.height = 64; const g = cv.getContext('2d');
+  g.font = '700 34px Fredoka, sans-serif'; const w = Math.min(250, g.measureText(r.nombre).width + 34);
+  g.fillStyle = 'rgba(30,40,25,.72)'; g.beginPath(); g.roundRect ? g.roundRect((256 - w) / 2, 6, w, 50, 25) : g.rect((256 - w) / 2, 6, w, 50); g.fill();
+  g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(r.nombre, 128, 32);
+  if (!r.tag) { r.tag = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthWrite: false })); r.tag.scale.set(2.2, 0.55, 1); r.tag.position.y = 2.5; r.obj.add(r.tag); }
+  r.tag.material.map = new THREE.CanvasTexture(cv); r.tag.material.needsUpdate = true;
+}
+function addRemote(o) {
+  if (o.id === MY_ID) return;
+  if (remotes.has(o.id)) removeRemote(o.id);
+  const obj = new THREE.Group(); remoteRoot.add(obj);
+  const r = { id: o.id, nombre: o.nombre, look: o.look, lugar: o.lugar, tierra: o.tierra | 0, mascotas: o.mascotas || [], obj, av: null, snaps: [], phase: 0, walk: 0, pets: [], plot: null, vis: false };
+  rebuildAvatar(r); setTag(r);
+  if (o.pos) { pushSnap(r, (srvOff || 0) + performance.now(), [o.id, ...o.pos]); }
+  obj.visible = !!o.pos;
+  remotes.set(o.id, r);
+  r.plot = newRemotePlot(r);
+  applyOps(r, o.bloques || []);
+  drawRemotePlotFloor(r);
+  rebuildRemotePets(r);
+}
+function rebuildAvatar(r) {
+  if (r.av) r.obj.remove(r.av.g);
+  r.av = makeAvatar(r.look);
+  r.av.g.traverse((m) => { if (m.isMesh) m.castShadow = !isTouch; });
+  r.obj.add(r.av.g);
+}
+function removeRemote(id) {
+  const r = remotes.get(id); if (!r) return;
+  remoteRoot.remove(r.obj);
+  for (const p of r.pets) remoteRoot.remove(p.obj);
+  if (r.plot) scene.remove(r.plot.group);
+  remotes.delete(id);
+}
+function pushSnap(r, hora, e) {
+  const s = { t: hora, x: e[1], y: e[2], z: e[3], f: e[4], fl: e[5] | 0 };
+  const last = r.snaps[r.snaps.length - 1];
+  if (last && hora <= last.t) return;
+  r.snaps.push(s);
+  if (r.snaps.length > 40) r.snaps.splice(0, r.snaps.length - 40);
+}
+const _rv = new THREE.Vector3();
+function remoteTick(dt, t) {
+  if (srvOff === null) return;
+  const renderT = performance.now() + srvOff - (netMode === 'poll' ? DELAY_POLL : DELAY_WS);
+  for (const r of remotes.values()) {
+    const S = r.snaps; if (!S.length) continue;
+    // las dos posiciones alrededor del momento que se muestra
+    let a = S[0], b = S[0];
+    for (let i = S.length - 1; i >= 0; i--) if (S[i].t <= renderT) { a = S[i]; b = S[i + 1] || S[i]; break; }
+    while (S.length > 3 && S[1].t < renderT - 1000) S.shift();
+    let x, y, z, f;
+    if (b !== a) {
+      const k = Math.min(1, Math.max(0, (renderT - a.t) / (b.t - a.t)));
+      x = a.x + (b.x - a.x) * k; y = a.y + (b.y - a.y) * k; z = a.z + (b.z - a.z) * k; f = angleLerp(a.f, b.f, k);
+    } else {
+      // no llegó lo siguiente todavía: sigue un ratito en la misma dirección (sin frenar de golpe)
+      const p = S[S.length - 2];
+      const over = Math.min(250, renderT - a.t);
+      if (p && over > 0 && a.t > p.t) { const k = over / (a.t - p.t); x = a.x + (a.x - p.x) * k * 0.6; y = a.y; z = a.z + (a.z - p.z) * k * 0.6; } else { x = a.x; y = a.y; z = a.z; }
+      f = a.f;
+    }
+    const o = r.obj;
+    const prev = _rv.copy(o.position);
+    // pequeño suavizado extra para que ni un bache se note
+    if (!r.vis) { o.position.set(x, y, z); r.vis = true; }
+    else { const k = 1 - Math.exp(-18 * dt); o.position.x += (x - o.position.x) * k; o.position.y += (y - o.position.y) * k; o.position.z += (z - o.position.z) * k; }
+    o.visible = true;
+    o.rotation.y = angleLerp(o.rotation.y, f, 1 - Math.exp(-14 * dt));
+    const sp = Math.hypot(o.position.x - prev.x, o.position.z - prev.z) / Math.max(dt, 1e-3);
+    r.walk += ((sp > 0.4 ? 1 : 0) - r.walk) * (1 - Math.exp(-10 * dt));
+    r.phase += dt * (sp * 1.75 + 0.0001);
+    animateRemote(r, sp, a.fl, t, dt);
+    tickRemotePets(r, dt, t);
+  }
+}
+function animateRemote(r, sp, fl, t, dt) {
+  const B = r.av.J; if (!B || !B.hips) return;
+  const sitting = fl & 4, onGround = fl & 1, running = fl & 2, w = r.walk;
+  const e = 1 - Math.exp(-14 * dt), to = (o, ax, v) => { o.rotation[ax] += (v - o.rotation[ax]) * e; };
+  if (sitting) {
+    to(B.L.leg, 'x', -1.5); to(B.R.leg, 'x', -1.5); to(B.L.knee, 'x', 1.45); to(B.R.knee, 'x', 1.45);
+    to(B.L.arm, 'x', -0.25); to(B.R.arm, 'x', -0.25); to(B.L.arm, 'z', 0); to(B.R.arm, 'z', 0);
+    to(B.L.elbow, 'x', -0.3); to(B.R.elbow, 'x', -0.3); B.hips.position.y = 0.7; B.hips.rotation.set(0, 0, 0); return;
+  }
+  const amp = Math.min(1, sp / 4.2) * (running ? 0.85 : 0.6), s = Math.sin(r.phase), c = Math.cos(r.phase);
+  if (onGround) {
+    // las piernas siguen la fase directo (así el paso coincide con lo que avanza)
+    B.L.leg.rotation.x = s * amp * w; B.R.leg.rotation.x = -s * amp * w;
+    B.L.arm.rotation.x = -s * amp * 0.8 * w; B.R.arm.rotation.x = s * amp * 0.8 * w;
+    to(B.L.arm, 'z', 0); to(B.R.arm, 'z', 0);
+    const e0 = 0.12 + (running ? 0.85 : 0.35) * w;
+    to(B.L.elbow, 'x', -(e0 + Math.max(0, s) * 0.3 * w)); to(B.R.elbow, 'x', -(e0 + Math.max(0, -s) * 0.3 * w));
+    to(B.L.knee, 'x', (0.08 + Math.max(0, -c) * (running ? 1.5 : 1)) * w); to(B.R.knee, 'x', (0.08 + Math.max(0, c) * (running ? 1.5 : 1)) * w);
+  } else {
+    to(B.L.leg, 'x', 0.6); to(B.R.leg, 'x', -0.3); to(B.L.knee, 'x', 1.2); to(B.R.knee, 'x', 0.6);
+    to(B.L.arm, 'z', -1.2); to(B.R.arm, 'z', 1.2); to(B.L.elbow, 'x', -0.9); to(B.R.elbow, 'x', -0.9);
+  }
+  // picando: el brazo sube y baja
+  if (fl & 16) { r.swing = (r.swing || 0) + dt * 3.2; const k = r.swing % 1; B.L.arm.rotation.x = k < 0.45 ? -0.3 - 2.3 * (k / 0.45) : -0.3 - 2.3 * (1 - (k - 0.45) / 0.55); }
+  else r.swing = 0;
+  B.hips.position.y = 0.7 + (onGround ? Math.abs(c) * 0.085 * amp * w : 0) + Math.sin(t * 2) * 0.02 * (1 - w);
+  B.hips.rotation.z = s * 0.05 * amp * w; B.hips.rotation.x = (running ? 0.12 : 0.04) * w;
+  B.head.rotation.y = Math.sin(t * 0.7 + r.lugar) * 0.05 * (1 - w);
+}
+
+// ---------- terrenos de los otros ----------
+function newRemotePlot(r) {
+  const [cx, cz] = SLOTS[r.lugar] || SLOTS[0];
+  const pl = { ox: cx - CELLS / 2, oz: cz - CELLS / 2, T: new Int16Array(CELLS * CELLS * MAXH), S: new Uint8Array(CELLS * CELLS * MAXH), R: new Uint8Array(CELLS * CELLS * MAXH), cells: {}, inst: {}, decos: {}, group: new THREE.Group(), floor: new THREE.Group() };
+  pl.group.add(pl.floor); scene.add(pl.group);
+  return pl;
+}
+function clearRemotePlot(r) { scene.remove(r.plot.group); r.plot = newRemotePlot(r); drawRemotePlotFloor(r); }
+function applyOps(r, ops) {
+  const pl = r.plot, dirtyK = new Set();
+  for (let i = 0; i + 5 < ops.length + 1; i += 6) {
+    const x = ops[i], y = ops[i + 1], z = ops[i + 2], t = ops[i + 3], sh = ops[i + 4], ro = ops[i + 5];
+    if (!inGrid(x, y, z)) continue;
+    const k = cid(x, y, z);
+    if (pl.T[k]) { const ot = pl.T[k] - 1; if (BLOCKS[ot].deco) { const d = pl.decos[k]; if (d) { pl.group.remove(d); delete pl.decos[k]; } } else { const key = ot * 3 + pl.S[k]; pl.cells[key].delete(k); dirtyK.add(key); } }
+    pl.T[k] = 0;
+    if (t >= 0 && BLOCKS[t]) {
+      pl.T[k] = t + 1; pl.S[k] = BLOCKS[t].deco ? 0 : sh; pl.R[k] = ro;
+      if (BLOCKS[t].deco) { const d = decoModel(t); d.position.set(pl.ox + x + 0.5, y, pl.oz + z + 0.5); d.rotation.y = -ro * Math.PI / 2; d.traverse((m) => { if (m.isMesh) { m.castShadow = false; m.receiveShadow = true; } }); pl.group.add(d); pl.decos[k] = d; }
+      else { const key = t * 3 + pl.S[k]; (pl.cells[key] = pl.cells[key] || new Set()).add(k); dirtyK.add(key); }
+    }
+  }
+  for (const key of dirtyK) rebuildRemote(pl, key);
+}
+const _m4r = new THREE.Matrix4(), _qr = new THREE.Quaternion(), _pr = new THREE.Vector3(), _sr = new THREE.Vector3(1, 1, 1);
+function rebuildRemote(pl, key) {
+  const set = pl.cells[key], t = Math.floor(key / 3), sh = key % 3, n = set ? set.size : 0;
+  let im = pl.inst[key];
+  if (!im || im.userData.cap < n) {
+    if (im) pl.group.remove(im);
+    const cap = Math.max(16, Math.ceil(n * 1.5));
+    im = new THREE.InstancedMesh(GEO[sh], blockMats(t), cap); im.userData.cap = cap; im.receiveShadow = true; im.castShadow = false; im.frustumCulled = false;
+    if (BLOCKS[t].alpha) im.renderOrder = 2;
+    pl.inst[key] = im; pl.group.add(im);
+  }
+  let i = 0;
+  if (set) for (const k of set) {
+    const x = k % CELLS, z = Math.floor(k / CELLS) % CELLS, y = Math.floor(k / (CELLS * CELLS));
+    _pr.set(pl.ox + x + 0.5, y + 0.5, pl.oz + z + 0.5); _qr.setFromAxisAngle(_up, -pl.R[k] * Math.PI / 2); _m4r.compose(_pr, _qr, _sr); im.setMatrixAt(i++, _m4r);
+  }
+  im.count = n; im.instanceMatrix.needsUpdate = true;
+}
+function drawRemotePlotFloor(r) {
+  const pl = r.plot, g = pl.floor;
+  while (g.children.length) g.remove(g.children[0]);
+  const size = LAND_SIZES[r.tierra] || 16, lo = (CELLS - size) >> 1;
+  const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d');
+  c.fillStyle = '#6bb84f'; c.fillRect(0, 0, 64, 64); c.fillStyle = '#62ad48'; c.fillRect(0, 0, 32, 32); c.fillRect(32, 32, 32, 32);
+  const tex = new THREE.CanvasTexture(cv); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(size / 2, size / 2);
+  const fl = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshLambertMaterial({ map: tex, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+  fl.rotation.x = -Math.PI / 2; fl.position.set(pl.ox + lo + size / 2, 0.02, pl.oz + lo + size / 2); fl.receiveShadow = true; g.add(fl);
+  const all = new THREE.Mesh(new THREE.PlaneGeometry(CELLS + 2, CELLS + 2), new THREE.MeshLambertMaterial({ color: 0x4f8a37 }));
+  all.rotation.x = -Math.PI / 2; all.position.set(pl.ox + CELLS / 2, 0.01, pl.oz + CELLS / 2); all.receiveShadow = true; g.add(all);
+  // cartel con el nombre del dueño, al frente del terreno
+  const sg = new THREE.Group(); sg.position.set(pl.ox + CELLS / 2, 0, pl.oz + CELLS + 1.2); g.add(sg);
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 2, 10), new THREE.MeshStandardMaterial({ color: '#b5814f', roughness: 0.55 })); post.position.y = 1; sg.add(post);
+  const scv = document.createElement('canvas'); scv.width = 512; scv.height = 160; const s2 = scv.getContext('2d');
+  s2.fillStyle = '#faf6eb'; s2.beginPath(); s2.roundRect ? s2.roundRect(4, 4, 504, 152, 30) : s2.rect(4, 4, 504, 152); s2.fill(); s2.lineWidth = 10; s2.strokeStyle = '#2ea046'; s2.stroke();
+  s2.fillStyle = '#1e2819'; s2.textAlign = 'center'; s2.textBaseline = 'middle'; s2.font = '700 56px Fredoka, sans-serif'; s2.fillText(tr('Terreno de {0}', r.nombre).slice(0, 22), 256, 80);
+  const board = new THREE.Mesh(rbox(3.2, 1, 0.12, 0.06), new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(scv), roughness: 0.5 })); board.position.y = 2.1; sg.add(board);
+}
+// choques con los bloques de los demás (se puede caminar por sus casas y subirse arriba)
+function remotePlotsCollide(px, py, pz) {
+  let top = -1;
+  for (const r of remotes.values()) {
+    const pl = r.plot; if (!pl) continue;
+    if (px < pl.ox - 1 || px > pl.ox + CELLS + 1 || pz < pl.oz - 1 || pz > pl.oz + CELLS + 1) continue;
+    const hf = (x, y, z) => {
+      if (!inGrid(x, y, z)) return 0; const k = cid(x, y, z); if (!pl.T[k]) return 0;
+      const b = BLOCKS[pl.T[k] - 1];
+      if (b.deco) { if (b.deco === 'door') return 0; return SOLID_DECO[b.deco] || 0; }
+      return pl.S[k] === 0 ? 1 : 0.5;
+    };
+    top = Math.max(top, collidesGrid(px, py, pz, pl.ox, pl.oz, hf));
+  }
+  return top;
+}
+
+// ---------- mascotas de los otros (solo en el Reino de Mascotas) ----------
+function rebuildRemotePets(r) {
+  for (const p of r.pets) remoteRoot.remove(p.obj);
+  r.pets = [];
+  for (const [id, v] of (r.mascotas || []).slice(0, 4)) {
+    if (!PBY[id]) continue;
+    const obj = petModel(id, v); obj.scale.setScalar(0.9); obj.visible = false; remoteRoot.add(obj);
+    obj.traverse((m) => { if (m.isMesh) m.castShadow = false; });
+    r.pets.push({ obj, hop: Math.random() * 6, spd: 0 });
+  }
+}
+function tickRemotePets(r, dt, t) {
+  const inPw = (r.snaps.length && (r.snaps[r.snaps.length - 1].fl & 64)) && inPets;
+  const o = r.obj, f = o.rotation.y;
+  const fwd = new THREE.Vector3(Math.sin(f), 0, Math.cos(f)), right = new THREE.Vector3(fwd.z, 0, -fwd.x);
+  r.pets.forEach((p, i) => {
+    const ob = p.obj;
+    if (!inPw) { ob.visible = false; return; }
+    const goal = o.position.clone().addScaledVector(fwd, -1.5 - Math.floor(i / 3) * 1.1).addScaledVector(right, (i % 3 - 1) * 1.1);
+    if (!ob.visible || ob.position.distanceTo(goal) > 25) ob.position.copy(goal);
+    ob.visible = true;
+    const before = ob.position.clone(), k = 1 - Math.exp(-7.5 * dt);
+    ob.position.x += (goal.x - ob.position.x) * k; ob.position.z += (goal.z - ob.position.z) * k;
+    const step = Math.hypot(ob.position.x - before.x, ob.position.z - before.z) / Math.max(dt, 1e-3);
+    p.spd += (step - p.spd) * Math.min(1, dt * 8);
+    ob.rotation.y = angleLerp(ob.rotation.y, p.spd > 0.7 ? Math.atan2(ob.position.x - before.x, ob.position.z - before.z) : f, 1 - Math.exp(-8 * dt));
+    p.hop += dt * (5 + Math.min(p.spd, 12) * 1.1);
+    const fly = ob.userData.fly;
+    ob.position.y = o.position.y + (fly ? 1.4 + Math.sin(t * 3 + i) * 0.15 : Math.abs(Math.sin(p.hop)) * Math.min(1, p.spd / 5) * 0.3);
+  });
+}
+
+// ---------- lo mío: posición 10 veces por segundo, bloques, mascotas ----------
+let lastPosT = 0;
+setInterval(() => { if (netMode === 'poll' && netOn) pollTick(); }, 150);
+function myFlags() {
+  let f = 0;
+  if (onGround) f |= 1;
+  if (keys.ShiftLeft || keys.ShiftRight || touchRun) f |= 2;
+  if (sitting) f |= 4;
+  if (flying) f |= 8;
+  if (performance.now() - netSwing < 350) f |= 16;
+  if (inPets) f |= 64;
+  return f;
+}
+function netTick(dt, t) {
+  if (!netMode && mode === 'play') netConnect();
+  remoteTick(dt, t);
+  if (!netOn) return;
+  // 10 veces por segundo (con el reloj de verdad, aunque el celular ande lento)
+  const now = performance.now();
+  if (now - lastPosT >= 100) {
+    lastPosT = now;
+    const p = player.position;
+    netSend({ t: 'pos', p: [+p.x.toFixed(2), +p.y.toFixed(2), +p.z.toFixed(2), +facing.toFixed(3), myFlags()] });
+    if (netOps.length) { netSend({ t: 'blk', ops: netOps }); netOps = []; }
+  }
+}
+// mascotas equipadas y huevos raros: se avisan a la sala
+{
+  const _rf = refreshFollowers;
+  refreshFollowers = function () { _rf(); netSend({ t: 'masc', mascotas: myPets() }); };
+}
+// si te sale una legendaria o mítica, se entera toda la sala
+{
+  const _sh = showHatch;
+  showHatch = function (z, got) {
+    for (const g of got || []) { const pp = PBY[g.o.id]; if (pp && (pp.rarity === 'legendary' || pp.rarity === 'mythic')) netSend({ t: 'evt', e: 'hatch', d: g.o.id }); }
+    return _sh.apply(this, arguments);
+  };
+}
+// botón "Ir a mi terreno"
+$('mMyPlot').onclick = () => {
+  closePanels(); standUp(); flying = false;
+  const [cx, cz] = plotCenter();
+  player.position.set(cx, 0, cz + CELLS / 2 + 2.5); vel.set(0, 0, 0); vy = 0; facing = Math.PI; camYaw = 0;
+  const f = $('fade'); f.classList.add('on'); setTimeout(() => f.classList.remove('on'), 250);
+};
+setInterval(updateBadge, 2000);
 
 function tick() {
   const dt = Math.min(clock.getDelta(), 0.05);
@@ -4161,7 +4663,7 @@ function tick() {
   }
   // no salir del campo
   const r = Math.hypot(player.position.x, player.position.z);
-  if (!clampPets() && r > FIELD - 2) { player.position.x *= (FIELD - 2) / r; player.position.z *= (FIELD - 2) / r; }
+  if (!clampPets()) { player.position.x = Math.max(-99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(58, player.position.z)); }
   player.rotation.y = facing;
 
   // animación de los huesos
@@ -4278,6 +4780,7 @@ function tick() {
     if (shakeT > 0) { shakeT -= dt; camera.position.x += (Math.random() - 0.5) * shakeT * 0.5; camera.position.y += (Math.random() - 0.5) * shakeT * 0.5; }
   }
   buildTick(dt, t);
+  netTick(dt, t);
   renderer.render(scene, camera);
   requestAnimationFrame(tick);
 }
