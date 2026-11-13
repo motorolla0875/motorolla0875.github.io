@@ -266,6 +266,77 @@
     #tut { bottom: 220px; }
     .menuGrid .toy { font-size: 14px; }
   }
+
+  body.is-touch #help { display: none !important; }
+  /* joystick bien visible */
+  body.is-touch #stick { background: rgba(20,25,18,.28) !important; border: 3px solid rgba(255,255,255,.95) !important; box-shadow: 0 2px 10px rgba(0,0,0,.25) !important; opacity: .85 !important; }
+  body.is-touch #stick.active { opacity: 1 !important; }
+  body.is-touch #knob { background: rgba(255,255,255,.92) !important; border: 2px solid rgba(20,25,18,.3) !important; box-shadow: 0 2px 6px rgba(0,0,0,.3) !important; }
+  /* aviso para girar el celular */
+  #rotate { position: fixed; inset: 0; z-index: 30; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: #faf6eb; color: #1e2819; font: 700 22px var(--font); text-align: center; padding: 30px; }
+  #rotate .ph { width: 70px; height: 110px; border: 6px solid #2ea046; border-radius: 16px; animation: rot 1.8s ease-in-out infinite; }
+  @keyframes rot { 0%, 25% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
+  @media (orientation: portrait) and (max-width: 760px) { body.is-touch #rotate { display: flex; } }
+
+  /* ===== celular horizontal: todo más compacto y en proporción ===== */
+  @media (orientation: landscape) and (max-height: 520px) {
+    /* vestuario: muñeco a la izquierda, opciones a la derecha */
+    body.is-touch #panel { left: auto !important; right: 8px !important; top: 8px !important; bottom: 8px !important; width: 300px !important; height: auto !important; border-radius: 16px !important; }
+    body.is-touch #panel header { padding: 8px 10px 2px !important; }
+    body.is-touch #panel h1 { font-size: 16px !important; }
+    body.is-touch #panel .small { padding: 5px 9px !important; font-size: 12px !important; }
+    body.is-touch #tabs { padding: 4px 8px 6px !important; gap: 4px !important; }
+    body.is-touch #tabs button { padding: 4px 9px !important; font-size: 12px !important; }
+    body.is-touch #panelBody { padding: 0 10px 8px !important; }
+    body.is-touch #panelBody h3 { margin: 6px 0 5px !important; font-size: 10px !important; }
+    body.is-touch .chips { gap: 5px !important; }
+    body.is-touch .chips button { padding: 6px 9px !important; font-size: 12px !important; }
+    body.is-touch .swatches { grid-template-columns: repeat(6, 1fr) !important; gap: 6px !important; }
+    body.is-touch #playBox { padding: 6px 10px 8px !important; }
+    body.is-touch #playBtn { font-size: 20px !important; padding: 6px 12px !important; }
+    body.is-touch #playFace svg { width: 26px; height: 26px; }
+    body.is-touch #edTools { top: auto !important; bottom: 10px !important; left: 10px !important; right: auto !important; }
+    body.is-touch #edHint { display: block !important; top: 8px !important; left: 8px !important; font-size: 12px !important; padding: 5px 9px !important; }
+    body.is-touch #zoomFace { font-size: 12px !important; padding: 6px 10px !important; }
+    /* juego */
+    body.is-touch #leftBtns { left: 8px !important; top: 6px !important; gap: 5px !important; }
+    body.is-touch #leftBtns .toy { padding: 5px 10px !important; font-size: 13px !important; }
+    body.is-touch #closetFace svg { width: 24px; height: 24px; }
+    body.is-touch #topBox { left: 50% !important; right: auto !important; transform: translateX(-50%) !important; top: 6px !important; padding: 3px 12px 4px !important; min-width: 100px !important; border-radius: 12px !important; }
+    body.is-touch #topBox .row { font-size: 17px !important; }
+    body.is-touch .coin { width: 16px; height: 16px; }
+    body.is-touch #count { font-size: 10px !important; }
+    body.is-touch #toast { top: 50px !important; font-size: 13px !important; padding: 6px 12px !important; }
+    body.is-touch #tools { left: auto !important; right: 8px !important; top: 6px !important; bottom: auto !important; transform: none !important; flex-direction: column !important; align-items: stretch !important; gap: 4px !important; }
+    body.is-touch #tools button { padding: 5px 8px !important; font-size: 11px !important; }
+    body.is-touch #hotbar { bottom: 6px !important; gap: 4px !important; max-width: 58vw !important; left: 47% !important; }
+    body.is-touch .slot { width: 46px !important; height: 52px !important; border-radius: 10px !important; }
+    body.is-touch .slot img { width: 28px !important; height: 28px !important; }
+    body.is-touch .slot small { font-size: 8.5px !important; max-width: 44px !important; }
+    body.is-touch .gridIcon { width: 22px !important; height: 22px !important; margin-bottom: 2px !important; }
+    body.is-touch .pickIcon { width: 26px !important; height: 26px !important; }
+    body.is-touch #structHint { bottom: 64px !important; font-size: 12px !important; }
+    body.is-touch #stickZone { left: 0 !important; bottom: 64px !important; width: 34vw !important; height: 62vh !important; }
+    body.is-touch #stick { z-index: 1; }
+    body.is-touch #stick { width: 104px !important; height: 104px !important; left: 22px !important; bottom: 72px !important; }
+    body.is-touch #knob { width: 46px !important; height: 46px !important; margin: -23px 0 0 -23px !important; }
+    body.is-touch #jumpBtn { right: 18px !important; bottom: 20px !important; width: 78px !important; height: 78px !important; font-size: 14px !important; }
+    body.is-touch #runBtn { right: 104px !important; bottom: 14px !important; width: 56px !important; height: 56px !important; font-size: 12px !important; }
+    body.is-touch #flyRow { right: 18px !important; bottom: 108px !important; flex-direction: row !important; }
+    body.is-touch #flyRow button { width: 58px !important; height: 40px !important; font-size: 12px !important; }
+    body.is-touch #banner { font-size: 34px !important; }
+    body.is-touch .card { max-height: 92vh !important; width: min(640px, 92vw) !important; }
+    body.is-touch .card header { padding: 8px 12px 4px !important; }
+    body.is-touch .card header h2 { font-size: 17px !important; }
+    body.is-touch #catGrid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)) !important; gap: 6px !important; }
+    body.is-touch .item img { width: 40px !important; height: 40px !important; }
+    body.is-touch .item { font-size: 11px !important; padding: 4px 3px 6px !important; }
+    body.is-touch .menuGrid { grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
+    body.is-touch .menuGrid .toy { padding: 7px 6px !important; font-size: 12px !important; }
+    body.is-touch #tut { bottom: 70px !important; width: min(420px, 60vw) !important; padding: 10px 12px !important; }
+    body.is-touch #tut p { font-size: 13px !important; }
+    body.is-touch #tut .toy { padding: 6px 12px !important; font-size: 13px !important; }
+  }
 </style>
 </head>
 <body>
@@ -317,6 +388,7 @@
 <div id="shop" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><p style="margin:0 0 6px">Ganás monedas jugando (5 por minuto) y con el regalo de cada día.</p><div id="shopList"></div></div></div></div>
 <div id="land" class="panel"><div class="card" style="width:min(420px,94vw)"><header><h2>Ampliar terreno</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="landBody"></div><button id="landBuy" class="toy">Comprar con monedas</button></div></div></div>
 <div id="confirm" class="panel"><div class="card" style="width:min(400px,94vw)"><header><h2>¿Limpiar todo?</h2></header><div class="body"><p>¿Sacar TODOS los bloques de tu terreno?</p><div class="menuGrid"><button id="clearYes" class="toy" style="background:#d9473b">Sí, limpiar</button><button class="toy gray" data-close>Cancelar</button></div></div></div></div>
+<div id="rotate"><div class="ph"></div><div id="rotTxt">Girá el celular para jugar</div></div>
 <div id="tut"><p id="tutText"></p><button id="tutNext" class="toy">Siguiente</button></div>
   <div id="stickZone" class="touch"></div>
   <div id="stick" class="touch"><div id="knob"></div></div>
@@ -460,6 +532,7 @@ const DICT = {
   // ---- plaza ----
   'CONSTRUÍ TODO': ['BUILD ANYTHING', 'CONSTRUA TUDO'], 'Construí Todo': ['Build Anything', 'Construa Tudo'],
   'Juego 1': ['Game 1', 'Jogo 1'], 'Juego 2': ['Game 2', 'Jogo 2'], 'PRÓXIMAMENTE': ['COMING SOON', 'EM BREVE'],
+  'Girá el celular para jugar': ['Turn your phone sideways to play', 'Vire o celular para jogar'],
   'subite a la cinta': ['hop on the belt', 'suba na esteira'],
   // ---- ayuda ----
   HELP_PC: ['<b>Click</b>: build · <b>Right click</b>: break · <b>Drag</b>: turn the camera<br><b>WASD</b>: walk · <b>Shift</b>: run · <b>Space</b>: jump<br><b>1-9</b>: blocks · <b>E</b>: all · <b>Q</b>: break · <b>R</b>: paint · <b>F</b>: fill · <b>Z</b>: undo · <b>C</b>: shape · <b>V</b>: rotate · <b>P</b>: photo',
@@ -1433,7 +1506,7 @@ function layout() {
   camera.aspect = W / H;
   if (mode === 'edit') {
     // corre la imagen para que el muñeco quede en el espacio libre (no detrás del panel)
-    if (W > 760) camera.setViewOffset(W, H, PANEL_W / 2, 0, W, H);
+    if (W > H) camera.setViewOffset(W, H, (document.getElementById('panel').offsetWidth + 20) / 2, 0, W, H); // panel a la derecha
     else camera.setViewOffset(W, H, 0, H * 0.21, W, H);
   } else {
     camera.clearViewOffset();
@@ -1457,7 +1530,11 @@ function enterPlay() {
   layout();
   audio(); startMusic();
 }
-document.getElementById('playBtn').addEventListener('click', enterPlay);
+document.getElementById('playBtn').addEventListener('click', () => {
+  // en celular: pantalla completa y horizontal (donde el navegador lo permite)
+  if (isTouch) { try { const de = document.documentElement; const p = de.requestFullscreen ? de.requestFullscreen() : null; if (p && p.then) p.then(() => screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape').catch(() => {})).catch(() => {}); } catch (e) { /* nada */ } }
+  enterPlay();
+});
 document.getElementById('closetBtn').addEventListener('click', enterEdit);
 document.getElementById('zoomFace').addEventListener('click', (e) => {
   edZoom = !edZoom;
@@ -3330,7 +3407,7 @@ function tick() {
   // cámara
   if (mode === 'edit') {
     // vestuario: la cámara mira al muñeco de frente (girarlo con el dedo)
-    const ty = edZoom ? 1.62 : 1.05, d = edZoom ? 2.2 : (innerWidth > 760 ? 3.9 : 6.0);
+    const ty = edZoom ? 1.62 : 1.05, d = edZoom ? 2.2 : (innerWidth > innerHeight ? (innerHeight < 520 ? 4.4 : 3.9) : 6.0);
     const target = tmp.copy(player.position).add(new THREE.Vector3(0, ty, 0));
     camera.position.lerp(new THREE.Vector3(target.x + Math.sin(edYaw) * d, target.y + 0.3, target.z + Math.cos(edYaw) * d), 1 - Math.exp(-8 * dt));
     camera.lookAt(target);
