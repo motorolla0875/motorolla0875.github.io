@@ -378,6 +378,15 @@
   #gTop .bk { font-size: 17px; }
   #gBtns { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
   #gBtns .toy { width: 98px; padding: 9px 6px; font-size: 14px; }
+  #marketHud { display: none; }
+  body.market #marketHud { display: block; }
+  body.market #topBox, body.market #shopBtn, body.market #help { display: none !important; }
+  #mkTop { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); display: flex; gap: 8px; pointer-events: none; }
+  #mkTop div { background: rgba(30,40,25,.85); color: #fff; border-radius: 14px; padding: 5px 14px; display: flex; align-items: center; gap: 7px; font-size: 22px; font-weight: 700; white-space: nowrap; }
+  #mkTop .cash { color: #7dffb0; } #mkTop .inc { font-size: 16px; color: #ffe27a; } #mkTop #mkReb:empty { display: none; }
+  #mkBtns { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
+  #mkBtns .toy { width: 98px; padding: 9px 6px; font-size: 14px; }
+  @media (orientation: landscape) and (max-height: 520px) { body.is-touch #mkTop { top: 6px !important; } body.is-touch #mkTop div { font-size: 15px !important; padding: 3px 10px !important; } body.is-touch #mkBtns .toy { width: 84px !important; padding: 7px 4px !important; font-size: 12px !important; } }
   #gPassBtn { background: #b45aff !important; }
   #seedBar { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; gap: 7px; pointer-events: auto; max-width: 92vw; overflow-x: auto; padding: 4px; }
   .seedB { position: relative; width: 58px; height: 58px; border-radius: 14px; border: 3px solid rgba(255,255,255,.85); background: rgba(250,246,235,.95); box-shadow: 0 3px 10px rgba(0,0,0,.18); font: 700 13px var(--font); cursor: pointer; flex: none; }
@@ -500,6 +509,10 @@
     <div id="cCross"></div>
     <div id="cFeed"></div>
   </div>
+  <div id="marketHud">
+    <div id="mkTop"><div class="cash">💵 <span id="mkCash">$0</span></div><div class="inc" id="mkInc"></div><div><span class="coin"></span><span id="mkCoins">0</span></div><div><span class="gem"></span><span id="mkGems">0</span></div><div id="mkReb"></div></div>
+    <div id="mkBtns"><button id="mkPassBtn" class="toy">Tienda</button></div>
+  </div>
   <div id="gardenHud">
     <div id="gTop"><div><span class="coin"></span><span id="gCoins">0</span></div><div><span class="gem"></span><span id="gGems">0</span></div><div class="bk">🧺 <span id="gBasket"></span></div></div>
     <div id="gBtns"><button id="gShopBtn" class="toy">Semillas</button><button id="gPassBtn" class="toy">Tienda</button></div>
@@ -546,6 +559,7 @@
 <div id="cshopPanel" class="panel"><div class="card"><header><h2>Lanzacacas</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="cshopList"></div></div></div></div>
 <div id="gshopPanel" class="panel"><div class="card"><header><h2>Semillas</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="gshopList"></div></div></div></div>
 <div id="gpassPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="gpassList"></div></div></div></div>
+<div id="mkpassPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="mkpassList"></div></div></div></div>
 <div id="pshopPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="pshopList"></div></div></div></div>
 <div id="hatch"><div id="hatchEggs"></div></div>
 <div id="fade"></div>
@@ -791,6 +805,20 @@ Object.assign(DICT, {
   'Tenés que quedarte con al menos una equipada.': ['Keep at least one equipped.', 'Fique com pelo menos um equipado.'],
   'Ya tenés el máximo de mascotas equipadas.': ['You already have the max equipped.', 'Você já tem o máximo equipado.'],
   'Mejor zona': ['Best zone', 'Melhor zona'], 'Volver a la plaza': ['Back to the plaza', 'Voltar para a praça'],
+  'Juego 5': ['Game 5', 'Jogo 5'], 'Mini Market': ['Mini Market', 'Mini Mercado'], 'MINI MARKET': ['MINI MARKET', 'MINI MERCADO'],
+  'Puestito': ['Little stand', 'Barraquinha'], 'Góndola de snacks': ['Snack shelf', 'Prateleira de salgadinhos'], 'Góndola de golosinas': ['Candy shelf', 'Prateleira de doces'],
+  'Paredes y puerta': ['Walls and door', 'Paredes e porta'], 'Heladera de bebidas': ['Drinks fridge', 'Geladeira de bebidas'], 'Góndola de panadería': ['Bakery shelf', 'Prateleira de padaria'],
+  'Cartel del local': ['Store sign', 'Placa da loja'], 'Freezer de helados': ['Ice cream freezer', 'Freezer de sorvete'], 'Segunda caja': ['Second register', 'Segundo caixa'],
+  'Agrandar el local': ['Expand the store', 'Aumentar a loja'], 'Puesto de frutas': ['Fruit stand', 'Banca de frutas'], 'Pasillo de limpieza': ['Cleaning aisle', 'Corredor de limpeza'],
+  'Pasillo de juguetes': ['Toy aisle', 'Corredor de brinquedos'], 'Estacionamiento': ['Parking lot', 'Estacionamento'], 'Cartel de supermercado': ['Supermarket sign', 'Placa de supermercado'],
+  'Camión de reparto': ['Delivery truck', 'Caminhão de entrega'], 'Caja': ['Register', 'Caixa'], 'automática': ['automatic', 'automático'], 'Renacer': ['Rebirth', 'Renascer'],
+  'Te falta {0}.': ['You need {0} more.', 'Faltam {0}.'], '¡Compraste {0}!': ['You bought {0}!', 'Você comprou {0}!'], 'Te falta {0} para renacer.': ['You need {0} more to rebirth.', 'Faltam {0} para renascer.'],
+  '¡RENACISTE!': ['REBIRTH!', 'RENASCEU!'], 'Ahora ganás +{0}% para siempre. Premio: 500 monedas y 20 gemas.': ['Now you earn +{0}% forever. Prize: 500 coins and 20 gems.', 'Agora você ganha +{0}% para sempre. Prêmio: 500 moedas e 20 gemas.'],
+  'Plata x2': ['Cash x2', 'Dinheiro x2'], 'Ganás el doble para siempre.': ['Earn double forever.', 'Ganhe o dobro para sempre.'], 'Cobro automático': ['Auto collect', 'Coleta automática'],
+  'La plata va directo a tu bolsillo, sin pisar la caja.': ['Cash goes straight to your pocket.', 'O dinheiro vai direto pro seu bolso.'], 'Clientes rápidos': ['Fast customers', 'Clientes rápidos'],
+  'Los clientes vienen el doble de seguido.': ['Customers come twice as often.', 'Os clientes vêm duas vezes mais.'], 'Ya lo tenés': ['Owned', 'Você já tem'], '{0} gemas': ['{0} gems', '{0} gemas'],
+  'Comprá cosas pisando el botón. Cobrá pisando la caja verde. Con todo comprado, ¡renacé!': ['Step on the button to buy. Step on the green register to collect. With everything bought, rebirth!', 'Pise no botão para comprar. Pise no caixa verde para coletar. Com tudo comprado, renasça!'],
+  'Pisá el botón rojo para comprar y la caja verde para cobrar. ¡Hacé crecer tu súper!': ['Step on the red button to buy and the green register to collect. Grow your store!', 'Pise no botão vermelho para comprar e no caixa verde para coletar. Faça seu mercado crescer!'],
   'Bloqueada': ['Locked', 'Bloqueada'], 'Cerrar': ['Close', 'Fechar'], 'Juego 2': ['Game 2', 'Jogo 2'],
 });
 const LANG_NAMES = { es: 'Español', en: 'English', pt: 'Português' };
@@ -904,7 +932,9 @@ function reservedAt(x, z) {
   if (x < -5 && x > -66 && Math.abs(z - 42) < 4.2) return true;            // cintas a la Huerta
   if (x < -63 && z > 21) return true;
   if (Math.abs(x) < 5 && z > 46 && z < 80) return true;                    // cintas a la Guerra de Caca
-  if (Math.abs(x) < 34 && z > 74) return true;                             // arena de la Guerra de Caca                                      // Huerta de la Suerte
+  if (Math.abs(x) < 34 && z > 74) return true;
+  if (x < -4 && x > -92 && z > 46 && z < 138 && Math.abs(x * 0.5980 + (z - 42) * 0.8015) < 5) return true;   // cintas al Mini Market
+  if (Math.abs(x + 72) < 19 && Math.abs(z - 116) < 19) return true;        // Mini Market                             // arena de la Guerra de Caca                                      // Huerta de la Suerte
   return false;
 }
 const offsets = new Float32Array(BLADES * 4);
@@ -2431,6 +2461,7 @@ function act(clientX, clientY, alt) {
   if (inPets) { petTap(clientX, clientY); return; }
   if (inGarden) { gardenTap(clientX, clientY); return; }
   if (inCongo) { congoShoot(); return; }
+  if (inMarket) return;
   if (!inGame) return;
   const p = pickCell(clientX, clientY);
   if (!p) return;
@@ -2895,7 +2926,7 @@ function updateHud() {
 let catTab = 'blocks';
 const CAT_TABS = [['blocks', 'Bloques'], ['premium', 'Premium'], ['daily', 'Colección'], ['deco', 'Muebles'], ['special', 'Especiales'], ['struct', 'Estructuras']].map(([a, n]) => [a, tr(n)]);
 function openCatalog(tab) { if (tab) catTab = tab; renderCatalog(); $('catalog').classList.add('open'); sfx('click'); }
-function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard', 'gshopPanel', 'gpassPanel', 'langPanel', 'cshopPanel']) $(id).classList.remove('open'); }
+function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard', 'gshopPanel', 'gpassPanel', 'langPanel', 'cshopPanel', 'mkpassPanel']) $(id).classList.remove('open'); }
 function renderCatalog() {
   const tabs = $('catTabs'); tabs.innerHTML = '';
   for (const [id, name] of CAT_TABS) { const b = document.createElement('button'); b.textContent = name; b.className = catTab === id ? 'on' : ''; b.onclick = () => { catTab = id; renderCatalog(); }; tabs.appendChild(b); }
@@ -3243,7 +3274,7 @@ function buildTick(dt, t) {
   if (mode === 'play' && onGround && !sitting && gs > 0.8 && ss !== lastStepSign) stepSound();
   lastStepSign = ss;
   // cada parte por separado: si una falla, las demás siguen andando (el juego nunca se congela)
-  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t));
+  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t));
   return night;
 }
 
@@ -4851,7 +4882,7 @@ try { myName = localStorage.getItem('mj_nombre') || ''; } catch (e) { /* nada */
 if (!myName) myName = (LANG === 'en' ? 'Player' : LANG === 'pt' ? 'Jogador' : 'Jugador') + Math.floor(1000 + Math.random() * 9000);
 
 // ---------- guardado en la nube ----------
-const SAVE_KEYS = ['construi_v1', 'pets_v1', 'huerta_v1', 'congo_v1', 'muneco-look', 'mj_nombre'];
+const SAVE_KEYS = ['construi_v1', 'pets_v1', 'huerta_v1', 'congo_v1', 'market_v1', 'muneco-look', 'mj_nombre'];
 function localBundle() { const d = {}; for (const k of SAVE_KEYS) { try { const v = localStorage.getItem(k); if (v != null) d[k] = v; } catch (e) { /* nada */ } } return d; }
 let lastCloud = '';
 async function cloudLoad() {
@@ -6489,6 +6520,358 @@ function congoTick(dt, t) {
   for (const s of CG_SKINS) if (s.rainbow && blasterCache[s.id]) { const h = (t * 0.3) % 1; blasterCache[s.id].traverse((m) => { if (m.isMesh && m.material.userData.rainbow) { m.material.color.setHSL(h, 0.9, 0.6); if (m.material.emissive) m.material.emissive.setHSL(h, 0.9, 0.4); } }); if (shotMats.rainbow) shotMats.rainbow.color.setHSL(h, 0.9, 0.6); }
 }
 
+// =====================================================================
+// ===== JUEGO 5: MINI MARKET TYCOON =====
+// =====================================================================
+// Arrancás con un puestito y lo convertís en supermercado: pisás los botones para comprar cosas,
+// cada cosa suma plata por segundo, la plata se junta en la caja (la pisás para cobrar) y cuando
+// tenés todo podés "renacer" (empezar de nuevo con +50% de ganancia para siempre).
+// La plata del súper es propia (como las monedas de las mascotas); al renacer te da monedas y gemas del mundo.
+const MK_ITEMS = [
+  { id: 'start', price: 0, income: 1, es: 'Puestito' },
+  { id: 'shelf1', price: 25, income: 2, es: 'Góndola de snacks' },
+  { id: 'shelf2', price: 80, income: 4, es: 'Góndola de golosinas' },
+  { id: 'walls', price: 150, income: 3, es: 'Paredes y puerta' },
+  { id: 'fridge1', price: 300, income: 8, es: 'Heladera de bebidas' },
+  { id: 'shelf3', price: 600, income: 12, es: 'Góndola de panadería' },
+  { id: 'sign', price: 900, income: 10, es: 'Cartel del local' },
+  { id: 'freezer', price: 1500, income: 25, es: 'Freezer de helados' },
+  { id: 'register2', price: 3000, income: 40, es: 'Segunda caja' },
+  { id: 'expand', price: 6000, income: 50, es: 'Agrandar el local' },
+  { id: 'fruit', price: 10000, income: 80, es: 'Puesto de frutas' },
+  { id: 'shelf4', price: 18000, income: 120, es: 'Pasillo de limpieza' },
+  { id: 'shelf5', price: 30000, income: 180, es: 'Pasillo de juguetes' },
+  { id: 'parking', price: 50000, income: 250, es: 'Estacionamiento' },
+  { id: 'neon', price: 90000, income: 400, es: 'Cartel de supermercado' },
+  { id: 'truck', price: 150000, income: 650, es: 'Camión de reparto' },
+];
+const MK_BY = {}; MK_ITEMS.forEach((it, i) => { it.order = i; MK_BY[it.id] = it; });
+const MK_REBIRTH = 250000, MK_REBIRTH_BONUS = 0.5, MK_START_CASH = 20;
+const MK_PASSES = [
+  { id: 'DoubleCash', gems: 150, es: 'Plata x2', d: 'Ganás el doble para siempre.' },
+  { id: 'AutoCollect', gems: 100, es: 'Cobro automático', d: 'La plata va directo a tu bolsillo, sin pisar la caja.' },
+  { id: 'FastCustomers', gems: 80, es: 'Clientes rápidos', d: 'Los clientes vienen el doble de seguido.' },
+];
+
+// ---------- guardado ----------
+const MK_KEY = 'market_v1';
+let mks = { cash: MK_START_CASH, owned: { start: 1 }, stash: 0, rebirths: 0, passes: {}, tut: 0 };
+try { const s = JSON.parse(localStorage.getItem(MK_KEY) || 'null'); if (s) mks = Object.assign(mks, s); } catch (e) { /* nada */ }
+let mkSaveT = 0;
+function mkSave(now) { if (!now) { clearTimeout(mkSaveT); mkSaveT = setTimeout(() => mkSave(true), 1500); return; } try { localStorage.setItem(MK_KEY, JSON.stringify(mks)); } catch (e) { /* nada */ } save(); }
+function mkMult() { return (1 + mks.rebirths * MK_REBIRTH_BONUS) * (mks.passes.DoubleCash ? 2 : 1); }
+function mkIncome() { let t = 0; for (const id in mks.owned) if (MK_BY[id]) t += MK_BY[id].income; return t * mkMult(); }
+const fmtMoney = (n) => '$' + fmt(Math.floor(n));
+
+// ---------- el lugar: al sureste de la plaza, al final de una cinta en diagonal ----------
+const MK = { x: -72, z: 116, k: 0.4 };
+const mkW = (x, z) => [MK.x + x * MK.k, MK.z + z * MK.k]; // posición de Roblox (local) → mundo
+const market = new THREE.Group(); scene.add(market);
+const mMat = (c, r = 0.7, extra) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: r }, extra || {}));
+function mBox(parent, w, h, d, mat, x, y, z) { const m = new THREE.Mesh(new THREE.BoxGeometry(w * MK.k, h * MK.k, d * MK.k), mat); const [wx, wz] = mkW(x, z); m.position.set(wx, y * MK.k, wz); m.castShadow = true; m.receiveShadow = true; parent.add(m); return m; }
+function mBall(parent, d, mat, x, y, z) { const m = new THREE.Mesh(new THREE.SphereGeometry(d / 2 * MK.k, 12, 9), mat); const [wx, wz] = mkW(x, z); m.position.set(wx, y * MK.k, wz); m.castShadow = true; parent.add(m); return m; }
+function mWall(x, z, w, d, h) { // muro con choques (círculos a lo largo)
+  const [wx, wz] = mkW(x, z), L = Math.max(w, d) * MK.k, along = w >= d;
+  for (let k = -L / 2 + 0.35; k <= L / 2 - 0.3; k += 0.7) colliders.push({ x: along ? wx + k : wx, z: along ? wz : wz + k, r: 0.45, h: (h || 10) * MK.k, mk: 1 });
+}
+{
+  // terreno de cemento, vereda de entrada y cartel de la calle
+  const base = new THREE.Mesh(new THREE.PlaneGeometry(90 * MK.k, 90 * MK.k), mMat('#c4c9c4', 0.95, { polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+  base.rotation.x = -Math.PI / 2; base.position.set(MK.x, 0.02, MK.z); base.receiveShadow = true; market.add(base);
+  const path = new THREE.Mesh(new THREE.PlaneGeometry(8 * MK.k, 30 * MK.k), mMat('#aaafaa', 0.95, { polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }));
+  path.rotation.x = -Math.PI / 2; const [px, pz] = mkW(0, -30); path.position.set(px, 0.03, pz); market.add(path);
+}
+// cinta en diagonal desde la plaza (sale al suroeste, entre la Huerta y la Guerra de Caca)
+const MK_END = { x: MK.x - 3, z: MK.z - 18 };
+const MK_DIR = (() => { const dx = MK_END.x - PLAZA.x, dz = MK_END.z - PLAZA.z, L = Math.hypot(dx, dz); return { x: dx / L, z: dz / L, L }; })();
+{
+  const dx = MK_DIR.x, dz = MK_DIR.z, L = MK_DIR.L - 1.5, sx = PLAZA.x + dx * (PLAZA.r - 1.2), sz = PLAZA.z + dz * (PLAZA.r - 1.2), ex = PLAZA.x + dx * L, ez = PLAZA.z + dz * L;
+  const px = -dz * 1.6, pz = dx * 1.6;
+  addBelt(sx - px, sz - pz, ex - px, ez - pz, '#1d9e75');
+  addBelt(ex + px, ez + pz, sx + px, sz + pz, '#e6a91e');
+  arch(ex + dx * 1.6, ez + dz * 1.6, Math.atan2(dx, dz), [tr('MINI MARKET'), tr('Juego 5')], '#1d9e75');
+  postSign(PLAZA.x + dx * (PLAZA.r + 0.8) - dz * 3.4, PLAZA.z + dz * (PLAZA.r + 0.8) + dx * 3.4, Math.atan2(dx, dz) + Math.PI, [tr('Mini Market'), tr('Juego 5')], '#1d9e75');
+}
+// límites: el pasillo de la cinta y el terreno del súper (lo demás lo maneja el mundo)
+function mkInside(x, z) {
+  if (x > MK.x - 17.6 && x < MK.x + 17.6 && z > MK.z - 17.6 && z < MK.z + 17.6) return true;
+  const px = x - PLAZA.x, pz = z - PLAZA.z, along = px * MK_DIR.x + pz * MK_DIR.z, side = -px * MK_DIR.z + pz * MK_DIR.x;
+  return along > 4 && along < MK_DIR.L + 4 && Math.abs(side) < 3.3;
+}
+let mkLast = null;
+function clampMarket() {
+  const p = player.position, beyond = (z) => z > 57.5;
+  if (mkInside(p.x, p.z)) { mkLast = { x: p.x, z: p.z }; return beyond(p.z); }
+  if (!mkLast || !beyond(mkLast.z) || Math.hypot(p.x - mkLast.x, p.z - mkLast.z) > 3) { mkLast = null; return false; }
+  // se resbala por el borde (como contra una pared)
+  if (mkInside(p.x, mkLast.z)) p.z = mkLast.z; else if (mkInside(mkLast.x, p.z)) p.x = mkLast.x; else { p.x = mkLast.x; p.z = mkLast.z; }
+  mkLast = { x: p.x, z: p.z };
+  return true;
+}
+
+// ---------- las cosas del local (armadas como en Roblox, a escala) ----------
+const MK_PRODUCTS = ['#e74c3c', '#3498db', '#f1c40f', '#9b59b6', '#2ecc71', '#e67e22'];
+const mkMats = {};
+const mm = (c, r, extra) => { const k = c + (r || '') + (extra ? JSON.stringify(extra) : ''); return mkMats[k] || (mkMats[k] = mMat(c, r === undefined ? 0.7 : r, extra)); };
+function shelf(g, x, z, frame, palette) {
+  mBox(g, 8, 5, 0.4, mm(frame), x, 2.5, z);
+  for (let i = 0; i < 3; i++) {
+    const y = 0.6 + i * 1.6;
+    mBox(g, 8, 0.25, 2, mm(frame), x, y, z + 0.9);
+    for (let k = 0; k < 6; k++) mBox(g, 0.9, 0.9, 0.9, mm(palette[(k + i * 2) % palette.length], 0.5), x - 3.1 + k * 1.25, y + 0.58, z + 1.1);
+  }
+  mBox(g, 0.3, 5, 2, mm(frame), x - 4, 2.5, z + 0.9); mBox(g, 0.3, 5, 2, mm(frame), x + 4, 2.5, z + 0.9);
+  mWall(x, z + 0.5, 8, 2, 5);
+}
+function register(g, x, z) {
+  mBox(g, 8, 3, 2.5, mm('#785032'), x, 1.5, z); mBox(g, 2, 1.2, 1.6, mm('#2d3436', 0.4), x - 1.5, 3.6, z);
+  const scr = mBox(g, 1.6, 0.9, 0.2, mm('#2ecc71', 0.3, { emissive: '#2ecc71', emissiveIntensity: 0.8 }), x - 1.5, 4.5, z - 0.5); scr.rotation.x = -0.35;
+  mWall(x, z, 8, 2.5, 3);
+}
+function fridge(g, x, z) {
+  mBox(g, 2.4, 7, 8, mm('#e6ebf0', 0.3), x, 3.5, z);
+  const drinks = ['#e74c3c', '#2ecc71', '#f1c40f', '#3498db'];
+  for (let i = 0; i < 3; i++) for (let k = 0; k < 5; k++) mBox(g, 0.6, 1.1, 0.6, mm(drinks[(k + i) % 4], 0.4), x + 1.1, 1.4 + i * 2, z - 2.8 + k * 1.4);
+  mBox(g, 0.2, 6.4, 7.6, mm('#b4dcff', 0.1, { transparent: true, opacity: 0.4 }), x + 1.3, 3.6, z);
+  mBox(g, 0.3, 0.6, 7.6, mm('#3498db', 0.3, { emissive: '#3498db', emissiveIntensity: 0.8 }), x + 1.3, 6.9, z);
+  mWall(x, z, 2.4, 8, 7);
+}
+function textSign(text, w, h, bg, fg) {
+  const cv = document.createElement('canvas'); cv.width = 512; cv.height = Math.round(512 * h / w); const c = cv.getContext('2d');
+  c.fillStyle = bg; c.fillRect(0, 0, cv.width, cv.height); c.fillStyle = fg; c.font = `700 ${Math.round(cv.height * 0.62)}px Fredoka, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, 256, cv.height / 2 + 4);
+  return new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(cv), roughness: 0.5 });
+}
+const mkWallsBack = [];
+function buildItem(id) {
+  const g = new THREE.Group();
+  const wall = mm('#f5f0e6', 0.9);
+  if (id === 'start') {
+    const fl = mBox(g, 30, 0.4, 24, mm('#decdaa', 0.8), 0, 0.2, 2); fl.castShadow = false;
+    register(g, -8, -6);
+  } else if (id === 'shelf1') shelf(g, 6, -3, '#c83c32', ['#f1c40f', '#e67e22', '#e74c3c']);
+  else if (id === 'shelf2') shelf(g, 6, 3, '#9b59b6', ['#ec70c7', '#ffffff', '#f1c40f', '#3498db']);
+  else if (id === 'walls') {
+    const back = mBox(g, 30, 10, 1, wall, 0, 5, 14); back.userData.back = 1;
+    mBox(g, 1, 10, 24, wall, -15, 5, 2); mBox(g, 1, 10, 24, wall, 15, 5, 2);
+    mBox(g, 11, 10, 1, wall, -9.5, 5, -10); mBox(g, 11, 10, 1, wall, 9.5, 5, -10); mBox(g, 8, 3, 1, wall, 0, 8.5, -10);
+    const aw = mBox(g, 12, 0.4, 3, mm('#1d9e75', 0.8), 0, 7.3, -11.6); aw.rotation.x = 0.26;
+    mWall(-15, 2, 1, 24); mWall(15, 2, 1, 24); mWall(-9.5, -10, 11, 1); mWall(9.5, -10, 11, 1);
+    if (!mks.owned.expand) mWall(0, 14, 30, 1);
+  } else if (id === 'fridge1') fridge(g, -13, 4);
+  else if (id === 'shelf3') shelf(g, 6, 9, '#a06e3c', ['#deb887', '#cd853f', '#f5deb3']);
+  else if (id === 'sign') { const s = mBox(g, 16, 3, 0.6, textSign('MINI MARKET', 16, 3, '#1d9e75', '#ffffff'), 0, 11.6, -10.4); s.material = [mm('#1d9e75'), mm('#1d9e75'), mm('#1d9e75'), mm('#1d9e75'), mm('#1d9e75'), textSign('MINI MARKET', 16, 3, '#1d9e75', '#ffffff')]; }
+  else if (id === 'freezer') {
+    mBox(g, 4, 3, 3, mm('#f0f5fa', 0.3), -11, 1.5, 11.5); mBox(g, 3.6, 0.2, 2.6, mm('#c8e6ff', 0.1, { transparent: true, opacity: 0.5 }), -11, 3.05, 11.5);
+    for (let k = 0; k < 4; k++) mBox(g, 0.7, 0.7, 0.7, mm(MK_PRODUCTS[k], 0.5), -12.2 + k * 0.8, 2.6, 11.5);
+    mWall(-11, 11.5, 4, 3, 3);
+  } else if (id === 'register2') register(g, 2, -6);
+  else if (id === 'expand') {
+    const fl = mBox(g, 30, 0.4, 20, mm('#decdaa', 0.8), 0, 0.2, 24); fl.castShadow = false;
+    mBox(g, 30, 10, 1, wall, 0, 5, 34); mBox(g, 1, 10, 20, wall, -15, 5, 24); mBox(g, 1, 10, 20, wall, 15, 5, 24);
+    mWall(0, 34, 30, 1); mWall(-15, 24, 1, 20); mWall(15, 24, 1, 20);
+  } else if (id === 'fruit') {
+    mBox(g, 8, 2.5, 5, mm('#8b5a2b'), -8, 1.25, 24);
+    const fr = ['#e74c3c', '#f1c40f', '#2ecc71', '#e67e22'];
+    for (let i = 0; i < 4; i++) for (let k = 0; k < 3; k++) mBall(g, 1, mm(fr[i], 0.4), -11 + i * 2, 3, 22.6 + k * 1.4);
+    mWall(-8, 24, 8, 5, 2.5);
+  } else if (id === 'shelf4') shelf(g, 6, 20, '#3498db', ['#ffffff', '#1abc9c', '#3498db', '#f1c40f']);
+  else if (id === 'shelf5') shelf(g, 6, 28, '#f1c40f', MK_PRODUCTS);
+  else if (id === 'parking') {
+    const asf = mBox(g, 36, 0.2, 18, mm('#3c3f41', 0.95), -23, 0.1, -30); asf.castShadow = false;
+    for (let i = 0; i < 5; i++) mBox(g, 0.4, 0.22, 7, mm('#ffffff'), -38 + i * 7, 0.12, -34);
+    const cars = ['#e74c3c', '#3498db', '#f1c40f'];
+    for (let i = 0; i < 3; i++) {
+      const cx = -34.5 + i * 7;
+      mBox(g, 4, 1.6, 7, mm(cars[i], 0.35), cx, 1.3, -34); mBox(g, 3.6, 1.3, 3.6, mm(cars[i], 0.35), cx, 2.7, -33.6);
+      for (const [wx, wz] of [[-2, -2.3], [2, -2.3], [-2, 2.3], [2, 2.3]]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.6 * MK.k, 0.6 * MK.k, 0.6 * MK.k, 12), mm('#1e1e1e')); w.rotation.z = Math.PI / 2; const [ax, az] = mkW(cx + wx, -34 + wz); w.position.set(ax, 0.6 * MK.k, az); g.add(w); }
+      const [ccx, ccz] = mkW(cx, -34); colliders.push({ x: ccx, z: ccz - 0.6, r: 0.9, h: 1.3, mk: 1 }, { x: ccx, z: ccz + 0.6, r: 0.9, h: 1.3, mk: 1 });
+    }
+  } else if (id === 'neon') {
+    mBox(g, 1, 22, 1, mm('#505050', 0.3), -30, 11, -14);
+    const s = mBox(g, 18, 4, 1, mm('#14141e'), -30, 23, -14);
+    s.material = [mm('#14141e'), mm('#14141e'), mm('#14141e'), mm('#14141e'), textSign('SUPERMARKET', 18, 4, '#14141e', '#ffe650'), textSign('SUPERMARKET', 18, 4, '#14141e', '#ffe650')];
+    const pink = mm('#ff50a0', 0.3, { emissive: '#ff50a0', emissiveIntensity: 1 });
+    mBox(g, 18.4, 0.3, 1.2, pink, -30, 25.1, -14); mBox(g, 18.4, 0.3, 1.2, pink, -30, 20.9, -14);
+    const [nx, nz] = mkW(-30, -14); colliders.push({ x: nx, z: nz, r: 0.35, h: 9, mk: 1 });
+  } else if (id === 'truck') {
+    const box = mBox(g, 6, 6, 12, mm('#f5f5f5', 0.4), -30, 3.8, 28);
+    box.material = [textSign('MINI MARKET', 12, 6, '#f5f5f5', '#1d9e75'), textSign('MINI MARKET', 12, 6, '#f5f5f5', '#1d9e75'), mm('#f5f5f5', 0.4), mm('#f5f5f5', 0.4), mm('#f5f5f5', 0.4), mm('#f5f5f5', 0.4)];
+    mBox(g, 6, 4.5, 4, mm('#1d9e75', 0.4), -30, 3, 20); mBox(g, 5.6, 1.8, 0.2, mm('#96c8e6', 0.1, { transparent: true, opacity: 0.6 }), -30, 4, 17.95);
+    for (const [wx, wz] of [[-3, 20], [3, 20], [-3, 30], [3, 30]]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(1 * MK.k, 1 * MK.k, 0.8 * MK.k, 14), mm('#1e1e1e')); w.rotation.z = Math.PI / 2; const [ax, az] = mkW(-30 + wx, wz); w.position.set(ax, 1 * MK.k, az); g.add(w); }
+    const [tx, tz] = mkW(-30, 24); for (let k = -2.4; k <= 2.4; k += 1.2) colliders.push({ x: tx, z: tz + k, r: 1.3, h: 4, mk: 1 });
+  }
+  g.traverse((m) => { if (m.isMesh && m.userData.back) mkWallsBack.push(m); });
+  mergeChildren(g, (o) => o.userData.back);
+  market.add(g);
+  return g;
+}
+const mkBuilt = {};
+function rebuildStore() {
+  for (const id in mkBuilt) { market.remove(mkBuilt[id]); delete mkBuilt[id]; }
+  for (let i = colliders.length - 1; i >= 0; i--) if (colliders[i].mk) colliders.splice(i, 1);
+  mkWallsBack.length = 0;
+  for (const it of MK_ITEMS) if (mks.owned[it.id]) mkBuilt[it.id] = buildItem(it.id);
+  // con el local agrandado, la pared del fondo vieja se abre
+  if (mks.owned.expand) for (const w of mkWallsBack) w.visible = false;
+  refreshButtons();
+}
+
+// ---------- botones para comprar y la caja para cobrar ----------
+function mPad(color, lines) {
+  const g = new THREE.Group(); market.add(g);
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.2, 28), new THREE.MeshStandardMaterial({ color, roughness: 0.4, emissive: color, emissiveIntensity: 0.3 })); disc.position.y = 0.1; g.add(disc);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: signTexture(lines, { border: color, size: 110 }), depthWrite: false })); sp.scale.set(3.4, 1.7, 1); sp.position.y = 2.1; g.add(sp);
+  return { g, disc, sp, key: '' };
+}
+const mkBtn = mPad('#e74c3c', ['', '']); const [bx, bz] = mkW(18, -16); mkBtn.g.position.set(bx, 0, bz);
+const mkCash = mPad('#1d9e75', [tr('Caja'), '$0']); const [cx0, cz0] = mkW(-8, -15); mkCash.g.position.set(cx0, 0, cz0);
+function nextItem() { return MK_ITEMS.find((it) => !mks.owned[it.id]); }
+function refreshButtons() {
+  const it = nextItem(), price = it ? it.price : MK_REBIRTH, can = mks.cash >= price;
+  const key = (it ? it.id : 'rebirth') + can;
+  if (key === mkBtn.key) return; mkBtn.key = key;
+  const col = !it ? '#b45aff' : can ? '#2ea046' : '#e74c3c';
+  mkBtn.disc.material.color.set(col); mkBtn.disc.material.emissive.set(col);
+  mkBtn.sp.material.map = signTexture(it ? [tr(it.es), fmtMoney(price)] : [tr('Renacer'), fmtMoney(price)], { border: col, size: 105 }); mkBtn.sp.material.needsUpdate = true;
+}
+let cashKey = '';
+function refreshCashPad() {
+  const key = Math.floor(mks.stash) + '|' + !!mks.passes.AutoCollect;
+  if (key === cashKey) return; cashKey = key;
+  mkCash.sp.material.map = signTexture(mks.passes.AutoCollect ? [tr('Caja'), tr('automática')] : [tr('Caja'), fmtMoney(mks.stash)], { border: '#1d9e75', size: 105 }); mkCash.sp.material.needsUpdate = true;
+}
+function mkBuy() {
+  const it = nextItem();
+  if (!it) { mkRebirth(); return; }
+  if (mks.cash < it.price) { toast(tr('Te falta {0}.', fmtMoney(it.price - mks.cash))); sfx('click'); return; }
+  mks.cash -= it.price; mks.owned[it.id] = 1; mkSave();
+  if (it.id === 'expand') rebuildStore(); // se abre la pared del fondo (y su choque)
+  const g = mkBuilt[it.id] || (mkBuilt[it.id] = buildItem(it.id));
+  // aparece con un saltito
+  g.userData.pop = 1;
+  refreshButtons(); updateMkHud(); sfx('coin'); happy();
+  toast(tr('¡Compraste {0}!', tr(it.es)) + '  +' + fmtMoney(it.income * mkMult()) + '/s');
+}
+function mkRebirth() {
+  if (mks.cash < MK_REBIRTH) { toast(tr('Te falta {0} para renacer.', fmtMoney(MK_REBIRTH - mks.cash))); return; }
+  mks.rebirths++; mks.cash = MK_START_CASH; mks.stash = 0; mks.owned = { start: 1 };
+  st.coins += 500; st.gems += 20; updateHud(); mkSave(true);
+  rebuildStore(); updateMkHud();
+  banner(tr('¡RENACISTE!')); toast(tr('Ahora ganás +{0}% para siempre. Premio: 500 monedas y 20 gemas.', Math.round(mks.rebirths * MK_REBIRTH_BONUS * 100))); sfx('ping'); happy();
+}
+function mkCollect() {
+  if (mks.stash < 1) return;
+  const n = Math.floor(mks.stash); mks.stash -= n; mks.cash += n; mkSave();
+  popText('+' + fmtMoney(n), new THREE.Vector3(mkCash.g.position.x, 1, mkCash.g.position.z), '#7dffb0'); sfx('coin');
+  refreshCashPad(); updateMkHud(); refreshButtons();
+}
+
+// ---------- clientes (vecinos que vienen a comprar) ----------
+const MK_SPOTS = { shelf1: [6, 0.8], shelf2: [6, 6.8], shelf3: [6, 12], fridge1: [-10, 4], freezer: [-7.5, 11.5], fruit: [-8, 20.5], shelf4: [6, 22.5], shelf5: [6, 30.5] };
+const customers = [], custPool = [];
+let custT = 3;
+function spawnCustomer() {
+  const spots = Object.keys(MK_SPOTS).filter((id) => mks.owned[id]);
+  if (!spots.length) return;
+  const sp = MK_SPOTS[spots[Math.floor(Math.random() * spots.length)]];
+  const route = [[0, -44], [0, -14], [0, -9], [-3, -6], [-3, -2], [-3, sp[1]], [sp[0], sp[1]], [-3, sp[1]], [-3, -2], [-8, -3.5], [-3, -2], [-3, -6], [0, -9], [0, -44]].map(([x, z]) => mkW(x, z));
+  // se reusan los muñecos (no se crean nuevos cada vez)
+  let c = custPool.pop();
+  if (!c) {
+    const R = brng(Math.floor(Math.random() * 1e9));
+    c = { bot: true, obj: new THREE.Group(), av: null, lugar: 60 + Math.floor(Math.random() * 40), phase: 0, walk: 0, spd: 0, nombre: '' };
+    c.look = botLook(R); c.av = makeAvatar(c.look); c.obj.add(c.av.g); c.obj.traverse((m) => { if (m.isMesh) m.castShadow = false; });
+  }
+  c.route = route; c.i = 1; c.wait = 0; c.spd = 0; c.walk = 0;
+  c.obj.position.set(route[0][0], 0, route[0][1]); market.add(c.obj);
+  customers.push(c);
+}
+function customersTick(dt, t, near) {
+  const fast = mks.passes.FastCustomers ? 0.5 : 1;
+  const nSpots = Object.keys(MK_SPOTS).filter((id) => mks.owned[id]).length;
+  custT -= dt;
+  if (near && custT <= 0) { custT = Math.max(1.2, 5 - nSpots * 0.5) * fast; if (customers.length < 5) spawnCustomer(); }
+  for (let i = customers.length - 1; i >= 0; i--) {
+    const c = customers[i], o = c.obj;
+    if (!near) { market.remove(o); customers.splice(i, 1); custPool.push(c); continue; }
+    let sp = 0;
+    if (c.wait > 0) c.wait -= dt;
+    else {
+      const [tx, tz] = c.route[c.i], dx = tx - o.position.x, dz = tz - o.position.z, d = Math.hypot(dx, dz), v = 3.6;
+      if (d < 0.08) { c.i++; if (c.i === 7 || c.i === 10) c.wait = 0.8; if (c.i >= c.route.length) { market.remove(o); customers.splice(i, 1); custPool.push(c); continue; } }
+      else { const s = Math.min(d, v * dt); o.position.x += dx / d * s; o.position.z += dz / d * s; o.rotation.y = angleLerp(o.rotation.y, Math.atan2(dx, dz), 1 - Math.exp(-12 * dt)); sp = v; }
+    }
+    c.spd += (sp - c.spd) * Math.min(1, dt * 8);
+    c.walk += ((c.spd > 0.4 ? 1 : 0) - c.walk) * (1 - Math.exp(-10 * dt));
+    c.phase += dt * (c.spd * 1.75 + 0.0001);
+    animateRemote(c, c.spd, 1, t, dt);
+    remoteFace(c, c.wait > 0 ? 1 : 0, dt);
+  }
+}
+
+// ---------- HUD y pases ----------
+function updateMkHud() {
+  $('mkCash').textContent = fmtMoney(mks.cash);
+  $('mkInc').textContent = '+' + fmtMoney(mkIncome()) + '/s';
+  $('mkReb').textContent = mks.rebirths ? '♻ ' + mks.rebirths : '';
+  $('mkCoins').textContent = fmt(st.coins); $('mkGems').textContent = fmt(st.gems);
+}
+function openMkPass() {
+  closePanels();
+  const box = $('mkpassList'); box.innerHTML = `<p class="note">${tr('Comprá cosas pisando el botón. Cobrá pisando la caja verde. Con todo comprado, ¡renacé!')}</p>`;
+  for (const p of MK_PASSES) {
+    const r = document.createElement('div'); r.className = 'shopRow';
+    r.innerHTML = `<span class="seedIco">${{ DoubleCash: '💵', AutoCollect: '🧲', FastCustomers: '🏃' }[p.id]}</span><div><b>${tr(p.es)}</b><small>${tr(p.d)}</small></div>`;
+    const have = !!mks.passes[p.id], b = document.createElement('button'); b.className = 'toy' + (have ? ' owned' : ' gemB'); b.textContent = have ? tr('Ya lo tenés') : tr('{0} gemas', p.gems); b.disabled = have;
+    b.onclick = () => { if (st.gems < p.gems) { toast(tr('Te faltan {0} gemas.', p.gems - st.gems)); return; } st.gems -= p.gems; mks.passes[p.id] = 1; mkSave(true); updateHud(); updateMkHud(); refreshCashPad(); openMkPass(); sfx('coin'); happy(); };
+    r.appendChild(b); box.appendChild(r);
+  }
+  $('mkpassPanel').classList.add('open'); sfx('click');
+}
+$('mkPassBtn').onclick = openMkPass;
+
+// ---------- cada cuadro ----------
+var inMarket = false;
+const MKB = { x0: MK.x - 18, x1: MK.x + 18, z0: MK.z - 18, z1: MK.z + 18 };
+let mkSecT = 0;
+const mkOn = {};
+function marketTick(dt, t) {
+  const p = player.position;
+  const now = mode === 'play' && p.x > MKB.x0 && p.x < MKB.x1 && p.z > MKB.z0 && p.z < MKB.z1;
+  if (now !== inMarket) {
+    inMarket = now;
+    document.body.classList.toggle('market', now);
+    if (now) {
+      updateMkHud(); refreshButtons(); refreshCashPad();
+      banner(tr('MINI MARKET'));
+      if (!mks.tut) { mks.tut = 1; mkSave(); setTimeout(() => toast(tr('Pisá el botón rojo para comprar y la caja verde para cobrar. ¡Hacé crecer tu súper!')), 1400); }
+    }
+  }
+  // la plata entra cada segundo mientras jugás en cualquier parte del mundo
+  mkSecT += dt;
+  if (mkSecT >= 1) {
+    mkSecT -= 1;
+    const inc = mkIncome();
+    if (mks.passes.AutoCollect) mks.cash += inc; else mks.stash += inc;
+    if (inMarket) { updateMkHud(); refreshButtons(); }
+    refreshCashPad();
+    if (Math.random() < 0.1) mkSave();
+  }
+  const near = Math.hypot(p.x - MK.x, p.z - MK.z) < 70;
+  customersTick(dt, t, near && mode === 'play');
+  for (const id in mkBuilt) { const g = mkBuilt[id]; if (g.userData.pop > 0) { g.userData.pop = Math.max(0, g.userData.pop - dt * 2.5); const s = 1 - g.userData.pop * 0.25 + Math.sin(g.userData.pop * Math.PI) * 0.15; g.scale.set(1, s, 1); g.position.y = 0; } }
+  mkBtn.disc.rotation.y += dt; mkCash.sp.position.y = 2.1 + Math.sin(t * 2) * 0.08;
+  if (!inMarket) return;
+  // pisar el botón / la caja
+  const onBtn = Math.hypot(p.x - mkBtn.g.position.x, p.z - mkBtn.g.position.z) < 1.2;
+  if (onBtn && !mkOn.btn) mkBuy();
+  mkOn.btn = onBtn;
+  const onCash = Math.hypot(p.x - mkCash.g.position.x, p.z - mkCash.g.position.z) < 1.2;
+  if (onCash && !mkOn.cash) mkCollect();
+  mkOn.cash = onCash;
+}
+rebuildStore();
+
 function tick() {
   requestAnimationFrame(tick);
   try { tickInner(); } catch (e) { safe('cuadro', () => { throw e; }); }
@@ -6543,7 +6926,7 @@ function tickInner() {
   }
   // no salir del campo
   const r = Math.hypot(player.position.x, player.position.z);
-  if (!clampPets() && !clampCongo()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(Math.abs(player.position.x) < 5 ? 80 : 58, player.position.z)); }
+  if (!clampPets() && !clampCongo() && !clampMarket()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(Math.abs(player.position.x) < 5 ? 80 : 58, player.position.z)); }
   player.rotation.y = facing;
 
   // animación de los huesos
