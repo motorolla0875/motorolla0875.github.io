@@ -4370,9 +4370,10 @@ function makeAvatar(lk) {
 }
 function setTag(r) {
   const cv = document.createElement('canvas'); cv.width = 256; cv.height = 64; const g = cv.getContext('2d');
-  g.font = '700 34px Fredoka, sans-serif'; const w = Math.min(250, g.measureText(r.nombre).width + 34);
-  g.fillStyle = 'rgba(30,40,25,.72)'; g.beginPath(); g.roundRect ? g.roundRect((256 - w) / 2, 6, w, 50, 25) : g.rect((256 - w) / 2, 6, w, 50); g.fill();
-  g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(r.nombre, 128, 32);
+  const label = r.bot ? '🏠 ' + r.nombre : r.nombre;
+  g.font = '700 34px Fredoka, sans-serif'; const w = Math.min(250, g.measureText(label).width + 34);
+  g.fillStyle = r.bot ? 'rgba(46,140,64,.78)' : 'rgba(30,40,25,.72)'; g.beginPath(); g.roundRect ? g.roundRect((256 - w) / 2, 6, w, 50, 25) : g.rect((256 - w) / 2, 6, w, 50); g.fill();
+  g.fillStyle = '#fff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(label, 128, 32);
   if (!r.tag) { r.tag = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthWrite: false })); r.tag.scale.set(2.2, 0.55, 1); r.tag.position.y = 2.5; r.obj.add(r.tag); }
   r.tag.material.map = new THREE.CanvasTexture(cv); r.tag.material.needsUpdate = true;
 }
@@ -4604,7 +4605,7 @@ function drawRemotePlotFloor(r) {
   const post = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 2, 10), new THREE.MeshStandardMaterial({ color: '#b5814f', roughness: 0.55 })); post.position.y = 1; sg.add(post);
   const scv = document.createElement('canvas'); scv.width = 512; scv.height = 160; const s2 = scv.getContext('2d');
   s2.fillStyle = '#faf6eb'; s2.beginPath(); s2.roundRect ? s2.roundRect(4, 4, 504, 152, 30) : s2.rect(4, 4, 504, 152); s2.fill(); s2.lineWidth = 10; s2.strokeStyle = '#2ea046'; s2.stroke();
-  s2.fillStyle = '#1e2819'; s2.textAlign = 'center'; s2.textBaseline = 'middle'; s2.font = '700 56px Fredoka, sans-serif'; s2.fillText(tr('Terreno de {0}', r.nombre).slice(0, 22), 256, 80);
+  s2.fillStyle = '#1e2819'; s2.textAlign = 'center'; s2.textBaseline = 'middle'; s2.font = '700 56px Fredoka, sans-serif'; s2.fillText(tr('Terreno de {0}', (r.bot ? '🏠 ' : '') + r.nombre).slice(0, 24), 256, 80);
   const board = new THREE.Mesh(rbox(3.2, 1, 0.12, 0.06), new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(scv), roughness: 0.5 })); board.position.y = 2.1; sg.add(board);
 }
 // se escucha cuando alguien construye cerca tuyo
@@ -4620,7 +4621,7 @@ function blockSound(r, ops) {
 // choques con los bloques de los demás (se puede caminar por sus casas y subirse arriba)
 function remotePlotsCollide(px, py, pz) {
   let top = -1;
-  for (const r of remotes.values()) {
+  for (const M of [remotes, bots]) for (const r of M.values()) {
     const pl = r.plot; if (!pl) continue;
     if (px < pl.ox - 1 || px > pl.ox + CELLS + 1 || pz < pl.oz - 1 || pz > pl.oz + CELLS + 1) continue;
     const hf = (x, y, z) => {
@@ -4646,7 +4647,7 @@ function rebuildRemotePets(r) {
   }
 }
 function tickRemotePets(r, dt, t) {
-  const inPw = (r.snaps.length && (r.snaps[r.snaps.length - 1].fl & 64)) && inPets;
+  const inPw = (r.bot ? r.inPw : (r.snaps.length && (r.snaps[r.snaps.length - 1].fl & 64))) && inPets;
   const o = r.obj, f = o.rotation.y;
   const fwd = new THREE.Vector3(Math.sin(f), 0, Math.cos(f)), right = new THREE.Vector3(fwd.z, 0, -fwd.x);
   r.pets.forEach((p, i) => {
@@ -4683,6 +4684,7 @@ function myFlags() {
 function netTick(dt, t) {
   if (!netMode && mode === 'play') netConnect();
   remoteTick(dt, t);
+  botsTick(dt, t);
   if (!netOn) return;
   // 10 veces por segundo (con el reloj de verdad, aunque el celular ande lento)
   const now = performance.now();
@@ -4718,6 +4720,282 @@ $('mMyPlot').onclick = () => {
   const f = $('fade'); f.classList.add('on'); setTimeout(() => f.classList.remove('on'), 250);
 };
 setInterval(updateBadge, 2000);
+
+// =====================================================================
+// ===== VECINOS: muñecos que viven en el mundo aunque no haya nadie =====
+// =====================================================================
+// Todo lo que hacen sale de la hora del servidor y del número de terreno, así que
+// dos personas en la misma sala ven a los mismos vecinos haciendo exactamente lo mismo.
+// No se hacen pasar por personas: llevan una casita 🏠 en el nombre y no cuentan como "en línea".
+var bots = new Map();
+const BOT_NAMES = ['Tomi', 'Lu', 'Mati', 'Sofi', 'Nico', 'Juli', 'Valen', 'Mora', 'Benja', 'Emma', 'Lolo', 'Cami', 'Fran', 'Pipo', 'Agus', 'Rocío', 'Bauti', 'Mía', 'Thiago', 'Luz', 'Santi', 'Pili', 'Joaco', 'Ema'];
+const BOT_CYCLE = 360;           // cada 6 minutos: construye, pasea, desarma y arranca otra cosa
+const BOT_STEP = 1.5, BOT_UNSTEP = 0.35;
+const botBI = (id) => BLOCKS.findIndex((b) => b.id === id);
+// números al azar pero repetibles (misma semilla = mismo resultado en todos los celulares)
+function brng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const bpick = (R, arr) => arr[Math.floor(R() * arr.length)];
+var botShift = 0; // (solo para pruebas)
+function botNow() { return (srvOff !== null ? (performance.now() + srvOff) / 1000 : Date.now() / 1000) + botShift; }
+
+// ---------- qué construyen ----------
+function botPlan(seed) {
+  const R = brng(seed), ops = [];
+  const put = (x, y, z, id, r = 0) => { const t = botBI(id); if (t >= 0) ops.push([x, y, z, t, 0, r]); };
+  const kind = Math.floor(R() * 5);
+  const cx = 14 + Math.floor(R() * 4), cz = 14 + Math.floor(R() * 4);
+  if (kind === 0) { // casita con puerta, ventanas, techo y muebles
+    const wall = bpick(R, ['planks', 'brick', 'white', 'sandstone', 'cobble']), roof = bpick(R, ['roof', 'planks', 'red', 'blue']);
+    const W = 3, H = 3;
+    put(cx, 0, cz - 1, 'bed', 2); put(cx - 1, 0, cz + 1, 'table'); put(cx - 2, 0, cz + 1, 'chair', 1); put(cx + 2, 0, cz - 2, 'plant');
+    for (let y = 0; y < H; y++) for (let x = -W; x <= W; x++) for (let z = -W; z <= W; z++) {
+      if (Math.abs(x) !== W && Math.abs(z) !== W) continue;
+      if (z === W && x === 0 && y < 2) { if (y === 0) put(cx, 0, cz + W, 'door', 0); continue; }
+      const win = y === 1 && (Math.abs(x) === W ? Math.abs(z) === 1 : Math.abs(x) === 2 && z === -W);
+      put(cx + x, y, cz + z, win ? 'glass' : wall);
+    }
+    for (let x = -W; x <= W; x++) for (let z = -W; z <= W; z++) put(cx + x, H, cz + z, roof);
+    put(cx - 1, 0, cz + W + 1, 'pot'); put(cx + 1, 0, cz + W + 1, 'pot');
+  } else if (kind === 1) { // torre con antorchas
+    const m = bpick(R, ['stone', 'cobble', 'basalt', 'marble']), h = 6 + Math.floor(R() * 3);
+    for (let y = 0; y < h; y++) for (let x = -1; x <= 1; x++) for (let z = -1; z <= 1; z++) if (x || z || y === h - 1) put(cx + x, y, cz + z, (y % 3 === 2 && !(x && z)) ? 'glass' : m);
+    for (const [x, z] of [[-2, -2], [2, -2], [-2, 2], [2, 2]]) put(cx + x, h, cz + z, m);
+    for (const [x, z] of [[-2, -1], [2, 1], [-1, 2], [1, -2]]) put(cx + x, h, cz + z, m);
+    put(cx, h, cz, 'torch'); put(cx - 1, 0, cz + 2, 'torch'); put(cx + 1, 0, cz + 2, 'torch');
+  } else if (kind === 2) { // jardín con árboles y cerca
+    for (let x = -4; x <= 4; x++) for (const z of [-4, 4]) put(cx + x, 0, cz + z, 'fence');
+    for (let z = -3; z <= 3; z++) for (const x of [-4, 4]) put(cx + x, 0, cz + z, 'fence');
+    for (const [tx, tz] of [[-2, -2], [2, 1]]) {
+      for (let y = 0; y < 3; y++) put(cx + tx, y, cz + tz, 'log');
+      for (let x = -1; x <= 1; x++) for (let z = -1; z <= 1; z++) put(cx + tx + x, 3, cz + tz + z, 'leaves');
+      put(cx + tx, 4, cz + tz, 'leaves');
+    }
+    put(cx + 1, 0, cz - 2, 'pot'); put(cx - 2, 0, cz + 2, 'plant'); put(cx, 0, cz + 2, 'chair', 0); put(cx + 3, 0, cz + 3, 'barrel');
+  } else if (kind === 3) { // corazón / dibujo de colores
+    const art = bpick(R, [
+      ['.XX.XX.', 'XXXXXXX', 'XXXXXXX', '.XXXXX.', '..XXX..', '...X...'],
+      ['..XXX..', '.XXXXX.', 'XX.X.XX', 'XXXXXXX', '.X...X.', 'X.....X'],
+      ['...X...', '..XXX..', '.XXXXX.', 'XXXXXXX', '..XXX..', '..XXX..'],
+    ]);
+    const c1 = bpick(R, ['red', 'pink', 'purple', 'blue', 'green', 'yellow', 'orange']);
+    for (let row = 0; row < art.length; row++) for (let col = 0; col < 7; col++) if (art[row][col] === 'X') put(cx - 3 + col, art.length - 1 - row, cz, c1);
+    for (let x = -3; x <= 3; x++) put(cx + x, 0, cz + 2, 'yellow');
+  } else { // pileta con reposeras
+    for (let x = -3; x <= 3; x++) for (let z = -2; z <= 2; z++) put(cx + x, 0, cz + z, Math.abs(x) === 3 || Math.abs(z) === 2 ? 'sand' : 'ice');
+    put(cx - 2, 1, cz - 3, 'chair', 0); put(cx, 1, cz - 3, 'chair', 0); put(cx + 2, 1, cz - 3, 'chair', 0);
+    for (let x = -3; x <= 3; x++) put(cx + x, 0, cz - 3, 'planks');
+    put(cx + 4, 0, cz, 'plant'); put(cx - 4, 0, cz, 'plant');
+  }
+  // de abajo hacia arriba, dando la vuelta
+  ops.sort((a, b) => a[1] - b[1] || Math.atan2(a[2] - cz, a[0] - cx) - Math.atan2(b[2] - cz, b[0] - cx));
+  let minX = 99, maxX = -99, minZ = 99, maxZ = -99;
+  for (const o of ops) { minX = Math.min(minX, o[0]); maxX = Math.max(maxX, o[0]); minZ = Math.min(minZ, o[2]); maxZ = Math.max(maxZ, o[2]); }
+  return { ops: ops.slice(0, 120), box: [minX, maxX, minZ, maxZ], R };
+}
+function botLook(R) {
+  const one = (k) => { const v = bpick(R, OPTIONS[k]); return Array.isArray(v) ? v[0] : v; };
+  const lk = {}; for (const k of Object.keys(OPTIONS)) lk[k] = one(k);
+  if (R() < 0.5) lk.hat = 'ninguno';
+  return lk;
+}
+// dónde se para para poner un bloque: afuera de lo que construye, del lado más cercano
+function standFor(pl, box, x, z) {
+  const [x0, x1, z0, z1] = box;
+  const d = [x - x0, x1 - x, z - z0, z1 - z], m = Math.min(...d), e = 1.3;
+  let sx = x + 0.5, sz = z + 0.5;
+  if (m === d[3]) sz = z1 + 1 + e - 0.5; else if (m === d[2]) sz = z0 - e + 0.5; else if (m === d[1]) sx = x1 + 1 + e - 0.5; else sx = x0 - e + 0.5;
+  return [pl.ox + sx, pl.oz + sz];
+}
+
+// ---------- el día de un vecino (todo sale de la hora) ----------
+function botCycle(b, cyc) {
+  const seed = (b.slot * 7919 + cyc * 104729) | 0;
+  const plan = botPlan(seed), R = plan.R;
+  const n = plan.ops.length, B = n * BOT_STEP, D = n * BOT_UNSTEP + 2;
+  const pl = b.plot, [cx, cz] = SLOTS[b.slot];
+  // paseo: vueltas por el barrio con paradas
+  const start = standFor(pl, plan.box, plan.ops[n - 1][0], plan.ops[n - 1][2]), back = standFor(pl, plan.box, plan.ops[n - 1][0], plan.ops[n - 1][2]);
+  const legs = []; let tt = B, px = start[0], pz = start[1];
+  const W = BOT_CYCLE - B - D;
+  while (tt < B + W - 22) {
+    const ang = R() * Math.PI * 2, rad = 6 + R() * 13;
+    const nx = Math.max(-97, Math.min(97, cx + Math.cos(ang) * rad)), nz = Math.max(-137, Math.min(56, cz + Math.sin(ang) * rad));
+    const run = R() < 0.3, spd = run ? 7.5 : 4.2, dist = Math.hypot(nx - px, nz - pz), dur = dist / spd;
+    const pause = 3 + R() * 8;
+    legs.push({ t0: tt, t1: tt + dur, ax: px, az: pz, bx: nx, bz: nz, run, pause, jump: R() < 0.5, face: R() * Math.PI * 2, emo: bpick(R, ['normal', 'normal', 'feliz', 'sorpresa', 'guiño']) });
+    tt += dur + pause; px = nx; pz = nz;
+  }
+  const left = B + W - tt, dist = Math.hypot(back[0] - px, back[1] - pz);
+  legs.push({ t0: tt, t1: tt + Math.max(dist / 6, left - 1), ax: px, az: pz, bx: back[0], bz: back[1], run: false, pause: 0, face: 0, emo: 'normal' });
+  b.name = BOT_NAMES[(b.slot * 5 + cyc * 3) % BOT_NAMES.length];
+  b.plan = plan; b.cyc = cyc; b.B = B; b.D = D; b.legs = legs; b.n = n;
+  b.lookNew = botLook(brng(seed ^ 0x5bd1e995));
+}
+// dónde está y qué hace en el segundo u del ciclo
+function botState(b, u) {
+  const s = { x: 0, y: 0, z: 0, f: 0, fl: 1, h: 0, ex: 'normal', count: 0 };
+  const ops = b.plan.ops, n = b.n;
+  if (u < b.B) { // construye
+    const i = Math.min(n - 1, Math.floor(u / BOT_STEP)), k = (u - i * BOT_STEP) / BOT_STEP;
+    const o = ops[i], prev = ops[Math.max(0, i - 1)];
+    const p1 = standFor(b.plot, b.plan.box, prev[0], prev[2]), p2 = standFor(b.plot, b.plan.box, o[0], o[2]);
+    const w = smooth01(k / 0.45);
+    s.x = p1[0] + (p2[0] - p1[0]) * w; s.z = p1[1] + (p2[1] - p1[1]) * w;
+    s.spd = k < 0.45 ? Math.hypot(p2[0] - p1[0], p2[1] - p1[1]) / (BOT_STEP * 0.45) : 0;
+    s.f = Math.atan2(b.plot.ox + o[0] + 0.5 - s.x, b.plot.oz + o[2] + 0.5 - s.z);
+    if (k > 0.5 && k < 0.75) s.fl |= 16;
+    s.h = 2 + o[3]; s.count = i + (k > 0.62 ? 1 : 0);
+    s.ex = o[1] >= 3 ? 'sorpresa' : 'normal';
+    return s;
+  }
+  if (u < BOT_CYCLE - b.D) { // pasea
+    s.count = n;
+    for (const L of b.legs) {
+      if (u > L.t1 + L.pause && L !== b.legs[b.legs.length - 1]) continue;
+      if (u < L.t1) {
+        const k = Math.max(0, (u - L.t0) / (L.t1 - L.t0));
+        s.x = L.ax + (L.bx - L.ax) * k; s.z = L.az + (L.bz - L.az) * k;
+        s.f = Math.atan2(L.bx - L.ax, L.bz - L.az); s.spd = Math.hypot(L.bx - L.ax, L.bz - L.az) / (L.t1 - L.t0);
+        if (L.run) { s.fl |= 2; s.ex = 'feliz'; }
+      } else {
+        const p = u - L.t1;
+        s.x = L.bx; s.z = L.bz; s.spd = 0; s.ex = L.emo;
+        s.f = Math.atan2(L.bx - L.ax, L.bz - L.az) + Math.min(1, p / 1.2) * angleDiff(Math.atan2(L.bx - L.ax, L.bz - L.az), L.face);
+        if (L.jump && p > 1.5 && p < 2.2) { const q = p - 1.5; s.y = Math.max(0, 7.5 * q - 11 * q * q); if (s.y > 0) s.fl &= ~1; }
+      }
+      return s;
+    }
+    const L = b.legs[b.legs.length - 1]; s.x = L.bx; s.z = L.bz; s.spd = 0; return s;
+  }
+  // desarma con el pico (rápido), para empezar otra cosa
+  const v = u - (BOT_CYCLE - b.D), j = Math.max(0, n - 1 - Math.floor(v / BOT_UNSTEP));
+  const o = ops[j], st = standFor(b.plot, b.plan.box, o[0], o[2]);
+  const L = b.legs[b.legs.length - 1];
+  const w = Math.min(1, v / 1.5);
+  s.x = L.bx + (st[0] - L.bx) * w; s.z = L.bz + (st[1] - L.bz) * w; s.spd = w < 1 ? 3 : 0;
+  s.f = Math.atan2(b.plot.ox + o[0] + 0.5 - s.x, b.plot.oz + o[2] + 0.5 - s.z);
+  s.fl |= 16; s.h = 1;
+  s.count = Math.max(0, n - Math.floor(v / BOT_UNSTEP));
+  return s;
+}
+function angleDiff(a, b) { let d = (b - a) % (Math.PI * 2); if (d > Math.PI) d -= Math.PI * 2; if (d < -Math.PI) d += Math.PI * 2; return d; }
+
+// ---------- quiénes están ----------
+function addBot(slot) {
+  const obj = new THREE.Group(); remoteRoot.add(obj);
+  const b = { bot: true, id: 'bot' + slot, slot, lugar: slot, nombre: '', look: {}, tierra: 0, mascotas: [], obj, av: null, snaps: [], phase: 0, walk: 0, spd: 0, pets: [], plot: null, vis: true, cyc: -1, built: 0 };
+  b.plot = newRemotePlot(b);
+  bots.set(slot, b);
+  return b;
+}
+function removeBot(slot) {
+  const b = bots.get(slot); if (!b) return;
+  remoteRoot.remove(b.obj);
+  for (const p of b.pets) remoteRoot.remove(p.obj);
+  scene.remove(b.plot.group);
+  bots.delete(slot);
+}
+function botsWanted() {
+  const busy = new Set([mySlot]); for (const r of remotes.values()) busy.add(r.lugar);
+  const max = Math.max(2, Math.min(isTouch ? 4 : 6, 7 - busy.size));
+  const want = [];
+  for (let s = 1; s < SLOTS.length && want.length < max; s++) if (!busy.has(s)) want.push(s);
+  return want;
+}
+let botCheckT = 0;
+function botsTick(dt, t) {
+  botCheckT -= dt;
+  if (botCheckT <= 0) {
+    botCheckT = 1;
+    const want = new Set(botsWanted());
+    for (const s of [...bots.keys()]) if (!want.has(s)) removeBot(s);
+    for (const s of want) if (!bots.has(s)) addBot(s);
+  }
+  const now = botNow(), me = player.position;
+  for (const b of bots.values()) {
+    const T = now + b.slot * 53, cyc = Math.floor(T / BOT_CYCLE), u = T - cyc * BOT_CYCLE;
+    if (cyc !== b.cyc) {
+      botCycle(b, cyc);
+      // vecino nuevo: otra ropa, otro nombre, terreno vacío
+      b.look = b.lookNew; b.nombre = b.name; rebuildAvatar(b); setTag(b);
+      clearRemotePlot(b); b.built = 0;
+    }
+    const s = botState(b, u);
+    // poner o sacar los bloques que corresponden a este momento
+    if (s.count !== b.built) {
+      const ops = [];
+      if (s.count > b.built) { for (let i = b.built; i < s.count; i++) ops.push(...b.plan.ops[i]); }
+      else { for (let i = s.count; i < b.built; i++) { const o = b.plan.ops[i]; ops.push(o[0], o[1], o[2], -1, 0, 0); } }
+      if (Math.abs(s.count - b.built) <= 2) blockSound(b, s.count > b.built ? ops.slice(0, 6) : ops.slice(0, 6));
+      applyOps(b, ops); b.built = s.count;
+    }
+    const o = b.obj, dist = Math.hypot(s.x - me.x, s.z - me.z);
+    o.position.set(s.x, s.y, s.z);
+    o.rotation.y = angleLerp(o.rotation.y, s.f, 1 - Math.exp(-12 * dt));
+    o.visible = dist < 110;
+    if (!o.visible) continue;
+    b.spd += ((s.spd || 0) - b.spd) * Math.min(1, dt * 8);
+    b.walk += ((b.spd > 0.4 ? 1 : 0) - b.walk) * (1 - Math.exp(-10 * dt));
+    b.phase += dt * (b.spd * 1.75 + 0.0001);
+    const ground = !!(s.fl & 1);
+    if (ground && b.ground === false) b.squash = 1;
+    b.ground = ground;
+    b.squash = (b.squash || 0) * Math.exp(-9 * dt);
+    b.av.g.scale.set(1 + b.squash * 0.12, 1 - b.squash * 0.15, 1 + b.squash * 0.12);
+    if (b.tag) { const op = Math.min(1, Math.max(0, (48 - dist) / 14)); b.tag.material.opacity = op; b.tag.visible = op > 0.02; }
+    setHeld(b, s.h);
+    animateRemote(b, b.spd, s.fl, t, dt);
+    remoteFace(b, Math.max(0, EXPRESIONES.indexOf(s.ex)), dt);
+  }
+  petBotsTick(dt, t, now);
+}
+
+// ---------- vecinos en el Reino de Mascotas ----------
+const petBots = [];
+const PB_PETS = ['kitty', 'puppy', 'bunny', 'honeybear', 'fox', 'duck', 'raccoon', 'candybear', 'fairybunny'];
+const petBotRoot = new THREE.Group(); petWorld.add(petBotRoot); // se ven también desde afuera, de lejos
+function petBotsTick(dt, t, now) {
+  if (!petBots.length) {
+    for (let i = 0; i < 3; i++) {
+      const obj = new THREE.Group(); petBotRoot.add(obj);
+      petBots.push({ bot: true, id: 'pbot' + i, i, lugar: 20 + i, obj, av: null, snaps: [], phase: 0, walk: 0, spd: 0, pets: [], inPw: true, cyc: -1, nombre: '' });
+    }
+  }
+  for (const b of petBots) {
+    const P = 240, T = now + b.i * 71, cyc = Math.floor(T / P), u = T - cyc * P;
+    if (cyc !== b.cyc) {
+      b.cyc = cyc; const R = brng(cyc * 31 + b.i * 977 + 5);
+      b.look = botLook(R); b.nombre = BOT_NAMES[(b.i * 7 + cyc) % BOT_NAMES.length];
+      if (b.av) b.obj.remove(b.av.g);
+      b.av = makeAvatar(b.look); b.hand = null; b.heldCode = -1; b.obj.add(b.av.g); setTag(b);
+      b.mascotas = []; for (let k = 0; k < 2 + Math.floor(R() * 2); k++) { const id = bpick(R, PB_PETS.filter((p) => PBY[p])); if (id) b.mascotas.push([id, '']); }
+      for (const p of b.pets) petsRoot.remove(p.obj);
+      b.pets = [];
+      for (const [id, v] of b.mascotas) { const obj = petModel(id, v); obj.scale.setScalar(0.9); obj.visible = false; petsRoot.add(obj); b.pets.push({ obj, hop: R() * 6, spd: 0 }); }
+      // paseo por la Pradera, en coordenadas propias del Reino
+      b.legs = []; let tt = 0, px = -8 + R() * 16, pz = -88 - R() * 12;
+      while (tt < P) { const nx = -13 + R() * 26, nz = -87 - R() * 16, dur = Math.hypot(nx - px, nz - pz) / 4.2, pause = 2 + R() * 6; b.legs.push({ t0: tt, t1: tt + dur, ax: px, az: pz, bx: nx, bz: nz, pause }); tt += dur + pause; px = nx; pz = nz; }
+    }
+    let x = 0, z = 0, f = 0, spd = 0, fl = 1;
+    for (const L of b.legs) {
+      if (u > L.t1 + L.pause) continue;
+      if (u < L.t1) { const k = (u - L.t0) / (L.t1 - L.t0); x = L.ax + (L.bx - L.ax) * k; z = L.az + (L.bz - L.az) * k; spd = 4.2; }
+      else { x = L.bx; z = L.bz; if ((u - L.t1) % 1.2 < 0.3) fl |= 16; } // en las paradas pica monedas
+      f = Math.atan2(L.bx - L.ax, L.bz - L.az); break;
+    }
+    // el grupo del Reino está girado: las cuentas van en sus coordenadas y se pasan a la escena
+    const o = b.obj;
+    o.position.set(x, 0, z);
+    o.rotation.y = angleLerp(o.rotation.y, f, 1 - Math.exp(-12 * dt));
+    b.spd += (spd - b.spd) * Math.min(1, dt * 8);
+    b.walk += ((b.spd > 0.4 ? 1 : 0) - b.walk) * (1 - Math.exp(-10 * dt));
+    b.phase += dt * (b.spd * 1.75 + 0.0001);
+    setHeld(b, 0);
+    animateRemote(b, b.spd, fl, t, dt);
+    remoteFace(b, (fl & 16) ? 1 : 0, dt);
+    tickRemotePets(b, dt, t);
+  }
+}
 
 function tick() {
   const dt = Math.min(clock.getDelta(), 0.05);
