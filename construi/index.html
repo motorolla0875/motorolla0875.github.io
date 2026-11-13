@@ -359,6 +359,11 @@
   #cMsg { position: absolute; left: 50%; top: 24%; transform: translate(-50%, -50%) scale(.6); opacity: 0; transition: .25s; text-align: center; color: #fff; pointer-events: none; text-shadow: 0 3px 0 rgba(60,30,10,.6); }
   #cMsg.on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   #cMsg b { display: block; font-size: 44px; } #cMsg small { display: block; font-size: 20px; }
+  #cCross { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; border: 2px solid rgba(255,255,255,.9); box-shadow: 0 0 0 1px rgba(0,0,0,.35); pointer-events: none; }
+  #cCross::after { content: ''; position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.4); }
+  #cFeed { position: absolute; right: 12px; top: 64px; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; pointer-events: none; }
+  #cFeed div { background: rgba(30,20,15,.75); color: #fff; border-radius: 10px; padding: 3px 10px; font-size: 14px; }
+  body.congo #stickZone ~ * {}
   .blasterIco { width: 44px; height: 26px; border-radius: 8px; flex: none; box-shadow: inset 0 -6px 0 rgba(0,0,0,.25); }
   @media (orientation: landscape) and (max-height: 520px) { body.is-touch #cTop .mb { width: 100px !important; height: 14px !important; } body.is-touch #cTime { font-size: 15px !important; padding: 2px 8px !important; } body.is-touch #cKills { top: 34px !important; font-size: 14px !important; } body.is-touch #cMsg b { font-size: 30px !important; } body.is-touch #cMsg small { font-size: 15px !important; } body.is-touch #cBtns .toy { width: 90px !important; font-size: 12px !important; } body.is-touch #cFireBtn { width: 78px !important; height: 78px; font-size: 28px !important; } }
 
@@ -490,6 +495,8 @@
     <div id="cBtns"><button id="cShopBtn" class="toy">Lanzacacas</button></div>
     <button id="cFireBtn" class="toy">💩</button>
     <div id="cMsg"></div>
+    <div id="cCross"></div>
+    <div id="cFeed"></div>
   </div>
   <div id="gardenHud">
     <div id="gTop"><div><span class="coin"></span><span id="gCoins">0</span></div><div><span class="gem"></span><span id="gGems">0</span></div><div class="bk">🧺 <span id="gBasket"></span></div></div>
@@ -566,6 +573,11 @@ const LANG = (() => {
 document.documentElement.lang = LANG;
 // clave: texto en español → [inglés, portugués]
 const DICT = {
+  'Vos': ['You', 'Você'], 'el monstruo': ['the monster', 'o monstro'],
+  '¡Tu monstruo está en peligro!': ['Your monster is in danger!', 'Seu monstro está em perigo!'],
+  '¡El monstruo enemigo está casi destruido!': ['The enemy monster is almost dead!', 'O monstro inimigo está quase destruído!'],
+  'Mové la vista con el dedo y tocá el botón para tirar caca. ¡Destruí el monstruo azul!': ['Move the view with your finger and tap the button to throw poop. Destroy the blue monster!', 'Mova a visão com o dedo e toque no botão para jogar cocô. Destrua o monstro azul!'],
+  'Hacé clic para apuntar con el mouse y mantené apretado para tirar caca. ¡Destruí el monstruo azul!': ['Click to aim with the mouse and hold to throw poop. Destroy the blue monster!', 'Clique para mirar com o mouse e segure para jogar cocô. Destrua o monstro azul!'],
   'GUERRA DE CACA': ['POOP WAR', 'GUERRA DE COCÔ'], 'Guerra de Caca': ['Poop War', 'Guerra de Cocô'], 'Juego 4': ['Game 4', 'Jogo 4'],
   'Lanzacacas': ['Poop Blaster', 'Lança-cocô'], 'En uso': ['Equipped', 'Em uso'], 'Usar': ['Equip', 'Usar'],
   'Clásico': ['Classic', 'Clássico'], 'Baba Tóxica': ['Toxic Slime', 'Gosma Tóxica'], 'Congelado': ['Frozen', 'Congelado'], 'Neón': ['Neon', 'Neon'], 'Galaxia': ['Galaxy', 'Galáxia'], 'Dorado': ['Golden', 'Dourado'], 'Fuego': ['Fire', 'Fogo'],
@@ -2414,7 +2426,7 @@ function playerCells(x, y, z) {
 function act(clientX, clientY, alt) {
   if (inPets) { petTap(clientX, clientY); return; }
   if (inGarden) { gardenTap(clientX, clientY); return; }
-  if (inCongo) { congoShoot(clientX, clientY); return; }
+  if (inCongo) { congoShoot(); return; }
   if (!inGame) return;
   const p = pickCell(clientX, clientY);
   if (!p) return;
@@ -3500,7 +3512,7 @@ function beltAt(x, z) {
   return null;
 }
 // altura del piso en un punto (las cintas están un poquito levantadas)
-function floorAt(x, z) { return beltAt(x, z) ? BELT_H : 0; }
+function floorAt(x, z) { return beltAt(x, z) ? BELT_H : (typeof congoFloor === 'function' ? congoFloor(x, z) : 0); }
 
 // cintas de la estación "Construí Todo": ida (izquierda) y vuelta (derecha)
 addBelt(-1.6, PLAZA.z - PLAZA.r + 1.2, -1.6, 19.2, '#2ea046');
@@ -5691,13 +5703,13 @@ function gardenBotsTick(dt, t, now) {
 // =====================================================================
 // Versión con tu muñeco del Poop War de Roblox: dos equipos con lanzacacas, cada uno protege
 // su monstruo de caca y tiene que destruir el del otro. Si se acaba el tiempo, gana el monstruo con más vida.
-// Jugás en el equipo rojo con 3 vecinos; enfrente hay 4 vecinos del equipo azul.
+// Se juega en primera persona, 8 contra 8: vos en el equipo rojo con 7 vecinos; enfrente, 8 vecinos del azul.
 const CG = { cx: 0, cz: 150, hx: 28, hz: 70 }; // la arena (rojo al norte, azul al sur)
 const CG_K = 0.4; // studs de Roblox → tamaño del muñeco
 const CG_CFG = {
-  matchTime: 240, wait: 6, endTime: 8, respawn: 4, shield: 2.5,
+  matchTime: 360, wait: 6, endTime: 8, respawn: 4, shield: 2.5,
   hp: 100, dmg: 34, fireRate: 0.28, shotSpeed: 76, shotGravity: 10, shotLife: 1.6,
-  mStart: 1500, mGrow: 3, mMax: 4500, mDmg: 10, mSpitRange: 18, mSpitEvery: 1.8,
+  mStart: 3000, mGrow: 7, mMax: 9000, mDmg: 10, mSpitRange: 18, mSpitEvery: 1.8,
   botFire: 0.6, botSpread: 5, botSight: 44, botSpeed: 6.6,
   coinsKill: 10, coinsMonster: 1, coinsWin: 60, coinsPlay: 20,
 };
@@ -5714,6 +5726,22 @@ const CG_SKINS = [
 const CG_BY = {}; CG_SKINS.forEach((s) => { CG_BY[s.id] = s; });
 const CG_NAMES = ['StinkyNinja', 'ToiletKing', 'PlungerPro', 'MudSlinger', 'FlushMaster', 'SmellyBeast', 'PoopSniper', 'DiaperDan', 'SewerRat_9', 'GooGoblin', 'CaptainPlunge', 'SplatAttack', 'BrownBomber', 'StinkBomb_X', 'PottyPanda', 'SlimeLord', 'TurboToot', 'FlyCatcher', 'MuckMonster', 'PoopyPirate', 'ClogBuster', 'RottenRex', 'WipeOut_77', 'DungDragon'];
 const CG_RED = '#e62d2d', CG_BLUE = '#286ef0';
+// plataformas del mapa de Roblox (en distancia al centro; la rampa sube hacia afuera)
+const CG_PLATS = [
+  { x: 20, z: 12, w: 7.2, d: 10.4, h: 3.2, rz: 3.6, rw: 4, rl: 6.4 },
+  { x: -20.8, z: 47.2, w: 6.4, d: 8.8, h: 3.2, rz: 40, rw: 4, rl: 5.6 },
+];
+// altura del piso en la arena (para subir por las rampas)
+function congoFloor(x, z) {
+  if (Math.abs(x - CG.cx) > CG.hx || Math.abs(z - CG.cz) > CG.hz) return 0;
+  const az = Math.abs(z - CG.cz);
+  for (const pl of CG_PLATS) {
+    const dx = Math.abs(x - CG.cx - pl.x);
+    if (dx <= pl.w / 2 && Math.abs(az - pl.z) <= pl.d / 2) return pl.h;
+    if (dx <= pl.rw / 2 && Math.abs(az - pl.rz) <= pl.rl / 2) return pl.h * Math.max(0, Math.min(1, (az - (pl.rz - pl.rl / 2)) / pl.rl));
+  }
+  return 0;
+}
 
 // ---------- guardado ----------
 const CG_KEY = 'congo_v1';
@@ -5808,6 +5836,20 @@ function stink(x, y, z, n, spread) {
     const base = cMesh(new THREE.PlaneGeometry(HX * 2 - 1.6, 12), new THREE.MeshStandardMaterial({ color: sign < 0 ? CG_RED : CG_BLUE, transparent: true, opacity: 0.4, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 }), CG.cx, 0.04, CG.cz + sign * (HZ - 6), cg);
     base.rotation.x = -Math.PI / 2; base.castShadow = false;
   }
+  // plataformas elevadas con rampa (se puede subir caminando)
+  for (const sign of [-1, 1]) {
+    for (const pl of CG_PLATS) {
+      const pz = CG.cz + sign * pl.z, rz = CG.cz + sign * pl.rz;
+      cMesh(new THREE.BoxGeometry(pl.w, pl.h, pl.d), C_STONE2, CG.cx + pl.x, pl.h / 2, pz);
+      cMesh(new THREE.BoxGeometry(pl.w + 0.2, 0.25, pl.d + 0.2), C_STONE, CG.cx + pl.x, pl.h + 0.12, pz);
+      const len = Math.hypot(pl.rl, pl.h), ramp = cMesh(new THREE.BoxGeometry(pl.rw, 0.35, len), C_STONE, CG.cx + pl.x, pl.h / 2 - 0.12, rz);
+      ramp.rotation.x = sign * Math.atan2(pl.h, pl.rl);
+      // paredes de la plataforma (menos donde está la rampa)
+      const x0 = CG.cx + pl.x - pl.w / 2 + 0.55, x1 = CG.cx + pl.x + pl.w / 2 - 0.55, zNear = pz - sign * (pl.d / 2 - 0.55), zFar = pz + sign * (pl.d / 2 - 0.55);
+      for (let x = x0; x <= x1 + 0.01; x += 0.9) { colliders.push({ x, z: zFar, r: 0.6, h: pl.h, cover: 1 }); if (Math.abs(x - CG.cx - pl.x) > pl.rw / 2 + 0.3) colliders.push({ x, z: zNear, r: 0.6, h: pl.h, cover: 1 }); }
+      for (let z = Math.min(zNear, zFar); z <= Math.max(zNear, zFar) + 0.01; z += 0.9) { colliders.push({ x: x0, z, r: 0.6, h: pl.h, cover: 1 }, { x: x1, z, r: 0.6, h: pl.h, cover: 1 }); }
+    }
+  }
   // centro: puente de piedra con un gran montón y dos columnas
   cMesh(new THREE.BoxGeometry(12, 1.2, 4), C_STONE2, CG.cx, 0.6, CG.cz);
   poopPile(CG.cx, CG.cz, 2.2); for (const x of [-9.6, 9.6]) { cMesh(new THREE.BoxGeometry(1.6, 4, 1.6), C_STONE, CG.cx + x, 2, CG.cz); colliders.push({ x: CG.cx + x, z: CG.cz, r: 1.1, h: 4, cover: 1 }); }
@@ -5898,7 +5940,7 @@ const fighters = []; // el jugador y los vecinos con lanzacacas
 let cgOn = false, cgPhase = 'off', cgPhaseT = 0, cgTime = 0, cgKills = 0, cgResult = '';
 const meF = { me: true, team: 'red', name: '', hp: 100, alive: true, respawnT: 0, shield: 0, lastFire: 0, kills: 0 };
 function fPos(f) { return f.me ? player.position : f.obj.position; }
-function spawnPoint(team, i) { const sign = team === 'red' ? -1 : 1; return [CG.cx + ((i % 4) - 1.5) * 4, CG.cz + sign * (158 * CG_K + (i > 3 ? 2 : 0))]; }
+function spawnPoint(team, i) { const sign = team === 'red' ? -1 : 1; return [CG.cx + ((i % 4) - 1.5) * 4, CG.cz + sign * (158 * CG_K - Math.floor(i / 4) * 2.4)]; }
 function makeBot(team, i) {
   const R = brng(i * 7919 + (team === 'red' ? 3 : 11));
   const obj = new THREE.Group(); cg.add(obj);
@@ -5909,6 +5951,7 @@ function makeBot(team, i) {
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.45, 0.62, 24), new THREE.MeshBasicMaterial({ color: team === 'red' ? CG_RED : CG_BLUE, transparent: true, opacity: 0.8, depthWrite: false }));
   ring.rotation.x = -Math.PI / 2; ring.position.y = 0.05; obj.add(ring);
   f.hand = attachBlaster(f.av.J, f.skin);
+  obj.traverse((m) => { if (m.isMesh) m.castShadow = false; }); // 16 muñecos: sin sombra para que ande liviano
   fighters.push(f);
   return f;
 }
@@ -5916,8 +5959,8 @@ function makeBot(team, i) {
 const myRing = new THREE.Mesh(new THREE.RingGeometry(0.45, 0.62, 24), new THREE.MeshBasicMaterial({ color: CG_RED, transparent: true, opacity: 0.8, depthWrite: false }));
 myRing.rotation.x = -Math.PI / 2; myRing.visible = false; scene.add(myRing);
 fighters.push(meF);
-for (let i = 1; i <= 3; i++) makeBot('red', i);
-for (let i = 0; i < 4; i++) makeBot('blue', i);
+for (let i = 1; i <= 7; i++) makeBot('red', i);
+for (let i = 0; i < 8; i++) makeBot('blue', i);
 fighters.forEach((f) => { if (f.bot) f.obj.visible = false; });
 
 // ---------- disparos ----------
@@ -5942,10 +5985,11 @@ function hitFighter(victim, shooter, monsterShot) {
   if (victim.me) { sfx('hurt'); hurtTime = 0.8; jolt = 0.6; shakeT = 0.3; updateCgHud(); }
   if (victim.hp > 0) return;
   victim.alive = false; victim.respawnT = CG_CFG.respawn; victim.hp = 0;
+  feed(shooter, victim);
   if (shooter && shooter.me) { cgKills++; cs.kills++; st.coins += CG_CFG.coinsKill; updateHud(); popText('+' + CG_CFG.coinsKill, fPos(victim), '#ffd83d'); sfx('ping'); happy(); }
   if (victim.me) {
     cgMsg(tr('¡TE EMBARRARON!'), shooter ? tr('por {0}', shooter.nombre || '?') : '', 2.5);
-    player.visible = false; myBlaster && (myBlaster.visible = false);
+    myBlaster && (myBlaster.visible = false);
   } else { victim.dieT = 0; }
   // salpicón grande
   const p = fPos(victim); splat(p.x, 0, p.z, true);
@@ -6006,49 +6050,87 @@ function aimDir(from, to, spreadDeg) {
 
 // ---------- disparar yo ----------
 const cRay = new THREE.Raycaster();
-function myMuzzle() { const p = player.position; return new THREE.Vector3(p.x + Math.sin(facing) * 0.55, p.y + 1.45, p.z + Math.cos(facing) * 0.55); }
-function congoShoot(cx, cy, assist) {
+function myMuzzle() { return new THREE.Vector3(0.24, -0.2, -0.85).applyQuaternion(camera.quaternion).add(camera.position); }
+const _fwd = new THREE.Vector3();
+function congoShoot() {
   if (cgPhase !== 'battle' || !meF.alive) return;
   const now = performance.now() / 1000;
   if (now - meF.lastFire < CG_CFG.fireRate) return;
   meF.lastFire = now;
-  let target = null;
-  if (cx !== undefined) {
-    cRay.setFromCamera(new THREE.Vector2(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1), camera);
-    const o = cRay.ray.origin, dv = cRay.ray.direction;
-    // ¿toqué a alguien o a un monstruo? (se elige lo más cercano a la línea)
-    let best = 1.6, bestP = null;
-    for (const f of fighters) {
-      if (f.me || !f.alive || f.team === 'red' || !f.obj.visible) continue;
-      const fp = f.obj.position, c = new THREE.Vector3(fp.x, fp.y + 1.05, fp.z);
-      const dist = cRay.ray.distanceToPoint(c) / Math.max(1, c.distanceTo(o) * 0.05);
-      if (dist < best) { best = dist; bestP = c; }
-    }
-    const m = cMon.blue; const mc = new THREE.Vector3(m.x, 4 * m.scale, m.z);
-    if (!bestP && cRay.ray.distanceToPoint(mc) < 4.5 * m.scale) bestP = mc;
-    if (bestP) target = bestP;
-    else if (dv.y < -0.02) { const t = -o.y / dv.y; target = o.clone().addScaledVector(dv, Math.min(t, 80)); }
-    else target = o.clone().addScaledVector(dv, 60);
+  // la mira está en el centro: lo primero que haya en esa línea (gente o monstruo), si no, lejos
+  const o = camera.position, fwd = _fwd.set(0, 0, -1).applyQuaternion(camera.quaternion);
+  let target = null, bestAng = isTouch ? 5 * Math.PI / 180 : 1.2 * Math.PI / 180, bestD = 999;
+  for (const f of fighters) {
+    if (f.me || !f.alive || f.team === 'red' || !f.obj.visible) continue;
+    const c = f.obj.position.clone().add(new THREE.Vector3(0, 1.05, 0)), d = c.distanceTo(o);
+    const ang = Math.acos(Math.max(-1, Math.min(1, c.clone().sub(o).normalize().dot(fwd))));
+    // ayuda para apuntar (5° en el celular, como en Roblox) o justo en la línea
+    const tol = Math.max(bestAng, Math.atan2(0.8, d));
+    if (ang < tol && d < bestD && !blocked(o, c)) { bestD = d; target = c; }
   }
-  if (!target || assist) {
-    // botón de disparo: al enemigo más cerca que tengas adelante (o al monstruo)
-    let best = null, bestD = 40;
-    const fwd = new THREE.Vector3(Math.sin(facing), 0, Math.cos(facing));
-    for (const f of fighters) {
-      if (f.me || !f.alive || f.team === 'red' || !f.obj.visible) continue;
-      const d = f.obj.position.clone().sub(player.position); const len = d.length(); d.y = 0; d.normalize();
-      if (len < bestD && d.dot(fwd) > 0.5) { bestD = len; best = f; }
-    }
-    if (best) target = best.obj.position.clone().add(new THREE.Vector3(0, 1.05, 0));
-    else if (!target) target = player.position.clone().addScaledVector(fwd, 40).add(new THREE.Vector3(0, 1.4, 0));
+  if (!target) {
+    const m = cMon.blue, mc = new THREE.Vector3(m.x, 4 * m.scale, m.z);
+    const ray = new THREE.Ray(o.clone(), fwd.clone());
+    if (ray.distanceToPoint(mc) < 4.6 * m.scale && mc.clone().sub(o).dot(fwd) > 0) target = ray.closestPointToPoint(mc, new THREE.Vector3());
+  }
+  if (!target) {
+    // al piso (o lejos si mirás para arriba)
+    const t = fwd.y < -0.02 ? Math.min(80, -(o.y - congoFloor(o.x, o.z)) / fwd.y) : 70;
+    target = o.clone().addScaledVector(fwd, t);
   }
   const from = myMuzzle();
-  facing = Math.atan2(target.x - player.position.x, target.z - player.position.z);
-  const dir = aimDir(myMuzzle(), target, 0);
-  fire(meF, from.addScaledVector(dir, 0.4), dir, false, cs.skin);
-  swing(0.18); sfx('soft');
+  const dir = aimDir(from, target, 0);
+  fire(meF, from, dir, false, cs.skin);
+  vmKick = 1; sfx('soft');
 }
 
+// ---------- primera persona: cámara en los ojos, lanzacacas en la mano ----------
+let fpPitch = 0, vmKick = 0, vmBob = 0;
+const vm = new THREE.Group(); camera.add(vm); if (!camera.parent) scene.add(camera);
+let vmGun = null, vmSkin = '';
+function buildViewModel() {
+  if (vmGun && vmSkin === cs.skin) return;
+  while (vm.children.length) vm.remove(vm.children[0]);
+  vmSkin = cs.skin;
+  vmGun = makeBlaster(cs.skin); vmGun.scale.setScalar(0.52); vmGun.position.set(0.25, -0.25, -0.66); vmGun.rotation.y = -0.05; vm.add(vmGun);
+  // el brazo y la manopla del muñeco
+  const sleeve = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.11, 0.42), new THREE.MeshStandardMaterial({ color: look.shirtColor, roughness: 0.8 }));
+  sleeve.position.set(0.27, -0.33, -0.36); sleeve.rotation.x = 0.3; vm.add(sleeve);
+  const hand = new THREE.Mesh(rbox(0.1, 0.11, 0.1, 0.03), new THREE.MeshStandardMaterial({ color: look.skin, roughness: 0.7 }));
+  hand.position.set(0.25, -0.28, -0.58); vm.add(hand);
+  vm.traverse((m) => { if (m.isMesh) { m.castShadow = false; m.renderOrder = 10; m.material = m.material.clone(); m.material.depthTest = true; } });
+}
+vm.visible = false;
+function fpCamera(dt, t) {
+  const p = player.position;
+  facing = camYaw + Math.PI;
+  fpPitch = (0.25 - camPitch) * 1.6;
+  const eyeY = meF.alive ? p.y + 1.72 : p.y + 0.5;
+  camera.position.set(p.x, eyeY, p.z);
+  camera.rotation.set(meF.alive ? fpPitch : -1.2, camYaw, meF.alive ? 0 : 0.4, 'YXZ');
+  if (shakeT > 0) { camera.position.x += (Math.random() - 0.5) * shakeT * 0.3; camera.position.y += (Math.random() - 0.5) * shakeT * 0.3; }
+  // el lanzacacas se mueve al caminar y patea al disparar
+  const sp = Math.hypot(vel.x, vel.z);
+  vmBob += dt * sp * 1.4;
+  vmKick = Math.max(0, vmKick - dt * 9);
+  vm.position.set(Math.sin(vmBob) * 0.015 * Math.min(1, sp / 6), -Math.abs(Math.cos(vmBob)) * 0.02 * Math.min(1, sp / 6), vmKick * 0.12);
+  vm.rotation.x = vmKick * 0.18;
+  vm.visible = meF.alive;
+  camera.fov = 70; camera.updateProjectionMatrix();
+}
+// compu: el mouse mueve la vista (se "engancha" al hacer clic) y mantener apretado dispara
+const cgCanvas = renderer.domElement;
+cgCanvas.addEventListener('pointerdown', (e) => {
+  if (!inCongo || e.pointerType !== 'mouse' || mode !== 'play') return;
+  if (document.pointerLockElement !== cgCanvas) { try { cgCanvas.requestPointerLock(); } catch (err) { /* nada */ } }
+  else { cgAuto = true; congoShoot(); }
+});
+addEventListener('pointerup', (e) => { if (e.pointerType === 'mouse') cgAuto = false; });
+addEventListener('mousemove', (e) => {
+  if (!inCongo || document.pointerLockElement !== cgCanvas) return;
+  camYaw -= e.movementX * 0.0024;
+  camPitch = Math.min(1.2, Math.max(-0.05, camPitch + e.movementY * 0.0018));
+});
 // ---------- vecinos: pensar, moverse y disparar ----------
 const _g = new THREE.Vector3();
 function botTick(f, dt, t) {
@@ -6148,13 +6230,30 @@ function monsterTick(m, dt, t) {
   }
 }
 
+// ---------- lista de eliminaciones (arriba a la derecha) y avisos de peligro ----------
+function feed(shooter, victim) {
+  const box = $('cFeed'); if (!box) return;
+  const col = (f) => f && f.team === 'red' ? CG_RED : CG_BLUE;
+  const nm = (f) => f ? (f.me ? tr('Vos') : f.nombre) : tr('el monstruo');
+  const row = document.createElement('div');
+  row.innerHTML = `<b style="color:${shooter ? col(shooter) : '#8a5523'}">${nm(shooter)}</b> 💩 <b style="color:${col(victim)}">${nm(victim)}</b>`;
+  box.prepend(row); while (box.children.length > 4) box.lastChild.remove();
+  setTimeout(() => row.remove(), 6000);
+}
+let warned = { red: false, blue: false };
+function dangerCheck() {
+  if (cgPhase !== 'battle') return;
+  if (!warned.red && cMon.red.hp / cMon.red.max < 0.25) { warned.red = true; cgMsg(tr('¡Tu monstruo está en peligro!'), '', 2); sfx('hurt'); }
+  if (!warned.blue && cMon.blue.hp / cMon.blue.max < 0.25) { warned.blue = true; cgMsg(tr('¡El monstruo enemigo está casi destruido!'), '', 2); sfx('ping'); }
+}
+
 // ---------- la partida ----------
 function cgMsg(big, small, dur) {
   const el = $('cMsg'); el.innerHTML = `<b>${big}</b>${small ? `<small>${small}</small>` : ''}`; el.classList.add('on');
   clearTimeout(cgMsg.t); if (dur) cgMsg.t = setTimeout(() => el.classList.remove('on'), dur * 1000);
 }
 function resetMatch() {
-  cgTime = CG_CFG.matchTime; cgKills = 0; cgResult = '';
+  cgTime = CG_CFG.matchTime; cgKills = 0; cgResult = ''; warned = { red: false, blue: false };
   for (const t of ['red', 'blue']) { const m = cMon[t]; m.hp = m.max = CG_CFG.mStart; m.barKey = ''; }
   for (const f of fighters) {
     f.hp = 100; f.alive = true; f.shield = CG_CFG.shield;
@@ -6201,7 +6300,7 @@ function openCShop() {
   $('cshopPanel').classList.add('open'); sfx('click');
 }
 $('cShopBtn').onclick = openCShop;
-$('cFireBtn').addEventListener('pointerdown', (e) => { e.stopPropagation(); e.preventDefault(); congoShoot(undefined, undefined, true); cgAuto = true; });
+$('cFireBtn').addEventListener('pointerdown', (e) => { e.stopPropagation(); e.preventDefault(); congoShoot(); cgAuto = true; });
 ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) => $('cFireBtn').addEventListener(ev, () => { cgAuto = false; }));
 let cgAuto = false;
 
@@ -6227,12 +6326,14 @@ function congoTick(dt, t) {
     inCongo = now;
     document.body.classList.toggle('congo', now);
     refreshMyBlaster();
-    myRing.visible = now;
+    myRing.visible = false;
+    player.visible = !now; buildViewModel(); vm.visible = now;
+    if (now) { camPitch = 0.25; } else { camera.fov = 70; camera.updateProjectionMatrix(); if (document.pointerLockElement) document.exitPointerLock(); }
     fighters.forEach((f) => { if (f.bot) f.obj.visible = now; });
     if (now) {
       meF.nombre = myName; resetMatch();
       banner(tr('GUERRA DE CACA'));
-      if (!cs.tut) { cs.tut = 1; csSave(); setTimeout(() => toast(isTouch ? tr('Tocá la pantalla (o el botón) para tirar caca. ¡Destruí el monstruo azul!') : tr('Hacé clic para tirar caca. ¡Destruí el monstruo azul!')), 1500); }
+      setTimeout(() => toast(isTouch ? tr('Mové la vista con el dedo y tocá el botón para tirar caca. ¡Destruí el monstruo azul!') : tr('Hacé clic para apuntar con el mouse y mantené apretado para tirar caca. ¡Destruí el monstruo azul!')), 1500);
     } else {
       cgPhase = 'off'; player.visible = true; meF.alive = true; meF.hp = 100;
       for (const s of shots) cg.remove(s.m); shots.length = 0;
@@ -6260,17 +6361,15 @@ function congoTick(dt, t) {
   meF.shield = Math.max(0, meF.shield - dt);
   if (!meF.alive) {
     meF.respawnT -= dt; vel.set(0, 0, 0);
-    if (meF.respawnT <= 0) { const [x, z] = spawnPoint('red', 0); p.set(x, 0, z); facing = Math.PI * 0; camYaw = Math.PI; meF.alive = true; meF.hp = 100; meF.shield = CG_CFG.shield; player.visible = true; updateCgHud(); }
+    if (meF.respawnT <= 0) { const [x, z] = spawnPoint('red', 0); p.set(x, 0, z); camYaw = Math.PI; camPitch = 0.25; meF.alive = true; meF.hp = 100; meF.shield = CG_CFG.shield; updateCgHud(); }
   } else if (meF.hp < 100) meF.hp = Math.min(100, meF.hp + dt * 4); // se cura de a poco
-  if (cgAuto) congoShoot(undefined, undefined, true);
-  myRing.position.set(p.x, 0.05, p.z);
-  if (myBlaster) myBlaster.visible = meF.alive && !sitting;
-  // el brazo con el lanzacacas apunta adelante
-  if (bones && meF.alive && !sitting) { bones.armL.rotation.x = -1.35; bones.armL.rotation.z = 0; bones.elbowL.rotation.x = -0.1; }
+  if (cgAuto) congoShoot();
+  if (myBlaster) myBlaster.visible = false;
   for (const f of fighters) if (f.bot) botTick(f, dt, t);
   for (const k of ['red', 'blue']) monsterTick(cMon[k], dt, t);
   shotsTick(dt);
-  if ((congoTick.hudT = (congoTick.hudT || 0) - dt) <= 0) { congoTick.hudT = 0.2; updateCgHud(); }
+  if ((congoTick.hudT = (congoTick.hudT || 0) - dt) <= 0) { congoTick.hudT = 0.2; updateCgHud(); dangerCheck(); }
+  fpCamera(dt, t);
   // los de lanzacacas arcoíris cambian de color
   for (const s of CG_SKINS) if (s.rainbow && blasterCache[s.id]) { const h = (t * 0.3) % 1; blasterCache[s.id].traverse((m) => { if (m.isMesh && m.material.userData.rainbow) { m.material.color.setHSL(h, 0.9, 0.6); if (m.material.emissive) m.material.emissive.setHSL(h, 0.9, 0.4); } }); if (shotMats.rainbow) shotMats.rainbow.color.setHSL(h, 0.9, 0.6); }
 }
