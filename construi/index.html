@@ -501,6 +501,7 @@
 <div id="petCard" class="panel"><div class="card"><div class="body" style="padding-top:14px"><div id="pcBody"></div><div class="menuGrid"><button id="pcEquip" class="toy">Equipar</button><button id="pcFuse" class="toy gold">Fusionar 5</button><button id="pcRelease" class="toy gray">Soltar</button><button id="pcClose" class="toy gray">Cerrar</button></div></div></div></div>
 <div id="upPanel" class="panel"><div class="card"><header><h2>Mejoras</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="upList"></div></div></div></div>
 <div id="idxPanel" class="panel"><div class="card"><header><h2>Índice</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="idxList"></div></div></div></div>
+<div id="langPanel" class="panel"><div class="card" style="width:min(360px,92vw)"><header><h2>Idioma</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="langList" class="menuGrid"></div></div></div></div>
 <div id="gshopPanel" class="panel"><div class="card"><header><h2>Semillas</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="gshopList"></div></div></div></div>
 <div id="gpassPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="gpassList"></div></div></div></div>
 <div id="pshopPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="pshopList"></div></div></div></div>
@@ -843,8 +844,8 @@ function reservedAt(x, z) {
   if (Math.abs(x) < 5 && z > 15 && z < 36) return true;                    // cintas a Construí Todo
   if (x > 5 && x < 64 && Math.abs(z - 42) < 4.2) return true;              // cintas al juego 2
   if (x > 52 && Math.abs(z - 42) < 18.5) return true;                      // Reino de Mascotas
-  if (x < -5 && x > -36 && Math.abs(z - 42) < 4.2) return true;            // cintas a la Huerta
-  if (x < -33 && z > 21) return true;                                      // Huerta de la Suerte
+  if (x < -5 && x > -66 && Math.abs(z - 42) < 4.2) return true;            // cintas a la Huerta
+  if (x < -63 && z > 21) return true;                                      // Huerta de la Suerte
   return false;
 }
 const offsets = new Float32Array(BLADES * 4);
@@ -2678,7 +2679,7 @@ function stepSound() {
   anyS(set, vol);
 }
 function audio() {
-  if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.gain.value = 0.7; master.connect(AC.destination); musicGain = AC.createGain(); musicGain.gain.value = st.volume * 0.35; musicGain.connect(master); } catch (e) { return null; } loadSamples(); }
+  if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.gain.value = 0.7; master.connect(AC.destination); musicGain = AC.createGain(); musicGain.gain.value = st.volume * 0.42; musicGain.connect(master); } catch (e) { return null; } loadSamples(); }
   if (AC.state === 'suspended') AC.resume();
   return AC;
 }
@@ -2717,16 +2718,24 @@ MUSIC.forEach((m) => { m.es = tr(m.es); });
 const musicEl = new Audio(); musicEl.preload = 'auto';
 let musicIdx = 0;
 musicEl.addEventListener('ended', () => { const m = MUSIC[st.music]; if (!m.files.length) return; musicIdx = (musicIdx + 1) % m.files.length; musicEl.src = 'musica/' + m.files[musicIdx] + '.mp3'; musicEl.play().catch(() => {}); });
+let musicNode = null;
+// la música pasa por el mezclador de sonido: así el volumen funciona también en iPhone (ahí el volumen del reproductor no se puede cambiar)
+function musicRoute() {
+  if (musicNode || !audio()) return;
+  try { musicNode = AC.createMediaElementSource(musicEl); musicNode.connect(musicGain); musicEl.volume = 1; } catch (e) { musicNode = null; }
+}
+function musicLevel() { return st.volume * 0.42; }
 function startMusic() {
+  musicRoute();
   const m = MUSIC[st.music];
-  musicEl.volume = Math.min(1, st.volume * 0.8);
+  if (musicNode) musicGain.gain.value = musicLevel(); else musicEl.volume = Math.min(1, st.volume * 0.5);
   if (!m || !m.files.length) { musicEl.pause(); return; }
   musicIdx = Math.floor(Math.random() * m.files.length);
   musicEl.src = 'musica/' + m.files[musicIdx] + '.mp3';
   musicEl.play().catch(() => {});
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden) musicEl.pause(); else if (MUSIC[st.music].files.length && mode === 'play') musicEl.play().catch(() => {}); });
-function setVolume(v) { st.volume = v; musicEl.volume = Math.min(1, v * 0.8); save(); }
+function setVolume(v) { st.volume = v; if (musicNode) musicGain.gain.setTargetAtTime(musicLevel(), AC.currentTime, 0.05); else musicEl.volume = Math.min(1, v * 0.5); save(); }
 
 // ===== interfaz =====
 const $ = (id) => document.getElementById(id);
@@ -2824,7 +2833,7 @@ function updateHud() {
 let catTab = 'blocks';
 const CAT_TABS = [['blocks', 'Bloques'], ['premium', 'Premium'], ['daily', 'Colección'], ['deco', 'Muebles'], ['special', 'Especiales'], ['struct', 'Estructuras']].map(([a, n]) => [a, tr(n)]);
 function openCatalog(tab) { if (tab) catTab = tab; renderCatalog(); $('catalog').classList.add('open'); sfx('click'); }
-function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard', 'gshopPanel', 'gpassPanel']) $(id).classList.remove('open'); }
+function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard', 'gshopPanel', 'gpassPanel', 'langPanel']) $(id).classList.remove('open'); }
 function renderCatalog() {
   const tabs = $('catTabs'); tabs.innerHTML = '';
   for (const [id, name] of CAT_TABS) { const b = document.createElement('button'); b.textContent = name; b.className = catTab === id ? 'on' : ''; b.onclick = () => { catTab = id; renderCatalog(); }; tabs.appendChild(b); }
@@ -3035,7 +3044,16 @@ $('volRange').oninput = (e) => setVolume(e.target.value / 100);
 $('mCloset').onclick = () => { closePanels(); enterEdit(); };
 $('mPlaza').onclick = () => goPlaza();
 // idioma: español → inglés → portugués (se recarga la página)
-$('lngBtn').onclick = () => { const order = ['es', 'en', 'pt']; const n = order[(order.indexOf(LANG) + 1) % 3]; try { localStorage.setItem('construi_lang', n); } catch (e) { /* nada */ } save(true); location.reload(); };
+$('lngBtn').onclick = () => {
+  closePanels();
+  const box = $('langList'); box.innerHTML = '';
+  for (const [code, name] of [['es', 'Español'], ['en', 'English'], ['pt', 'Português']]) {
+    const b = document.createElement('button'); b.className = 'toy' + (code === LANG ? '' : ' gray'); b.textContent = (code === LANG ? '✓ ' : '') + name;
+    b.onclick = () => { if (code === LANG) { closePanels(); return; } try { localStorage.setItem('construi_lang', code); } catch (e) { /* nada */ } save(true); location.reload(); };
+    box.appendChild(b);
+  }
+  $('langPanel').classList.add('open'); sfx('click');
+};
 // botones de herramientas sobre la barra
 $('shapeBtn').onclick = () => { shape = (shape + 1) % 3; updateToolUI(); sfx('click'); };
 $('rotBtn').onclick = () => { rot = (rot + 1) % 4; updateToolUI(); sfx('click'); };
@@ -4184,7 +4202,7 @@ function updateEggBtn(force) {
     $('egg3').style.display = ps.passes.TripleHatch ? '' : 'none';
     $('egg3').innerHTML = `${tr('Abrir x3')} <span class="coinS"></span>${fmt(z.egg * 3)}`;
   } else eb.style.display = 'none';
-  if (nearGate >= 0) { const z = PZONES[nearGate]; gb.style.display = ''; gb.innerHTML = `${tr('Abrir zona')}: ${z.name} <span class="coinS"></span>${fmt(z.price)}`; }
+  if (nearGate >= 0) { const z = PZONES[nearGate]; gb.style.display = 'block'; gb.innerHTML = `${tr('Abrir zona')}: ${z.name} <span class="coinS"></span>${fmt(z.price)}`; }
   else gb.style.display = 'none';
 }
 $('egg1').onclick = () => openEgg(nearEgg, 1);
@@ -4300,15 +4318,15 @@ function gBasket() {
 }
 
 // ---------- el lugar: al oeste de la plaza, al final de la cinta ----------
-const HUERTA = { x0: -97, x1: -35, z0: 23, z1: 57.6 };
-const GF = { x: -68, z: 40.5 }, G_TILE = 2.5, G_STEP = 2.85;
+const HUERTA = { x0: -127, x1: -65, z0: 23, z1: 57.6 };
+const GF = { x: -98, z: 40.5 }, G_TILE = 2.5, G_STEP = 2.85;
 const garden = new THREE.Group(); scene.add(garden);
 const gMat = (c, r = 0.6) => new THREE.MeshStandardMaterial({ color: c, roughness: r });
 function gMesh(geo, mat, x, y, z, parent = garden) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; parent.add(m); return m; }
 // cintas de ida y vuelta desde la plaza
-addBelt(PLAZA.x - PLAZA.r + 1.2, PLAZA.z - 1.6, -32, PLAZA.z - 1.6, '#5aa546');
-addBelt(-32, PLAZA.z + 1.6, PLAZA.x - PLAZA.r + 1.2, PLAZA.z + 1.6, '#e6a91e');
-arch(-34, 42, Math.PI / 2, [tr('HUERTA DE LA SUERTE'), tr('Juego 3')], '#5aa546');
+addBelt(PLAZA.x - PLAZA.r + 1.2, PLAZA.z - 1.6, -62, PLAZA.z - 1.6, '#5aa546');
+addBelt(-62, PLAZA.z + 1.6, PLAZA.x - PLAZA.r + 1.2, PLAZA.z + 1.6, '#e6a91e');
+arch(-64, 42, Math.PI / 2, [tr('HUERTA DE LA SUERTE'), tr('Juego 3')], '#5aa546');
 postSign(PLAZA.x - PLAZA.r + 0.2, PLAZA.z + 4.4, Math.PI / 2, [tr('Huerta de la Suerte'), tr('subite a la cinta')], '#5aa546');
 {
   // pasto cortito de la huerta, camino de arena y cerco blanco
@@ -4319,7 +4337,7 @@ postSign(PLAZA.x - PLAZA.r + 0.2, PLAZA.z + 4.4, Math.PI / 2, [tr('Huerta de la 
   const fl = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
   fl.rotation.x = -Math.PI / 2; fl.position.set((HUERTA.x0 + HUERTA.x1) / 2, 0.015, (HUERTA.z0 + HUERTA.z1) / 2); fl.receiveShadow = true; garden.add(fl);
   const path = new THREE.Mesh(new THREE.PlaneGeometry(26, 3.4), new THREE.MeshStandardMaterial({ color: '#e8d6a8', roughness: 0.9, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }));
-  path.rotation.x = -Math.PI / 2; path.position.set(-46, 0.02, 42); path.receiveShadow = true; garden.add(path);
+  path.rotation.x = -Math.PI / 2; path.position.set(-76, 0.02, 42); path.receiveShadow = true; garden.add(path);
   const fence = gMat('#faf6eb', 0.5), postG = new THREE.CylinderGeometry(0.11, 0.13, 1.3, 8);
   const side = (ax, az, bx, bz, gapAt) => {
     const len = Math.hypot(bx - ax, bz - az), n = Math.round(len / 2);
@@ -4340,7 +4358,7 @@ postSign(PLAZA.x - PLAZA.r + 0.2, PLAZA.z + 4.4, Math.PI / 2, [tr('Huerta de la 
     gMesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 5), gMat('#3c8c37'), x, 0.2, z);
     gMesh(new THREE.SphereGeometry(0.14, 8, 6), gMat(fc[i % fc.length]), x, 0.45, z);
   }
-  for (const [x, z] of [[-93, 27], [-93, 54], [-80, 27], [-80, 54]]) {
+  for (const [x, z] of [[-123, 27], [-123, 54], [-110, 27], [-110, 54]]) {
     gMesh(new THREE.CylinderGeometry(0.25, 0.32, 1.6, 10), gMat('#8a5a32'), x, 0.8, z);
     gMesh(new THREE.SphereGeometry(1.35, 14, 10), gMat('#4fae4a'), x, 2.4, z);
     for (let k = 0; k < 5; k++) { const a = k * 1.3; gMesh(new THREE.SphereGeometry(0.2, 8, 6), gMat('#e2493b'), x + Math.cos(a) * 1.05, 2.3 + Math.sin(k) * 0.5, z + Math.sin(a) * 1.05); }
@@ -4371,11 +4389,11 @@ function pad(x, z, color, lines) {
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthWrite: false })); sp.scale.set(2.6, 1.3, 1); sp.position.y = 2.2; g.add(sp);
   return { g, disc, sp, x, z, color };
 }
-stand(-41.5, 31, Math.PI / 2, '#2ea046', tr('SEMILLAS'));
-stand(-41.5, 53, Math.PI / 2, '#e6a91e', tr('VENDER'));
-const shopPad = pad(-39, 31, '#2ea046', [tr('Semillas'), tr('pisá acá')]);
-const sellPad = pad(-39, 53, '#e6a91e', [tr('Vender'), tr('pisá acá')]);
-const upPad = pad(-52, 34, '#e2493b', [tr('Mejora'), '']);
+stand(-71.5, 31, Math.PI / 2, '#2ea046', tr('SEMILLAS'));
+stand(-71.5, 53, Math.PI / 2, '#e6a91e', tr('VENDER'));
+const shopPad = pad(-69, 31, '#2ea046', [tr('Semillas'), tr('pisá acá')]);
+const sellPad = pad(-69, 53, '#e6a91e', [tr('Vender'), tr('pisá acá')]);
+const upPad = pad(-82, 34, '#e2493b', [tr('Mejora'), '']);
 
 // ---------- las casillas de tierra (6x6, se van desbloqueando) ----------
 const gTiles = {}; // key "r_c" -> { mesh, x, z, plant, stage, lbl, lblTxt }
@@ -5003,9 +5021,10 @@ function remoteFace(r, exIdx, dt) {
   const key = expr + '|' + Math.round(blink * 6) + '|' + Math.round(r.lookV * 6);
   if (key === F.key) return;
   F.key = key;
-  drawFace(expr, blink, r.lookV);
-  F.ctx.clearRect(0, 0, F.cv.width, F.cv.height); F.ctx.drawImage(FACE.canvas, 0, 0); F.tex.needsUpdate = true;
-  faceKey = ''; // que tu cara se vuelva a dibujar en el próximo cuadro
+  // se dibuja directo en su lienzo (prestándole el dibujante de caras), así tu cara no se toca
+  const sv = { ctx: FACE.ctx, tex: FACE.tex, canvas: FACE.canvas, key: faceKey };
+  FACE.ctx = F.ctx; FACE.tex = F.tex; FACE.canvas = F.cv; faceKey = '';
+  try { drawFace(expr, blink, r.lookV); } finally { FACE.ctx = sv.ctx; FACE.tex = sv.tex; FACE.canvas = sv.canvas; faceKey = sv.key; }
 }
 function animateRemote(r, sp, fl, t, dt) {
   const B = r.av.J; if (!B || !B.hips) return;
@@ -5504,10 +5523,10 @@ function gardenBotsTick(dt, t, now) {
       if (b.av) b.obj.remove(b.av.g);
       b.av = makeAvatar(b.look); b.hand = null; b.heldCode = -1; b.obj.add(b.av.g); setTag(b);
       // recorrido por los pasillos de la huerta y paradas junto a las plantas
-      b.legs = []; let tt = 0, px = -46 + R() * 4, pz = 36 + R() * 10;
+      b.legs = []; let tt = 0, px = -76 + R() * 4, pz = 36 + R() * 10;
       while (tt < P) {
         const lane = Math.floor(R() * 7), alongX = R() < 0.5;
-        const nx = alongX ? -76 + R() * 17 : -76.5 + lane * 2.85, nz = alongX ? 31.9 + lane * 2.85 : 32 + R() * 17;
+        const nx = alongX ? -106 + R() * 17 : -106.5 + lane * 2.85, nz = alongX ? 31.9 + lane * 2.85 : 32 + R() * 17;
         const dur = Math.hypot(nx - px, nz - pz) / 3.6, pause = 2 + R() * 5;
         b.legs.push({ t0: tt, t1: tt + dur, ax: px, az: pz, bx: nx, bz: nz, pause, face: R() * Math.PI * 2 }); tt += dur + pause; px = nx; pz = nz;
       }
@@ -5583,7 +5602,7 @@ function tick() {
   }
   // no salir del campo
   const r = Math.hypot(player.position.x, player.position.z);
-  if (!clampPets()) { player.position.x = Math.max(-99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(58, player.position.z)); }
+  if (!clampPets()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(58, player.position.z)); }
   player.rotation.y = facing;
 
   // animación de los huesos
