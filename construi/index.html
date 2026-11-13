@@ -4264,6 +4264,47 @@ function portalTick() { /* sin portales: el mundo de mascotas está al final de 
 refreshFollowers();
 
 // =====================================================================
+// ===== RENDIMIENTO: juntar piezas que no se mueven entre sí =====
+// =====================================================================
+// Muchas piezas con el mismo material dentro del mismo grupo se dibujan de a una (cada una es un "pedido" a la placa de video).
+// Si se juntan en una sola pieza se ven idénticas, pero el celular las dibuja de una sola vez.
+function mergeChildren(parent, keep) {
+  for (const c of parent.children.slice()) if (c.children.length && !(keep && keep(c))) mergeChildren(c, keep);
+  const byMat = new Map();
+  for (const m of parent.children) {
+    if (!m.isMesh || m.isInstancedMesh || m.children.length || !m.visible || (keep && keep(m)) || Array.isArray(m.material)) continue;
+    const k = m.material.uuid + '|' + m.castShadow + '|' + m.receiveShadow;
+    if (!byMat.has(k)) byMat.set(k, []);
+    byMat.get(k).push(m);
+  }
+  for (const list of byMat.values()) {
+    if (list.length < 2) continue;
+    let n = 0; const parts = [];
+    for (const m of list) {
+      m.updateMatrix();
+      const g = (m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone()); g.applyMatrix4(m.matrix);
+      parts.push(g); n += g.attributes.position.count;
+    }
+    const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3), uv = new Float32Array(n * 2);
+    let o = 0;
+    for (const g of parts) {
+      const c = g.attributes.position.count;
+      pos.set(g.attributes.position.array, o * 3);
+      if (g.attributes.normal) nor.set(g.attributes.normal.array, o * 3);
+      if (g.attributes.uv) uv.set(g.attributes.uv.array, o * 2);
+      o += c; g.dispose();
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+    geo.computeBoundingSphere();
+    const mesh = new THREE.Mesh(geo, list[0].material); mesh.castShadow = list[0].castShadow; mesh.receiveShadow = list[0].receiveShadow;
+    for (const m of list) parent.remove(m);
+    parent.add(mesh);
+  }
+}
+function disposeTree(o) { o.traverse((m) => { if (m.isMesh && m.geometry && !m.geometry.userData.shared) m.geometry.dispose(); }); }
+
+// =====================================================================
 // ===== JUEGO 3: HUERTA DE LA SUERTE (Lucky Garden) =====
 // =====================================================================
 // Plantás, esperás, cosechás y vendés. A veces sale una fruta dorada (x5) o arcoíris (x20).
@@ -4321,6 +4362,7 @@ function gBasket() {
 const HUERTA = { x0: -127, x1: -65, z0: 23, z1: 57.6 };
 const GF = { x: -98, z: 40.5 }, G_TILE = 2.5, G_STEP = 2.85;
 const garden = new THREE.Group(); scene.add(garden);
+const gStatic = new THREE.Group(); garden.add(gStatic); // lo que nunca se mueve (se junta al final)
 const gMat = (c, r = 0.6) => new THREE.MeshStandardMaterial({ color: c, roughness: r });
 function gMesh(geo, mat, x, y, z, parent = garden) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; parent.add(m); return m; }
 // cintas de ida y vuelta desde la plaza
@@ -4344,8 +4386,8 @@ postSign(PLAZA.x - PLAZA.r + 0.2, PLAZA.z + 4.4, Math.PI / 2, [tr('Huerta de la 
     for (let i = 0; i <= n; i++) {
       const x = ax + (bx - ax) * i / n, z = az + (bz - az) * i / n;
       if (gapAt && gapAt(x, z)) continue;
-      gMesh(postG, fence, x, 0.65, z); colliders.push({ x, z, r: 0.2 });
-      if (i < n) { const nx = ax + (bx - ax) * (i + 1) / n, nz = az + (bz - az) * (i + 1) / n; if (gapAt && gapAt(nx, nz)) continue; const rail = gMesh(new THREE.BoxGeometry(0.1, 0.14, Math.hypot(nx - x, nz - z)), fence, (x + nx) / 2, 0.95, (z + nz) / 2); rail.rotation.y = Math.atan2(nx - x, nz - z); }
+      gMesh(postG, fence, x, 0.65, z, gStatic); colliders.push({ x, z, r: 0.2 });
+      if (i < n) { const nx = ax + (bx - ax) * (i + 1) / n, nz = az + (bz - az) * (i + 1) / n; if (gapAt && gapAt(nx, nz)) continue; const rail = gMesh(new THREE.BoxGeometry(0.1, 0.14, Math.hypot(nx - x, nz - z)), fence, (x + nx) / 2, 0.95, (z + nz) / 2, gStatic); rail.rotation.y = Math.atan2(nx - x, nz - z); }
     }
   };
   side(HUERTA.x0, HUERTA.z0, HUERTA.x1, HUERTA.z0); side(HUERTA.x0, HUERTA.z1, HUERTA.x1, HUERTA.z1);
@@ -4353,15 +4395,17 @@ postSign(PLAZA.x - PLAZA.r + 0.2, PLAZA.z + 4.4, Math.PI / 2, [tr('Huerta de la 
   side(HUERTA.x1, HUERTA.z0, HUERTA.x1, HUERTA.z1, (x, z) => Math.abs(z - 42) < 4.5); // entrada
   // flores y arbolitos de adorno en los bordes
   const fc = ['#ff6fa8', '#ffd83d', '#ffffff', '#b07cff', '#ff8a3d'];
+  const FLOWER_STEM = gMat('#3c8c37'), FLOWER_MATS = fc.map((c) => gMat(c));
   for (let i = 0; i < 46; i++) {
     const x = HUERTA.x0 + 1 + Math.random() * (HUERTA.x1 - HUERTA.x0 - 2), z = Math.random() < 0.5 ? HUERTA.z0 + 0.8 + Math.random() * 1.2 : HUERTA.z1 - 0.8 - Math.random() * 1.2;
-    gMesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 5), gMat('#3c8c37'), x, 0.2, z);
-    gMesh(new THREE.SphereGeometry(0.14, 8, 6), gMat(fc[i % fc.length]), x, 0.45, z);
+    gMesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 5), FLOWER_STEM, x, 0.2, z, gStatic).castShadow = false;
+    gMesh(new THREE.SphereGeometry(0.14, 8, 6), FLOWER_MATS[i % fc.length], x, 0.45, z, gStatic).castShadow = false;
   }
+  const TREE_WOOD = gMat('#8a5a32'), TREE_LEAF = gMat('#4fae4a'), TREE_APPLE = gMat('#e2493b');
   for (const [x, z] of [[-123, 27], [-123, 54], [-110, 27], [-110, 54]]) {
-    gMesh(new THREE.CylinderGeometry(0.25, 0.32, 1.6, 10), gMat('#8a5a32'), x, 0.8, z);
-    gMesh(new THREE.SphereGeometry(1.35, 14, 10), gMat('#4fae4a'), x, 2.4, z);
-    for (let k = 0; k < 5; k++) { const a = k * 1.3; gMesh(new THREE.SphereGeometry(0.2, 8, 6), gMat('#e2493b'), x + Math.cos(a) * 1.05, 2.3 + Math.sin(k) * 0.5, z + Math.sin(a) * 1.05); }
+    gMesh(new THREE.CylinderGeometry(0.25, 0.32, 1.6, 10), TREE_WOOD, x, 0.8, z, gStatic);
+    gMesh(new THREE.SphereGeometry(1.35, 14, 10), TREE_LEAF, x, 2.4, z, gStatic);
+    for (let k = 0; k < 5; k++) { const a = k * 1.3; gMesh(new THREE.SphereGeometry(0.2, 8, 6), TREE_APPLE, x + Math.cos(a) * 1.05, 2.3 + Math.sin(k) * 0.5, z + Math.sin(a) * 1.05, gStatic); }
     colliders.push({ x, z, r: 0.45 });
   }
 }
@@ -4371,13 +4415,15 @@ function stand(x, z, rotY, roof, title) {
   const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rotY; garden.add(g);
   gMesh(rbox(5, 1.25, 1.7, 0.12), gMat('#c08a55'), 0, 0.62, 0, g);
   gMesh(rbox(5.2, 0.16, 1.9, 0.06), gMat('#faf6eb'), 0, 1.3, 0, g);
-  for (const sx of [-2.3, 2.3]) for (const sz of [-0.7, 0.7]) gMesh(new THREE.CylinderGeometry(0.1, 0.1, 3.8, 10), gMat('#9a6a3e'), sx, 1.9, sz, g);
-  for (let i = 0; i < 6; i++) { const s = gMesh(rbox(0.86, 0.12, 2.3, 0.04), gMat(i % 2 ? '#ffffff' : roof, 0.7), -2.15 + i * 0.86, 3.85, 0, g); s.rotation.x = -0.2; }
+  const postM = gMat('#9a6a3e'), rw = gMat('#ffffff', 0.7), rc = gMat(roof, 0.7);
+  for (const sx of [-2.3, 2.3]) for (const sz of [-0.7, 0.7]) gMesh(new THREE.CylinderGeometry(0.1, 0.1, 3.8, 10), postM, sx, 1.9, sz, g);
+  for (let i = 0; i < 6; i++) { const s = gMesh(rbox(0.86, 0.12, 2.3, 0.04), i % 2 ? rw : rc, -2.15 + i * 0.86, 3.85, 0, g); s.rotation.x = -0.2; }
   const board = gMesh(rbox(4.2, 1, 0.12, 0.06), new THREE.MeshStandardMaterial({ map: signTexture([title], { border: roof, size: 170 }), roughness: 0.5 }), 0, 3.05, 0.95, g);
   const back = board.clone(); back.rotation.y = Math.PI; back.position.z = -0.95; g.add(back);
   // cajones con frutas
-  const fcol = ['#f0821e', '#dc2828', '#f5cd32', '#288c32'];
-  for (let i = 0; i < 4; i++) for (let k = 0; k < 3; k++) gMesh(new THREE.SphereGeometry(0.17, 10, 8), gMat(fcol[i], 0.4), -1.7 + i * 1.12 + (k - 1) * 0.2, 1.52, -0.25 + (k % 2) * 0.4, g);
+  const fcol = ['#f0821e', '#dc2828', '#f5cd32', '#288c32'].map((c) => gMat(c, 0.4));
+  for (let i = 0; i < 4; i++) for (let k = 0; k < 3; k++) gMesh(new THREE.SphereGeometry(0.17, 10, 8), fcol[i], -1.7 + i * 1.12 + (k - 1) * 0.2, 1.52, -0.25 + (k % 2) * 0.4, g);
+  mergeChildren(g);
   colliders.push({ x: x - 1.6 * Math.cos(rotY), z: z + 1.6 * Math.sin(rotY), r: 0.95 }, { x, z, r: 0.95 }, { x: x + 1.6 * Math.cos(rotY), z: z - 1.6 * Math.sin(rotY), r: 0.95 });
   return g;
 }
@@ -4415,12 +4461,15 @@ function refreshTiles() {
 }
 
 // ---------- plantas (como en Roblox, a escala del muñeco) ----------
-const G_GREEN = gMat('#3ca03c', 0.7), G_STEM = gMat('#2f8a36', 0.7);
-const gRainbow = [];
+const G_GREEN = gMat('#3ca03c', 0.7), G_STEM = gMat('#2f8a36', 0.7), G_STRIPE = gMat('#196423'), G_CENTER = gMat('#6e461e');
+const G_GOLD = new THREE.MeshStandardMaterial({ color: '#ffcd28', roughness: 0.25, metalness: 0.65, emissive: '#5a3c00', emissiveIntensity: 0.4 });
+const G_RAINBOW = new THREE.MeshStandardMaterial({ color: '#ff80ff', roughness: 0.3, emissive: '#ff80ff', emissiveIntensity: 0.45 });
+const gRainbow = [G_RAINBOW], G_FRUIT = {};
+const G_LEAF_GEO = {};
 function fruitMat(color, mut) {
-  if (mut === 'golden') return new THREE.MeshStandardMaterial({ color: '#ffcd28', roughness: 0.25, metalness: 0.65, emissive: '#5a3c00', emissiveIntensity: 0.4 });
-  if (mut === 'rainbow') { const m = new THREE.MeshStandardMaterial({ color: '#ff80ff', roughness: 0.3, emissive: '#ff80ff', emissiveIntensity: 0.45 }); gRainbow.push(m); return m; }
-  return gMat(color, 0.35);
+  if (mut === 'golden') return G_GOLD;
+  if (mut === 'rainbow') return G_RAINBOW;
+  return G_FRUIT[color] || (G_FRUIT[color] = gMat(color, 0.35));
 }
 function leaf(g, x, y, z, size, rz = 0, ry = 0, rx = 0) { const l = gMesh(new THREE.BoxGeometry(size * 0.42, 0.06, size * 0.85), G_GREEN, x, y, z, g); l.rotation.set(rx, ry, rz); return l; }
 function plantModel(id, stage, mut) {
@@ -4443,7 +4492,7 @@ function plantModel(id, stage, mut) {
   } else if (s.shape === 'melon') {
     for (let i = 0; i < 5; i++) { const a = i * Math.PI * 2 / 5; leaf(g, Math.sin(a) * 0.7 * gr, base + 0.05, Math.cos(a) * 0.7 * gr, 0.85 * gr, 0, a); }
     const m = fruit(new THREE.SphereGeometry(s.size * 0.5 * K * gr, 18, 14), 0, base + s.size * 0.42 * K * gr, 0); m.scale.set(1, 0.85, 1.25);
-    if (stage === 2 && !mut) for (let k = -1; k <= 1; k++) { const st = gMesh(new THREE.BoxGeometry(0.06, s.size * 0.42 * K * 1.9, s.size * 0.42 * K * 2.2), gMat('#196423'), k * 0.28, 0, 0, m); st.scale.set(1, 0.98, 0.96); }
+    if (stage === 2 && !mut) for (let k = -1; k <= 1; k++) { const st = gMesh(new THREE.BoxGeometry(0.06, s.size * 0.42 * K * 1.9, s.size * 0.42 * K * 2.2), G_STRIPE, k * 0.28, 0, 0, m); st.scale.set(1, 0.98, 0.96); }
   } else if (s.shape === 'corn') {
     for (const x of [-0.34, 0.34]) {
       gMesh(new THREE.CylinderGeometry(0.07, 0.09, 2.1 * gr, 8), G_STEM, x, base + 1.05 * gr, 0, g);
@@ -4456,7 +4505,7 @@ function plantModel(id, stage, mut) {
     leaf(g, 0.3, base + 1.05 * gr, 0, 0.85 * gr, -0.7); leaf(g, -0.3, base + 1.45 * gr, 0, 0.85 * gr, 0.7);
     const head = new THREE.Group(); head.position.set(0, base + 2.6 * gr, 0.05); head.rotation.x = -0.25; g.add(head);
     for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, p = gMesh(new THREE.SphereGeometry(0.22 * gr, 8, 6), fruitMat(col, fm), Math.cos(a) * 0.42 * gr, Math.sin(a) * 0.42 * gr, 0, head); p.scale.set(1.5, 0.7, 0.35); p.rotation.z = a; p.userData.fruit = 1; }
-    const ctr = gMesh(new THREE.CylinderGeometry(0.3 * gr, 0.3 * gr, 0.14, 16), gMat('#6e461e'), 0, 0, 0.05, head); ctr.rotation.x = Math.PI / 2;
+    const ctr = gMesh(new THREE.CylinderGeometry(0.3 * gr, 0.3 * gr, 0.14, 16), G_CENTER, 0, 0, 0.05, head); ctr.rotation.x = Math.PI / 2;
   }
   // brillitos si salió dorada o arcoíris
   if (stage === 2 && mut) {
@@ -4464,6 +4513,9 @@ function plantModel(id, stage, mut) {
     for (let i = 0; i < 7; i++) { const s2 = new THREE.Sprite(new THREE.SpriteMaterial({ map: sparkTex(), color: mut === 'golden' ? '#ffe066' : '#ff9cff', transparent: true, depthWrite: false })); s2.scale.setScalar(0.28); s2.userData.ph = Math.random() * 6; s2.userData.p = new THREE.Vector3((Math.random() - 0.5) * 1.6, 0.3 + Math.random() * 1.6, (Math.random() - 0.5) * 1.6); s2.position.copy(s2.userData.p); sp.add(s2); }
   }
   g.traverse((m) => { if (m.isMesh) m.castShadow = !isTouch; });
+  mergeChildren(g, (o) => o.userData.sparkle);
+  // los brillitos se guardan aparte (para animarlos sin recorrer toda la planta)
+  g.userData.sparks = []; g.traverse((o) => { if (o.userData.ph !== undefined) g.userData.sparks.push(o); });
   return g;
 }
 let _spark = null;
@@ -4491,16 +4543,17 @@ function setLabel(t, txt, color) {
 }
 function drawTile(t) {
   const d = gs.tiles[t.key];
-  if (!d) { if (t.plant) { garden.remove(t.plant); t.plant = null; } t.stage = -1; setLabel(t, '', ''); return; }
+  if (!d) { if (t.plant) { garden.remove(t.plant); disposeTree(t.plant); t.plant = null; } t.stage = -1; setLabel(t, '', ''); return; }
   const [stage, left] = stageOf(d);
   if (stage !== t.stage || !t.plant) {
-    if (t.plant) garden.remove(t.plant);
+    if (t.plant) { garden.remove(t.plant); disposeTree(t.plant); }
     t.plant = plantModel(d.seed, stage, d.mut); t.plant.position.set(t.x, 0.02, t.z); t.plant.rotation.y = ((t.r * 7 + t.c * 3) % 4) * Math.PI / 2; garden.add(t.plant);
     if (t.stage >= 0 && stage > t.stage) { t.pop = 1; if (stage === 2 && inGarden && Math.hypot(t.x - player.position.x, t.z - player.position.z) < 25) sfx('pop'); }
     t.stage = stage;
   }
   if (stage === 2) setLabel(t, (d.mut ? tr(G_MUTS.find((m) => m.id === d.mut).es) + ' ' : '') + tr('¡LISTA!'), d.mut === 'golden' ? '#ffd83d' : d.mut === 'rainbow' ? '#ff9cff' : '#9dff8c');
-  else setLabel(t, fmtTime(left), '#ffffff');
+  else if (Math.hypot(t.x - player.position.x, t.z - player.position.z) < 18) setLabel(t, fmtTime(left), '#ffffff');
+  else if (t.lbl && t.lblTxt && !/^\d/.test(t.lblTxt)) setLabel(t, '', ''); // si decía LISTA y se cosechó, se borra
 }
 
 // ---------- plantar / cosechar / vender ----------
@@ -4644,11 +4697,23 @@ $('gShopBtn').onclick = openGShop;
 $('gPassBtn').onclick = openGPass;
 
 // ---------- cada cuadro ----------
+// si el celular no llega a moverlo fluido, baja un poquito la resolución (casi no se nota y gana mucha velocidad)
+const perf = { t: performance.now(), frames: 0, slow: 0, pr: renderer.getPixelRatio() };
+function perfTick() {
+  perf.frames++;
+  const now = performance.now(), el = now - perf.t;
+  if (el < 2000) return;
+  const fps = perf.frames * 1000 / el; perf.frames = 0; perf.t = now;
+  if (document.hidden || mode !== 'play') return;
+  perf.slow = fps < 40 ? perf.slow + 1 : 0;
+  if (perf.slow >= 2 && perf.pr > 1.25) { perf.pr = Math.max(1.25, perf.pr - 0.25); renderer.setPixelRatio(perf.pr); layout(); perf.slow = 0; }
+}
 var inGarden = false;
 let gLabelT = 0;
 const onPad = {};
 function inHuerta(p) { return p.x > HUERTA.x0 && p.x < HUERTA.x1 + 0.5 && p.z > HUERTA.z0 && p.z < HUERTA.z1; }
 function gardenTick(dt, t) {
+  perfTick();
   const p = player.position;
   const now = mode === 'play' && inHuerta(p);
   if (now !== inGarden) {
@@ -4661,21 +4726,23 @@ function gardenTick(dt, t) {
     }
   }
   // carteles y plantas: una vez por segundo alcanza (y siempre que cambia algo)
-  gLabelT -= dt;
-  if (gLabelT <= 0) { gLabelT = 1; for (const k in gTiles) drawTile(gTiles[k]); if (inGarden) { updateGHud(); refreshUpPad(); } }
+  const nowMs = performance.now();
+  if (nowMs >= gLabelT) { const far = Math.hypot(p.x - GF.x, p.z - GF.z) > 70; gLabelT = nowMs + (far ? 3000 : 1000); for (const k in gTiles) drawTile(gTiles[k]); if (inGarden) { updateGHud(); refreshUpPad(); } }
   // el texto que falta solo se lee de cerca
+  const gNear = Math.hypot(p.x - GF.x, p.z - GF.z) < 90;
   for (const k in gTiles) {
+    if (!gNear) break;
     const tl = gTiles[k];
     if (tl.lbl && tl.lbl.visible !== false) { const ready = tl.stage === 2, d = Math.hypot(tl.x - p.x, tl.z - p.z); tl.lbl.material.opacity = ready ? Math.min(1, Math.max(0, (40 - d) / 12)) : Math.min(1, Math.max(0, (14 - d) / 4)); }
     if (tl.pop > 0 && tl.plant) { tl.pop = Math.max(0, tl.pop - dt * 3); const s = 1 + Math.sin(tl.pop * Math.PI) * 0.25; tl.plant.scale.set(s, 2 - s, s); }
-    if (tl.plant) { tl.plant.rotation.z = Math.sin(t * 1.3 + tl.r + tl.c * 0.7) * 0.025; tl.plant.traverse((o) => { if (o.userData.ph !== undefined) { o.material.opacity = 0.35 + 0.65 * Math.abs(Math.sin(t * 3 + o.userData.ph)); o.position.y = o.userData.p.y + Math.sin(t * 1.5 + o.userData.ph) * 0.15; } }); }
+    if (tl.plant) { tl.plant.rotation.z = Math.sin(t * 1.3 + tl.r + tl.c * 0.7) * 0.025; for (const o of tl.plant.userData.sparks) { o.material.opacity = 0.35 + 0.65 * Math.abs(Math.sin(t * 3 + o.userData.ph)); o.position.y = o.userData.p.y + Math.sin(t * 1.5 + o.userData.ph) * 0.15; } }
   }
-  for (const m of gRainbow) { const h = (t * 0.25) % 1; m.color.setHSL(h, 0.85, 0.6); m.emissive.setHSL(h, 0.9, 0.35); }
+  if (gNear) for (const m of gRainbow) { const h = (t * 0.25) % 1; m.color.setHSL(h, 0.85, 0.6); m.emissive.setHSL(h, 0.9, 0.35); }
   // la cosecha sube y se achica (vuela a la canasta)
   for (let i = gFly.length - 1; i >= 0; i--) {
     const f = gFly[i]; f.t += dt;
     f.o.position.y += dt * 5; f.o.scale.setScalar(Math.max(0.01, 1 - f.t * 1.6)); f.o.rotation.y += dt * 8;
-    if (f.t > 0.6) { garden.remove(f.o); gFly.splice(i, 1); }
+    if (f.t > 0.6) { garden.remove(f.o); disposeTree(f.o); gFly.splice(i, 1); }
   }
   if (!inGarden || mode !== 'play') return;
   // pisar una casilla: planta o cosecha
@@ -4696,6 +4763,7 @@ function gardenTick(dt, t) {
 }
 refreshTiles(); renderSeedBar();
 for (const k in gTiles) drawTile(gTiles[k]);
+mergeChildren(gStatic);
 
 // =====================================================================
 // ===== ONLINE: guardado en el servidor y jugadores en vivo =====
@@ -4873,6 +4941,8 @@ function makeAvatar(lk) {
   applyLook(true);
   const av = { g, J, P, MAT };
   ({ MAT, P, J, look } = save);
+  // se juntan las piezas de cada articulación (se ve igual, se dibuja mucho más rápido)
+  mergeChildren(g, (o) => o.name === 'facePlane');
   // la cara: un lienzo propio, que se redibuja cuando cambia su expresión, parpadea o mira al costado
   const cv = document.createElement('canvas'); cv.width = FACE.canvas.width; cv.height = FACE.canvas.height;
   av.face = { cv, ctx: cv.getContext('2d'), tex: new THREE.CanvasTexture(cv), key: '' };
@@ -4903,7 +4973,7 @@ function addRemote(o) {
   rebuildRemotePets(r);
 }
 function rebuildAvatar(r) {
-  if (r.av) r.obj.remove(r.av.g);
+  if (r.av) { r.obj.remove(r.av.g); disposeTree(r.av.g); }
   r.av = makeAvatar(r.look); r.hand = null; r.heldCode = -1;
   r.av.g.traverse((m) => { if (m.isMesh) m.castShadow = !isTouch; });
   r.obj.add(r.av.g);
@@ -4985,6 +5055,8 @@ function remoteTick(dt, t) {
     // el nombre se apaga de a poco a lo lejos
     if (r.tag) { const op = Math.min(1, Math.max(0, (48 - dist) / 14)); r.tag.material.opacity = op; r.tag.visible = op > 0.02; }
     setHeld(r, a.h);
+    r.skip = !r.skip;
+    if (dist > 45 && r.skip) { tickRemotePets(r, dt, t); continue; }
     animateRemote(r, r.spd, fl, t, dt);
     remoteFace(r, a.ex, dt);
     tickRemotePets(r, dt, t);
@@ -4997,8 +5069,17 @@ function setHeld(r, code) {
   const L = r.av.J.L;
   if (!r.hand) { r.hand = new THREE.Group(); r.hand.position.copy(L.ax).multiplyScalar(0.309 + 0.2).add(new THREE.Vector3(0, 0, 0.14)); L.elbow.add(r.hand); }
   while (r.hand.children.length) r.hand.remove(r.hand.children[0]);
-  if (code === 1) r.hand.add(makePickaxe());
-  else if (code >= 2 && BLOCKS[code - 2]) r.hand.add(heldModel(code - 2));
+  const tpl = handTpl(code); if (tpl) r.hand.add(tpl.clone());
+}
+// lo de la mano se arma una vez por tipo y después se copia (comparte el dibujo)
+const HAND_TPL = {};
+function handTpl(code) {
+  if (!code) return null;
+  if (HAND_TPL[code]) return HAND_TPL[code];
+  let m = null;
+  if (code === 1) m = makePickaxe(); else if (BLOCKS[code - 2]) m = heldModel(code - 2);
+  if (m) { mergeChildren(m); m.traverse((o) => { if (o.geometry) o.geometry.userData.shared = 1; }); }
+  return (HAND_TPL[code] = m);
 }
 // su cara: la expresión que tiene él, y parpadeo + mirar al costado como el tuyo
 function remoteFace(r, exIdx, dt) {
@@ -5077,7 +5158,7 @@ function applyOps(r, ops) {
     pl.T[k] = 0;
     if (t >= 0 && BLOCKS[t]) {
       pl.T[k] = t + 1; pl.S[k] = BLOCKS[t].deco ? 0 : sh; pl.R[k] = ro;
-      if (BLOCKS[t].deco) { const d = decoModel(t); d.position.set(pl.ox + x + 0.5, y, pl.oz + z + 0.5); d.rotation.y = -ro * Math.PI / 2; d.traverse((m) => { if (m.isMesh) { m.castShadow = false; m.receiveShadow = true; } }); pl.group.add(d); pl.decos[k] = d; }
+      if (BLOCKS[t].deco) { const d = remoteDeco(t); d.position.set(pl.ox + x + 0.5, y, pl.oz + z + 0.5); d.rotation.y = -ro * Math.PI / 2; d.traverse((m) => { if (m.isMesh) { m.castShadow = false; m.receiveShadow = true; } }); pl.group.add(d); pl.decos[k] = d; }
       else { const key = t * 3 + pl.S[k]; (pl.cells[key] = pl.cells[key] || new Set()).add(k); dirtyK.add(key); }
     }
   }
@@ -5119,6 +5200,12 @@ function drawRemotePlotFloor(r) {
   s2.fillStyle = '#faf6eb'; s2.beginPath(); s2.roundRect ? s2.roundRect(4, 4, 504, 152, 30) : s2.rect(4, 4, 504, 152); s2.fill(); s2.lineWidth = 10; s2.strokeStyle = '#2ea046'; s2.stroke();
   s2.fillStyle = '#1e2819'; s2.textAlign = 'center'; s2.textBaseline = 'middle'; s2.font = '700 56px Fredoka, sans-serif'; s2.fillText(tr('Terreno de {0}', (r.bot ? '🏠 ' : '') + r.nombre).slice(0, 24), 256, 80);
   const board = new THREE.Mesh(rbox(3.2, 1, 0.12, 0.06), new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(scv), roughness: 0.5 })); board.position.y = 2.1; sg.add(board);
+}
+// muebles de los terrenos de los otros: un molde por tipo con las piezas juntadas (se dibujan de una vez)
+const RDECO = {};
+function remoteDeco(t) {
+  if (!RDECO[t]) { const m = decoModel(t); mergeChildren(m); m.traverse((o) => { if (o.geometry) o.geometry.userData.shared = 1; }); RDECO[t] = m; }
+  return RDECO[t].clone();
 }
 // se escucha cuando alguien construye cerca tuyo
 function blockSound(r, ops) {
@@ -5456,6 +5543,8 @@ function botsTick(dt, t) {
     b.av.g.scale.set(1 + b.squash * 0.12, 1 - b.squash * 0.15, 1 + b.squash * 0.12);
     if (b.tag) { const op = Math.min(1, Math.max(0, (48 - dist) / 14)); b.tag.material.opacity = op; b.tag.visible = op > 0.02; }
     setHeld(b, s.h);
+    b.skip = !b.skip;
+    if (dist > 45 && b.skip) continue; // lejos: se anima un cuadro sí y otro no (no se nota)
     animateRemote(b, b.spd, s.fl, t, dt);
     remoteFace(b, Math.max(0, EXPRESIONES.indexOf(s.ex)), dt);
   }
@@ -5479,7 +5568,7 @@ function petBotsTick(dt, t, now) {
     if (cyc !== b.cyc) {
       b.cyc = cyc; const R = brng(cyc * 31 + b.i * 977 + 5);
       b.look = botLook(R); b.nombre = BOT_NAMES[(b.i * 7 + cyc) % BOT_NAMES.length];
-      if (b.av) b.obj.remove(b.av.g);
+      if (b.av) { b.obj.remove(b.av.g); disposeTree(b.av.g); }
       b.av = makeAvatar(b.look); b.hand = null; b.heldCode = -1; b.obj.add(b.av.g); setTag(b);
       b.mascotas = []; for (let k = 0; k < 2 + Math.floor(R() * 2); k++) { const id = bpick(R, PB_PETS.filter((p) => PBY[p])); if (id) b.mascotas.push([id, '']); }
       for (const p of b.pets) petsRoot.remove(p.obj);
@@ -5520,7 +5609,7 @@ function gardenBotsTick(dt, t, now) {
     if (cyc !== b.cyc) {
       b.cyc = cyc; const R = brng(cyc * 53 + b.i * 1931 + 11);
       b.look = botLook(R); b.nombre = BOT_NAMES[(b.i * 11 + cyc * 5 + 3) % BOT_NAMES.length];
-      if (b.av) b.obj.remove(b.av.g);
+      if (b.av) { b.obj.remove(b.av.g); disposeTree(b.av.g); }
       b.av = makeAvatar(b.look); b.hand = null; b.heldCode = -1; b.obj.add(b.av.g); setTag(b);
       // recorrido por los pasillos de la huerta y paradas junto a las plantas
       b.legs = []; let tt = 0, px = -76 + R() * 4, pz = 36 + R() * 10;
