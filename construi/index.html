@@ -698,7 +698,7 @@ document.body.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x9fd3ff);
-scene.fog = new THREE.Fog(0xbfe3ff, 35, 120);
+scene.fog = new THREE.Fog(0xbfe3ff, 45, 175); // más lejos: se ven los otros mundos
 
 const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 400);
 
@@ -762,8 +762,8 @@ function reservedAt(x, z) {
   if (Math.abs(x) < 17.4 && Math.abs(z) < 17.4) return true;              // terreno de construcción
   if (Math.hypot(x, z - 42) < 9.6) return true;                            // plaza
   if (Math.abs(x) < 5 && z > 15 && z < 36) return true;                    // cintas a Construí Todo
-  if (x > 5 && x < 39 && Math.abs(z - 42) < 4.2) return true;              // cintas al juego 2
-  if (Math.hypot(x - 34.5, z - 42) < 4.5) return true;                     // estación del juego 2
+  if (x > 5 && x < 64 && Math.abs(z - 42) < 4.2) return true;              // cintas al juego 2
+  if (x > 52 && Math.abs(z - 42) < 18.5) return true;                      // Reino de Mascotas
   return false;
 }
 const offsets = new Float32Array(BLADES * 4);
@@ -2585,34 +2585,28 @@ function sfx(kind, breaking) {
     case 'boom': { const n = noise(1.2); const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.setValueAtTime(1200, t); f.frequency.exponentialRampToValueAtTime(80, t + 1); n.connect(f); f.connect(g); g.gain.setValueAtTime(1.2, t); g.gain.exponentialRampToValueAtTime(0.001, t + 1.2); n.start(t); tone(90, 35, 0.8, 'sine', 0.7); break; }
   }
 }
-// música: melodías simples que se arman solas (4 estilos, como en Roblox)
+// música: los temas propios (2 por estilo), uno detrás del otro
 const MUSIC = [
-  { es: 'Apagada' },
-  { es: 'Tranquila', bpm: 76, scale: [0, 2, 4, 7, 9], root: 57, wave: 'sine' },
-  { es: 'Alegre', bpm: 112, scale: [0, 2, 4, 5, 7, 9, 11], root: 60, wave: 'triangle' },
-  { es: 'Aventura', bpm: 96, scale: [0, 2, 3, 5, 7, 8, 10], root: 55, wave: 'triangle' },
-  { es: 'Noche', bpm: 64, scale: [0, 3, 5, 7, 10], root: 50, wave: 'sine' },
+  { es: 'Apagada', files: [] },
+  { es: 'Tranquila', files: ['tranquila1', 'tranquila2'] },
+  { es: 'Alegre', files: ['alegre1', 'alegre2'] },
+  { es: 'Aventura', files: ['aventura1', 'aventura2'] },
+  { es: 'Noche', files: ['noche1', 'noche2'] },
 ];
 MUSIC.forEach((m) => { m.es = tr(m.es); });
-let musicTimer = null, beat = 0;
-function midi(n) { return 440 * Math.pow(2, (n - 69) / 12); }
+const musicEl = new Audio(); musicEl.preload = 'auto';
+let musicIdx = 0;
+musicEl.addEventListener('ended', () => { const m = MUSIC[st.music]; if (!m.files.length) return; musicIdx = (musicIdx + 1) % m.files.length; musicEl.src = 'musica/' + m.files[musicIdx] + '.mp3'; musicEl.play().catch(() => {}); });
 function startMusic() {
-  clearInterval(musicTimer); musicTimer = null;
-  const m = MUSIC[st.music]; if (!m || !m.bpm || !audio()) return;
-  const R = rnd(st.music * 31);
-  const chords = [0, 3, 4, 2];
-  beat = 0;
-  musicTimer = setInterval(() => {
-    if (!AC || document.hidden) return;
-    const t = AC.currentTime + 0.05, step = 60 / m.bpm / 2;
-    const chord = chords[Math.floor(beat / 8) % 4];
-    const note = (n, dur, vol, type) => { const o = AC.createOscillator(); o.type = type || m.wave; o.frequency.value = midi(n); const g = AC.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.connect(g); g.connect(musicGain); o.start(t); o.stop(t + dur + 0.05); };
-    if (beat % 8 === 0) { const r = m.root - 12 + m.scale[chord % m.scale.length]; note(r, step * 7, 0.22, 'sine'); }
-    if (beat % 2 === 0 || R() < 0.3) { if (R() < 0.75) { const deg = (chord + Math.floor(R() * 5)) % m.scale.length; const oct = R() < 0.3 ? 12 : 0; note(m.root + m.scale[deg] + oct, step * (1.5 + R() * 2), 0.12); } }
-    beat++;
-  }, 60000 / m.bpm / 2);
+  const m = MUSIC[st.music];
+  musicEl.volume = Math.min(1, st.volume * 0.8);
+  if (!m || !m.files.length) { musicEl.pause(); return; }
+  musicIdx = Math.floor(Math.random() * m.files.length);
+  musicEl.src = 'musica/' + m.files[musicIdx] + '.mp3';
+  musicEl.play().catch(() => {});
 }
-function setVolume(v) { st.volume = v; if (musicGain) musicGain.gain.value = v * 0.35; save(); }
+document.addEventListener('visibilitychange', () => { if (document.hidden) musicEl.pause(); else if (MUSIC[st.music].files.length && mode === 'play') musicEl.play().catch(() => {}); });
+function setVolume(v) { st.volume = v; musicEl.volume = Math.min(1, v * 0.8); save(); }
 
 // ===== interfaz =====
 const $ = (id) => document.getElementById(id);
@@ -3252,7 +3246,7 @@ function postSign(x, z, rotY, lines, color) {
   addMesh(new THREE.CylinderGeometry(1.5, 1.7, 0.7, 32), toyMat('#faf6eb'), sx, 0.35, sz);
   addMesh(new THREE.CylinderGeometry(1.2, 1.2, 0.5, 32), toyMat('#2ea046'), sx, 0.95, sz);
   const head = addMesh(rbox(2.2, 2, 2.2, 0.22), toyMat('#ffd83d', 0.4), sx, 2.25, sz);
-  head.name = 'statue';
+  head.name = 'statue'; head.rotation.y = Math.PI; // mira hacia el centro de la plaza
   const faceCv = document.createElement('canvas'); faceCv.width = faceCv.height = 256; const fg = faceCv.getContext('2d');
   fg.fillStyle = '#1d2433'; fg.beginPath(); fg.ellipse(88, 105, 15, 30, 0, 0, 7); fg.fill(); fg.beginPath(); fg.ellipse(168, 105, 15, 30, 0, 0, 7); fg.fill();
   fg.lineWidth = 12; fg.lineCap = 'round'; fg.strokeStyle = '#1d2433'; fg.beginPath(); fg.moveTo(80, 165); fg.quadraticCurveTo(128, 215, 176, 165); fg.stroke();
@@ -3319,9 +3313,10 @@ addBelt(1.6, 19.2, 1.6, PLAZA.z - PLAZA.r + 1.2, '#e6a91e');
 arch(0, 20.6, 0, [tr('CONSTRUÍ TODO'), tr('Juego 1')], '#2ea046');
 postSign(-4.4, PLAZA.z - PLAZA.r + 0.2, 0, [tr('Construí Todo'), tr('subite a la cinta')], '#2ea046');
 // próximo juego: cinta hacia el este que termina en una estación "pronto"
-addBelt(PLAZA.x + PLAZA.r - 1.2, PLAZA.z - 1.6, PLAZA.x + 30, PLAZA.z - 1.6, '#4fb3ee');
-addBelt(PLAZA.x + 30, PLAZA.z + 1.6, PLAZA.x + PLAZA.r - 1.2, PLAZA.z + 1.6, '#e6a91e');
-arch(PLAZA.x + 31.6, PLAZA.z, Math.PI / 2, [tr('REINO DE MASCOTAS'), tr('Juego 2')], '#4fb3ee');
+// cintas largas hasta el Reino de Mascotas (se ve de lejos, llegás caminando por la cinta)
+addBelt(PLAZA.x + PLAZA.r - 1.2, PLAZA.z - 1.6, 63, PLAZA.z - 1.6, '#4fb3ee');
+addBelt(63, PLAZA.z + 1.6, PLAZA.x + PLAZA.r - 1.2, PLAZA.z + 1.6, '#e6a91e');
+// (el arco del Juego 2 es la entrada gigante del Reino de Mascotas, al final de la cinta)
 // portales: textura de remolino
 function swirlTex(c) {
   const cv = document.createElement('canvas'); cv.width = cv.height = 128; const g = cv.getContext('2d');
@@ -3333,10 +3328,7 @@ function swirlTex(c) {
 }
 const portals = [];
 {
-  // estación 2: plataforma con el portal al Reino de Mascotas
-  const cx = PLAZA.x + 34.5, cz = PLAZA.z;
-  const pad = new THREE.Mesh(new THREE.CylinderGeometry(3.4, 3.4, 0.12, 40), toyMat('#4fb3ee')); pad.position.set(cx, 0.06, cz); pad.receiveShadow = true; hub.add(pad);
-  for (let i = 0; i < 9; i++) { const a = -Math.PI / 2 + 0.6 + i * (Math.PI * 2 - 1.2) / 8; const x = cx + Math.cos(a + Math.PI / 2) * 3.1, z = cz + Math.sin(a + Math.PI / 2) * 3.1; addMesh(rbox(0.35, 0.9, 0.35, 0.12), toyMat(i % 2 ? '#ffd83d' : '#faf6eb'), x, 0.45, z); colliders.push({ x, z, r: 0.22 }); }
+  // (la estación 2 es el arco: la cinta sigue derecho hasta el mundo de mascotas)
 }
 
 // las cintas mueven al muñeco (si está parado arriba)
@@ -3456,7 +3448,6 @@ const MAX_PETS = 80, PILES_PER_ZONE = 14, RESPAWN = 6, PLAYER_POWER = 2, GEM_CHA
 
 // ----- lugar del mundo de mascotas -----
 const PW_Z0 = -84, ZONE_L = 22, PW_X = 16; // la zona i va de z = PW_Z0 - i*22 a PW_Z0 - (i+1)*22
-const PW_ENTRY = new THREE.Vector3(-1.6, BELT_H, -76.2);
 const zoneZ = (i) => PW_Z0 - i * ZONE_L; // borde de entrada de la zona i
 function zoneOf(z) { return Math.max(0, Math.min(4, Math.floor((PW_Z0 - z) / ZONE_L))); }
 
@@ -3578,8 +3569,16 @@ function petIcon(id, v) {
 // =====================================================================
 // ===== el mundo de mascotas =====
 // =====================================================================
+// el mundo se arma en coordenadas propias (avanza hacia -z) y después se gira para que quede al final de la cinta
+const PW_ROT = -Math.PI / 2;
 const petWorld = new THREE.Group();
-scene.add(petWorld);
+petWorld.rotation.y = PW_ROT; petWorld.position.set(-21, 0, 42);
+scene.add(petWorld); petWorld.updateMatrixWorld(true);
+const _pl = new THREE.Vector3();
+function PL() { return petWorld.worldToLocal(_pl.copy(player.position)); } // posición del muñeco en el mundo de mascotas
+const toWorld = (v) => petWorld.localToWorld(v.clone());
+function colL(x, z, r) { const w = petWorld.localToWorld(new THREE.Vector3(x, 0, z)); colliders.push({ x: w.x, z: w.z, r }); } // obstáculo en coordenadas del mundo de mascotas
+const LF = () => facing - PW_ROT; // hacia dónde mira, en el mundo de mascotas
 const piles = [];       // montones de monedas y cofres
 const pileHit = [];     // cajas invisibles para tocar
 const eggStands = [];
@@ -3623,7 +3622,21 @@ function coinMesh(r = 0.22) { const m = new THREE.Mesh(new THREE.CylinderGeometr
 (function buildPetWorld() {
   // patio de entrada con el portal de vuelta
   const entry = new THREE.Mesh(new THREE.PlaneGeometry(PW_X * 2, 8), new THREE.MeshStandardMaterial({ map: (() => { const t = checkerTex('#f3ead2', '#ffe79a'); t.repeat.set(8, 2); return t; })(), roughness: 0.6 }));
-  entry.rotation.x = -Math.PI / 2; entry.position.set(0, 0.02, -80); entry.receiveShadow = true; petWorld.add(entry);
+  entry.rotation.x = -Math.PI / 2; entry.position.set(0, 0.02, -80); // patio de llegada entry.receiveShadow = true; petWorld.add(entry);
+  // entrada grande: se ve de lejos desde la plaza (arco alto, huevo gigante y mascotas gigantes)
+  {
+    const gz = -77.2;
+    for (const x of [-4.6, 4.6]) { pwMesh(new THREE.CylinderGeometry(0.6, 0.7, 9, 20), tm('#ff96be'), x, 4.5, gz); pwMesh(new THREE.SphereGeometry(0.8, 18, 12), tm('#ffd83d'), x, 9.3, gz); colL(x, gz, 0.7); }
+    const sg = pwMesh(rbox(10.4, 3, 0.35, 0.2), new THREE.MeshStandardMaterial({ map: signTex(tr('REINO DE MASCOTAS'), tr('Juego 2'), '#b45aff'), roughness: 0.5 }), 0, 7.4, gz);
+    sg.rotation.y = Math.PI; // el cartel mira hacia la plaza
+    const big = [['kitty', -9.5], ['puppy', 9.5]];
+    for (const [id, x] of big) {
+      pwMesh(new THREE.CylinderGeometry(1.9, 2.1, 1, 28), tm('#faf6eb'), x, 0.5, gz + 1);
+      const pm = petModel(id, ''); pm.scale.setScalar(4); pm.position.set(x, 1, gz + 1); pm.rotation.y = Math.PI; petWorld.add(pm);
+      colL(x, gz + 1, 2);
+    }
+    const egg = pwMesh(new THREE.SphereGeometry(2.2, 32, 22), new THREE.MeshStandardMaterial({ map: eggTex(PZONES[4]), roughness: 0.35 }), 0, 12.4, gz); egg.scale.set(1, 1.28, 1);
+  }
   PZONES.forEach((z, i) => {
     const z0 = zoneZ(i), zc = z0 - ZONE_L / 2;
     const tex = checkerTex(z.ground, z.ground2); tex.repeat.set(PW_X, ZONE_L / 2);
@@ -3639,7 +3652,7 @@ function coinMesh(r = 0.22) { const m = new THREE.Mesh(new THREE.CylinderGeometr
     const egg = pwMesh(new THREE.SphereGeometry(0.85, 28, 20), new THREE.MeshStandardMaterial({ map: eggTex(z), roughness: 0.35 }), ex, 1.75, ez);
     egg.scale.set(1, 1.28, 1);
     const sign = pwMesh(rbox(2.4, 1.2, 0.14, 0.08), new THREE.MeshStandardMaterial({ map: signTex(tr('Abrir huevo'), fmt(z.egg), '#2ea046'), roughness: 0.5 }), ex, 3.75, ez);
-    colliders.push({ x: ex, z: ez, r: 1.55 });
+    colL(ex, ez, 1.55);
     eggStands.push({ i, x: ex, z: ez, egg });
     // portón al principio de cada zona (menos la primera)
     if (i > 0) {
@@ -3653,8 +3666,6 @@ function coinMesh(r = 0.22) { const m = new THREE.Mesh(new THREE.CylinderGeometr
     }
   });
   // cintas de llegada y de vuelta (como en la plaza): llegás en una y te volvés en la otra
-  addBelt(-1.6, -75.4, -1.6, -83, '#4fb3ee');
-  addBelt(1.6, -83, 1.6, -75.4, '#e6a91e');
 })();
 
 function decorate(i, z, z0) {
@@ -3668,11 +3679,11 @@ function decorate(i, z, z0) {
     if (i === 2) { const t = pwMesh(new THREE.CylinderGeometry(0.16, 0.24, 3, 8), tm('#b98a5a'), 0, 1.5, 0, g); t.rotation.z = 0.15; for (let l = 0; l < 5; l++) { const lf = pwMesh(new THREE.ConeGeometry(0.35, 1.6, 4), tm('#3fae4a'), Math.cos(l * 1.26) * 0.6 + 0.2, 3, Math.sin(l * 1.26) * 0.6, g); lf.rotation.set(Math.sin(l * 1.26) * 1.2, 0, -Math.cos(l * 1.26) * 1.2); lf.scale.z = 0.3; } }
     if (i === 3) { pwMesh(new THREE.CylinderGeometry(0.2, 0.28, 1.2, 8), tm('#7a5232'), 0, 0.6, 0, g); pwMesh(new THREE.ConeGeometry(1, 1.7, 8), tm('#2f6d48'), 0, 1.9, 0, g); pwMesh(new THREE.ConeGeometry(0.6, 0.8, 8), tm('#ffffff'), 0, 2.55, 0, g); }
     if (i === 4) { pwMesh(new THREE.CylinderGeometry(0.06, 0.06, 1.8, 8), tm('#ffffff'), 0, 0.9, 0, g); const l = pwMesh(new THREE.CylinderGeometry(0.55, 0.55, 0.16, 20), tm(['#ff78c8', '#78c8ff', '#ffe646'][k % 3]), 0, 1.9, 0, g); l.rotation.x = Math.PI / 2; }
-    colliders.push({ x: g.position.x, z: g.position.z, r: 0.5 });
+    colL(g.position.x, g.position.z, 0.5);
   }
   if (i === 2) { const w = new THREE.Mesh(new THREE.PlaneGeometry(4, ZONE_L), tm('#4fb6ee', 0.15, { transparent: true, opacity: 0.85 })); w.rotation.x = -Math.PI / 2; w.position.set(PW_X - 2, 0.04, z0 - ZONE_L / 2); petWorld.add(w); }
-  if (i === 3) for (let k = 0; k < 2; k++) { const g = new THREE.Group(); g.position.set(k ? 9 : -9, 0, z0 - 15); petWorld.add(g); pwMesh(new THREE.SphereGeometry(0.6, 14, 10), tm('#ffffff'), 0, 0.55, 0, g); pwMesh(new THREE.SphereGeometry(0.42, 14, 10), tm('#ffffff'), 0, 1.4, 0, g); pwMesh(new THREE.ConeGeometry(0.07, 0.3, 8), tm('#ff8a28'), 0, 1.42, 0.45, g).rotation.x = Math.PI / 2; colliders.push({ x: g.position.x, z: g.position.z, r: 0.6 }); }
-  if (i === 4) for (const s of [-1, 1]) { const g = new THREE.Group(); g.position.set(s * 11, 0, z0 - 16); petWorld.add(g); pwMesh(new THREE.CylinderGeometry(1, 1.1, 4, 16), tm('#ffb4dc'), 0, 2, 0, g); pwMesh(new THREE.ConeGeometry(1.3, 1.8, 16), tm('#8c5ad2'), 0, 4.9, 0, g); colliders.push({ x: g.position.x, z: g.position.z, r: 1.15 }); }
+  if (i === 3) for (let k = 0; k < 2; k++) { const g = new THREE.Group(); g.position.set(k ? 9 : -9, 0, z0 - 15); petWorld.add(g); pwMesh(new THREE.SphereGeometry(0.6, 14, 10), tm('#ffffff'), 0, 0.55, 0, g); pwMesh(new THREE.SphereGeometry(0.42, 14, 10), tm('#ffffff'), 0, 1.4, 0, g); pwMesh(new THREE.ConeGeometry(0.07, 0.3, 8), tm('#ff8a28'), 0, 1.42, 0.45, g).rotation.x = Math.PI / 2; colL(g.position.x, g.position.z, 0.6); }
+  if (i === 4) for (const s of [-1, 1]) { const g = new THREE.Group(); g.position.set(s * 11, 0, z0 - 16); petWorld.add(g); pwMesh(new THREE.CylinderGeometry(1, 1.1, 4, 16), tm('#ffb4dc'), 0, 2, 0, g); pwMesh(new THREE.ConeGeometry(1.3, 1.8, 16), tm('#8c5ad2'), 0, 4.9, 0, g); colL(g.position.x, g.position.z, 1.15); }
 }
 
 // montones de monedas y cofres
@@ -3733,13 +3744,13 @@ PZONES.forEach((z, i) => { for (let k = 0; k < PILES_PER_ZONE; k++) makePile(i, 
 // ===== mascotas que te siguen =====
 // =====================================================================
 const followers = []; // { o (dato), obj, pos, target, hopT }
-const petsRoot = new THREE.Group(); scene.add(petsRoot); petsRoot.visible = false;
+const petsRoot = new THREE.Group(); petWorld.add(petsRoot); petsRoot.visible = false;
 function refreshFollowers() {
   const want = ps.pets.filter((o) => o.eq);
   for (let i = followers.length - 1; i >= 0; i--) { const f = followers[i]; if (!want.includes(f.o)) { petsRoot.remove(f.obj); followers.splice(i, 1); } }
   for (const o of want) if (!followers.some((f) => f.o === o)) {
     const obj = petModel(o.id, o.v); obj.scale.setScalar(0.9); petsRoot.add(obj);
-    obj.position.copy(player.position).add(new THREE.Vector3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5) * 2));
+    obj.position.copy(PL()).add(new THREE.Vector3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5) * 2));
     followers.push({ o, obj, target: null, hop: Math.random() * 6, atk: 0 });
   }
   followers.sort((a, b) => ps.pets.indexOf(a.o) - ps.pets.indexOf(b.o));
@@ -3755,13 +3766,14 @@ function petsTick(dt, t) {
   }
   if (attackTarget && !attackTarget.alive) attackTarget = null;
   // si estás al lado de un montón y no elegiste otro, lo atacan solos
+  const pl = PL().clone(), lf = LF();
   if (!attackTarget && inPets) {
     let best = null, bd = 3.2;
-    for (const p of piles) if (p.alive && p.i < ps.unlocked) { const d = Math.hypot(p.x - player.position.x, p.z - player.position.z); if (d < bd) { bd = d; best = p; } }
+    for (const p of piles) if (p.alive && p.i < ps.unlocked) { const d = Math.hypot(p.x - pl.x, p.z - pl.z); if (d < bd) { bd = d; best = p; } }
     if (best) attackTarget = best;
   }
-  if (attackTarget && Math.hypot(attackTarget.x - player.position.x, attackTarget.z - player.position.z) > 26) attackTarget = null;
-  const fwd = new THREE.Vector3(Math.sin(facing), 0, Math.cos(facing)), right = new THREE.Vector3(fwd.z, 0, -fwd.x);
+  if (attackTarget && Math.hypot(attackTarget.x - pl.x, attackTarget.z - pl.z) > 26) attackTarget = null;
+  const fwd = new THREE.Vector3(Math.sin(lf), 0, Math.cos(lf)), right = new THREE.Vector3(fwd.z, 0, -fwd.x);
   let dps = 0;
   followers.forEach((f, i) => {
     const o = f.obj, fly = o.userData.fly;
@@ -3771,16 +3783,16 @@ function petsTick(dt, t) {
       goal = new THREE.Vector3(attackTarget.x + Math.cos(a) * 1.25, 0, attackTarget.z + Math.sin(a) * 1.25);
     } else {
       const row = Math.floor(i / 3), col = i % 3 - 1;
-      goal = player.position.clone().addScaledVector(fwd, -1.5 - row * 1.1).addScaledVector(right, col * 1.1);
+      goal = pl.clone().addScaledVector(fwd, -1.5 - row * 1.1).addScaledVector(right, col * 1.1);
     }
-    goal.y = player.position.y;
+    goal.y = pl.y;
     const d = goal.clone().sub(o.position); d.y = 0;
     const dist = d.length(), moving = dist > 0.15;
     const sp = Math.max(9, dist * 3);
     if (dist > 30) o.position.copy(goal); // si quedó muy lejos aparece al lado
     else if (moving) o.position.addScaledVector(d.normalize(), Math.min(dist, sp * dt));
     // mirar hacia donde va (o al montón)
-    const look = attackTarget && inPets && dist < 0.4 ? Math.atan2(attackTarget.x - o.position.x, attackTarget.z - o.position.z) : moving ? Math.atan2(d.x, d.z) : facing;
+    const look = attackTarget && inPets && dist < 0.4 ? Math.atan2(attackTarget.x - o.position.x, attackTarget.z - o.position.z) : moving ? Math.atan2(d.x, d.z) : lf;
     o.rotation.y = angleLerp(o.rotation.y, look, 1 - Math.exp(-10 * dt));
     f.hop += dt * (moving ? 12 : 3);
     const atk = attackTarget && inPets && dist < 0.5;
@@ -3795,7 +3807,7 @@ function petsTick(dt, t) {
   // monedas que vuelan hacia vos
   for (let i = flyCoins.length - 1; i >= 0; i--) {
     const c = flyCoins[i]; c.t += dt;
-    const k = Math.min(1, c.t / 0.55), dest = player.position.clone().add(new THREE.Vector3(0, 1.2, 0));
+    const k = Math.min(1, c.t / 0.55), dest = pl.clone().add(new THREE.Vector3(0, 1.2, 0));
     c.m.position.lerpVectors(c.from, dest, k * k); c.m.position.y += Math.sin(k * Math.PI) * 2.2; c.m.rotation.x += dt * 9;
     if (k >= 1) { petsRoot.remove(c.m); flyCoins.splice(i, 1); }
   }
@@ -3817,9 +3829,9 @@ function breakPile(p) {
   ps.coins += coins; ps.gems += gems; psSave();
   const from = new THREE.Vector3(p.x, 0.6, p.z);
   for (let k = 0; k < (p.chest ? 12 : 6); k++) { const m = coinMesh(0.16); m.position.copy(from); petsRoot.add(m); flyCoins.push({ m, from: from.clone().add(new THREE.Vector3((Math.random() - 0.5) * 1.5, 0, (Math.random() - 0.5) * 1.5)), t: -k * 0.04 }); }
-  popText('+' + fmt(coins), from, '#ffd23c'); if (gems) popText('+' + gems + ' 💎'.replace('💎', ''), from.clone().add(new THREE.Vector3(0, 0.6, 0)), '#5ae6ff', true);
+  popText('+' + fmt(coins), toWorld(from), '#ffd23c'); if (gems) popText('+' + gems, toWorld(from.clone().add(new THREE.Vector3(0, 0.6, 0))), '#5ae6ff', true);
   sfx('coin'); if (p.chest) setTimeout(() => sfx('coin'), 120);
-  puff(from, p.chest ? '#b5773f' : '#ffc828');
+  puff(toWorld(from), p.chest ? '#b5773f' : '#ffc828');
 }
 // textito que sube (+monedas)
 function popText(txt, pos, color, gem) {
@@ -3838,8 +3850,9 @@ function petTap(cx, cy) {
   if (!hits.length) return;
   const p = hits[0].object.userData.pile;
   attackTarget = p;
-  facing = Math.atan2(p.x - player.position.x, p.z - player.position.z);
-  if (Math.hypot(p.x - player.position.x, p.z - player.position.z) < 4) { damage(p, PLAYER_POWER * MULT[ps.up.coins]); swing(0.3); sfx('click'); }
+  const pl = PL();
+  facing = Math.atan2(p.x - pl.x, p.z - pl.z) + PW_ROT;
+  if (Math.hypot(p.x - pl.x, p.z - pl.z) < 4) { damage(p, PLAYER_POWER * MULT[ps.up.coins]); swing(0.3); sfx('click'); }
 }
 
 // =====================================================================
@@ -4050,7 +4063,7 @@ function petHudTick() {
   if (!inPets) return;
   if (ps.coins !== lastCoins) { $('pCoins').textContent = fmt(ps.coins); lastCoins = ps.coins; }
   if (ps.gems !== lastGems) { $('pGems').textContent = fmt(ps.gems); lastGems = ps.gems; }
-  const p = player.position;
+  const p = PL();
   nearEgg = -1; for (const e of eggStands) if (e.i < ps.unlocked && Math.hypot(p.x - e.x, p.z - e.z) < 3.6) nearEgg = e.i;
   nearGate = -1; for (const g of gates) if (g.i === ps.unlocked && Math.abs(p.z - g.z) < 2.6) nearGate = g.i;
   updateEggBtn();
@@ -4061,16 +4074,19 @@ addEventListener('keydown', (e) => { if (!inPets || e.repeat) return; if (e.code
 // ===== límites del mundo de mascotas (no pasar los portones cerrados) =====
 var inPets = false;
 function clampPets() {
-  const p = player.position;
+  const p = PL();
   if (p.z > -74) return false;
-  p.x = Math.max(-PW_X + 0.6, Math.min(PW_X - 0.6, p.x));
+  // los costados del mundo (eje x propio = eje z de la escena)
+  const cx = Math.max(-PW_X + 0.6, Math.min(PW_X - 0.6, p.x));
+  if (cx !== p.x) { p.x = cx; vel.z = 0; }
+  // no pasar los portones cerrados (eje z propio = -x de la escena)
   const minZ = ps.unlocked >= 5 ? zoneZ(5) + 0.6 : zoneZ(ps.unlocked) + 0.5;
-  if (p.z < minZ) { p.z = minZ; vel.z = 0; }
-  if (p.z > -75.6) p.z = -75.6;
+  if (p.z < minZ) { p.z = minZ; vel.x = 0; }
+  player.position.copy(petWorld.localToWorld(p));
   return true;
 }
 function petsZone() {
-  const now = mode === 'play' && player.position.z < -74;
+  const now = mode === 'play' && PL().z < -74;
   if (now !== inPets) {
     inPets = now;
     document.body.classList.toggle('pets', now);
@@ -4083,31 +4099,11 @@ function petsZone() {
     } else attackTarget = null;
     // las mascotas viven en su mundo: afuera no te siguen
     petsRoot.visible = now;
-    if (now) followers.forEach((fl) => fl.obj.position.copy(player.position));
+    if (now) { const pl = PL(); followers.forEach((fl) => fl.obj.position.copy(pl)); }
   }
 }
 
-// ===== portales: estación 2 de la plaza ↔ mundo de mascotas =====
-function travel(to) {
-  const f = $('fade'); f.classList.add('on'); sfx('pop');
-  setTimeout(() => {
-    standUp(); flying = false; vel.set(0, 0, 0); vy = 0;
-    if (to === 'pets') { player.position.copy(PW_ENTRY); facing = Math.PI; camYaw = 0; petsRoot.visible = true; }
-    else { player.position.set(22, BELT_H, 43.6); facing = -Math.PI / 2; camYaw = Math.PI / 2; }
-    camera.position.copy(player.position).add(new THREE.Vector3(Math.sin(camYaw) * 7, 3, Math.cos(camYaw) * 7));
-    followers.forEach((fl) => fl.obj.position.copy(player.position));
-    setTimeout(() => f.classList.remove('on'), 120);
-  }, 380);
-}
-// sin portales: la cinta de la plaza te deja en el mundo de mascotas, y la cinta de vuelta te trae
-let portalCool = 0;
-function portalTick(dt) {
-  portalCool -= dt;
-  if (mode !== 'play' || portalCool > 0) return;
-  const p = player.position;
-  if (!inPets && p.x > 29.8 && Math.abs(p.z - 42) < 3.4) { portalCool = 2; travel('pets'); }
-  else if (inPets && p.z > -75.9 && p.x > 0) { portalCool = 2; travel('plaza'); }
-}
+function portalTick() { /* sin portales: el mundo de mascotas está al final de la cinta */ }
 refreshFollowers();
 
 function tick() {
