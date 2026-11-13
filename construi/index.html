@@ -338,6 +338,25 @@
     body.is-touch #tut .toy { padding: 6px 12px !important; font-size: 13px !important; }
   }
 
+  /* ===== Huerta de la Suerte ===== */
+  #gardenHud { display: none; }
+  body.garden #gardenHud { display: block; }
+  body.garden #topBox, body.garden #shopBtn, body.garden #help { display: none !important; }
+  #gTop { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); display: flex; gap: 8px; pointer-events: none; }
+  #gTop div { background: rgba(30,40,25,.85); color: #fff; border-radius: 14px; padding: 5px 14px; display: flex; align-items: center; gap: 7px; font-size: 22px; font-weight: 700; white-space: nowrap; }
+  #gTop .bk { font-size: 17px; }
+  #gBtns { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
+  #gBtns .toy { width: 98px; padding: 9px 6px; font-size: 14px; }
+  #gPassBtn { background: #b45aff !important; }
+  #seedBar { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; gap: 7px; pointer-events: auto; max-width: 92vw; overflow-x: auto; padding: 4px; }
+  .seedB { position: relative; width: 58px; height: 58px; border-radius: 14px; border: 3px solid rgba(255,255,255,.85); background: rgba(250,246,235,.95); box-shadow: 0 3px 10px rgba(0,0,0,.18); font: 700 13px var(--font); cursor: pointer; flex: none; }
+  .seedB .ico { font-size: 30px; line-height: 1; }
+  .seedB b { position: absolute; right: 4px; bottom: 1px; font-size: 14px; color: #1e2819; }
+  .seedB.on { border-color: #ffd83d; background: #fff4c2; transform: translateY(-4px); }
+  .seedB.empty { width: auto; padding: 0 14px; }
+  .seedIco { font-size: 34px; width: 44px; text-align: center; flex: none; }
+  .shopRow .toy + .toy { margin-left: 4px; }
+
   /* ===== Reino de Mascotas ===== */
   #petHud { display: none; }
   body.pets #petHud { display: block; }
@@ -383,6 +402,7 @@
   .vTag { display: inline-block; font-style: normal; font-size: 11px; padding: 1px 7px; border-radius: 8px; color: #5a3c00; background: #ffd23c; vertical-align: 2px; }
   .vTag.vr { background: linear-gradient(90deg,#ff8fb1,#ffd23c,#7fe08a,#7fc8ff,#c8a0ff); color: #3a2a50; }
   body.pets #help { display: none !important; }
+  @media (orientation: landscape) and (max-height: 520px) { body.is-touch #gTop { top: 6px !important; } body.is-touch #gTop div { font-size: 15px !important; padding: 3px 10px !important; } body.is-touch .seedB { width: 46px !important; height: 46px !important; } body.is-touch .seedB .ico { font-size: 23px !important; } body.is-touch #seedBar { bottom: 12px !important; } body.is-touch #gBtns .toy { width: 84px !important; padding: 7px 4px !important; font-size: 12px !important; } }
   .upIcon { width: 44px; height: 44px; border-radius: 12px; flex: none; background: var(--lg-gold); position: relative; }
   .u_slots { background: #ff8fb1; } .u_coins { background: #ffc828; } .u_luck { background: #5adc78; } .u_speed { background: #4fa0e6; }
   .idxRow { background: #fff; border: 1px solid var(--lg-line); border-radius: 12px; padding: 8px 10px; margin-bottom: 8px; }
@@ -439,6 +459,11 @@
   <div id="netBadge"></div>
   <div id="toast"></div>
   <div id="banner"></div>
+  <div id="gardenHud">
+    <div id="gTop"><div><span class="coin"></span><span id="gCoins">0</span></div><div><span class="gem"></span><span id="gGems">0</span></div><div class="bk">🧺 <span id="gBasket"></span></div></div>
+    <div id="gBtns"><button id="gShopBtn" class="toy">Semillas</button><button id="gPassBtn" class="toy">Tienda</button></div>
+    <div id="seedBar"></div>
+  </div>
   <div id="petHud">
     <div id="petTop"><div><span class="coin"></span><span id="pCoins">0</span></div><div><span class="gem"></span><span id="pGems">0</span></div></div>
     <div id="petBtns"><button id="pPetsBtn" class="toy">Mascotas</button><button id="pUpBtn" class="toy">Mejoras</button><button id="pIdxBtn" class="toy">Índice</button><button id="pShopBtn" class="toy">Tienda</button></div>
@@ -476,6 +501,8 @@
 <div id="petCard" class="panel"><div class="card"><div class="body" style="padding-top:14px"><div id="pcBody"></div><div class="menuGrid"><button id="pcEquip" class="toy">Equipar</button><button id="pcFuse" class="toy gold">Fusionar 5</button><button id="pcRelease" class="toy gray">Soltar</button><button id="pcClose" class="toy gray">Cerrar</button></div></div></div></div>
 <div id="upPanel" class="panel"><div class="card"><header><h2>Mejoras</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="upList"></div></div></div></div>
 <div id="idxPanel" class="panel"><div class="card"><header><h2>Índice</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="idxList"></div></div></div></div>
+<div id="gshopPanel" class="panel"><div class="card"><header><h2>Semillas</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="gshopList"></div></div></div></div>
+<div id="gpassPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="gpassList"></div></div></div></div>
 <div id="pshopPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="pshopList"></div></div></div></div>
 <div id="hatch"><div id="hatchEggs"></div></div>
 <div id="fade"></div>
@@ -505,6 +532,35 @@ const LANG = (() => {
 document.documentElement.lang = LANG;
 // clave: texto en español → [inglés, portugués]
 const DICT = {
+  'HUERTA DE LA SUERTE': ['LUCKY GARDEN', 'HORTA DA SORTE'],
+  'Huerta de la Suerte': ['Lucky Garden', 'Horta da Sorte'],
+  'Juego 3': ['Game 3', 'Jogo 3'],
+  'SEMILLAS': ['SEEDS', 'SEMENTES'], 'VENDER': ['SELL', 'VENDER'],
+  'Semillas': ['Seeds', 'Sementes'], 'Vender': ['Sell', 'Vender'], 'Mejora': ['Upgrade', 'Melhoria'], 'pisá acá': ['step here', 'pise aqui'],
+  'monedas': ['coins', 'moedas'],
+  '¡LISTA!': ['READY!', 'PRONTA!'], 'Arcoíris': ['Rainbow', 'Arco-íris'], 'Dorada': ['Golden', 'Dourada'],
+  '¡{0}! x{1}': ['{0}! x{1}', '{0}! x{1}'],
+  'No tenés semillas. Comprá en el puesto verde.': ["You have no seeds. Buy some at the green stand.", 'Você não tem sementes. Compre na banca verde.'],
+  'No tenés nada para vender. ¡Cosechá primero!': ['Nothing to sell. Harvest first!', 'Nada para vender. Colha primeiro!'],
+  '¡Vendiste todo por {0} monedas!': ['You sold everything for {0} coins!', 'Você vendeu tudo por {0} moedas!'],
+  '¡Compraste {0}!': ['You bought {0}!', 'Você comprou {0}!'],
+  'Acercate a esa casilla.': ['Get closer to that spot.', 'Chegue mais perto.'],
+  'Esa parte se desbloquea con la mejora "Huerta más grande".': ['That area unlocks with the "Bigger Garden" upgrade.', 'Essa parte libera com a melhoria "Horta maior".'],
+  'Le falta {0}.': ['{0} left.', 'Faltam {0}.'],
+  'Sin semillas': ['No seeds', 'Sem sementes'],
+  '{0} en la canasta · {1}': ['{0} in basket · {1}', '{0} na cesta · {1}'], 'Canasta vacía': ['Empty basket', 'Cesta vazia'],
+  'Comprá semillas, plantalas pisando la tierra y cosechá cuando estén listas.': ['Buy seeds, plant them by stepping on the soil and harvest when they are ready.', 'Compre sementes, plante pisando na terra e colha quando estiverem prontas.'],
+  'Crece en {0} · se vende a {1}': ['Grows in {0} · sells for {1}', 'Cresce em {0} · vende por {1}'],
+  'tenés {0}': ['you have {0}', 'você tem {0}'],
+  'Regar todo': ['Water everything', 'Regar tudo'], 'Todo lo plantado queda listo ya.': ['Everything planted is ready right away.', 'Tudo que está plantado fica pronto já.'],
+  'No hay nada creciendo.': ['Nothing is growing.', 'Nada está crescendo.'], '¡Todo listo para cosechar!': ['All ready to harvest!', 'Tudo pronto para colher!'],
+  'Venta doble': ['Double Sell', 'Venda dupla'], 'Cobrás el doble por todo lo que vendés.': ['Get double for everything you sell.', 'Ganhe o dobro por tudo que vender.'],
+  'Súper suerte': ['Super Luck', 'Super sorte'], 'El doble de frutas doradas y arcoíris.': ['Twice as many golden and rainbow crops.', 'O dobro de frutas douradas e arco-íris.'],
+  'Crecimiento rápido': ['Fast Grow', 'Crescimento rápido'], 'Todo crece el doble de rápido.': ['Everything grows twice as fast.', 'Tudo cresce duas vezes mais rápido.'],
+  'Huerta más grande': ['Bigger Garden', 'Horta maior'], 'Regador': ['Sprinkler', 'Regador'], 'Trébol de la suerte': ['Lucky Clover', 'Trevo da sorte'],
+  'Huerta más grande II': ['Bigger Garden II', 'Horta maior II'], 'Súper regador': ['Super Sprinkler', 'Super regador'], 'Huerta gigante': ['Huge Garden', 'Horta gigante'], 'Trébol dorado': ['Golden Clover', 'Trevo dourado'],
+  'Pisá la tierra para plantar. Cuando diga ¡LISTA!, pisala de nuevo para cosechar.': ['Step on the soil to plant. When it says READY!, step on it again to harvest.', 'Pise na terra para plantar. Quando disser PRONTA!, pise de novo para colher.'],
+  'Vendé tu canasta en el puesto amarillo.': ['Sell your basket at the yellow stand.', 'Venda sua cesta na banca amarela.'],
   'Ir a mi terreno': ['Go to my plot', 'Ir ao meu terreno'],
   'Nombre': ['Name', 'Nome'],
   'En línea · {0} jugadores': ['Online · {0} players', 'Online · {0} jogadores'],
@@ -787,6 +843,8 @@ function reservedAt(x, z) {
   if (Math.abs(x) < 5 && z > 15 && z < 36) return true;                    // cintas a Construí Todo
   if (x > 5 && x < 64 && Math.abs(z - 42) < 4.2) return true;              // cintas al juego 2
   if (x > 52 && Math.abs(z - 42) < 18.5) return true;                      // Reino de Mascotas
+  if (x < -5 && x > -36 && Math.abs(z - 42) < 4.2) return true;            // cintas a la Huerta
+  if (x < -33 && z > 21) return true;                                      // Huerta de la Suerte
   return false;
 }
 const offsets = new Float32Array(BLADES * 4);
@@ -2310,6 +2368,7 @@ function playerCells(x, y, z) {
 // ----- la acción de la herramienta en un punto de la pantalla -----
 function act(clientX, clientY, alt) {
   if (inPets) { petTap(clientX, clientY); return; }
+  if (inGarden) { gardenTap(clientX, clientY); return; }
   if (!inGame) return;
   const p = pickCell(clientX, clientY);
   if (!p) return;
@@ -2765,7 +2824,7 @@ function updateHud() {
 let catTab = 'blocks';
 const CAT_TABS = [['blocks', 'Bloques'], ['premium', 'Premium'], ['daily', 'Colección'], ['deco', 'Muebles'], ['special', 'Especiales'], ['struct', 'Estructuras']].map(([a, n]) => [a, tr(n)]);
 function openCatalog(tab) { if (tab) catTab = tab; renderCatalog(); $('catalog').classList.add('open'); sfx('click'); }
-function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard']) $(id).classList.remove('open'); }
+function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard', 'gshopPanel', 'gpassPanel']) $(id).classList.remove('open'); }
 function renderCatalog() {
   const tabs = $('catTabs'); tabs.innerHTML = '';
   for (const [id, name] of CAT_TABS) { const b = document.createElement('button'); b.textContent = name; b.className = catTab === id ? 'on' : ''; b.onclick = () => { catTab = id; renderCatalog(); }; tabs.appendChild(b); }
@@ -3099,7 +3158,7 @@ function buildTick(dt, t) {
   const gs = Math.hypot(vel.x, vel.z), ss = Math.sign(Math.sin(phase));
   if (mode === 'play' && onGround && !sitting && gs > 0.8 && ss !== lastStepSign) stepSound();
   lastStepSign = ss;
-  beltTick(dt); zoneTick(); petsZone(); petsTick(dt, t); portalTick(dt);
+  beltTick(dt); zoneTick(); petsZone(); petsTick(dt, t); portalTick(dt); gardenTick(dt, t);
   return night;
 }
 
@@ -3330,7 +3389,7 @@ function postSign(x, z, rotY, lines, color) {
   const cols = ['#e2493b', '#ffd83d', '#4fb3ee', '#4cc35a', '#f08a24', '#8c4fd1'];
   for (let i = 0; i < 10; i++) {
     const a = i / 10 * Math.PI * 2 + 0.31;
-    if (Math.sin(a) < -0.55 || Math.cos(a) > 0.75) continue; // deja libre la salida de las cintas (norte y este)
+    if (Math.sin(a) < -0.55 || Math.abs(Math.cos(a)) > 0.75) continue; // deja libre la salida de las cintas (norte, este y oeste)
     const x = PLAZA.x + Math.cos(a) * (PLAZA.r - 0.6), z = PLAZA.z + Math.sin(a) * (PLAZA.r - 0.6);
     addMesh(new THREE.CylinderGeometry(0.07, 0.07, 2.6, 8), toyMat('#faf6eb'), x, 1.3, z);
     const f = addMesh(new THREE.ConeGeometry(0.4, 0.7, 3), toyMat(cols[i % cols.length]), x + 0.25, 2.3, z);
@@ -4187,6 +4246,440 @@ function portalTick() { /* sin portales: el mundo de mascotas está al final de 
 refreshFollowers();
 
 // =====================================================================
+// ===== JUEGO 3: HUERTA DE LA SUERTE (Lucky Garden) =====
+// =====================================================================
+// Plantás, esperás, cosechás y vendés. A veces sale una fruta dorada (x5) o arcoíris (x20).
+// Las plantas crecen con la hora de verdad: si te vas, siguen creciendo.
+// La plata que ganás son las monedas de todo el mundo (sirven en todos los juegos).
+const G_SEEDS = [
+  { id: 'carrot', price: 10, grow: 20, sell: 18, es: 'Zanahoria', en: 'Carrot', pt: 'Cenoura', color: '#f0821e', shape: 'cone', size: 1.3, count: 1, ico: '🥕' },
+  { id: 'tomato', price: 40, grow: 45, sell: 70, es: 'Tomate', en: 'Tomato', pt: 'Tomate', color: '#dc2828', shape: 'ball', size: 0.9, count: 4, ico: '🍅' },
+  { id: 'corn', price: 120, grow: 90, sell: 210, es: 'Choclo', en: 'Corn', pt: 'Milho', color: '#f5cd32', shape: 'corn', size: 1, count: 2, ico: '🌽' },
+  { id: 'strawberry', price: 350, grow: 150, sell: 600, es: 'Frutilla', en: 'Strawberry', pt: 'Morango', color: '#eb1e46', shape: 'ball', size: 0.7, count: 6, ico: '🍓' },
+  { id: 'pumpkin', price: 900, grow: 240, sell: 1600, es: 'Calabaza', en: 'Pumpkin', pt: 'Abóbora', color: '#eb7814', shape: 'ball', size: 2.6, count: 1, ico: '🎃' },
+  { id: 'watermelon', price: 2500, grow: 360, sell: 4500, es: 'Sandía', en: 'Watermelon', pt: 'Melancia', color: '#288c32', shape: 'melon', size: 2.6, count: 1, ico: '🍉' },
+  { id: 'sunflower', price: 7000, grow: 600, sell: 13000, es: 'Girasol', en: 'Sunflower', pt: 'Girassol', color: '#ffd21e', shape: 'flower', size: 2.2, count: 1, ico: '🌻' },
+  { id: 'dragonfruit', price: 20000, grow: 900, sell: 40000, es: 'Fruta del dragón', en: 'Dragon Fruit', pt: 'Pitaia', color: '#e62896', shape: 'ball', size: 1.6, count: 2, ico: '🐉' },
+];
+const G_BY = {}; G_SEEDS.forEach((s) => { G_BY[s.id] = s; s.name = LANG === 'en' ? s.en : LANG === 'pt' ? s.pt : s.es; });
+const G_MUTS = [
+  { id: 'rainbow', chance: 0.008, mult: 20, es: 'Arcoíris' },
+  { id: 'golden', chance: 0.04, mult: 5, es: 'Dorada' },
+];
+const G_UPS = [
+  { id: 'expand1', kind: 'expand', level: 1, price: 200, es: 'Huerta más grande' },
+  { id: 'sprinkler1', kind: 'sprinkler', level: 1, price: 500, es: 'Regador' },
+  { id: 'lucky1', kind: 'lucky', level: 1, price: 1500, es: 'Trébol de la suerte' },
+  { id: 'expand2', kind: 'expand', level: 2, price: 2000, es: 'Huerta más grande II' },
+  { id: 'sprinkler2', kind: 'sprinkler', level: 2, price: 8000, es: 'Súper regador' },
+  { id: 'expand3', kind: 'expand', level: 3, price: 15000, es: 'Huerta gigante' },
+  { id: 'lucky2', kind: 'lucky', level: 2, price: 25000, es: 'Trébol dorado' },
+];
+const G_GROW = [1, 0.8, 0.6], G_LUCK = [1, 2, 4], G_SIZE = [3, 4, 5, 6];
+// pases con gemas (en Roblox eran con Robux)
+const G_PASSES = [
+  { id: 'DoubleSell', gems: 150, es: 'Venta doble', d: 'Cobrás el doble por todo lo que vendés.' },
+  { id: 'SuperLuck', gems: 120, es: 'Súper suerte', d: 'El doble de frutas doradas y arcoíris.' },
+  { id: 'FastGrow', gems: 120, es: 'Crecimiento rápido', d: 'Todo crece el doble de rápido.' },
+];
+const G_WATER_GEMS = 5; // regar todo con gemas: lo plantado queda listo ya
+
+// ---------- guardado ----------
+const G_KEY = 'huerta_v1';
+let gs = { seeds: { carrot: 3 }, tiles: {}, basket: {}, bought: {}, passes: {}, selected: 'carrot', tut: 0 };
+try { const s = JSON.parse(localStorage.getItem(G_KEY) || 'null'); if (s) gs = Object.assign(gs, s); } catch (e) { /* sin guardado */ }
+function gSave() { try { localStorage.setItem(G_KEY, JSON.stringify(gs)); } catch (e) { /* lleno */ } save(); }
+const gLevel = (kind) => { let lv = 0; for (const u of G_UPS) if (u.kind === kind && gs.bought[u.id]) lv = Math.max(lv, u.level); return lv; };
+const gNow = () => Date.now() / 1000;
+const gMutMult = (m) => { const x = G_MUTS.find((k) => k.id === m); return x ? x.mult : 1; };
+function gBasket() {
+  let n = 0, v = 0;
+  for (const k in gs.basket) { const [id, mut] = k.split('|'); const s = G_BY[id]; if (!s) continue; n += gs.basket[k]; v += s.sell * gMutMult(mut) * gs.basket[k]; }
+  if (gs.passes.DoubleSell) v *= 2;
+  return [n, v];
+}
+
+// ---------- el lugar: al oeste de la plaza, al final de la cinta ----------
+const HUERTA = { x0: -97, x1: -35, z0: 23, z1: 57.6 };
+const GF = { x: -68, z: 40.5 }, G_TILE = 2.5, G_STEP = 2.85;
+const garden = new THREE.Group(); scene.add(garden);
+const gMat = (c, r = 0.6) => new THREE.MeshStandardMaterial({ color: c, roughness: r });
+function gMesh(geo, mat, x, y, z, parent = garden) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; parent.add(m); return m; }
+// cintas de ida y vuelta desde la plaza
+addBelt(PLAZA.x - PLAZA.r + 1.2, PLAZA.z - 1.6, -32, PLAZA.z - 1.6, '#5aa546');
+addBelt(-32, PLAZA.z + 1.6, PLAZA.x - PLAZA.r + 1.2, PLAZA.z + 1.6, '#e6a91e');
+arch(-34, 42, Math.PI / 2, [tr('HUERTA DE LA SUERTE'), tr('Juego 3')], '#5aa546');
+postSign(PLAZA.x - PLAZA.r + 0.2, PLAZA.z + 4.4, Math.PI / 2, [tr('Huerta de la Suerte'), tr('subite a la cinta')], '#5aa546');
+{
+  // pasto cortito de la huerta, camino de arena y cerco blanco
+  const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d');
+  c.fillStyle = '#7cc45a'; c.fillRect(0, 0, 64, 64); c.fillStyle = '#74bc52'; c.fillRect(0, 0, 32, 32); c.fillRect(32, 32, 32, 32);
+  const tex = new THREE.CanvasTexture(cv); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(31, 17);
+  const W = HUERTA.x1 - HUERTA.x0, D = HUERTA.z1 - HUERTA.z0;
+  const fl = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+  fl.rotation.x = -Math.PI / 2; fl.position.set((HUERTA.x0 + HUERTA.x1) / 2, 0.015, (HUERTA.z0 + HUERTA.z1) / 2); fl.receiveShadow = true; garden.add(fl);
+  const path = new THREE.Mesh(new THREE.PlaneGeometry(26, 3.4), new THREE.MeshStandardMaterial({ color: '#e8d6a8', roughness: 0.9, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }));
+  path.rotation.x = -Math.PI / 2; path.position.set(-46, 0.02, 42); path.receiveShadow = true; garden.add(path);
+  const fence = gMat('#faf6eb', 0.5), postG = new THREE.CylinderGeometry(0.11, 0.13, 1.3, 8);
+  const side = (ax, az, bx, bz, gapAt) => {
+    const len = Math.hypot(bx - ax, bz - az), n = Math.round(len / 2);
+    for (let i = 0; i <= n; i++) {
+      const x = ax + (bx - ax) * i / n, z = az + (bz - az) * i / n;
+      if (gapAt && gapAt(x, z)) continue;
+      gMesh(postG, fence, x, 0.65, z); colliders.push({ x, z, r: 0.2 });
+      if (i < n) { const nx = ax + (bx - ax) * (i + 1) / n, nz = az + (bz - az) * (i + 1) / n; if (gapAt && gapAt(nx, nz)) continue; const rail = gMesh(new THREE.BoxGeometry(0.1, 0.14, Math.hypot(nx - x, nz - z)), fence, (x + nx) / 2, 0.95, (z + nz) / 2); rail.rotation.y = Math.atan2(nx - x, nz - z); }
+    }
+  };
+  side(HUERTA.x0, HUERTA.z0, HUERTA.x1, HUERTA.z0); side(HUERTA.x0, HUERTA.z1, HUERTA.x1, HUERTA.z1);
+  side(HUERTA.x0, HUERTA.z0, HUERTA.x0, HUERTA.z1);
+  side(HUERTA.x1, HUERTA.z0, HUERTA.x1, HUERTA.z1, (x, z) => Math.abs(z - 42) < 4.5); // entrada
+  // flores y arbolitos de adorno en los bordes
+  const fc = ['#ff6fa8', '#ffd83d', '#ffffff', '#b07cff', '#ff8a3d'];
+  for (let i = 0; i < 46; i++) {
+    const x = HUERTA.x0 + 1 + Math.random() * (HUERTA.x1 - HUERTA.x0 - 2), z = Math.random() < 0.5 ? HUERTA.z0 + 0.8 + Math.random() * 1.2 : HUERTA.z1 - 0.8 - Math.random() * 1.2;
+    gMesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 5), gMat('#3c8c37'), x, 0.2, z);
+    gMesh(new THREE.SphereGeometry(0.14, 8, 6), gMat(fc[i % fc.length]), x, 0.45, z);
+  }
+  for (const [x, z] of [[-93, 27], [-93, 54], [-80, 27], [-80, 54]]) {
+    gMesh(new THREE.CylinderGeometry(0.25, 0.32, 1.6, 10), gMat('#8a5a32'), x, 0.8, z);
+    gMesh(new THREE.SphereGeometry(1.35, 14, 10), gMat('#4fae4a'), x, 2.4, z);
+    for (let k = 0; k < 5; k++) { const a = k * 1.3; gMesh(new THREE.SphereGeometry(0.2, 8, 6), gMat('#e2493b'), x + Math.cos(a) * 1.05, 2.3 + Math.sin(k) * 0.5, z + Math.sin(a) * 1.05); }
+    colliders.push({ x, z, r: 0.45 });
+  }
+}
+
+// ---------- puestos: semillas (verde) y venta (amarillo) ----------
+function stand(x, z, rotY, roof, title) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rotY; garden.add(g);
+  gMesh(rbox(5, 1.25, 1.7, 0.12), gMat('#c08a55'), 0, 0.62, 0, g);
+  gMesh(rbox(5.2, 0.16, 1.9, 0.06), gMat('#faf6eb'), 0, 1.3, 0, g);
+  for (const sx of [-2.3, 2.3]) for (const sz of [-0.7, 0.7]) gMesh(new THREE.CylinderGeometry(0.1, 0.1, 3.8, 10), gMat('#9a6a3e'), sx, 1.9, sz, g);
+  for (let i = 0; i < 6; i++) { const s = gMesh(rbox(0.86, 0.12, 2.3, 0.04), gMat(i % 2 ? '#ffffff' : roof, 0.7), -2.15 + i * 0.86, 3.85, 0, g); s.rotation.x = -0.2; }
+  const board = gMesh(rbox(4.2, 1, 0.12, 0.06), new THREE.MeshStandardMaterial({ map: signTexture([title], { border: roof, size: 170 }), roughness: 0.5 }), 0, 3.05, 0.95, g);
+  const back = board.clone(); back.rotation.y = Math.PI; back.position.z = -0.95; g.add(back);
+  // cajones con frutas
+  const fcol = ['#f0821e', '#dc2828', '#f5cd32', '#288c32'];
+  for (let i = 0; i < 4; i++) for (let k = 0; k < 3; k++) gMesh(new THREE.SphereGeometry(0.17, 10, 8), gMat(fcol[i], 0.4), -1.7 + i * 1.12 + (k - 1) * 0.2, 1.52, -0.25 + (k % 2) * 0.4, g);
+  colliders.push({ x: x - 1.6 * Math.cos(rotY), z: z + 1.6 * Math.sin(rotY), r: 0.95 }, { x, z, r: 0.95 }, { x: x + 1.6 * Math.cos(rotY), z: z - 1.6 * Math.sin(rotY), r: 0.95 });
+  return g;
+}
+function pad(x, z, color, lines) {
+  const g = new THREE.Group(); g.position.set(x, 0, z); garden.add(g);
+  const disc = gMesh(new THREE.CylinderGeometry(1.25, 1.25, 0.12, 32), new THREE.MeshStandardMaterial({ color, roughness: 0.4, emissive: color, emissiveIntensity: 0.25 }), 0, 0.06, 0, g);
+  const ring = gMesh(new THREE.TorusGeometry(1.25, 0.09, 8, 40), gMat('#faf6eb', 0.4), 0, 0.12, 0, g); ring.rotation.x = Math.PI / 2;
+  const tex = signTexture(lines, { border: color, size: 120 });
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthWrite: false })); sp.scale.set(2.6, 1.3, 1); sp.position.y = 2.2; g.add(sp);
+  return { g, disc, sp, x, z, color };
+}
+stand(-41.5, 31, Math.PI / 2, '#2ea046', tr('SEMILLAS'));
+stand(-41.5, 53, Math.PI / 2, '#e6a91e', tr('VENDER'));
+const shopPad = pad(-39, 31, '#2ea046', [tr('Semillas'), tr('pisá acá')]);
+const sellPad = pad(-39, 53, '#e6a91e', [tr('Vender'), tr('pisá acá')]);
+const upPad = pad(-52, 34, '#e2493b', [tr('Mejora'), '']);
+
+// ---------- las casillas de tierra (6x6, se van desbloqueando) ----------
+const gTiles = {}; // key "r_c" -> { mesh, x, z, plant, stage, lbl, lblTxt }
+const dirtTex = (() => { const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d'); c.fillStyle = '#7a4e2e'; c.fillRect(0, 0, 64, 64); c.fillStyle = '#6b4327'; for (let i = 0; i < 5; i++) c.fillRect(0, i * 13 + 4, 64, 4); return new THREE.CanvasTexture(cv); })();
+const dirtMat = new THREE.MeshStandardMaterial({ map: dirtTex, roughness: 0.95 }), lockMat = gMat('#93cf6e', 0.9);
+const tileGeo = rbox(G_TILE, 0.22, G_TILE, 0.08);
+for (let r = 0; r < 6; r++) for (let c = 0; c < 6; c++) {
+  const x = GF.x + (c - 2.5) * G_STEP, z = GF.z + (r - 2.5) * G_STEP;
+  const mesh = gMesh(tileGeo, lockMat, x, 0.02, z); mesh.castShadow = false;
+  const key = r + '_' + c; mesh.userData.key = key;
+  gTiles[key] = { key, r, c, mesh, x, z, plant: null, stage: -1, mut: null };
+}
+function gUnlocked(key) {
+  const size = G_SIZE[gLevel('expand')], off = (6 - size) >> 1, [r, c] = key.split('_').map(Number);
+  return r >= off && r < off + size && c >= off && c < off + size;
+}
+function refreshTiles() {
+  for (const k in gTiles) { const t = gTiles[k], u = gUnlocked(k); t.mesh.material = u ? dirtMat : lockMat; t.mesh.scale.y = u ? 1 : 0.4; }
+}
+
+// ---------- plantas (como en Roblox, a escala del muñeco) ----------
+const G_GREEN = gMat('#3ca03c', 0.7), G_STEM = gMat('#2f8a36', 0.7);
+const gRainbow = [];
+function fruitMat(color, mut) {
+  if (mut === 'golden') return new THREE.MeshStandardMaterial({ color: '#ffcd28', roughness: 0.25, metalness: 0.65, emissive: '#5a3c00', emissiveIntensity: 0.4 });
+  if (mut === 'rainbow') { const m = new THREE.MeshStandardMaterial({ color: '#ff80ff', roughness: 0.3, emissive: '#ff80ff', emissiveIntensity: 0.45 }); gRainbow.push(m); return m; }
+  return gMat(color, 0.35);
+}
+function leaf(g, x, y, z, size, rz = 0, ry = 0, rx = 0) { const l = gMesh(new THREE.BoxGeometry(size * 0.42, 0.06, size * 0.85), G_GREEN, x, y, z, g); l.rotation.set(rx, ry, rz); return l; }
+function plantModel(id, stage, mut) {
+  const s = G_BY[id], g = new THREE.Group(), K = 0.42; // studs de Roblox → tamaño del muñeco
+  if (stage === 0) {
+    gMesh(new THREE.CylinderGeometry(0.06, 0.07, 0.4, 6), G_STEM, 0, 0.32, 0, g);
+    leaf(g, 0.13, 0.5, 0, 0.45, -0.45); leaf(g, -0.13, 0.5, 0, 0.45, 0.45);
+    return g;
+  }
+  const gr = stage === 1 ? 0.6 : 1, col = stage === 1 ? '#82be5a' : s.color, fm = stage === 2 ? mut : null, base = 0.14;
+  const fruit = (geo, x, y, z) => { const m = gMesh(geo, fruitMat(col, fm), x, y, z, g); m.userData.fruit = 1; return m; };
+  if (s.shape === 'cone') {
+    for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2; leaf(g, Math.sin(a) * 0.13, base + 0.5 * gr, Math.cos(a) * 0.13, 0.7 * gr, 0, a, 1.2); }
+    const c = fruit(new THREE.ConeGeometry(0.24 * gr, 0.62 * gr, 12), 0, base + 0.14 * gr, 0); c.rotation.x = Math.PI;
+  } else if (s.shape === 'ball') {
+    const bush = gMesh(new THREE.SphereGeometry(1.3 * K * gr, 14, 10), G_GREEN, 0, base + 1.3 * K * gr, 0, g);
+    bush.scale.y = 0.9;
+    if (s.size > 2) fruit(new THREE.SphereGeometry(s.size * 0.5 * K * gr, 16, 12), 0, base + s.size * 0.42 * K * gr, -0.55 * gr);
+    else for (let i = 1; i <= s.count; i++) { const a = i / s.count * Math.PI * 2; fruit(new THREE.SphereGeometry(s.size * 0.5 * K * gr, 12, 10), Math.cos(a) * 0.55 * gr, base + (1.3 + Math.sin(i) * 0.5) * K * gr, Math.sin(a) * 0.55 * gr); }
+  } else if (s.shape === 'melon') {
+    for (let i = 0; i < 5; i++) { const a = i * Math.PI * 2 / 5; leaf(g, Math.sin(a) * 0.7 * gr, base + 0.05, Math.cos(a) * 0.7 * gr, 0.85 * gr, 0, a); }
+    const m = fruit(new THREE.SphereGeometry(s.size * 0.5 * K * gr, 18, 14), 0, base + s.size * 0.42 * K * gr, 0); m.scale.set(1, 0.85, 1.25);
+    if (stage === 2 && !mut) for (let k = -1; k <= 1; k++) { const st = gMesh(new THREE.BoxGeometry(0.06, s.size * 0.42 * K * 1.9, s.size * 0.42 * K * 2.2), gMat('#196423'), k * 0.28, 0, 0, m); st.scale.set(1, 0.98, 0.96); }
+  } else if (s.shape === 'corn') {
+    for (const x of [-0.34, 0.34]) {
+      gMesh(new THREE.CylinderGeometry(0.07, 0.09, 2.1 * gr, 8), G_STEM, x, base + 1.05 * gr, 0, g);
+      leaf(g, x + 0.25, base + 0.85 * gr, 0, 0.85 * gr, -0.9);
+      const e = fruit(new THREE.CylinderGeometry(0.16 * gr, 0.13 * gr, 0.75 * gr, 12), x + 0.19, base + 1.25 * gr, -0.08); e.rotation.z = -0.25;
+      const h = gMesh(new THREE.ConeGeometry(0.18 * gr, 0.5 * gr, 8), G_GREEN, x + 0.17, base + 0.95 * gr, -0.08, g); h.rotation.z = Math.PI - 0.25;
+    }
+  } else if (s.shape === 'flower') {
+    gMesh(new THREE.CylinderGeometry(0.09, 0.11, 2.5 * gr, 8), G_STEM, 0, base + 1.25 * gr, 0, g);
+    leaf(g, 0.3, base + 1.05 * gr, 0, 0.85 * gr, -0.7); leaf(g, -0.3, base + 1.45 * gr, 0, 0.85 * gr, 0.7);
+    const head = new THREE.Group(); head.position.set(0, base + 2.6 * gr, 0.05); head.rotation.x = -0.25; g.add(head);
+    for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, p = gMesh(new THREE.SphereGeometry(0.22 * gr, 8, 6), fruitMat(col, fm), Math.cos(a) * 0.42 * gr, Math.sin(a) * 0.42 * gr, 0, head); p.scale.set(1.5, 0.7, 0.35); p.rotation.z = a; p.userData.fruit = 1; }
+    const ctr = gMesh(new THREE.CylinderGeometry(0.3 * gr, 0.3 * gr, 0.14, 16), gMat('#6e461e'), 0, 0, 0.05, head); ctr.rotation.x = Math.PI / 2;
+  }
+  // brillitos si salió dorada o arcoíris
+  if (stage === 2 && mut) {
+    const sp = new THREE.Group(); sp.userData.sparkle = 1; g.add(sp);
+    for (let i = 0; i < 7; i++) { const s2 = new THREE.Sprite(new THREE.SpriteMaterial({ map: sparkTex(), color: mut === 'golden' ? '#ffe066' : '#ff9cff', transparent: true, depthWrite: false })); s2.scale.setScalar(0.28); s2.userData.ph = Math.random() * 6; s2.userData.p = new THREE.Vector3((Math.random() - 0.5) * 1.6, 0.3 + Math.random() * 1.6, (Math.random() - 0.5) * 1.6); s2.position.copy(s2.userData.p); sp.add(s2); }
+  }
+  g.traverse((m) => { if (m.isMesh) m.castShadow = !isTouch; });
+  return g;
+}
+let _spark = null;
+function sparkTex() {
+  if (_spark) return _spark;
+  const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d');
+  const gr = c.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,.7)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  c.fillStyle = gr; c.beginPath(); c.moveTo(32, 0); c.lineTo(38, 26); c.lineTo(64, 32); c.lineTo(38, 38); c.lineTo(32, 64); c.lineTo(26, 38); c.lineTo(0, 32); c.lineTo(26, 26); c.fill();
+  return (_spark = new THREE.CanvasTexture(cv));
+}
+function stageOf(t) { const el = gNow() - t.at, p = Math.min(1, Math.max(0, el / Math.max(1, t.grow))); return [p >= 1 ? 2 : p >= 0.35 ? 1 : 0, Math.max(0, t.grow - el)]; }
+function fmtTime(sec) { sec = Math.ceil(sec); const m = Math.floor(sec / 60), s = sec % 60; return m ? m + ':' + String(s).padStart(2, '0') : s + 's'; }
+// cartelito arriba de cada planta: lo que falta (de cerca) o ¡LISTA! (de lejos)
+function setLabel(t, txt, color) {
+  const k = txt + color;
+  if (t.lblTxt === k) return; t.lblTxt = k;
+  if (!t.lbl) { t.lbl = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthWrite: false })); t.lbl.scale.set(1.5, 0.38, 1); t.lbl.position.set(t.x, 2.2, t.z); garden.add(t.lbl); }
+  if (!txt) { t.lbl.visible = false; return; }
+  const cv = document.createElement('canvas'); cv.width = 256; cv.height = 64; const g = cv.getContext('2d');
+  g.font = '700 38px Fredoka, sans-serif'; const w = Math.min(250, g.measureText(txt).width + 30);
+  g.fillStyle = 'rgba(30,40,25,.78)'; g.beginPath(); g.roundRect ? g.roundRect((256 - w) / 2, 4, w, 56, 26) : g.rect((256 - w) / 2, 4, w, 56); g.fill();
+  g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(txt, 128, 33);
+  if (t.lbl.material.map) t.lbl.material.map.dispose();
+  t.lbl.material.map = new THREE.CanvasTexture(cv); t.lbl.material.needsUpdate = true; t.lbl.visible = true;
+}
+function drawTile(t) {
+  const d = gs.tiles[t.key];
+  if (!d) { if (t.plant) { garden.remove(t.plant); t.plant = null; } t.stage = -1; setLabel(t, '', ''); return; }
+  const [stage, left] = stageOf(d);
+  if (stage !== t.stage || !t.plant) {
+    if (t.plant) garden.remove(t.plant);
+    t.plant = plantModel(d.seed, stage, d.mut); t.plant.position.set(t.x, 0.02, t.z); t.plant.rotation.y = ((t.r * 7 + t.c * 3) % 4) * Math.PI / 2; garden.add(t.plant);
+    if (t.stage >= 0 && stage > t.stage) { t.pop = 1; if (stage === 2 && inGarden && Math.hypot(t.x - player.position.x, t.z - player.position.z) < 25) sfx('pop'); }
+    t.stage = stage;
+  }
+  if (stage === 2) setLabel(t, (d.mut ? tr(G_MUTS.find((m) => m.id === d.mut).es) + ' ' : '') + tr('¡LISTA!'), d.mut === 'golden' ? '#ffd83d' : d.mut === 'rainbow' ? '#ff9cff' : '#9dff8c');
+  else setLabel(t, fmtTime(left), '#ffffff');
+}
+
+// ---------- plantar / cosechar / vender ----------
+function rollMut() {
+  const luck = G_LUCK[gLevel('lucky')] * (gs.passes.SuperLuck ? 2 : 1);
+  const r = Math.random(); let acc = 0;
+  for (const m of G_MUTS) { acc += m.chance * luck; if (r < acc) return m.id; }
+  return null;
+}
+function gPlant(t) {
+  let sel = gs.selected;
+  if (!sel || !(gs.seeds[sel] > 0)) { sel = G_SEEDS.map((s) => s.id).find((id) => gs.seeds[id] > 0); if (!sel) { toast(tr('No tenés semillas. Comprá en el puesto verde.')); return; } gs.selected = sel; }
+  const s = G_BY[sel];
+  gs.seeds[sel]--; if (gs.seeds[sel] <= 0) delete gs.seeds[sel];
+  const grow = Math.max(5, Math.floor(s.grow * G_GROW[gLevel('sprinkler')] * (gs.passes.FastGrow ? 0.5 : 1)));
+  gs.tiles[t.key] = { seed: sel, at: gNow(), grow, mut: rollMut() };
+  drawTile(t); t.pop = 1; gSave(); renderSeedBar();
+  sfx('soft'); swing(0.25);
+  popText('+ ' + s.name, new THREE.Vector3(t.x, 0.5, t.z), '#ffffff');
+}
+function gHarvest(t) {
+  const d = gs.tiles[t.key], s = G_BY[d.seed], bk = d.seed + '|' + (d.mut || '');
+  gs.basket[bk] = (gs.basket[bk] || 0) + 1;
+  delete gs.tiles[t.key];
+  // la fruta salta a la canasta
+  if (t.plant) { const p = t.plant; t.plant = null; gFly.push({ o: p, t: 0 }); }
+  t.stage = -1; setLabel(t, '', '');
+  gSave(); updateGHud(); sfx('pop'); swing(0.3);
+  if (d.mut) { const m = G_MUTS.find((x) => x.id === d.mut); popText(tr('¡{0}! x{1}', tr(m.es), m.mult), new THREE.Vector3(t.x, 1, t.z), d.mut === 'golden' ? '#ffd83d' : '#ff9cff'); happy(); sfx('ping'); }
+  else popText('+1 ' + s.name, new THREE.Vector3(t.x, 1, t.z), '#9dff8c');
+}
+const gFly = [];
+function gSell() {
+  const [n, v] = gBasket();
+  if (!n) { toast(tr('No tenés nada para vender. ¡Cosechá primero!')); return; }
+  gs.basket = {}; st.coins += v; gSave(); updateHud(); updateGHud(); refreshUpPad();
+  toast(tr('¡Vendiste todo por {0} monedas!', fmt(v))); sfx('coin'); happy();
+  popText('+' + fmt(v), new THREE.Vector3(sellPad.x, 1, sellPad.z), '#ffd83d');
+}
+function nextUp() { return G_UPS.find((u) => !gs.bought[u.id]); }
+function gBuyUp() {
+  const u = nextUp(); if (!u) return;
+  if (st.coins < u.price) { toast(tr('Te faltan {0} monedas.', fmt(u.price - st.coins))); sfx('click'); return; }
+  st.coins -= u.price; gs.bought[u.id] = true; gSave(); updateHud(); refreshTiles(); refreshUpPad(); updateGHud();
+  toast(tr('¡Compraste {0}!', tr(u.es))); sfx('coin'); happy();
+}
+let upKey = '';
+function refreshUpPad() {
+  const u = nextUp(), key = u ? u.id + (st.coins >= u.price) : 'max';
+  if (key === upKey) return; upKey = key;
+  upPad.g.visible = !!u;
+  if (!u) return;
+  const ok = st.coins >= u.price, col = ok ? '#2ea046' : '#e2493b';
+  upPad.disc.material.color.set(col); upPad.disc.material.emissive.set(col);
+  upPad.sp.material.map = signTexture([tr(u.es), fmt(u.price) + ' ' + tr('monedas')], { border: col, size: 110 }); upPad.sp.material.needsUpdate = true;
+}
+
+// ---------- tocar en la pantalla ----------
+const gRay = new THREE.Raycaster();
+function gardenTap(cx, cy) {
+  gRay.setFromCamera(new THREE.Vector2(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1), camera);
+  const hits = gRay.intersectObjects(Object.values(gTiles).map((t) => t.mesh), false);
+  if (!hits.length) return;
+  const t = gTiles[hits[0].object.userData.key];
+  const p = player.position;
+  if (Math.hypot(t.x - p.x, t.z - p.z) > 7) { toast(tr('Acercate a esa casilla.')); return; }
+  facing = Math.atan2(t.x - p.x, t.z - p.z);
+  tileAction(t, true);
+}
+function tileAction(t, tapped) {
+  if (!gUnlocked(t.key)) { if (tapped) toast(tr('Esa parte se desbloquea con la mejora "Huerta más grande".')); return; }
+  const d = gs.tiles[t.key];
+  if (!d) gPlant(t);
+  else if (stageOf(d)[0] === 2) gHarvest(t);
+  else if (tapped) toast(tr('Le falta {0}.', fmtTime(stageOf(d)[1])));
+}
+
+// ---------- HUD de la huerta ----------
+function renderSeedBar() {
+  const bar = $('seedBar'); bar.innerHTML = '';
+  for (const s of G_SEEDS) {
+    const n = gs.seeds[s.id] || 0; if (!n) continue;
+    const b = document.createElement('button'); b.className = 'seedB' + (gs.selected === s.id ? ' on' : '');
+    b.innerHTML = `<span class="ico">${s.ico}</span><b>${n}</b>`; b.title = s.name;
+    b.onclick = (e) => { e.stopPropagation(); gs.selected = s.id; gSave(); renderSeedBar(); sfx('click'); toast(s.name); };
+    bar.appendChild(b);
+  }
+  if (!bar.children.length) { const b = document.createElement('button'); b.className = 'seedB empty'; b.textContent = tr('Sin semillas'); b.onclick = () => openGShop(); bar.appendChild(b); }
+}
+let gHudKey = '';
+function updateGHud() {
+  const [n, v] = gBasket();
+  const key = st.coins + '|' + st.gems + '|' + n + '|' + v;
+  if (key === gHudKey) return; gHudKey = key;
+  $('gCoins').textContent = fmt(st.coins); $('gGems').textContent = st.gems;
+  $('gBasket').textContent = n ? tr('{0} en la canasta · {1}', n, fmt(v)) : tr('Canasta vacía');
+}
+function openGShop() {
+  closePanels();
+  const box = $('gshopList'); box.innerHTML = `<p class="note">${tr('Comprá semillas, plantalas pisando la tierra y cosechá cuando estén listas.')}</p>`;
+  for (const s of G_SEEDS) {
+    const r = document.createElement('div'); r.className = 'shopRow';
+    r.innerHTML = `<span class="seedIco">${s.ico}</span><div><b>${s.name}</b><small>${tr('Crece en {0} · se vende a {1}', fmtTime(s.grow), fmt(s.sell))}${gs.seeds[s.id] ? ' · ' + tr('tenés {0}', gs.seeds[s.id]) : ''}</small></div>`;
+    for (const q of [1, 5]) {
+      const b = document.createElement('button'); b.className = 'toy' + (q === 5 ? ' gold' : ''); b.innerHTML = `x${q} <span class="coinS"></span>${fmt(s.price * q)}`;
+      b.onclick = () => {
+        if (st.coins < s.price * q) { toast(tr('Te faltan {0} monedas.', fmt(s.price * q - st.coins))); sfx('click'); return; }
+        st.coins -= s.price * q; gs.seeds[s.id] = (gs.seeds[s.id] || 0) + q; gs.selected = s.id; gSave(); updateHud(); updateGHud(); renderSeedBar(); refreshUpPad(); openGShop(); sfx('coin');
+      };
+      r.appendChild(b);
+    }
+    box.appendChild(r);
+  }
+  $('gshopPanel').classList.add('open'); sfx('click');
+}
+function openGPass() {
+  closePanels();
+  const box = $('gpassList'); box.innerHTML = '';
+  const water = document.createElement('div'); water.className = 'shopRow';
+  const planted = Object.values(gs.tiles).filter((d) => stageOf(d)[0] < 2).length;
+  water.innerHTML = `<span class="seedIco">💧</span><div><b>${tr('Regar todo')}</b><small>${tr('Todo lo plantado queda listo ya.')} (${planted})</small></div>`;
+  const wb = document.createElement('button'); wb.className = 'toy gemB'; wb.textContent = tr('{0} gemas', G_WATER_GEMS);
+  wb.onclick = () => {
+    if (!planted) { toast(tr('No hay nada creciendo.')); return; }
+    if (st.gems < G_WATER_GEMS) { toast(tr('Te faltan {0} gemas.', G_WATER_GEMS - st.gems)); return; }
+    st.gems -= G_WATER_GEMS; for (const k in gs.tiles) gs.tiles[k].at = gNow() - gs.tiles[k].grow - 1;
+    gSave(); updateHud(); updateGHud(); closePanels(); sfx('coin'); happy(); toast(tr('¡Todo listo para cosechar!'));
+  };
+  water.appendChild(wb); box.appendChild(water);
+  const h = document.createElement('h3'); h.textContent = tr('Pases'); box.appendChild(h);
+  for (const p of G_PASSES) {
+    const r = document.createElement('div'); r.className = 'shopRow';
+    r.innerHTML = `<span class="seedIco">${{ DoubleSell: '💰', SuperLuck: '🍀', FastGrow: '⏩' }[p.id]}</span><div><b>${tr(p.es)}</b><small>${tr(p.d)}</small></div>`;
+    const have = !!gs.passes[p.id], b = document.createElement('button'); b.className = 'toy' + (have ? ' owned' : ' gemB'); b.textContent = have ? tr('Ya lo tenés') : tr('{0} gemas', p.gems); b.disabled = have;
+    b.onclick = () => { if (st.gems < p.gems) { toast(tr('Te faltan {0} gemas.', p.gems - st.gems)); return; } st.gems -= p.gems; gs.passes[p.id] = 1; gSave(); updateHud(); updateGHud(); openGPass(); sfx('coin'); happy(); };
+    r.appendChild(b); box.appendChild(r);
+  }
+  $('gpassPanel').classList.add('open'); sfx('click');
+}
+$('gShopBtn').onclick = openGShop;
+$('gPassBtn').onclick = openGPass;
+
+// ---------- cada cuadro ----------
+var inGarden = false;
+let gLabelT = 0;
+const onPad = {};
+function inHuerta(p) { return p.x > HUERTA.x0 && p.x < HUERTA.x1 + 0.5 && p.z > HUERTA.z0 && p.z < HUERTA.z1; }
+function gardenTick(dt, t) {
+  const p = player.position;
+  const now = mode === 'play' && inHuerta(p);
+  if (now !== inGarden) {
+    inGarden = now;
+    document.body.classList.toggle('garden', now);
+    if (now) {
+      gHudKey = ''; updateGHud(); renderSeedBar(); refreshUpPad();
+      banner(tr('HUERTA DE LA SUERTE'));
+      if (!gs.tut) { gs.tut = 1; gSave(); setTimeout(() => toast(tr('Pisá la tierra para plantar. Cuando diga ¡LISTA!, pisala de nuevo para cosechar.')), 1400); setTimeout(() => toast(tr('Vendé tu canasta en el puesto amarillo.')), 6000); }
+    }
+  }
+  // carteles y plantas: una vez por segundo alcanza (y siempre que cambia algo)
+  gLabelT -= dt;
+  if (gLabelT <= 0) { gLabelT = 1; for (const k in gTiles) drawTile(gTiles[k]); if (inGarden) { updateGHud(); refreshUpPad(); } }
+  // el texto que falta solo se lee de cerca
+  for (const k in gTiles) {
+    const tl = gTiles[k];
+    if (tl.lbl && tl.lbl.visible !== false) { const ready = tl.stage === 2, d = Math.hypot(tl.x - p.x, tl.z - p.z); tl.lbl.material.opacity = ready ? Math.min(1, Math.max(0, (40 - d) / 12)) : Math.min(1, Math.max(0, (14 - d) / 4)); }
+    if (tl.pop > 0 && tl.plant) { tl.pop = Math.max(0, tl.pop - dt * 3); const s = 1 + Math.sin(tl.pop * Math.PI) * 0.25; tl.plant.scale.set(s, 2 - s, s); }
+    if (tl.plant) { tl.plant.rotation.z = Math.sin(t * 1.3 + tl.r + tl.c * 0.7) * 0.025; tl.plant.traverse((o) => { if (o.userData.ph !== undefined) { o.material.opacity = 0.35 + 0.65 * Math.abs(Math.sin(t * 3 + o.userData.ph)); o.position.y = o.userData.p.y + Math.sin(t * 1.5 + o.userData.ph) * 0.15; } }); }
+  }
+  for (const m of gRainbow) { const h = (t * 0.25) % 1; m.color.setHSL(h, 0.85, 0.6); m.emissive.setHSL(h, 0.9, 0.35); }
+  // la cosecha sube y se achica (vuela a la canasta)
+  for (let i = gFly.length - 1; i >= 0; i--) {
+    const f = gFly[i]; f.t += dt;
+    f.o.position.y += dt * 5; f.o.scale.setScalar(Math.max(0.01, 1 - f.t * 1.6)); f.o.rotation.y += dt * 8;
+    if (f.t > 0.6) { garden.remove(f.o); gFly.splice(i, 1); }
+  }
+  if (!inGarden || mode !== 'play') return;
+  // pisar una casilla: planta o cosecha
+  if (onGround && p.y < 0.6) {
+    const c = Math.round((p.x - GF.x) / G_STEP + 2.5), r = Math.round((p.z - GF.z) / G_STEP + 2.5);
+    const t2 = gTiles[r + '_' + c];
+    if (t2 && Math.abs(p.x - t2.x) < G_TILE / 2 && Math.abs(p.z - t2.z) < G_TILE / 2) {
+      if (onPad.tile !== t2.key) { onPad.tile = t2.key; tileAction(t2, false); }
+    } else onPad.tile = null;
+  }
+  // pisar los puestos
+  const near = (pd) => Math.hypot(p.x - pd.x, p.z - pd.z) < 1.3;
+  for (const [id, pd, fn] of [['shop', shopPad, openGShop], ['sell', sellPad, gSell], ['up', upPad, gBuyUp]]) {
+    const on = near(pd) && (id !== 'up' || upPad.g.visible);
+    if (on && !onPad[id]) fn();
+    onPad[id] = on;
+  }
+}
+refreshTiles(); renderSeedBar();
+for (const k in gTiles) drawTile(gTiles[k]);
+
+// =====================================================================
 // ===== ONLINE: guardado en el servidor y jugadores en vivo =====
 // =====================================================================
 // El servidor (tintix-server, /api/mj) guarda el progreso y reparte las posiciones de la sala 10 veces por segundo.
@@ -4205,7 +4698,7 @@ try { myName = localStorage.getItem('mj_nombre') || ''; } catch (e) { /* nada */
 if (!myName) myName = (LANG === 'en' ? 'Player' : LANG === 'pt' ? 'Jogador' : 'Jugador') + Math.floor(1000 + Math.random() * 9000);
 
 // ---------- guardado en la nube ----------
-const SAVE_KEYS = ['construi_v1', 'pets_v1', 'muneco-look', 'mj_nombre'];
+const SAVE_KEYS = ['construi_v1', 'pets_v1', 'huerta_v1', 'muneco-look', 'mj_nombre'];
 function localBundle() { const d = {}; for (const k of SAVE_KEYS) { try { const v = localStorage.getItem(k); if (v != null) d[k] = v; } catch (e) { /* nada */ } } return d; }
 let lastCloud = '';
 async function cloudLoad() {
@@ -4948,6 +5441,7 @@ function botsTick(dt, t) {
     remoteFace(b, Math.max(0, EXPRESIONES.indexOf(s.ex)), dt);
   }
   petBotsTick(dt, t, now);
+  gardenBotsTick(dt, t, now);
 }
 
 // ---------- vecinos en el Reino de Mascotas ----------
@@ -4994,6 +5488,48 @@ function petBotsTick(dt, t, now) {
     animateRemote(b, b.spd, fl, t, dt);
     remoteFace(b, (fl & 16) ? 1 : 0, dt);
     tickRemotePets(b, dt, t);
+  }
+}
+
+// ---------- vecinos en la Huerta: caminan entre los surcos y se agachan a cosechar ----------
+const gardenBots = [];
+function gardenBotsTick(dt, t, now) {
+  if (!gardenBots.length) for (let i = 0; i < 2; i++) { const obj = new THREE.Group(); remoteRoot.add(obj); gardenBots.push({ bot: true, id: 'gbot' + i, i, lugar: 30 + i, obj, av: null, snaps: [], phase: 0, walk: 0, spd: 0, pets: [], cyc: -1, nombre: '' }); }
+  const me = player.position;
+  for (const b of gardenBots) {
+    const P = 200, T = now + b.i * 97, cyc = Math.floor(T / P), u = T - cyc * P;
+    if (cyc !== b.cyc) {
+      b.cyc = cyc; const R = brng(cyc * 53 + b.i * 1931 + 11);
+      b.look = botLook(R); b.nombre = BOT_NAMES[(b.i * 11 + cyc * 5 + 3) % BOT_NAMES.length];
+      if (b.av) b.obj.remove(b.av.g);
+      b.av = makeAvatar(b.look); b.hand = null; b.heldCode = -1; b.obj.add(b.av.g); setTag(b);
+      // recorrido por los pasillos de la huerta y paradas junto a las plantas
+      b.legs = []; let tt = 0, px = -46 + R() * 4, pz = 36 + R() * 10;
+      while (tt < P) {
+        const lane = Math.floor(R() * 7), alongX = R() < 0.5;
+        const nx = alongX ? -76 + R() * 17 : -76.5 + lane * 2.85, nz = alongX ? 31.9 + lane * 2.85 : 32 + R() * 17;
+        const dur = Math.hypot(nx - px, nz - pz) / 3.6, pause = 2 + R() * 5;
+        b.legs.push({ t0: tt, t1: tt + dur, ax: px, az: pz, bx: nx, bz: nz, pause, face: R() * Math.PI * 2 }); tt += dur + pause; px = nx; pz = nz;
+      }
+    }
+    let x = 0, z = 0, f = 0, spd = 0, fl = 1;
+    for (const L of b.legs) {
+      if (u > L.t1 + L.pause) continue;
+      if (u < L.t1) { const k = (u - L.t0) / Math.max(0.01, L.t1 - L.t0); x = L.ax + (L.bx - L.ax) * k; z = L.az + (L.bz - L.az) * k; spd = 3.6; f = Math.atan2(L.bx - L.ax, L.bz - L.az); }
+      else { x = L.bx; z = L.bz; f = L.face; const q = (u - L.t1) % 2.2; if (q > 0.6 && q < 1) fl |= 16; }
+      break;
+    }
+    const o = b.obj, dist = Math.hypot(x - me.x, z - me.z);
+    o.position.set(x, 0, z); o.visible = dist < 110;
+    if (!o.visible) continue;
+    o.rotation.y = angleLerp(o.rotation.y, f, 1 - Math.exp(-12 * dt));
+    b.spd += (spd - b.spd) * Math.min(1, dt * 8);
+    b.walk += ((b.spd > 0.4 ? 1 : 0) - b.walk) * (1 - Math.exp(-10 * dt));
+    b.phase += dt * (b.spd * 1.75 + 0.0001);
+    if (b.tag) { const op = Math.min(1, Math.max(0, (48 - dist) / 14)); b.tag.material.opacity = op; b.tag.visible = op > 0.02; }
+    setHeld(b, 0);
+    animateRemote(b, b.spd, fl, t, dt);
+    remoteFace(b, (fl & 16) ? 1 : 0, dt);
   }
 }
 
