@@ -3786,18 +3786,23 @@ function petsTick(dt, t) {
       goal = pl.clone().addScaledVector(fwd, -1.5 - row * 1.1).addScaledVector(right, col * 1.1);
     }
     goal.y = pl.y;
-    const d = goal.clone().sub(o.position); d.y = 0;
-    const dist = d.length(), moving = dist > 0.15;
-    const sp = Math.max(9, dist * 3);
+    // movimiento suave: se acercan de a poco al lugar (sin frenar y arrancar de golpe)
+    const before = o.position.clone();
+    const dist = Math.hypot(goal.x - o.position.x, goal.z - o.position.z);
     if (dist > 30) o.position.copy(goal); // si quedó muy lejos aparece al lado
-    else if (moving) o.position.addScaledVector(d.normalize(), Math.min(dist, sp * dt));
-    // mirar hacia donde va (o al montón)
-    const look = attackTarget && inPets && dist < 0.4 ? Math.atan2(attackTarget.x - o.position.x, attackTarget.z - o.position.z) : moving ? Math.atan2(d.x, d.z) : lf;
-    o.rotation.y = angleLerp(o.rotation.y, look, 1 - Math.exp(-10 * dt));
-    f.hop += dt * (moving ? 12 : 3);
-    const atk = attackTarget && inPets && dist < 0.5;
-    const base = player.position.y * 0 + goal.y + (fly ? 1.4 + Math.sin(t * 3 + i) * 0.15 : 0);
-    o.position.y = base + (fly ? 0 : (moving ? Math.abs(Math.sin(f.hop)) * 0.35 : atk ? Math.abs(Math.sin(t * 9 + i)) * 0.3 : 0));
+    else { const k = 1 - Math.exp(-(attackTarget && inPets ? 6 : 7.5) * dt); o.position.x += (goal.x - o.position.x) * k; o.position.z += (goal.z - o.position.z) * k; }
+    const step = Math.hypot(o.position.x - before.x, o.position.z - before.z) / Math.max(dt, 1e-3);
+    f.spd = (f.spd || 0) + (step - (f.spd || 0)) * Math.min(1, dt * 8);
+    const moving = f.spd > 0.7;
+    // mira hacia donde camina; quieta mira para el mismo lado que vos (o al montón)
+    const atk = attackTarget && inPets && dist < 0.6;
+    const look = atk ? Math.atan2(attackTarget.x - o.position.x, attackTarget.z - o.position.z) : moving ? Math.atan2(o.position.x - before.x, o.position.z - before.z) : lf;
+    o.rotation.y = angleLerp(o.rotation.y, look, 1 - Math.exp(-8 * dt));
+    f.hop += dt * (5 + Math.min(f.spd, 12) * 1.1);
+    const hopA = Math.min(1, f.spd / 5) * 0.3;
+    const base = goal.y + (fly ? 1.4 + Math.sin(t * 3 + i) * 0.15 : 0);
+    const yTarget = base + (fly ? 0 : atk ? Math.abs(Math.sin(t * 9 + i)) * 0.3 : Math.abs(Math.sin(f.hop)) * hopA);
+    o.position.y += (yTarget - o.position.y) * Math.min(1, dt * 20);
     const body = o.getObjectByName('pbody'); if (body) body.rotation.x = atk ? Math.sin(t * 18 + i) * 0.25 : 0;
     const wl = o.getObjectByName('wingL'), wr = o.getObjectByName('wingR');
     if (wl) { const fl = Math.sin(t * (fly ? 14 : 4) + i) * 0.5; wl.rotation.z = fl; wr.rotation.z = -fl; }
