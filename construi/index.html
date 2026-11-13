@@ -575,6 +575,7 @@ const LANG = (() => {
 document.documentElement.lang = LANG;
 // clave: texto en español → [inglés, portugués]
 const DICT = {
+  'TU TERRENO': ['YOUR PLOT', 'SEU TERRENO'], '¡Este es tu terreno!': ['This is your plot!', 'Este é o seu terreno!'],
   'Vos': ['You', 'Você'], 'el monstruo': ['the monster', 'o monstro'],
   '¡Tu monstruo está en peligro!': ['Your monster is in danger!', 'Seu monstro está em perigo!'],
   '¡El monstruo enemigo está casi destruido!': ['The enemy monster is almost dead!', 'O monstro inimigo está quase destruído!'],
@@ -5345,6 +5346,7 @@ function netTick(dt, t) {
   if (!netMode && mode === 'play') netConnect();
   remoteTick(dt, t);
   botsTick(dt, t);
+  myPlotTick(dt, t);
   if (!netOn) return;
   // 10 veces por segundo (con el reloj de verdad, aunque el celular ande lento)
   const now = performance.now();
@@ -5380,6 +5382,37 @@ $('mMyPlot').onclick = () => {
   const f = $('fade'); f.classList.add('on'); setTimeout(() => f.classList.remove('on'), 250);
 };
 setInterval(updateBadge, 2000);
+// ---------- tu terreno: cartel flotante y la cinta te lleva directo ----------
+// En línea cada uno tiene su terreno en otro lugar del barrio: la cinta de "Construí Todo" llega al del medio,
+// así que si el tuyo es otro, te lleva hasta el tuyo (y arriba de tu terreno hay un cartel que lo marca).
+const myPlotMark = (() => {
+  const cv = document.createElement('canvas'); cv.width = 512; cv.height = 160; const g = cv.getContext('2d');
+  const draw = () => {
+    g.clearRect(0, 0, 512, 160);
+    g.fillStyle = '#2ea046'; g.beginPath(); g.roundRect ? g.roundRect(8, 8, 496, 110, 40) : g.rect(8, 8, 496, 110); g.fill();
+    g.beginPath(); g.moveTo(226, 116); g.lineTo(286, 116); g.lineTo(256, 152); g.fill();
+    g.fillStyle = '#fff'; g.font = '700 64px Fredoka, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(tr('TU TERRENO'), 256, 64);
+    sp.material.map.needsUpdate = true;
+  };
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), depthWrite: false })); sp.scale.set(7, 2.2, 1); scene.add(sp);
+  draw(); if (document.fonts && document.fonts.load) document.fonts.load('700 64px Fredoka').then(draw).catch(() => {});
+  return sp;
+})();
+let beltWarpT = 0;
+function myPlotTick(dt, t) {
+  const [cx, cz] = plotCenter(), p = player.position;
+  myPlotMark.position.set(cx, 11 + Math.sin(t * 2) * 0.4, cz);
+  myPlotMark.visible = mode === 'play' && !inGame && Math.hypot(p.x - cx, p.z - cz) < 160;
+  beltWarpT -= dt;
+  // llegaste por la cinta al terreno del medio, pero el tuyo es otro: te lleva al tuyo
+  if (mySlot !== 0 && mode === 'play' && beltWarpT <= 0 && Math.abs(p.x + 1.6) < 1.4 && p.z < 20.5 && p.z > 17) {
+    beltWarpT = 3;
+    const f = $('fade'); f.classList.add('on'); setTimeout(() => f.classList.remove('on'), 250);
+    player.position.set(cx, 0, cz + CELLS / 2 + 2.5); vel.set(0, 0, 0); vy = 0; facing = Math.PI; camYaw = 0;
+    toast(tr('¡Este es tu terreno!'));
+  }
+}
+
 
 // =====================================================================
 // ===== VECINOS: muñecos que viven en el mundo aunque no haya nadie =====
