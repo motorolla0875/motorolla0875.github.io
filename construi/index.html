@@ -3299,7 +3299,7 @@ function buildTick(dt, t) {
   if (mode === 'play' && onGround && !sitting && gs > 0.8 && ss !== lastStepSign) stepSound();
   lastStepSign = ss;
   // cada parte por separado: si una falla, las demás siguen andando (el juego nunca se congela)
-  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t)); safe('obby', () => obbyTick(dt, t));
+  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t)); safe('obby', () => obbyTick(dt, t)); safe('cull', () => zoneCullTick(dt));
   return night;
 }
 
@@ -3465,11 +3465,14 @@ scene.add(hub);
 
 // ----- carteles con la letra del juego -----
 const signs = [];
+// (res: resolución; con 0.5 cada cartel usa 4 veces menos memoria y se ve igual de nítido en el celular)
+// tex.setLines(lineas, opciones) vuelve a escribir el MISMO cartel (no crea uno nuevo: así no se llena la memoria)
 function signTexture(lines, opts) {
-  const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 512 * (opts.h || 1) / (opts.w || 2) * 2;
+  const S = opts.res || 0.5, W = 1024, H = 512 * (opts.h || 1) / (opts.w || 2) * 2;
+  const cv = document.createElement('canvas'); cv.width = Math.round(W * S); cv.height = Math.round(H * S);
   const draw = () => {
-    const g = cv.getContext('2d'), W = cv.width, H = cv.height;
-    g.clearRect(0, 0, W, H);
+    const g = cv.getContext('2d');
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height); g.setTransform(S, 0, 0, S, 0, 0);
     g.fillStyle = opts.bg || '#faf6eb';
     const r = 70; g.beginPath(); g.moveTo(r, 0); g.arcTo(W, 0, W, H, r); g.arcTo(W, H, 0, H, r); g.arcTo(0, H, 0, 0, r); g.arcTo(0, 0, W, 0, r); g.fill();
     g.lineWidth = 26; g.strokeStyle = opts.border || '#2ea046'; g.stroke();
@@ -3488,7 +3491,23 @@ function signTexture(lines, opts) {
   tex.anisotropy = 4;
   draw();
   signs.push(draw);
+  let key = JSON.stringify(lines) + (opts.border || '');
+  tex.setLines = (l, o) => {
+    const k = JSON.stringify(l) + ((o && o.border) || opts.border || '');
+    if (k === key) return; key = k;
+    lines = l; if (o) opts = Object.assign({}, opts, o);
+    draw();
+  };
   return tex;
+}
+// juegos lejos (detrás de la niebla) no se dibujan: menos trabajo para el celular
+const zoneGroups = [];
+function cullZone(obj, x, z, r) { zoneGroups.push({ obj, x, z, r }); }
+let cullT = 0;
+function zoneCullTick(dt) {
+  cullT -= dt; if (cullT > 0) return; cullT = 0.4;
+  const p = player.position, far = scene.fog ? scene.fog.far + 12 : 190;
+  for (const z of zoneGroups) z.obj.visible = Math.hypot(p.x - z.x, p.z - z.z) - z.r < far;
 }
 // vuelve a dibujar los carteles cuando termina de cargar la letra
 if (document.fonts && document.fonts.load) document.fonts.load('700 100px Fredoka').then(() => signs.forEach((d) => d())).catch(() => {});
@@ -3871,6 +3890,7 @@ const PW_ROT = -Math.PI / 2;
 const petWorld = new THREE.Group();
 petWorld.rotation.y = PW_ROT; petWorld.position.set(-21, 0, 42);
 scene.add(petWorld); petWorld.updateMatrixWorld(true);
+cullZone(petWorld, 120, 42, 75);
 const _pl = new THREE.Vector3();
 function PL() { return petWorld.worldToLocal(_pl.copy(player.position)); } // posición del muñeco en el mundo de mascotas
 const toWorld = (v) => petWorld.localToWorld(v.clone());
@@ -4010,6 +4030,8 @@ function makePile(i, chest) {
   g.scale.setScalar(chest ? sc * 1.1 : sc);
   const hit = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshBasicMaterial({ visible: false })); hit.position.y = 0.7; g.add(hit);
   const bar = makeBar(); bar.position.y = chest ? 2 : 1.4; g.add(bar);
+  // las monedas del montón se juntan en una sola pieza (menos cosas para dibujar)
+  mergeChildren(g, (o) => o.name === 'spin' || o === hit || o === bar);
   const p = { i, chest, g, hit, bar, x: 0, z: 0, hp: 1, max: 1, alive: false, respawn: 0 };
   hit.userData.pile = p; pileHit.push(hit);
   piles.push(p);
@@ -4507,6 +4529,7 @@ function gBasket() {
 const HUERTA = { x0: -127, x1: -65, z0: 23, z1: 57.6 };
 const GF = { x: -98, z: 40.5 }, G_TILE = 2.5, G_STEP = 2.85;
 const garden = new THREE.Group(); scene.add(garden);
+cullZone(garden, -96, 40, 45);
 const gStatic = new THREE.Group(); garden.add(gStatic); // lo que nunca se mueve (se junta al final)
 const gMat = (c, r = 0.6) => new THREE.MeshStandardMaterial({ color: c, roughness: r });
 function gMesh(geo, mat, x, y, z, parent = garden) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; parent.add(m); return m; }
@@ -4753,7 +4776,7 @@ function refreshUpPad() {
   if (!u) return;
   const ok = st.coins >= u.price, col = ok ? '#2ea046' : '#e2493b';
   upPad.disc.material.color.set(col); upPad.disc.material.emissive.set(col);
-  upPad.sp.material.map = signTexture([tr(u.es), fmt(u.price) + ' ' + tr('monedas')], { border: col, size: 110 }); upPad.sp.material.needsUpdate = true;
+  upPad.sp.material.map.setLines([tr(u.es), fmt(u.price) + ' ' + tr('monedas')], { border: col, size: 110 });
 }
 
 // ---------- tocar en la pantalla ----------
@@ -5871,6 +5894,7 @@ function csSave() { try { localStorage.setItem(CG_KEY, JSON.stringify(cs)); } ca
 
 // ---------- la arena (castillo en ruinas embarrado) ----------
 const cg = new THREE.Group(); scene.add(cg);
+cullZone(cg, 0, 150, 80);
 const cgStatic = new THREE.Group(); cg.add(cgStatic);
 const cMat = (c, r = 0.85, extra) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: r }, extra || {}));
 const C_STONE = cMat('#8c806e'), C_STONE2 = cMat('#73685a'), C_POOP = cMat('#6e3e1c', 0.5), C_POOP2 = cMat('#875023', 0.5), C_POOP3 = cMat('#553016', 0.6);
@@ -6683,10 +6707,12 @@ function fridge(g, x, z) {
   mBox(g, 0.3, 0.6, 7.6, mm('#3498db', 0.3, { emissive: '#3498db', emissiveIntensity: 0.8 }), x + 1.3, 6.9, z);
   mWall(x, z, 2.4, 8, 7);
 }
+const textSignCache = {};
 function textSign(text, w, h, bg, fg) {
+  const ck = [text, w, h, bg, fg].join('|'); if (textSignCache[ck]) return textSignCache[ck];
   const cv = document.createElement('canvas'); cv.width = 512; cv.height = Math.round(512 * h / w); const c = cv.getContext('2d');
   c.fillStyle = bg; c.fillRect(0, 0, cv.width, cv.height); c.fillStyle = fg; c.font = `700 ${Math.round(cv.height * 0.62)}px Fredoka, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(text, 256, cv.height / 2 + 4);
-  return new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(cv), roughness: 0.5 });
+  return (textSignCache[ck] = new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(cv), roughness: 0.5 }));
 }
 const mkWallsBack = [];
 function buildItem(id) {
@@ -6779,13 +6805,13 @@ function refreshButtons() {
   if (key === mkBtn.key) return; mkBtn.key = key;
   const col = !it ? '#b45aff' : can ? '#2ea046' : '#e74c3c';
   mkBtn.disc.material.color.set(col); mkBtn.disc.material.emissive.set(col);
-  mkBtn.sp.material.map = signTexture(it ? [tr(it.es), fmtMoney(price)] : [tr('Renacer'), fmtMoney(price)], { border: col, size: 105 }); mkBtn.sp.material.needsUpdate = true;
+  mkBtn.sp.material.map.setLines(it ? [tr(it.es), fmtMoney(price)] : [tr('Renacer'), fmtMoney(price)], { border: col, size: 105 });
 }
 let cashKey = '';
 function refreshCashPad() {
   const key = Math.floor(mks.stash) + '|' + !!mks.passes.AutoCollect;
   if (key === cashKey) return; cashKey = key;
-  mkCash.sp.material.map = signTexture(mks.passes.AutoCollect ? [tr('Caja'), tr('automática')] : [tr('Caja'), fmtMoney(mks.stash)], { border: '#1d9e75', size: 105 }); mkCash.sp.material.needsUpdate = true;
+  mkCash.sp.material.map.setLines(mks.passes.AutoCollect ? [tr('Caja'), tr('automática')] : [tr('Caja'), fmtMoney(mks.stash)], { border: '#1d9e75', size: 105 });
 }
 function mkBuy() {
   const it = nextItem();
@@ -6918,6 +6944,7 @@ function marketTick(dt, t) {
   mkOn.cash = onCash;
 }
 rebuildStore();
+cullZone(market, MK.x, MK.z, 30);
 
 // =====================================================================
 // ===== JUEGO 6: TORRE LOCA (OBBY) =====
@@ -6951,6 +6978,7 @@ function obFloorOf(stage) { return Math.max(0, Math.min(OB_FLOORS.length - 1, Ma
 function obFloorAtY(y) { return obFloorOf(Math.floor(y / OB.rise) + 1); }
 
 const obby = new THREE.Group(); scene.add(obby);
+cullZone(obby, OB.cx, OB.cz, OB.zone + 8);
 // las cajas que se pisan: { cx, cy, cz, hx, hy, hz, rot, mesh, kind, ... } (cy = centro)
 const obBoxes = [];
 const obMovers = [], obSpinners = [], obTrusses = [], obLava = [];
