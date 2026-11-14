@@ -389,11 +389,13 @@
   .trTool .ico { font-size: 30px; line-height: 1; }
   .trTool small { font-size: 11px; font-weight: 700; color: #2a1840; line-height: 1.05; text-align: center; }
   .trTool.sel { background: #ffd23f; transform: translateY(-4px); }
+  .trTool.item { background: #e9fbff; } .trTool.item.sel { background: #ffd23f; }
+  .trSep { width: 3px; background: rgba(42,24,64,.5); border-radius: 2px; margin: 6px 2px; }
   .trTool.locked { background: #d9d2e0; } .trTool.locked .ico { opacity: .55; }
   #trFlash { position: fixed; inset: 0; background: radial-gradient(circle, #fff 0%, #ff5fa2 55%, #7b3fe4 100%); opacity: 0; pointer-events: none; z-index: 50; }
   #trFlash.on { animation: trfl .7s ease-out; }
   @keyframes trfl { 0% { opacity: .95; } 100% { opacity: 0; } }
-  @media (orientation: landscape) and (max-height: 520px) { body.is-touch #trTop { top: 6px !important; } body.is-touch #trTop div { font-size: 15px !important; padding: 3px 10px !important; } body.is-touch .trTool { width: 62px !important; height: 58px !important; } body.is-touch .trTool .ico { font-size: 22px !important; } body.is-touch .trTool small { font-size: 9px !important; } }
+  @media (orientation: landscape) and (max-height: 520px) { body.is-touch #trTop { top: 6px !important; } body.is-touch #trTop div { font-size: 15px !important; padding: 3px 10px !important; } body.is-touch .trTool { width: 52px !important; height: 54px !important; } body.is-touch #trTools { gap: 5px !important; } body.is-touch .trTool .ico { font-size: 22px !important; } body.is-touch .trTool small { font-size: 9px !important; } }
   #obbyHud { display: none; }
   body.obby #obbyHud { display: block; }
   body.obby #topBox, body.obby #shopBtn, body.obby #help { display: none !important; }
@@ -536,7 +538,7 @@
     <div id="cFeed"></div>
   </div>
   <div id="trollHud">
-    <div id="trTop"><div class="cnt">💥 <span id="trCount">0</span></div><div><span class="coin"></span><span id="trCoins">0</span></div><div><span class="gem"></span><span id="trGems">0</span></div></div>
+    <div id="trTop"><div class="cnt">💥 <span id="trCount">0</span></div><div>🤡 <span id="trTrolls">0</span></div><div><span class="coin"></span><span id="trCoins">0</span></div><div><span class="gem"></span><span id="trGems">0</span></div></div>
     <div id="trTools"></div>
   </div>
   <div id="trFlash"></div>
@@ -841,7 +843,9 @@ Object.assign(DICT, {
   'Tenés que quedarte con al menos una equipada.': ['Keep at least one equipped.', 'Fique com pelo menos um equipado.'],
   'Ya tenés el máximo de mascotas equipadas.': ['You already have the max equipped.', 'Você já tem o máximo equipado.'],
   'Mejor zona': ['Best zone', 'Melhor zona'], 'Volver a la plaza': ['Back to the plaza', 'Voltar para a praça'],
-  'Juego 7': ['Game 7', 'Jogo 7'], 'Troll Land': ['Troll Land', 'Troll Land'], 'TROLL LAND': ['TROLL LAND', 'TROLL LAND'],
+  'Juego 7': ['Game 7', 'Jogo 7'], 'Banana': ['Banana', 'Banana'], 'Almohadón de pedo': ['Whoopee cushion', 'Almofada de pum'], 'Globo de agua': ['Water balloon', 'Balão de água'], 'Rayo pollito': ['Chick ray', 'Raio pintinho'],
+  '¡Te convirtieron en pollito!': ['You got turned into a chick!', 'Te transformaram em pintinho!'], '¡Te tiraron un pedo!': ['Someone farted on you!', 'Soltaram um pum em você!'], '¡Te mojaron!': ['You got soaked!', 'Te molharam!'], '¡Te resbalaste!': ['You slipped!', 'Você escorregou!'],
+  '¡Está muy lejos!': ['Too far!', 'Muito longe!'], 'Tocá a un jugador o a un vecino.': ['Tap a player or a neighbor.', 'Toque em um jogador ou vizinho.'], '¡Compraste {0} x{1}!': ['You bought {0} x{1}!', 'Você comprou {0} x{1}!'], 'Troll Land': ['Troll Land', 'Troll Land'], 'TROLL LAND': ['TROLL LAND', 'TROLL LAND'],
   'Martillo': ['Hammer', 'Martelo'], 'Bomba de caca': ['Poop bomb', 'Bomba de cocô'], 'Bola de demolición': ['Wrecking ball', 'Bola de demolição'], 'Meteorito': ['Meteor', 'Meteoro'],
   '¡Acercate más para romper!': ['Get closer to smash!', 'Chegue mais perto para quebrar!'], '¡Nueva herramienta: {0}!': ['New tool: {0}!', 'Nova ferramenta: {0}!'],
   'Te faltan {0} monedas.': ['You need {0} more coins.', 'Faltam {0} moedas.'],
@@ -5108,7 +5112,7 @@ function onNet(m) {
     case 'nombre': { const r = remotes.get(m.id); if (r) { r.nombre = m.nombre; setTag(r); drawRemotePlotFloor(r); } break; }
     case 'tierra': { const r = remotes.get(m.id); if (r) { r.tierra = m.tierra; drawRemotePlotFloor(r); } break; }
     case 'masc': { const r = remotes.get(m.id); if (r) { r.mascotas = m.mascotas; rebuildRemotePets(r); } break; }
-    case 'evt': if (m.e === 'hatch' && PBY[m.d]) { toast(tr('¡{0} sacó {1}!', m.nombre, PBY[m.d].name)); sfx('ping'); } break;
+    case 'evt': if (m.e === 'hatch' && PBY[m.d]) { toast(tr('¡{0} sacó {1}!', m.nombre, PBY[m.d].name)); sfx('ping'); } else if (typeof trollNet === 'function') trollNet(m.id, m.e, m.d); break;
   }
 }
 // reloj del servidor: la diferencia más chica vista (= el mensaje que llegó más rápido) es la mejor.
@@ -7587,6 +7591,7 @@ let trCd = 0;
 function trTool() { return TT_BY[trs.tool] || TT_BY.hammer; }
 function trollTap(cx, cy) {
   if (trCd > 0) return;
+  if (trs.tool.startsWith('it:')) { const it = TI_BY[trs.tool.slice(3)]; if (it) trUseItem(it, cx, cy); return; }
   const tool = trTool();
   trV2.set(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1);
   trRay.setFromCamera(trV2, camera);
@@ -7635,6 +7640,11 @@ function trProjTick(dt) {
       troll.remove(pr.m);
       trProj.splice(q, 1);
       const t = pr.to, tool = pr.tool;
+      if (tool.id === 'water') {
+        trApply('water', t.x, t.z, '', !pr.byBot);
+        if (pr.byBot && inTroll && Math.hypot(player.position.x - t.x, player.position.z - t.z) < 2.2) { meFx.wet = 4.5; toast(tr('¡Te mojaron!')); }
+        continue;
+      }
       const cnt = trBlast(t.x, Math.max(0.5, t.y), t.z, tool.rad, tool.id === 'bomb' ? 1.4 : 2.2);
       if (tool.id === 'bomb') { if (typeof poopBurst === 'function') poopBurst(t.clone(), new THREE.Vector3(0, 1, 0), true); playS('cg_splat' + (1 + Math.floor(Math.random() * 3)), 0.8); }
       else { playS('impacto_fuerte', 0.9, tool.id === 'meteor' ? 0.6 : 0.85); debSpawn(t.x, 0.5, t.z, '#9a8f86', 10, 1.6); }
@@ -7781,10 +7791,18 @@ function trBuildBar() {
     };
     bar.appendChild(b);
   }
+  const sep = document.createElement('div'); sep.className = 'trSep'; bar.appendChild(sep);
+  for (const it of TROLL_ITEMS) {
+    const b = document.createElement('button'), n = trs.items[it.id] || 0, key = 'it:' + it.id;
+    b.className = 'trTool item' + (trs.tool === key ? ' sel' : '') + (n ? '' : ' locked');
+    b.innerHTML = `<span class="ico">${it.ico}</span><small>${n ? 'x' + n : it.gems ? '💎 ' + it.gems : '🪙 ' + fmt(it.price)}</small>`;
+    b.onclick = (e) => { e.stopPropagation(); if (!n) { trBuyItem(it); return; } trs.tool = key; trSave(); trBuildBar(); sfx('click'); };
+    bar.appendChild(b);
+  }
 }
 function updateTrHud() {
   $('trCoins').textContent = fmt(st.coins); $('trGems').textContent = fmt(st.gems);
-  $('trCount').textContent = fmt(trSession);
+  $('trCount').textContent = fmt(trSession); $('trTrolls').textContent = fmt(trs.trolls);
 }
 
 // ---------- cada cuadro ----------
@@ -7803,6 +7821,22 @@ function trollTick(dt, t) {
   if (trCd > 0) trCd -= dt;
   if (near) { debTick(dt); trProjTick(dt); trRespawnTick(dt); }
   trBotsTick(dt, t, near);
+  if (near) {
+    trFxTick(dt);
+    const nowS = performance.now() / 1000;
+    for (let i = trBananas.length - 1; i >= 0; i--) {
+      const bn = trBananas[i];
+      if (bn.t < nowS) { troll.remove(bn.g); trBananas.splice(i, 1); continue; }
+      // ¿alguien la pisó?
+      if (inTroll && meFx.slip <= 0 && player.position.y < 0.3 && Math.hypot(player.position.x - bn.x, player.position.z - bn.z) < 0.55) { meFx.slip = 1.4; vy = 5; onGround = false; playS('choque_m1', 0.6, 1.3); toast(tr('¡Te resbalaste!')); troll.remove(bn.g); trBananas.splice(i, 1); continue; }
+      let hit = false;
+      for (const c of trBots) if (!(c.trfx && c.trfx.slip > 0) && Math.hypot(c.obj.position.x - bn.x, c.obj.position.z - bn.z) < 0.55) { trFxOn(c, 'slip'); hit = true; break; }
+      if (hit) { troll.remove(bn.g); trBananas.splice(i, 1); }
+    }
+    for (const c of trBots) trOtherFxTick(c, dt);
+    if (typeof remotes !== 'undefined') for (const r of remotes.values()) if (r.trfx) trOtherFxTick(r, dt);
+  }
+  if (inTroll) { trMeTick(dt); trBotsTroll(dt); } else if (meFx.chick > 0 || meChick) { meFx.chick = 0; trMeTick(dt); }
   if (!inTroll) return;
   // las monedas se suman de a poco (sin redibujar todo el tiempo)
   trCoinT -= dt;
@@ -7818,6 +7852,231 @@ function trollTick(dt, t) {
     }
   }
   if (trShake > 0) { trShake = Math.max(0, trShake - dt * 1.8); camera.position.x += (Math.random() - 0.5) * trShake; camera.position.y += (Math.random() - 0.5) * trShake; }
+}
+
+// =====================================================================
+// ===== TROLL LAND (parte 2: trolleos entre jugadores y vecinos) =====
+// =====================================================================
+// Se compran en paquetes y solo funcionan dentro de Troll Land. Nadie pierde nada: duran unos segundos.
+const TROLL_ITEMS = [
+  { id: 'banana', ico: '🍌', es: 'Banana', pack: 5, price: 150, range: 10 },
+  { id: 'fart', ico: '💨', es: 'Almohadón de pedo', pack: 5, price: 200, range: 9 },
+  { id: 'water', ico: '🎈', es: 'Globo de agua', pack: 5, price: 250, range: 14 },
+  { id: 'chick', ico: '🐥', es: 'Rayo pollito', pack: 3, gems: 15, range: 12 },
+];
+const TI_BY = {}; TROLL_ITEMS.forEach((t) => { TI_BY[t.id] = t; });
+trs.items = trs.items || {}; trs.trolls = trs.trolls || 0;
+
+// ---------- sonidos inventados (pedo, chapuzón, pío) ----------
+function trFartSound(vol) {
+  const ac = audio(); if (!ac) return;
+  const t0 = ac.currentTime, d = 0.55 + Math.random() * 0.3;
+  const o = ac.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(95 + Math.random() * 30, t0); o.frequency.exponentialRampToValueAtTime(55, t0 + d);
+  const lfo = ac.createOscillator(); lfo.frequency.value = 26 + Math.random() * 10; const lg = ac.createGain(); lg.gain.value = 0.5; lfo.connect(lg);
+  const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.5 * (vol || 1) * sfxScale, t0 + 0.04); g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);
+  lg.connect(g.gain);
+  const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 700;
+  o.connect(f); f.connect(g); g.connect(master); o.start(t0); lfo.start(t0); o.stop(t0 + d + 0.05); lfo.stop(t0 + d + 0.05);
+}
+function trSplashSound(vol) {
+  const ac = audio(); if (!ac) return;
+  const s = noise(0.45), f = ac.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(2200, ac.currentTime); f.frequency.exponentialRampToValueAtTime(500, ac.currentTime + 0.4);
+  const g = ac.createGain(); g.gain.setValueAtTime(0.6 * (vol || 1) * sfxScale, ac.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.45);
+  s.connect(f); f.connect(g); g.connect(master); s.start();
+}
+function trPeep(vol) {
+  const ac = audio(); if (!ac) return;
+  for (let i = 0; i < 2; i++) {
+    const t0 = ac.currentTime + i * 0.16, o = ac.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(2600, t0); o.frequency.exponentialRampToValueAtTime(3400, t0 + 0.08);
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.25 * (vol || 1) * sfxScale, t0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.1);
+    o.connect(g); g.connect(master); o.start(t0); o.stop(t0 + 0.12);
+  }
+}
+
+// ---------- modelos: banana, pollito, nubecita de pedo, gotitas ----------
+const banMat = new THREE.MeshStandardMaterial({ color: '#ffe14d', roughness: 0.5 }), banTip = new THREE.MeshStandardMaterial({ color: '#5a4a1a', roughness: 0.6 });
+const TG = {}; function tg(k, f) { return TG[k] || (TG[k] = f()); }
+function makeBanana() {
+  const g = new THREE.Group();
+  const b = new THREE.Mesh(tg('bt', () => new THREE.TorusGeometry(0.28, 0.08, 8, 16, Math.PI * 0.9)), banMat); b.rotation.x = Math.PI / 2; b.position.y = 0.08; g.add(b);
+  for (const a of [0.3, 1.2, 2.2]) { const p = new THREE.Mesh(tg('bp', () => new THREE.SphereGeometry(0.09, 8, 6)), banMat); p.scale.set(1.6, 0.4, 0.7); p.position.set(Math.cos(a) * 0.32, 0.03, Math.sin(a) * 0.32); p.rotation.y = -a; g.add(p); }
+  const t = new THREE.Mesh(tg('bk', () => new THREE.SphereGeometry(0.04, 6, 5)), banTip); t.position.set(0.28, 0.08, 0); g.add(t);
+  return g;
+}
+const chickMat = new THREE.MeshStandardMaterial({ color: '#ffe066', roughness: 0.6 }), beakMat = new THREE.MeshStandardMaterial({ color: '#ff9a1f', roughness: 0.5 }), eyeMat = new THREE.MeshStandardMaterial({ color: '#111', roughness: 0.3 });
+function makeChick() {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(tg('c1', () => new THREE.SphereGeometry(0.42, 16, 12)), chickMat); body.position.y = 0.45; body.scale.set(1, 0.95, 1.05); g.add(body);
+  const head = new THREE.Mesh(tg('c2', () => new THREE.SphereGeometry(0.28, 14, 10)), chickMat); head.position.set(0, 0.95, 0.12); g.add(head);
+  const beak = new THREE.Mesh(tg('c3', () => new THREE.ConeGeometry(0.08, 0.18, 8)), beakMat); beak.rotation.x = Math.PI / 2; beak.position.set(0, 0.93, 0.42); g.add(beak);
+  for (const s of [-1, 1]) {
+    const e = new THREE.Mesh(tg('c4', () => new THREE.SphereGeometry(0.045, 8, 6)), eyeMat); e.position.set(s * 0.11, 1.02, 0.36); g.add(e);
+    const w = new THREE.Mesh(tg('c5', () => new THREE.SphereGeometry(0.18, 10, 8)), chickMat); w.scale.set(0.35, 0.8, 1); w.position.set(s * 0.42, 0.5, 0); g.add(w);
+    const f = new THREE.Mesh(tg('c6', () => new THREE.BoxGeometry(0.12, 0.04, 0.18)), beakMat); f.position.set(s * 0.15, 0.02, 0.08); g.add(f);
+  }
+  const tuft = new THREE.Mesh(tg('c7', () => new THREE.ConeGeometry(0.06, 0.16, 6)), chickMat); tuft.position.set(0, 1.25, 0.1); g.add(tuft);
+  g.traverse((m) => { if (m.isMesh) m.castShadow = true; });
+  return g;
+}
+const puffMat = new THREE.MeshStandardMaterial({ color: '#9fd36a', roughness: 1, transparent: true, opacity: 0.75 });
+const dropMat = new THREE.MeshStandardMaterial({ color: '#5fb8ff', roughness: 0.2, transparent: true, opacity: 0.85 });
+const puffGeo = new THREE.SphereGeometry(0.35, 10, 8), dropGeo = new THREE.SphereGeometry(0.08, 6, 5);
+const trFx = []; // nubecitas y gotas que viven un ratito
+function trPuff(x, y, z, n, mat, geo, up) {
+  for (let i = 0; i < n; i++) {
+    const m = new THREE.Mesh(geo || puffGeo, mat || puffMat); m.position.set(x + (Math.random() - 0.5) * 0.6, y + Math.random() * 0.3, z + (Math.random() - 0.5) * 0.6); troll.add(m);
+    trFx.push({ m, life: 0.9 + Math.random() * 0.5, vx: (Math.random() - 0.5) * 2, vy: (up || 1) * (0.6 + Math.random()), vz: (Math.random() - 0.5) * 2, grow: geo ? 0 : 0.7 });
+  }
+}
+function trFxTick(dt) {
+  for (let i = trFx.length - 1; i >= 0; i--) {
+    const f = trFx[i]; f.life -= dt;
+    if (f.life <= 0) { troll.remove(f.m); trFx.splice(i, 1); continue; }
+    f.m.position.x += f.vx * dt; f.m.position.y += f.vy * dt; f.m.position.z += f.vz * dt;
+    if (f.grow) { f.m.scale.multiplyScalar(1 + f.grow * dt); f.vy *= 0.96; } else f.vy -= 9 * dt;
+  }
+}
+
+// ---------- bananas en el piso ----------
+const trBananas = []; // { g, x, z, t }
+function trDropBanana(x, z) {
+  const g = makeBanana(); g.position.set(x, 0, z); g.rotation.y = Math.random() * 6; troll.add(g);
+  trBananas.push({ g, x, z, t: performance.now() / 1000 + 40 });
+  if (trBananas.length > 30) { const o = trBananas.shift(); troll.remove(o.g); }
+}
+
+// ---------- efectos sobre un personaje (yo, un vecino o otro jugador) ----------
+// fx = { slip, wet, chick, chickMesh } guardado en el personaje
+function trFxOn(who, kind) {
+  const fx = who === 'me' ? meFx : (who.trfx || (who.trfx = {}));
+  const pos = who === 'me' ? player.position : who.obj.position;
+  if (kind === 'slip') { fx.slip = 1.4; fx.spin = 0; if (who === 'me') { vy = 5; onGround = false; } playS('choque_m1', 0.5, 1.3); }
+  if (kind === 'fart') { fx.launch = 0.9; if (who === 'me') { vy = 13; onGround = false; } trPuff(pos.x, pos.y + 0.5, pos.z, 7); trFartSound(1); }
+  if (kind === 'wet') { fx.wet = 4.5; trPuff(pos.x, pos.y + 1.6, pos.z, 10, dropMat, dropGeo, 2); trSplashSound(1); }
+  if (kind === 'chick') { fx.chick = 10; trPeep(1); trPuff(pos.x, pos.y + 0.8, pos.z, 6, tg('cm', () => new THREE.MeshStandardMaterial({ color: '#fff3a0', transparent: true, opacity: 0.8 }))); }
+}
+const meFx = { slip: 0, wet: 0, chick: 0 };
+let meChick = null, meHidden = [];
+let trPrevPos = null;
+function trMeTick(dt) {
+  const p = player.position, fx = meFx;
+  // resbalón: no te podés mover y das vueltas
+  if (fx.slip > 0) { fx.slip -= dt; if (trPrevPos) { p.x = trPrevPos.x; p.z = trPrevPos.z; } facing += dt * 14; }
+  // mojado: andás más lento y caen gotas
+  if (fx.wet > 0) { fx.wet -= dt; if (trPrevPos) { p.x = trPrevPos.x + (p.x - trPrevPos.x) * 0.55; p.z = trPrevPos.z + (p.z - trPrevPos.z) * 0.55; } if (Math.random() < dt * 8) trPuff(p.x, p.y + 1.7, p.z, 1, dropMat, dropGeo, -0.5); }
+  // pollito: el muñeco se esconde y aparece un pollito
+  if (fx.chick > 0) {
+    fx.chick -= dt;
+    if (!meChick) { meChick = makeChick(); player.add(meChick); meHidden = player.children.filter((c) => c !== meChick && c.visible); meHidden.forEach((c) => { c.visible = false; }); }
+    meChick.rotation.z = Math.sin(performance.now() / 90) * 0.08;
+    if (Math.random() < dt * 0.6) trPeep(0.5);
+  } else if (meChick) { player.remove(meChick); meChick = null; meHidden.forEach((c) => { c.visible = true; }); meHidden = []; }
+  trPrevPos = { x: p.x, z: p.z };
+}
+function trOtherFxTick(who, dt) {
+  const fx = who.trfx; if (!fx) return;
+  if (fx.slip > 0) { fx.slip -= dt; who.obj.rotation.y += dt * 14; who.av.g.rotation.z = Math.sin(fx.slip * 6) * 0.6; if (fx.slip <= 0) who.av.g.rotation.z = 0; }
+  if (fx.launch > 0) { fx.launch -= dt; who.av.g.position.y = Math.sin((0.9 - fx.launch) / 0.9 * Math.PI) * 3; if (fx.launch <= 0) who.av.g.position.y = 0; }
+  if (fx.wet > 0) { fx.wet -= dt; if (Math.random() < dt * 8) trPuff(who.obj.position.x, 1.8, who.obj.position.z, 1, dropMat, dropGeo, -0.5); }
+  if (fx.chick > 0) {
+    fx.chick -= dt;
+    if (!fx.chickMesh) { fx.chickMesh = makeChick(); who.obj.add(fx.chickMesh); }
+    who.av.g.visible = false; fx.chickMesh.visible = true;
+    if (fx.chick <= 0) { who.obj.remove(fx.chickMesh); fx.chickMesh = null; who.av.g.visible = true; }
+  }
+}
+
+// ---------- a quién le apunto ----------
+function trTargets() {
+  const out = [];
+  for (const c of trBots) if (c.obj.visible) out.push({ who: c, obj: c.obj, id: '' });
+  if (typeof remotes !== 'undefined') for (const r of remotes.values()) if (r.obj.visible && Math.hypot(r.obj.position.x - TL.x, r.obj.position.z - TL.z) < TL.r + 2) out.push({ who: r, obj: r.obj, id: r.id });
+  return out;
+}
+function trPickTarget(cx, cy) {
+  trV2.set(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1); trRay.setFromCamera(trV2, camera);
+  const tg = trTargets();
+  // el más cercano al rayo (fácil de tocar en el celular)
+  let best = null, bd = 1.3;
+  for (const t of tg) {
+    const c = t.obj.position.clone().add(new THREE.Vector3(0, 1, 0));
+    const d = trRay.ray.distanceToPoint(c);
+    if (d < bd) { bd = d; best = t; }
+  }
+  return best;
+}
+function trGroundPoint(cx, cy) {
+  trV2.set(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1); trRay.setFromCamera(trV2, camera);
+  const hit = trRay.intersectObject(trMesh, false).find((h) => h.instanceId !== undefined && trCells[h.instanceId].alive);
+  if (hit) return hit.point;
+  const t = -trRay.ray.origin.y / trRay.ray.direction.y;
+  return t > 0 ? trRay.ray.origin.clone().add(trRay.ray.direction.clone().multiplyScalar(t)) : null;
+}
+// aplicar un trolleo (lo hice yo o llegó por la red)
+function trApply(kind, x, z, targetId, fromMe) {
+  if (kind === 'banana') trDropBanana(x, z);
+  if (kind === 'water') {
+    trPuff(x, 0.6, z, 16, dropMat, dropGeo, 2.5); trSplashSound(Math.max(0.2, 1 - Math.hypot(x - player.position.x, z - player.position.z) / 25));
+    if (inTroll && Math.hypot(player.position.x - x, player.position.z - z) < 2.2 && !fromMe) { meFx.wet = 4.5; }
+    for (const c of trBots) if (Math.hypot(c.obj.position.x - x, c.obj.position.z - z) < 2.2) trFxOn(c, 'wet');
+  }
+  if (kind === 'fart' || kind === 'chick') {
+    if (targetId === MY_ID) { if (inTroll) { if (kind === 'fart') { trFxOn('me', 'fart'); } else { meFx.chick = 10; trPeep(1); } toast(kind === 'chick' ? tr('¡Te convirtieron en pollito!') : tr('¡Te tiraron un pedo!')); } }
+    else if (typeof remotes !== 'undefined' && remotes.has(targetId)) trFxOn(remotes.get(targetId), kind);
+  }
+}
+function trUseItem(item, cx, cy) {
+  if (!trs.items[item.id]) { trBuyItem(item); return; }
+  const p = player.position;
+  if (item.id === 'banana' || item.id === 'water') {
+    const g = trGroundPoint(cx, cy); if (!g) return;
+    if (Math.hypot(g.x - p.x, g.z - p.z) > item.range) { toast(tr('¡Está muy lejos!')); return; }
+    if (item.id === 'water') {
+      // el globo vuela hasta ahí
+      const m = new THREE.Mesh(tg('gb', () => new THREE.SphereGeometry(0.28, 12, 10)), tg('gm', () => new THREE.MeshStandardMaterial({ color: '#ff5fa2', roughness: 0.3 }))); troll.add(m);
+      trProj.push({ m, from: new THREE.Vector3(p.x, p.y + 1.6, p.z), to: new THREE.Vector3(g.x, 0.3, g.z), t: 0, dur: 0.5, arc: 2.5, tool: { id: 'water', rad: 0, cd: 0 } });
+    } else trApply('banana', g.x, g.z, '', true);
+    netSend({ t: 'evt', e: (item.id === 'banana' ? 'tb' : 'tw') + g.x.toFixed(1) + ',' + g.z.toFixed(1) });
+  } else {
+    const t = trPickTarget(cx, cy);
+    if (!t) { toast(tr('Tocá a un jugador o a un vecino.')); return; }
+    if (Math.hypot(t.obj.position.x - p.x, t.obj.position.z - p.z) > item.range) { toast(tr('¡Está muy lejos!')); return; }
+    trFxOn(t.who, item.id === 'fart' ? 'fart' : 'chick');
+    if (t.id) netSend({ t: 'evt', e: item.id === 'fart' ? 'tf' : 'tc', d: t.id });
+  }
+  trs.items[item.id]--; trs.trolls++; trSave(); trBuildBar(); updateTrHud();
+  trCd = 0.35;
+}
+function trBuyItem(item) {
+  if (item.gems) { if (st.gems < item.gems) { toast(tr('Te faltan {0} gemas.', item.gems - st.gems)); return; } st.gems -= item.gems; }
+  else { if (st.coins < item.price) { toast(tr('Te faltan {0} monedas.', fmt(item.price - st.coins))); return; } st.coins -= item.price; }
+  trs.items[item.id] = (trs.items[item.id] || 0) + item.pack; trs.tool = 'it:' + item.id;
+  updateHud(); trSave(); trBuildBar(); updateTrHud(); sfx('coin'); happy();
+  toast(tr('¡Compraste {0} x{1}!', tr(item.es), item.pack));
+}
+// lo que llega por la red
+function trollNet(id, e, d) {
+  if (!e || e[0] !== 't' || e.length < 2) return;
+  const k = { b: 'banana', w: 'water', f: 'fart', c: 'chick' }[e[1]]; if (!k) return;
+  if (k === 'banana' || k === 'water') { const [x, z] = e.slice(2).split(',').map(Number); if (isFinite(x) && isFinite(z) && Math.hypot(x - TL.x, z - TL.z) < TL.r + 2) trApply(k, x, z, '', false); }
+  else trApply(k, 0, 0, String(d || ''), false);
+}
+
+// ---------- los vecinos también te trollean (de vez en cuando) ----------
+let trBotTrollT = 12;
+function trBotsTroll(dt) {
+  trBotTrollT -= dt; if (trBotTrollT > 0) return;
+  trBotTrollT = 14 + Math.random() * 14;
+  const p = player.position, near = trBots.filter((c) => !c.builder && c.obj.visible && Math.hypot(c.obj.position.x - p.x, c.obj.position.z - p.z) < 12);
+  if (!near.length) return;
+  const c = near[Math.floor(Math.random() * near.length)], r = Math.random();
+  c.face = Math.atan2(p.x - c.obj.position.x, p.z - c.obj.position.z); c.swing = 0.25;
+  if (r < 0.45) { // globo de agua
+    const m = new THREE.Mesh(tg('gb', () => new THREE.SphereGeometry(0.28, 12, 10)), tg('gm2', () => new THREE.MeshStandardMaterial({ color: '#5fb8ff', roughness: 0.3 }))); troll.add(m);
+    trProj.push({ m, from: c.obj.position.clone().add(new THREE.Vector3(0, 1.6, 0)), to: new THREE.Vector3(p.x, 0.3, p.z), t: 0, dur: 0.7, arc: 2.5, tool: { id: 'water', rad: 0, cd: 0 }, byBot: true });
+  } else if (r < 0.8) { // banana en tu camino
+    const a = facing; trDropBanana(p.x + Math.sin(a) * 2.2, p.z + Math.cos(a) * 2.2);
+  } else { trFxOn(c, 'fart'); }
 }
 
 function tick() {
