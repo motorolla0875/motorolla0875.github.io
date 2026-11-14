@@ -378,6 +378,16 @@
   #gTop .bk { font-size: 17px; }
   #gBtns { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
   #gBtns .toy { width: 98px; padding: 9px 6px; font-size: 14px; }
+  #obbyHud { display: none; }
+  body.obby #obbyHud { display: block; }
+  body.obby #topBox, body.obby #shopBtn, body.obby #help { display: none !important; }
+  #obTop { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); display: flex; gap: 8px; pointer-events: none; }
+  #obTop div { background: rgba(30,40,25,.85); color: #fff; border-radius: 14px; padding: 5px 14px; display: flex; align-items: center; gap: 7px; font-size: 22px; font-weight: 700; white-space: nowrap; }
+  #obTop .stg { background: rgba(110,80,220,.92); }
+  #obFloor { position: absolute; left: 50%; top: 58px; transform: translateX(-50%); color: #fff; font-weight: 700; font-size: 17px; text-shadow: 0 2px 3px rgba(0,0,0,.6); pointer-events: none; white-space: nowrap; }
+  #obBtns { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
+  #obBtns .toy { width: 108px; padding: 9px 6px; font-size: 14px; }
+  @media (orientation: landscape) and (max-height: 520px) { body.is-touch #obTop { top: 6px !important; } body.is-touch #obTop div { font-size: 15px !important; padding: 3px 10px !important; } body.is-touch #obFloor { top: 40px !important; font-size: 13px !important; } body.is-touch #obBtns .toy { width: 92px !important; padding: 7px 4px !important; font-size: 12px !important; } }
   #marketHud { display: none; }
   body.market #marketHud { display: block; }
   body.market #topBox, body.market #shopBtn, body.market #help { display: none !important; }
@@ -508,6 +518,11 @@
     <div id="cMsg"></div>
     <div id="cCross"></div>
     <div id="cFeed"></div>
+  </div>
+  <div id="obbyHud">
+    <div id="obTop"><div class="stg" id="obStage"></div><div>⏱ <span id="obTime">0:00.0</span></div><div><span class="coin"></span><span id="obCoins">0</span></div></div>
+    <div id="obFloor"></div>
+    <div id="obBtns"><button id="obBackBtn" class="toy">Checkpoint</button><button id="obExitBtn" class="toy">Bajar</button><button id="obRestartBtn" class="toy">Reiniciar</button></div>
   </div>
   <div id="marketHud">
     <div id="mkTop"><div class="cash">💵 <span id="mkCash">$0</span></div><div class="inc" id="mkInc"></div><div><span class="coin"></span><span id="mkCoins">0</span></div><div><span class="gem"></span><span id="mkGems">0</span></div><div id="mkReb"></div></div>
@@ -805,6 +820,13 @@ Object.assign(DICT, {
   'Tenés que quedarte con al menos una equipada.': ['Keep at least one equipped.', 'Fique com pelo menos um equipado.'],
   'Ya tenés el máximo de mascotas equipadas.': ['You already have the max equipped.', 'Você já tem o máximo equipado.'],
   'Mejor zona': ['Best zone', 'Melhor zona'], 'Volver a la plaza': ['Back to the plaza', 'Voltar para a praça'],
+  'Juego 6': ['Game 6', 'Jogo 6'], 'Torre Loca': ['Crazy Tower', 'Torre Maluca'], 'TORRE LOCA': ['CRAZY TOWER', 'TORRE MALUCA'], 'Juego 1': ['Game 1', 'Jogo 1'], 'Juego 3': ['Game 3', 'Jogo 3'], 'Juego 4': ['Game 4', 'Jogo 4'],
+  'Reino de Mascotas': ['Pet Kingdom', 'Reino dos Pets'], 'Etapa {0}/{1}': ['Stage {0}/{1}', 'Etapa {0}/{1}'], '¡Subí la torre!': ['Climb the tower!', 'Suba a torre!'], 'Récord: {0}': ['Record: {0}', 'Recorde: {0}'],
+  'Piso 1: Dulces': ['Floor 1: Candy', 'Andar 1: Doces'], 'Piso 2: Volcán': ['Floor 2: Volcano', 'Andar 2: Vulcão'], 'Piso 3: Hielo': ['Floor 3: Ice', 'Andar 3: Gelo'], 'Piso 4: Selva': ['Floor 4: Jungle', 'Andar 4: Selva'], 'Piso 5: Espacio': ['Floor 5: Space', 'Andar 5: Espaço'], 'Piso 6: Arcoíris': ['Floor 6: Rainbow', 'Andar 6: Arco-íris'],
+  'Checkpoint': ['Checkpoint', 'Checkpoint'], 'Bajar': ['Go down', 'Descer'], 'Reiniciar': ['Restart', 'Reiniciar'], '¡A subir de nuevo!': ['Climb again!', 'Suba de novo!'], '¡LLEGASTE!': ['YOU MADE IT!', 'VOCÊ CHEGOU!'],
+  'Tiempo: {0}': ['Time: {0}', 'Tempo: {0}'], '¡NUEVO RÉCORD!': ['NEW RECORD!', 'NOVO RECORDE!'], 'Premio: {0} monedas y {1} gemas': ['Prize: {0} coins and {1} gems', 'Prêmio: {0} moedas e {1} gemas'],
+  'Tocá "Reiniciar" para subir de nuevo.': ['Tap "Restart" to climb again.', 'Toque "Reiniciar" para subir de novo.'], 'Tocá "Checkpoint" para seguir desde la etapa {0}.': ['Tap "Checkpoint" to continue from stage {0}.', 'Toque "Checkpoint" para continuar da etapa {0}.'],
+  'Subí la torre saltando de checkpoint en checkpoint. Si te caés, volvés al último.': ['Climb the tower jumping from checkpoint to checkpoint. If you fall, you go back to the last one.', 'Suba a torre pulando de checkpoint em checkpoint. Se cair, volta ao último.'],
   'Juego 5': ['Game 5', 'Jogo 5'], 'Mini Market': ['Mini Market', 'Mini Mercado'], 'MINI MARKET': ['MINI MARKET', 'MINI MERCADO'],
   'Puestito': ['Little stand', 'Barraquinha'], 'Góndola de snacks': ['Snack shelf', 'Prateleira de salgadinhos'], 'Góndola de golosinas': ['Candy shelf', 'Prateleira de doces'],
   'Paredes y puerta': ['Walls and door', 'Paredes e porta'], 'Heladera de bebidas': ['Drinks fridge', 'Geladeira de bebidas'], 'Góndola de panadería': ['Bakery shelf', 'Prateleira de padaria'],
@@ -925,7 +947,7 @@ const bladeGeo = new THREE.BufferGeometry();
 // lugares sin pasto alto ni adornos: el terreno, la plaza y las cintas
 function reservedAt(x, z) {
   for (const zz of [0, -40, -80, -120]) for (const xx of [0, -40, 40, -80, 80]) if (Math.abs(x - xx) < 18.4 && Math.abs(z - zz) < 18.4) return true; // terrenos del barrio
-  if (Math.hypot(x, z - 42) < 9.6) return true;                            // plaza
+  if (Math.hypot(x, z - 42) < 11.6) return true;                            // plaza
   if (Math.abs(x) < 5 && z > 15 && z < 36) return true;                    // cintas a Construí Todo
   if (x > 5 && x < 64 && Math.abs(z - 42) < 4.2) return true;              // cintas al juego 2
   if (x > 52 && Math.abs(z - 42) < 18.5) return true;                      // Reino de Mascotas
@@ -934,7 +956,9 @@ function reservedAt(x, z) {
   if (Math.abs(x) < 5 && z > 46 && z < 80) return true;                    // cintas a la Guerra de Caca
   if (Math.abs(x) < 34 && z > 74) return true;
   if (x < -4 && x > -92 && z > 46 && z < 138 && Math.abs(x * 0.5980 + (z - 42) * 0.8015) < 5) return true;   // cintas al Mini Market
-  if (Math.abs(x + 72) < 19 && Math.abs(z - 116) < 19) return true;        // Mini Market                             // arena de la Guerra de Caca                                      // Huerta de la Suerte
+  if (Math.abs(x + 72) < 19 && Math.abs(z - 116) < 19) return true;
+  if (Math.hypot(x - 82, z - 122) < 38) return true;                       // Torre Loca
+  if (x > 4 && x < 70 && z > 46 && z < 110 && Math.abs(x * 0.699 - (z - 42) * 0.716) < 5) return true; // cintas a la Torre Loca        // Mini Market                             // arena de la Guerra de Caca                                      // Huerta de la Suerte
   return false;
 }
 const offsets = new Float32Array(BLADES * 4);
@@ -2461,7 +2485,7 @@ function act(clientX, clientY, alt) {
   if (inPets) { petTap(clientX, clientY); return; }
   if (inGarden) { gardenTap(clientX, clientY); return; }
   if (inCongo) { congoShoot(); return; }
-  if (inMarket) return;
+  if (inMarket || inObby) return;
   if (!inGame) return;
   const p = pickCell(clientX, clientY);
   if (!p) return;
@@ -2634,6 +2658,7 @@ function collides(px, py, pz) {
   let top = collidesGrid(px, py, pz, X0, Z0, solidH);
   // terrenos de los otros jugadores de la sala
   if (typeof remotePlotsCollide === 'function') top = Math.max(top, remotePlotsCollide(px, py, pz));
+  if (typeof obbyCollide === 'function') top = Math.max(top, obbyCollide(px, py, pz));
   return top; // -1 = libre; si no, la altura de arriba de lo que choca
 }
 let flying = false;
@@ -3274,7 +3299,7 @@ function buildTick(dt, t) {
   if (mode === 'play' && onGround && !sitting && gs > 0.8 && ss !== lastStepSign) stepSound();
   lastStepSign = ss;
   // cada parte por separado: si una falla, las demás siguen andando (el juego nunca se congela)
-  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t));
+  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t)); safe('obby', () => obbyTick(dt, t));
   return night;
 }
 
@@ -3419,6 +3444,22 @@ document.title = tr('Construí Todo');
 // ===== PLAZA Y CINTAS: el muñeco se sube a la cinta y va de juego en juego =====
 // =====================================================================
 const PLAZA = { x: 0, z: 42, r: 8.5 };
+// dónde quedan los juegos que salen en diagonal (Mini Market y Torre Loca)
+const OBBY_C = { x: 82, z: 122 };
+// salidas de la plaza (una por juego): la plaza se agranda sola si no entran bien las cintas y los carteles
+const PLAZA_EXITS = (() => {
+  const dir = (x, z) => { const l = Math.hypot(x, z); return { x: x / l, z: z / l, L: l }; };
+  const ob = (() => { const a = Math.atan2(PLAZA.z - OBBY_C.z, PLAZA.x - OBBY_C.x); return dir(OBBY_C.x + Math.cos(a) * 26 - PLAZA.x, OBBY_C.z + Math.sin(a) * 26 - PLAZA.z); })();
+  return { construi: dir(0, -1), mascotas: dir(1, 0), congo: dir(0, 1), huerta: dir(-1, 0), market: dir(-75 - PLAZA.x, 98 - PLAZA.z), obby: ob };
+})();
+const OBBY_DIR = PLAZA_EXITS.obby;
+{
+  const angs = Object.values(PLAZA_EXITS).map((d) => Math.atan2(d.z, d.x)).sort((a, b) => a - b);
+  let gap = Math.PI * 2;
+  angs.forEach((a, i) => { const nx = i + 1 < angs.length ? angs[i + 1] : angs[0] + Math.PI * 2; gap = Math.min(gap, nx - a); });
+  // cada salida necesita unos 8.8 de ancho (las dos cintas + el cartel a la izquierda)
+  PLAZA.r = Math.max(8.5, Math.min(16, 8.8 / gap));
+}
 const hub = new THREE.Group();
 scene.add(hub);
 
@@ -3477,6 +3518,11 @@ function postSign(x, z, rotY, lines, color) {
   colliders.push({ x, z, r: 0.25 });
   return g;
 }
+// cartel de cada salida de la plaza: siempre a la IZQUIERDA de la cinta (mirando desde la plaza hacia el juego)
+function plazaSign(dx, dz, lines, color) {
+  const lx = dz, lz = -dx; // izquierda
+  return postSign(PLAZA.x + dx * (PLAZA.r + 0.8) + lx * 4.4, PLAZA.z + dz * (PLAZA.r + 0.8) + lz * 4.4, Math.atan2(dx, dz) + Math.PI, lines, color);
+}
 
 // ----- la plaza: piso de baldosas de juguete, borde y la estatua del muñeco -----
 {
@@ -3505,7 +3551,7 @@ function postSign(x, z, rotY, lines, color) {
   const cols = ['#e2493b', '#ffd83d', '#4fb3ee', '#4cc35a', '#f08a24', '#8c4fd1'];
   for (let i = 0; i < 10; i++) {
     const a = i / 10 * Math.PI * 2 + 0.31;
-    if (Math.abs(Math.sin(a)) > 0.55 || Math.abs(Math.cos(a)) > 0.75) continue; // deja libre la salida de las cintas (norte, este y oeste)
+    if (Object.values(PLAZA_EXITS).some((d) => Math.abs(Math.atan2(Math.sin(a - Math.atan2(d.z, d.x)), Math.cos(a - Math.atan2(d.z, d.x)))) < 0.62)) continue; // deja libres las salidas de las cintas
     const x = PLAZA.x + Math.cos(a) * (PLAZA.r - 0.6), z = PLAZA.z + Math.sin(a) * (PLAZA.r - 0.6);
     addMesh(new THREE.CylinderGeometry(0.07, 0.07, 2.6, 8), toyMat('#faf6eb'), x, 1.3, z);
     const f = addMesh(new THREE.ConeGeometry(0.4, 0.7, 3), toyMat(cols[i % cols.length]), x + 0.25, 2.3, z);
@@ -3559,11 +3605,12 @@ function floorAt(x, z) { return beltAt(x, z) ? BELT_H : (typeof congoFloor === '
 addBelt(-1.6, PLAZA.z - PLAZA.r + 1.2, -1.6, 19.2, '#2ea046');
 addBelt(1.6, 19.2, 1.6, PLAZA.z - PLAZA.r + 1.2, '#e6a91e');
 arch(0, 20.6, 0, [tr('CONSTRUÍ TODO'), tr('Juego 1')], '#2ea046');
-postSign(-4.4, PLAZA.z - PLAZA.r + 0.2, 0, [tr('Construí Todo'), tr('subite a la cinta')], '#2ea046');
+plazaSign(0, -1, [tr('Construí Todo'), tr('Juego 1')], '#2ea046');
 // próximo juego: cinta hacia el este que termina en una estación "pronto"
 // cintas largas hasta el Reino de Mascotas (se ve de lejos, llegás caminando por la cinta)
 addBelt(PLAZA.x + PLAZA.r - 1.2, PLAZA.z - 1.6, 63, PLAZA.z - 1.6, '#4fb3ee');
 addBelt(63, PLAZA.z + 1.6, PLAZA.x + PLAZA.r - 1.2, PLAZA.z + 1.6, '#e6a91e');
+plazaSign(1, 0, [tr('Reino de Mascotas'), tr('Juego 2')], '#4fb3ee');
 // (el arco del Juego 2 es la entrada gigante del Reino de Mascotas, al final de la cinta)
 // portales: textura de remolino
 function swirlTex(c) {
@@ -4330,7 +4377,7 @@ addEventListener('keydown', (e) => { if (!inPets || e.repeat) return; if (e.code
 var inPets = false;
 function clampPets() {
   const p = PL();
-  if (p.z > -74) return false;
+  if (p.z > -74 || Math.abs(p.x) > PW_X + 8) return false;
   // los costados del mundo (eje x propio = eje z de la escena)
   const cx = Math.max(-PW_X + 0.6, Math.min(PW_X - 0.6, p.x));
   if (cx !== p.x) { p.x = cx; vel.z = 0; }
@@ -4341,7 +4388,7 @@ function clampPets() {
   return true;
 }
 function petsZone() {
-  const now = mode === 'play' && PL().z < -74;
+  const now = mode === 'play' && PL().z < -74 && Math.abs(PL().x) < PW_X + 8;
   if (now !== inPets) {
     inPets = now;
     document.body.classList.toggle('pets', now);
@@ -4467,7 +4514,7 @@ function gMesh(geo, mat, x, y, z, parent = garden) { const m = new THREE.Mesh(ge
 addBelt(PLAZA.x - PLAZA.r + 1.2, PLAZA.z - 1.6, -62, PLAZA.z - 1.6, '#5aa546');
 addBelt(-62, PLAZA.z + 1.6, PLAZA.x - PLAZA.r + 1.2, PLAZA.z + 1.6, '#e6a91e');
 arch(-64, 42, Math.PI / 2, [tr('HUERTA DE LA SUERTE'), tr('Juego 3')], '#5aa546');
-postSign(PLAZA.x - PLAZA.r + 0.2, PLAZA.z + 4.4, Math.PI / 2, [tr('Huerta de la Suerte'), tr('subite a la cinta')], '#5aa546');
+plazaSign(-1, 0, [tr('Huerta de la Suerte'), tr('Juego 3')], '#5aa546');
 {
   // pasto cortito de la huerta, camino de arena y cerco blanco
   const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d');
@@ -4882,7 +4929,7 @@ try { myName = localStorage.getItem('mj_nombre') || ''; } catch (e) { /* nada */
 if (!myName) myName = (LANG === 'en' ? 'Player' : LANG === 'pt' ? 'Jogador' : 'Jugador') + Math.floor(1000 + Math.random() * 9000);
 
 // ---------- guardado en la nube ----------
-const SAVE_KEYS = ['construi_v1', 'pets_v1', 'huerta_v1', 'congo_v1', 'market_v1', 'muneco-look', 'mj_nombre'];
+const SAVE_KEYS = ['construi_v1', 'pets_v1', 'huerta_v1', 'congo_v1', 'market_v1', 'obby_v1', 'muneco-look', 'mj_nombre'];
 function localBundle() { const d = {}; for (const k of SAVE_KEYS) { try { const v = localStorage.getItem(k); if (v != null) d[k] = v; } catch (e) { /* nada */ } } return d; }
 let lastCloud = '';
 async function cloudLoad() {
@@ -5933,7 +5980,7 @@ function stink(x, y, z, n, spread) {
 addBelt(PLAZA.x - 1.6, PLAZA.z + PLAZA.r - 1.2, PLAZA.x - 1.6, CG.cz - CG.hz - 4, '#8a5523');
 addBelt(PLAZA.x + 1.6, CG.cz - CG.hz - 4, PLAZA.x + 1.6, PLAZA.z + PLAZA.r - 1.2, '#e6a91e');
 arch(0, CG.cz - CG.hz - 3, 0, [tr('GUERRA DE CACA'), tr('Juego 4')], '#8a5523');
-postSign(PLAZA.x - 4.4, PLAZA.z + PLAZA.r - 0.2, Math.PI, [tr('Guerra de Caca'), tr('subite a la cinta')], '#8a5523');
+plazaSign(0, 1, [tr('Guerra de Caca'), tr('Juego 4')], '#8a5523');
 mergeChildren(cgStatic);
 
 // ---------- monstruos de caca ----------
@@ -6590,7 +6637,7 @@ const MK_DIR = (() => { const dx = MK_END.x - PLAZA.x, dz = MK_END.z - PLAZA.z, 
   addBelt(sx - px, sz - pz, ex - px, ez - pz, '#1d9e75');
   addBelt(ex + px, ez + pz, sx + px, sz + pz, '#e6a91e');
   arch(ex + dx * 1.6, ez + dz * 1.6, Math.atan2(dx, dz), [tr('MINI MARKET'), tr('Juego 5')], '#1d9e75');
-  postSign(PLAZA.x + dx * (PLAZA.r + 0.8) - dz * 3.4, PLAZA.z + dz * (PLAZA.r + 0.8) + dx * 3.4, Math.atan2(dx, dz) + Math.PI, [tr('Mini Market'), tr('Juego 5')], '#1d9e75');
+  plazaSign(dx, dz, [tr('Mini Market'), tr('Juego 5')], '#1d9e75');
 }
 // límites: el pasillo de la cinta y el terreno del súper (lo demás lo maneja el mundo)
 function mkInside(x, z) {
@@ -6872,6 +6919,429 @@ function marketTick(dt, t) {
 }
 rebuildStore();
 
+// =====================================================================
+// ===== JUEGO 6: TORRE LOCA (OBBY) =====
+// =====================================================================
+// Una torre en espiral con 6 pisos y 30 etapas: piedras, vigas, plataformas que se mueven, baldosas que
+// desaparecen, camas elásticas, lava, barras que giran, cintas que empujan y escaleras para trepar.
+// Si te caés volvés a tu checkpoint. Cada checkpoint nuevo da monedas; arriba de todo, premio y récord.
+const OB = { cx: OBBY_C.x, cz: OBBY_C.z, R: 26, rise: 1.6, per: 5, zone: 37 };
+const OB_FLOORS = [
+  { es: 'Piso 1: Dulces', cols: ['#ff8cc8', '#8cdcff', '#ffeb78'], kill: '#e63c78', st: ['jumps', 'beams', 'moving', 'vanish', 'tramp'] },
+  { es: 'Piso 2: Volcán', cols: ['#5a5050', '#786460', '#463c3c'], kill: '#ff5a14', st: ['lava', 'spinner', 'moving', 'lava', 'truss'] },
+  { es: 'Piso 3: Hielo', cols: ['#beebff', '#96d2f5', '#ebfaff'], kill: '#2878ff', st: ['jumps', 'conveyor', 'beams', 'vanish', 'updown'], ice: 1 },
+  { es: 'Piso 4: Selva', cols: ['#6eaa46', '#8c643c', '#508c3c'], kill: '#5a7828', st: ['truss', 'moving', 'spinner', 'tramp', 'lava'] },
+  { es: 'Piso 5: Espacio', cols: ['#785adc', '#3cc8f0', '#f0f0ff'], kill: '#ff2850', st: ['jumps', 'moving', 'vanish', 'updown', 'tramp'], grav: 0.5 },
+  { es: 'Piso 6: Arcoíris', cols: ['#ff5050', '#ffc83c', '#50c8ff', '#aa64ff', '#5adc6e'], kill: '#ff1e1e', st: ['spinner', 'beams', 'conveyor', 'updown', 'vanish'] },
+];
+const OB_TOTAL = OB_FLOORS.length * OB.per;
+const OB_STAGE_COINS = 5, OB_WIN_COINS = 100, OB_WIN_GEMS = 10;
+
+// ---------- guardado ----------
+const OB_KEY = 'obby_v1';
+let obs = { stage: 0, best: 0, wins: 0, runStart: 0, skipped: 0 };
+try { const s = JSON.parse(localStorage.getItem(OB_KEY) || 'null'); if (s) obs = Object.assign(obs, s); } catch (e) { /* nada */ }
+obs.runStart = 0; // el reloj arranca de nuevo al entrar
+function obSave() { try { localStorage.setItem(OB_KEY, JSON.stringify(obs)); } catch (e) { /* nada */ } save(); }
+
+// ---------- cuentas de la torre ----------
+const OB_A0 = Math.atan2(PLAZA.z - OB.cz, PLAZA.x - OB.cx); // el checkpoint 0 mira hacia la plaza
+function obPad(i) { const a = OB_A0 + i * Math.PI * 2 / OB.per; return new THREE.Vector3(OB.cx + Math.cos(a) * OB.R, i * OB.rise, OB.cz + Math.sin(a) * OB.R); }
+function obFloorOf(stage) { return Math.max(0, Math.min(OB_FLOORS.length - 1, Math.floor((Math.max(stage, 1) - 1) / OB.per))); }
+function obFloorAtY(y) { return obFloorOf(Math.floor(y / OB.rise) + 1); }
+
+const obby = new THREE.Group(); scene.add(obby);
+// las cajas que se pisan: { cx, cy, cz, hx, hy, hz, rot, mesh, kind, ... } (cy = centro)
+const obBoxes = [];
+const obMovers = [], obSpinners = [], obTrusses = [], obLava = [];
+const obMat = {};
+const obM = (c, r, extra) => { const k = c + (r || 0.6) + (extra ? JSON.stringify(extra) : ''); return obMat[k] || (obMat[k] = new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: r || 0.6 }, extra || {}))); };
+function obBox(parent, w, h, d, mat, x, y, z, rot, kind) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  m.position.set(x, y, z); m.rotation.y = rot || 0; m.castShadow = true; m.receiveShadow = true; parent.add(m);
+  const b = { cx: x, cy: y, cz: z, hx: w / 2, hy: h / 2, hz: d / 2, rot: rot || 0, mesh: m, kind: kind || 'solid', solid: true };
+  obBoxes.push(b);
+  return b;
+}
+
+// ---------- una etapa ----------
+function obStage(k, parent) {
+  const fi = obFloorOf(k), F = OB_FLOORS[fi], diff = fi + 1, kind = F.st[(k - 1) % OB.per];
+  let seed = k * 7919; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  const P0 = obPad(k - 1), P1 = obPad(k);
+  const fx = P1.x - P0.x, fz = P1.z - P0.z, D = Math.hypot(fx, fz), ux = fx / D, uz = fz / D;
+  const rx = -uz, rz = ux; // costado
+  const H = P1.y - P0.y, s0 = 2.6, s1 = D - 2.6, rot = Math.atan2(ux, uz);
+  let ci = 0; const col = () => F.cols[ci++ % F.cols.length];
+  const at = (s, side, y) => [P0.x + ux * s + rx * side, P0.y + H * s / D + y, P0.z + uz * s + rz * side];
+  const mat = () => obM(col(), F.ice ? 0.15 : 0.6, F.ice ? { metalness: 0.1 } : null);
+  // bloque con la cara de arriba en "top"
+  const block = (s, side, top, w, h, d, m, kd) => { const [x, y, z] = at(s, side, top - h / 2); const b = obBox(parent, w, h, d, m || mat(), x, y, z, rot, kd); if (F.ice) b.ice = 1; return b; };
+  const mover = (b, ox, oy, oz, per, ph) => { b.base = [b.cx, b.cy, b.cz]; b.off = [ox, oy, oz]; b.per = per; b.ph = ph; obMovers.push(b); };
+  const lavaMat = obM(F.kill, 0.4, { emissive: F.kill, emissiveIntensity: 0.6 });
+  const path = []; // por dónde suben los vecinos (arriba de cada cosa, en orden)
+  const step = (b) => { path.push([b.cx, b.cy + b.hy, b.cz]); return b; };
+  if (kind === 'jumps') {
+    const size = Math.max(1.3, 2.0 - diff * 0.1); let st = 2.8 + diff * 0.1;
+    const n = Math.floor((s1 - s0) / st) + 1; st = (s1 - s0) / Math.max(1, n - 1);
+    for (let i = 0; i < n; i++) step(block(s0 + i * st, diff > 1 && i > 0 && i < n - 1 ? (rnd() - 0.5) * 1.6 : 0, rnd() * 0.3, size, 0.4, size));
+  } else if (kind === 'beams') {
+    const w = Math.max(0.45, 0.85 - diff * 0.06), n = 5, pts = [];
+    for (let i = 0; i <= n; i++) pts.push(at(s0 - 1 + i * (s1 - s0 + 2) / n, i === 0 || i === n ? 0 : (i % 2 ? 1.6 : -1.6), 0));
+    for (let i = 0; i < n; i++) {
+      const [ax, ay, az] = pts[i], [bx, by, bz] = pts[i + 1], L = Math.hypot(bx - ax, bz - az);
+      // vigas en escalera (planas) para que se puedan caminar
+      const b = obBox(parent, w, 0.4, L, mat(), (ax + bx) / 2, (ay + by) / 2 - 0.2, (az + bz) / 2, Math.atan2(bx - ax, bz - az));
+      step(b);
+    }
+  } else if (kind === 'moving' || kind === 'updown') {
+    const size = diff >= 4 ? 2.0 : 2.3, n = Math.floor((s1 - s0) / 3.4) + 1, st = (s1 - s0) / Math.max(1, n - 1);
+    for (let i = 0; i < n; i++) {
+      const b = step(block(s0 + i * st, 0, 0, size, 0.4, size, obM('#f5f5fa', 0.5)));
+      b.mesh.material = obM(col(), 0.4);
+      if (i > 0 && i < n - 1) {
+        const per = Math.max(2.2, 3.4 - diff * 0.2);
+        if (kind === 'moving') mover(b, rx * 2.6, 0, rz * 2.6, per, i * 0.15); else mover(b, 0, 1.4, 0, per, i * 0.3);
+      }
+    }
+  } else if (kind === 'vanish') {
+    const n = Math.floor((s1 - s0) / 2.2) + 1, st = (s1 - s0) / Math.max(1, n - 1);
+    for (let i = 0; i < n; i++) {
+      const b = step(block(s0 + i * st, diff >= 3 && i > 0 && i < n - 1 ? (rnd() - 0.5) * 1.4 : 0, 0, 1.7, 0.4, 1.7, null, i > 0 && i < n - 1 ? 'vanish' : 'solid'));
+      if (b.kind === 'vanish') { b.mesh.material = new THREE.MeshStandardMaterial({ color: col(), roughness: 0.2, transparent: true, opacity: 0.8 }); }
+    }
+  } else if (kind === 'tramp') {
+    step(block(s0 + 1.8, 0, 0, 3, 0.5, 4.6));
+    const t = block(s0 + 7, 0, -1.6, 2.4, 0.3, 2.4, obM('#ff46a0', 0.4, { emissive: '#ff46a0', emissiveIntensity: 0.4 }), 'tramp'); step(t);
+    block(s0 + 7, 0, -1.75, 2.8, 0.3, 2.8, obM('#28282e'));
+    block(s0 + 9.6, 0, 3.4, 3.2, 5, 0.4); // pared: solo se pasa rebotando
+    step(block(s0 + 12.4, 0, 3.4, 3.2, 0.5, 5.2));
+    step(block(s0 + 17.2, 0, 2.4, 1.9, 0.4, 1.9));
+    step(block(s0 + 19.8, 0, 1.4, 1.9, 0.4, 1.9));
+    step(block(s1, 0, 0.4, 1.9, 0.4, 1.9));
+  } else if (kind === 'lava') {
+    const [ax, ay, az] = at(s0 - 1.5, 0, -0.85), [bx, by, bz] = at(s1 + 1.5, 0, -0.85);
+    const lv = obBox(parent, 5, 0.3, Math.hypot(bx - ax, bz - az), lavaMat, (ax + bx) / 2, (ay + by) / 2, (az + bz) / 2, rot, 'lava');
+    lv.mesh.rotation.order = 'YXZ'; lv.mesh.rotation.x = -Math.atan2(by - ay, Math.hypot(bx - ax, bz - az)); lv.solid = false; lv.dy = by - ay; obLava.push(lv);
+    const size = Math.max(1.2, 1.8 - diff * 0.1), n = Math.floor((s1 - s0) / 3.0) + 1, st = (s1 - s0) / Math.max(1, n - 1);
+    for (let i = 0; i < n; i++) {
+      const b = step(block(s0 + i * st, i > 0 && i < n - 1 ? (rnd() - 0.5) * 2 : 0, 0, size, 0.5, size));
+      if (diff >= 4 && i % 2 === 1 && i < n - 1) mover(b, rx * 1.2, 0, rz * 1.2, 3, i * 0.2);
+    }
+  } else if (kind === 'spinner') {
+    const n = 3, seg = (s1 - s0 + 2) / n;
+    for (let i = 0; i < n; i++) {
+      const sc = s0 - 1 + seg * (i + 0.5);
+      const pl = step(block(sc, 0, 0, 4.8, 0.5, 4.8));
+      if (i < n - 1) step(block(sc + seg / 2, 0, 0, 1.6, 0.5, seg - 4.8 + 0.3));
+      const top = pl.cy + pl.hy;
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1.2, 14), obM('#3c3c46', 0.4, { metalness: 0.4 })); post.position.set(pl.cx, top + 0.6, pl.cz); parent.add(post);
+      const mk = (y, sp) => { const bar = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.3, 0.3), lavaMat); bar.position.set(pl.cx, y, pl.cz); obby.add(bar); obSpinners.push({ mesh: bar, sp, len: 4.4, y }); };
+      const sp = (1.3 + diff * 0.22) * (i % 2 ? -1 : 1);
+      mk(top + 0.5, sp);
+      if (diff >= 6) mk(top + 1.45, -sp);
+    }
+  } else if (kind === 'conveyor') {
+    const n = 3, seg = (s1 - s0 + 1.5) / n;
+    for (let i = 0; i < n; i++) {
+      const b = step(block(s0 - 0.75 + seg * (i + 0.5), 0, 0, 2.4, 0.4, seg - 1, obM('#9aa0aa', 0.3, { metalness: 0.5 }), 'belt'));
+      const sgn = i % 2 ? -1 : 1, v = 2.4 + diff * 0.35;
+      b.push = [rx * v * sgn, rz * v * sgn];
+      // flechas que muestran para dónde empuja
+      for (let a = -1; a <= 1; a++) {
+        const ar = new THREE.Mesh(new THREE.ConeGeometry(0.28, 0.6, 3), obM('#ffd83d', 0.5)); ar.rotation.set(0, 0, -Math.PI / 2 * sgn);
+        const g = new THREE.Group(); g.position.set(b.cx + ux * a * (seg - 1) * 0.3, b.cy + b.hy + 0.05, b.cz + uz * a * (seg - 1) * 0.3); g.rotation.y = rot; g.add(ar); ar.scale.set(1, 1, 0.25); ar.rotation.x = -Math.PI / 2; parent.add(g);
+      }
+    }
+  } else if (kind === 'truss') {
+    step(block(s0 + 2.2, 0, 0, 3, 0.5, 5));
+    const tb = block(s0 + 5.2, 0, 3.6, 0.8, 3.6, 0.8, obM('#e6e6eb', 0.4, { metalness: 0.3 }), 'truss'); obTrusses.push(tb); step(tb);
+    // travesaños de la escalera
+    for (let y = 0.4; y < 3.6; y += 0.45) { const r = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.08, 0.95), obM('#9a9aa6')); r.position.set(tb.cx, tb.cy - tb.hy + y, tb.cz); r.rotation.y = rot; parent.add(r); }
+    step(block(s0 + 8.8, 0, 3.6, 3, 0.5, 6.4));
+    step(block(s0 + 14.2, 0, 2.6, 1.9, 0.4, 1.9));
+    step(block(s0 + 16.8, 0, 1.6, 1.9, 0.4, 1.9));
+    step(block(s0 + 19.4, 0, 0.8, 1.9, 0.4, 1.9));
+    step(block(s1, 0, 0.2, 1.9, 0.4, 1.9));
+  }
+  return path;
+}
+
+// ---------- armar la torre ----------
+const obPads = [];
+const obPath = []; // el camino completo para los vecinos
+{
+  // piso del lugar y la columna del medio con los colores de cada piso
+  const base = new THREE.Mesh(new THREE.CircleGeometry(OB.zone, 64), new THREE.MeshStandardMaterial({ color: '#cfe6c4', roughness: 0.95, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+  base.rotation.x = -Math.PI / 2; base.position.set(OB.cx, 0.02, OB.cz); base.receiveShadow = true; obby.add(base);
+  const core = new THREE.Group(); obby.add(core);
+  OB_FLOORS.forEach((F, i) => {
+    const h = OB.per * OB.rise, c = new THREE.Mesh(new THREE.CylinderGeometry(7, 7, h, 40), obM(new THREE.Color(F.cols[0]).lerp(new THREE.Color('#000000'), 0.2).getStyle(), 0.6));
+    c.position.set(OB.cx, i * h + h / 2 - 1, OB.cz); c.castShadow = true; core.add(c);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: signTexture([tr(F.es)], { border: F.cols[0], size: 110 }), depthWrite: false }));
+    const p = obPad(i * OB.per); sp.position.set(p.x + (p.x - OB.cx) * 0.12, p.y + 3.6, p.z + (p.z - OB.cz) * 0.12); sp.scale.set(5, 2.5, 1); obby.add(sp);
+  });
+  colliders.push({ x: OB.cx, z: OB.cz, r: 7.2, h: OB_TOTAL * OB.rise + 4, ob: 1 });
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(8, 8, 0.6, 40), obM('#ffd83d', 0.4, { emissive: '#ffb400', emissiveIntensity: 0.3 })); top.position.set(OB.cx, OB_TOTAL * OB.rise - 0.7, OB.cz); obby.add(top);
+  // checkpoints
+  for (let i = 0; i <= OB_TOTAL; i++) {
+    const p = obPad(i), F = OB_FLOORS[obFloorOf(Math.max(i, 1))], big = i === OB_TOTAL;
+    const b = obBox(obby, big ? 6 : 3.2, 0.4, big ? 6 : 3.2, obM('#f5f5fa', 0.5), p.x, p.y - 0.2, p.z, OB_A0 + i * Math.PI * 2 / OB.per);
+    b.pad = i; obPads.push(b);
+    if (i > 0) {
+      const glow = new THREE.Mesh(new THREE.BoxGeometry(big ? 3 : 2.2, 0.06, big ? 3 : 2.2), obM(big ? '#ffd83d' : F.cols[0], 0.3, { emissive: big ? '#ffd83d' : F.cols[0], emissiveIntensity: 0.5 }));
+      glow.position.set(p.x, p.y + 0.03, p.z); glow.rotation.y = b.rot; obby.add(glow);
+      const num = new THREE.Sprite(new THREE.SpriteMaterial({ map: signTexture([big ? '🏆' : String(i)], { border: big ? '#ffd83d' : F.cols[0], size: 150, w: 2, h: 1 }), depthWrite: false }));
+      num.position.set(p.x, p.y + 1.9, p.z); num.scale.set(1.2, 0.6, 1); obby.add(num); b.num = num;
+    }
+  }
+  // trofeo arriba
+  const tp = obPad(OB_TOTAL), cup = new THREE.Group(); cup.position.set(tp.x + (OB.cx - tp.x) * 0.06, tp.y, tp.z + (OB.cz - tp.z) * 0.06); obby.add(cup);
+  const gold = obM('#ffcd32', 0.25, { metalness: 0.7 });
+  const c1 = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.6, 0.3, 16), obM('#5a3c1e')); c1.position.y = 0.15; cup.add(c1);
+  const c2 = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.7, 10), gold); c2.position.y = 0.6; cup.add(c2);
+  const c3 = new THREE.Mesh(new THREE.SphereGeometry(0.55, 18, 12, 0, Math.PI * 2, 0, Math.PI / 2), gold); c3.rotation.x = Math.PI; c3.position.y = 1.4; cup.add(c3);
+  obby.userData.cup = cup;
+  // etapas (lo que no se mueve se junta para que dibuje rápido)
+  for (let k = 1; k <= OB_TOTAL; k++) {
+    const g = new THREE.Group(); obby.add(g);
+    const p0 = obPad(k - 1);
+    obPath.push([p0.x, p0.y, p0.z], ...obStage(k, g));
+    mergeChildren(g, (m) => obBoxes.some((b) => b.mesh === m && (b.base || b.kind === 'vanish')));
+    // las cajas que se juntaron ya no tienen su propia malla (solo se usan para pisar)
+  }
+  const pt = obPad(OB_TOTAL); obPath.push([pt.x, pt.y, pt.z]);
+}
+
+// ---------- cinta desde la plaza ----------
+{
+  const dx = OBBY_DIR.x, dz = OBBY_DIR.z, p0 = obPad(0);
+  const L = Math.hypot(p0.x - PLAZA.x, p0.z - PLAZA.z) - 4.2;
+  const sx = PLAZA.x + dx * (PLAZA.r - 1.2), sz = PLAZA.z + dz * (PLAZA.r - 1.2), ex = PLAZA.x + dx * L, ez = PLAZA.z + dz * L;
+  const px = -dz * 1.6, pz = dx * 1.6;
+  addBelt(sx - px, sz - pz, ex - px, ez - pz, '#aa64ff');
+  addBelt(ex + px, ez + pz, sx + px, sz + pz, '#e6a91e');
+  arch(ex + dx * 1.6, ez + dz * 1.6, Math.atan2(dx, dz), [tr('TORRE LOCA'), tr('Juego 6')], '#aa64ff');
+  plazaSign(dx, dz, [tr('Torre Loca'), tr('Juego 6')], '#aa64ff');
+}
+
+// ---------- límites: el pasillo de la cinta y el terreno de la torre ----------
+function obInside(x, z) {
+  if (Math.hypot(x - OB.cx, z - OB.cz) < OB.zone - 0.6) return true;
+  const px = x - PLAZA.x, pz = z - PLAZA.z, along = px * OBBY_DIR.x + pz * OBBY_DIR.z, side = -px * OBBY_DIR.z + pz * OBBY_DIR.x;
+  return along > 4 && along < OBBY_DIR.L + 6 && Math.abs(side) < 3.3;
+}
+let obLast = null;
+function clampObby() {
+  const p = player.position, beyond = (x, z) => z > 57.5 || x > 52;
+  if (obInside(p.x, p.z)) { obLast = { x: p.x, z: p.z }; return beyond(p.x, p.z); }
+  if (!obLast || !beyond(obLast.x, obLast.z) || Math.hypot(p.x - obLast.x, p.z - obLast.z) > 3) { obLast = null; return false; }
+  if (obInside(p.x, obLast.z)) p.z = obLast.z; else if (obInside(obLast.x, p.z)) p.x = obLast.x; else { p.x = obLast.x; p.z = obLast.z; }
+  obLast = { x: p.x, z: p.z };
+  return true;
+}
+
+// ---------- choques con las plataformas (lo usa el movimiento del muñeco) ----------
+function obLocal(b, x, z) { const dx = x - b.cx, dz = z - b.cz, c = Math.cos(-b.rot), s = Math.sin(-b.rot); return [dx * c + dz * s, -dx * s + dz * c]; }
+function obbyCollide(px, py, pz) {
+  if (Math.abs(px - OB.cx) > OB.zone || Math.abs(pz - OB.cz) > OB.zone) return -1;
+  let top = -1;
+  for (const b of obBoxes) {
+    if (!b.solid) continue;
+    const bt = b.cy + b.hy, bb = b.cy - b.hy;
+    if (py >= bt - 0.001 || py + PH <= bb) continue;
+    if (Math.abs(px - b.cx) > b.hx + b.hz + 1 || Math.abs(pz - b.cz) > b.hx + b.hz + 1) continue;
+    const [lx, lz] = obLocal(b, px, pz);
+    if (Math.abs(lx) < b.hx + PR && Math.abs(lz) < b.hz + PR) top = Math.max(top, b.slope ? bt : bt);
+  }
+  return top;
+}
+// sobre qué está parado
+function obSupport(p) {
+  let best = null;
+  for (const b of obBoxes) {
+    if (!b.solid) continue;
+    const bt = b.cy + b.hy;
+    if (Math.abs(p.y - bt) > 0.06) continue;
+    if (Math.abs(p.x - b.cx) > b.hx + b.hz + 1 || Math.abs(p.z - b.cz) > b.hx + b.hz + 1) continue;
+    const [lx, lz] = obLocal(b, p.x, p.z);
+    if (Math.abs(lx) < b.hx + PR && Math.abs(lz) < b.hz + PR) { if (!best || b.kind !== 'solid') best = b; }
+  }
+  return best;
+}
+
+// ---------- vecinos que suben la torre ----------
+const obBots = [];
+function obBotPos(b) {
+  const i = Math.min(obPath.length - 2, Math.floor(b.t)), k = b.t - i, A = obPath[i], B = obPath[i + 1];
+  const d = Math.hypot(B[0] - A[0], B[2] - A[2]), jump = d > 0.9 || Math.abs(B[1] - A[1]) > 0.3;
+  const y = A[1] + (B[1] - A[1]) * k + (jump ? Math.sin(Math.PI * k) * (0.9 + Math.max(0, B[1] - A[1]) * 0.5) : 0);
+  return [A[0] + (B[0] - A[0]) * k, y, A[2] + (B[2] - A[2]) * k, Math.atan2(B[0] - A[0], B[2] - A[2]), jump];
+}
+function obBotsTick(dt, t, near) {
+  if (near && !obBots.length) {
+    for (let i = 0; i < 3; i++) {
+      const R = brng(4242 + i * 77);
+      const c = { bot: true, obj: new THREE.Group(), lugar: 90 + i, phase: 0, walk: 0, spd: 0, nombre: bpick(R, BOT_NAMES), t: (obPath.length * (0.15 + i * 0.25)) | 0, wait: 0, speed: 0.55 + i * 0.12 };
+      c.look = botLook(R); c.av = makeAvatar(c.look); c.obj.add(c.av.g); c.obj.traverse((m) => { if (m.isMesh) m.castShadow = false; });
+      obby.add(c.obj); obBots.push(c);
+    }
+  }
+  for (const c of obBots) {
+    c.obj.visible = near;
+    if (!near) continue;
+    let sp = 0;
+    if (c.wait > 0) { c.wait -= dt; if (c.wait <= 0 && c.t >= obPath.length - 1.01) c.t = 0; }
+    else {
+      const i = Math.floor(c.t), A = obPath[i], B = obPath[Math.min(obPath.length - 1, i + 1)];
+      const d = Math.max(0.3, Math.hypot(B[0] - A[0], B[2] - A[2], B[1] - A[1]));
+      c.t += dt * 4.2 * c.speed / d;
+      if (Math.floor(c.t) !== i && Math.random() < 0.08) c.wait = 0.6 + Math.random(); // a veces se frena a mirar
+      if (c.t >= obPath.length - 1) { c.t = obPath.length - 1.001; c.wait = 3; }
+      sp = 4.2 * c.speed;
+    }
+    const [x, y, z, f, jump] = obBotPos(c);
+    c.obj.position.set(x, y, z);
+    c.obj.rotation.y = angleLerp(c.obj.rotation.y, f, 1 - Math.exp(-10 * dt));
+    c.spd += (sp - c.spd) * Math.min(1, dt * 8);
+    c.walk += ((c.spd > 0.4 ? 1 : 0) - c.walk) * (1 - Math.exp(-10 * dt));
+    c.phase += dt * (c.spd * 1.75 + 0.0001);
+    animateRemote(c, c.spd, jump && c.wait <= 0 ? 0 : 1, t, dt);
+    remoteFace(c, c.wait > 0 ? 1 : 0, dt);
+  }
+}
+
+// ---------- pantalla ----------
+function obPrize() { return OB_STAGE_COINS; }
+function updateObHud() {
+  $('obStage').textContent = obs.stage > 0 ? tr('Etapa {0}/{1}', Math.min(obs.stage, OB_TOTAL), OB_TOTAL) : tr('¡Subí la torre!');
+  $('obFloor').textContent = obs.stage > 0 && obs.stage < OB_TOTAL ? tr(OB_FLOORS[obFloorOf(obs.stage + 1)].es) : obs.best ? tr('Récord: {0}', obClock(obs.best)) : '';
+  $('obCoins').textContent = fmt(st.coins);
+}
+function obClock(sec) { const m = Math.floor(sec / 60), s = sec - m * 60; return m + ':' + (s < 10 ? '0' : '') + s.toFixed(1); }
+let obFlashT = 0, obClimb = false;
+function obBack(hurt) {
+  obClimb = obs.stage > 0;
+  const p = obPad(Math.min(obs.stage, OB_TOTAL));
+  const n = obPad(Math.min(obs.stage + 1, OB_TOTAL));
+  player.position.set(p.x, p.y + 0.05, p.z); vy = 0; vel.x = vel.z = 0;
+  facing = Math.atan2(n.x - p.x, n.z - p.z); camYaw = facing + Math.PI;
+  if (hurt) { obFlashT = 0.5; sfx('click'); }
+}
+$('obBackBtn').onclick = () => { obBack(false); sfx('click'); };
+$('obExitBtn').onclick = () => {
+  // bajar al piso sin perder tu etapa (para irte a otro juego)
+  const p = obPad(0); obClimb = false; player.position.set(p.x, 0, p.z); vy = 0; facing = Math.atan2(PLAZA.x - p.x, PLAZA.z - p.z); camYaw = facing + Math.PI; sfx('click');
+};
+$('obRestartBtn').onclick = () => {
+  closePanels(); obs.stage = 0; obs.runStart = 0; obs.skipped = 0; obSave(); obBack(false); updateObHud(); toast(tr('¡A subir de nuevo!')); sfx('click');
+};
+
+// ---------- cada cuadro ----------
+var inObby = false;
+const obVanish = new Map();
+let obSupportPrev = null, obTrampT = 0;
+function obbyTick(dt, t) {
+  const p = player.position, distC = Math.hypot(p.x - OB.cx, p.z - OB.cz);
+  const now = mode === 'play' && distC < OB.zone - 1;
+  if (now !== inObby) {
+    inObby = now;
+    document.body.classList.toggle('obby', now);
+    if (now) {
+      updateObHud(); banner(tr('TORRE LOCA'));
+      if (obs.stage > 0 && obs.stage < OB_TOTAL) setTimeout(() => toast(tr('Tocá "Checkpoint" para seguir desde la etapa {0}.', obs.stage)), 1400);
+      else if (!obs.wins) setTimeout(() => toast(tr('Subí la torre saltando de checkpoint en checkpoint. Si te caés, volvés al último.')), 1400);
+    }
+  }
+  const near = mode === 'play' && distC < 110;
+  // plataformas que se mueven (y llevan encima al muñeco)
+  const sup = inObby ? obSupport(p) : null;
+  const tt = performance.now() / 1000;
+  for (const b of obMovers) {
+    const k = Math.sin(2 * Math.PI * (tt / b.per + b.ph));
+    const nx = b.base[0] + b.off[0] * k, ny = b.base[1] + b.off[1] * k, nz = b.base[2] + b.off[2] * k;
+    if (sup === b) { p.x += nx - b.cx; p.z += nz - b.cz; p.y += ny - b.cy; }
+    b.cx = nx; b.cy = ny; b.cz = nz; b.mesh.position.set(nx, ny, nz);
+  }
+  for (const s of obSpinners) s.mesh.rotation.y = tt * s.sp;
+  obby.userData.cup.rotation.y = tt;
+  // baldosas que se van
+  for (const [b, v] of obVanish) {
+    v.t += dt;
+    if (v.t > 0.45 && b.solid) { b.solid = false; }
+    b.mesh.material.opacity = v.t < 0.45 ? 0.8 - v.t : v.t < 3 ? 0.06 : Math.min(0.8, (v.t - 3) * 3);
+    if (v.t > 3) b.solid = true;
+    if (v.t > 3.3) { obVanish.delete(b); b.mesh.material.opacity = 0.8; }
+  }
+  if (near) obBotsTick(dt, t, true); else if (obBots.length) obBotsTick(dt, t, false);
+  if (!inObby) { obSupportPrev = null; return; }
+  if (obFlashT > 0) { obFlashT -= dt; document.body.style.boxShadow = `inset 0 0 ${Math.round(160 * obFlashT)}px rgba(255,40,40,.8)`; if (obFlashT <= 0) document.body.style.boxShadow = ''; }
+  // en el espacio la gravedad es más liviana
+  const fl = OB_FLOORS[obFloorAtY(p.y)];
+  if (fl.grav && p.y > 1 && !onGround) vy += 22 * (1 - fl.grav) * dt;
+  // lo que pisás
+  if (sup) {
+    if (sup.kind === 'kill') obBack(true);
+    else if (sup.kind === 'tramp' && tt - obTrampT > 0.3) { obTrampT = tt; vy = 17 * Math.sqrt(fl.grav || 1); onGround = false; sfx('jump'); }
+    else if (sup.kind === 'vanish' && !obVanish.has(sup)) obVanish.set(sup, { t: 0 });
+    else if (sup.kind === 'belt') { p.x += sup.push[0] * dt; p.z += sup.push[1] * dt; }
+    else if (sup.pad !== undefined) {
+      const k = sup.pad;
+      if (k === obs.stage + 1) {
+        obs.stage = k;
+        if (k === 1) { obs.runStart = tt; obs.skipped = 0; }
+        if (k === OB_TOTAL) obWin(tt);
+        else {
+          st.coins += obPrize(); updateHud();
+          popText('+' + obPrize(), new THREE.Vector3(p.x, p.y + 1, p.z), '#ffd83d'); sfx('ping');
+          if (k % OB.per === 0) banner(tr(OB_FLOORS[obFloorOf(k + 1)].es));
+        }
+        obSave(); updateObHud();
+      }
+    }
+  }
+  obSupportPrev = sup;
+  // barras que giran
+  for (const s of obSpinners) {
+    const m = s.mesh;
+    if (!(p.y < s.y + 0.15 && p.y + PH > s.y - 0.15)) continue;
+    const dx = p.x - m.position.x, dz = p.z - m.position.z, a = -m.rotation.y, lx = dx * Math.cos(a) - dz * Math.sin(a), lz = dx * Math.sin(a) + dz * Math.cos(a);
+    if (Math.abs(lx) < s.len / 2 + PR && Math.abs(lz) < 0.15 + PR) { obBack(true); break; }
+  }
+  // escaleras: si estás pegado, subís solo
+  for (const b of obTrusses) {
+    const [lx, lz] = obLocal(b, p.x, p.z);
+    if (Math.abs(lx) < b.hx + PR + 0.12 && Math.abs(lz) < b.hz + PR + 0.12 && p.y < b.cy + b.hy - 0.02 && p.y > b.cy - b.hy - 0.3) { vy = Math.max(vy, 3.6); onGround = false; }
+  }
+  // lava: si la tocás, volvés
+  for (const b of obLava) {
+    const [lx, lz] = obLocal(b, p.x, p.z);
+    if (Math.abs(lx) >= b.hx || Math.abs(lz) >= b.hz) continue;
+    const surf = b.cy + b.hy + (lz / b.hz) * b.dy / 2;
+    if (p.y < surf + 0.05 && p.y > surf - 1.5) { obBack(true); break; }
+  }
+  // caídas: volvés a tu checkpoint (solo si estabas subiendo; caminando por el piso no)
+  if (sup && sup.cy + sup.hy > 0.5) obClimb = true;
+  if (obClimb && obs.stage > 0) {
+    const ref = obPad(Math.min(obs.stage, OB_TOTAL)).y;
+    if (p.y < ref - 3.2 || (p.y < 0.05 && onGround && !sup)) obBack(true);
+  }
+  // reloj
+  $('obTime').textContent = obs.runStart && obs.stage < OB_TOTAL ? obClock(tt - obs.runStart) : obs.lastTime ? obClock(obs.lastTime) : '0:00.0';
+}
+function obWin(tt) {
+  const time = obs.runStart ? tt - obs.runStart : 0;
+  const valid = obs.runStart && !obs.skipped && time > 10;
+  const record = valid && (!obs.best || time < obs.best);
+  if (record) obs.best = +time.toFixed(2);
+  obs.wins++; obs.lastTime = valid ? time : 0; obs.runStart = 0;
+  st.coins += OB_WIN_COINS; st.gems += OB_WIN_GEMS; updateHud(); happy();
+  banner(tr('¡LLEGASTE!'));
+  toast((valid ? tr('Tiempo: {0}', obClock(time)) + (record ? '  ·  ' + tr('¡NUEVO RÉCORD!') : '') + '  ·  ' : '') + tr('Premio: {0} monedas y {1} gemas', OB_WIN_COINS, OB_WIN_GEMS));
+  sfx('ping');
+  setTimeout(() => toast(tr('Tocá "Reiniciar" para subir de nuevo.')), 4200);
+}
+
 function tick() {
   requestAnimationFrame(tick);
   try { tickInner(); } catch (e) { safe('cuadro', () => { throw e; }); }
@@ -6926,7 +7396,7 @@ function tickInner() {
   }
   // no salir del campo
   const r = Math.hypot(player.position.x, player.position.z);
-  if (!clampPets() && !clampCongo() && !clampMarket()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(Math.abs(player.position.x) < 5 ? 80 : 58, player.position.z)); }
+  if (!clampPets() && !clampCongo() && !clampMarket() && !clampObby()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(Math.abs(player.position.x) < 5 ? 80 : 58, player.position.z)); }
   player.rotation.y = facing;
 
   // animación de los huesos
