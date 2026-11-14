@@ -378,6 +378,22 @@
   #gTop .bk { font-size: 17px; }
   #gBtns { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
   #gBtns .toy { width: 98px; padding: 9px 6px; font-size: 14px; }
+  #trollHud { display: none; }
+  body.troll #trollHud { display: block; }
+  body.troll #topBox, body.troll #shopBtn, body.troll #help { display: none !important; }
+  #trTop { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); display: flex; gap: 8px; pointer-events: none; }
+  #trTop div { background: rgba(60,25,70,.86); color: #fff; border-radius: 14px; padding: 5px 14px; display: flex; align-items: center; gap: 7px; font-size: 22px; font-weight: 700; white-space: nowrap; }
+  #trTop .cnt { background: rgba(255,95,162,.92); }
+  #trTools { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); display: flex; gap: 8px; pointer-events: auto; }
+  .trTool { width: 78px; height: 74px; border-radius: 16px; border: 3px solid #2a1840; background: #fff7ef; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-family: inherit; cursor: pointer; box-shadow: 0 4px 0 #2a1840; padding: 2px; }
+  .trTool .ico { font-size: 30px; line-height: 1; }
+  .trTool small { font-size: 11px; font-weight: 700; color: #2a1840; line-height: 1.05; text-align: center; }
+  .trTool.sel { background: #ffd23f; transform: translateY(-4px); }
+  .trTool.locked { background: #d9d2e0; } .trTool.locked .ico { opacity: .55; }
+  #trFlash { position: fixed; inset: 0; background: radial-gradient(circle, #fff 0%, #ff5fa2 55%, #7b3fe4 100%); opacity: 0; pointer-events: none; z-index: 50; }
+  #trFlash.on { animation: trfl .7s ease-out; }
+  @keyframes trfl { 0% { opacity: .95; } 100% { opacity: 0; } }
+  @media (orientation: landscape) and (max-height: 520px) { body.is-touch #trTop { top: 6px !important; } body.is-touch #trTop div { font-size: 15px !important; padding: 3px 10px !important; } body.is-touch .trTool { width: 62px !important; height: 58px !important; } body.is-touch .trTool .ico { font-size: 22px !important; } body.is-touch .trTool small { font-size: 9px !important; } }
   #obbyHud { display: none; }
   body.obby #obbyHud { display: block; }
   body.obby #topBox, body.obby #shopBtn, body.obby #help { display: none !important; }
@@ -519,6 +535,11 @@
     <div id="cCross"></div>
     <div id="cFeed"></div>
   </div>
+  <div id="trollHud">
+    <div id="trTop"><div class="cnt">💥 <span id="trCount">0</span></div><div><span class="coin"></span><span id="trCoins">0</span></div><div><span class="gem"></span><span id="trGems">0</span></div></div>
+    <div id="trTools"></div>
+  </div>
+  <div id="trFlash"></div>
   <div id="obbyHud">
     <div id="obTop"><div class="stg" id="obStage"></div><div>⏱ <span id="obTime">0:00.0</span></div><div><span class="coin"></span><span id="obCoins">0</span></div></div>
     <div id="obFloor"></div>
@@ -820,6 +841,11 @@ Object.assign(DICT, {
   'Tenés que quedarte con al menos una equipada.': ['Keep at least one equipped.', 'Fique com pelo menos um equipado.'],
   'Ya tenés el máximo de mascotas equipadas.': ['You already have the max equipped.', 'Você já tem o máximo equipado.'],
   'Mejor zona': ['Best zone', 'Melhor zona'], 'Volver a la plaza': ['Back to the plaza', 'Voltar para a praça'],
+  'Juego 7': ['Game 7', 'Jogo 7'], 'Troll Land': ['Troll Land', 'Troll Land'], 'TROLL LAND': ['TROLL LAND', 'TROLL LAND'],
+  'Martillo': ['Hammer', 'Martelo'], 'Bomba de caca': ['Poop bomb', 'Bomba de cocô'], 'Bola de demolición': ['Wrecking ball', 'Bola de demolição'], 'Meteorito': ['Meteor', 'Meteoro'],
+  '¡Acercate más para romper!': ['Get closer to smash!', 'Chegue mais perto para quebrar!'], '¡Nueva herramienta: {0}!': ['New tool: {0}!', 'Nova ferramenta: {0}!'],
+  'Te faltan {0} monedas.': ['You need {0} more coins.', 'Faltam {0} moedas.'],
+  '¡Rompé todo! Tocá los bloques para destruirlos. Cada bloque es una moneda.': ['Smash everything! Tap the blocks to destroy them. Each block is a coin.', 'Quebre tudo! Toque nos blocos para destruí-los. Cada bloco é uma moeda.'],
   'Juego 6': ['Game 6', 'Jogo 6'], 'Torre Loca': ['Crazy Tower', 'Torre Maluca'], 'TORRE LOCA': ['CRAZY TOWER', 'TORRE MALUCA'], 'Juego 1': ['Game 1', 'Jogo 1'], 'Juego 3': ['Game 3', 'Jogo 3'], 'Juego 4': ['Game 4', 'Jogo 4'],
   'Reino de Mascotas': ['Pet Kingdom', 'Reino dos Pets'], 'Etapa {0}/{1}': ['Stage {0}/{1}', 'Etapa {0}/{1}'], '¡Subí la torre!': ['Climb the tower!', 'Suba a torre!'], 'Récord: {0}': ['Record: {0}', 'Recorde: {0}'],
   'Piso 1: Dulces': ['Floor 1: Candy', 'Andar 1: Doces'], 'Piso 2: Volcán': ['Floor 2: Volcano', 'Andar 2: Vulcão'], 'Piso 3: Hielo': ['Floor 3: Ice', 'Andar 3: Gelo'], 'Piso 4: Selva': ['Floor 4: Jungle', 'Andar 4: Selva'], 'Piso 5: Espacio': ['Floor 5: Space', 'Andar 5: Espaço'], 'Piso 6: Arcoíris': ['Floor 6: Rainbow', 'Andar 6: Arco-íris'],
@@ -957,7 +983,9 @@ function reservedAt(x, z) {
   if (Math.abs(x) < 34 && z > 74) return true;
   if (x < -4 && x > -92 && z > 46 && z < 138 && Math.abs(x * 0.5980 + (z - 42) * 0.8015) < 5) return true;   // cintas al Mini Market
   if (Math.abs(x + 72) < 19 && Math.abs(z - 116) < 19) return true;
-  if (Math.hypot(x - 82, z - 122) < 38) return true;                       // Torre Loca
+  if (Math.hypot(x - 82, z - 122) < 38) return true;
+  if (Math.hypot(x + 75, z - 178) < 34) return true;                       // Troll Land
+  if (x > 4 && x < 28 && z > 10 && z < 38 && Math.abs(x + (z - 42)) < 6) return true; // cinta al portal de Troll Land                       // Torre Loca
   if (x > 4 && x < 70 && z > 46 && z < 110 && Math.abs(x * 0.699 - (z - 42) * 0.716) < 5) return true; // cintas a la Torre Loca        // Mini Market                             // arena de la Guerra de Caca                                      // Huerta de la Suerte
   return false;
 }
@@ -2485,6 +2513,7 @@ function act(clientX, clientY, alt) {
   if (inPets) { petTap(clientX, clientY); return; }
   if (inGarden) { gardenTap(clientX, clientY); return; }
   if (inCongo) { congoShoot(); return; }
+  if (inTroll) { trollTap(clientX, clientY); return; }
   if (inMarket || inObby) return;
   if (!inGame) return;
   const p = pickCell(clientX, clientY);
@@ -2659,6 +2688,7 @@ function collides(px, py, pz) {
   // terrenos de los otros jugadores de la sala
   if (typeof remotePlotsCollide === 'function') top = Math.max(top, remotePlotsCollide(px, py, pz));
   if (typeof obbyCollide === 'function') top = Math.max(top, obbyCollide(px, py, pz));
+  if (typeof trollCollide === 'function') top = Math.max(top, trollCollide(px, py, pz));
   return top; // -1 = libre; si no, la altura de arriba de lo que choca
 }
 let flying = false;
@@ -3299,7 +3329,7 @@ function buildTick(dt, t) {
   if (mode === 'play' && onGround && !sitting && gs > 0.8 && ss !== lastStepSign) stepSound();
   lastStepSign = ss;
   // cada parte por separado: si una falla, las demás siguen andando (el juego nunca se congela)
-  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t)); safe('obby', () => obbyTick(dt, t)); safe('cull', () => zoneCullTick(dt));
+  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t)); safe('obby', () => obbyTick(dt, t)); safe('troll', () => trollTick(dt, t)); safe('cull', () => zoneCullTick(dt));
   return night;
 }
 
@@ -3450,7 +3480,7 @@ const OBBY_C = { x: 82, z: 122 };
 const PLAZA_EXITS = (() => {
   const dir = (x, z) => { const l = Math.hypot(x, z); return { x: x / l, z: z / l, L: l }; };
   const ob = (() => { const a = Math.atan2(PLAZA.z - OBBY_C.z, PLAZA.x - OBBY_C.x); return dir(OBBY_C.x + Math.cos(a) * 26 - PLAZA.x, OBBY_C.z + Math.sin(a) * 26 - PLAZA.z); })();
-  return { construi: dir(0, -1), mascotas: dir(1, 0), congo: dir(0, 1), huerta: dir(-1, 0), market: dir(-75 - PLAZA.x, 98 - PLAZA.z), obby: ob };
+  return { construi: dir(0, -1), mascotas: dir(1, 0), congo: dir(0, 1), huerta: dir(-1, 0), market: dir(-75 - PLAZA.x, 98 - PLAZA.z), obby: ob, troll: dir(1, -1) };
 })();
 const OBBY_DIR = PLAZA_EXITS.obby;
 {
@@ -4952,7 +4982,7 @@ try { myName = localStorage.getItem('mj_nombre') || ''; } catch (e) { /* nada */
 if (!myName) myName = (LANG === 'en' ? 'Player' : LANG === 'pt' ? 'Jogador' : 'Jugador') + Math.floor(1000 + Math.random() * 9000);
 
 // ---------- guardado en la nube ----------
-const SAVE_KEYS = ['construi_v1', 'pets_v1', 'huerta_v1', 'congo_v1', 'market_v1', 'obby_v1', 'muneco-look', 'mj_nombre'];
+const SAVE_KEYS = ['construi_v1', 'pets_v1', 'huerta_v1', 'congo_v1', 'market_v1', 'obby_v1', 'troll_v1', 'muneco-look', 'mj_nombre'];
 function localBundle() { const d = {}; for (const k of SAVE_KEYS) { try { const v = localStorage.getItem(k); if (v != null) d[k] = v; } catch (e) { /* nada */ } } return d; }
 let lastCloud = '';
 async function cloudLoad() {
@@ -7370,6 +7400,426 @@ function obWin(tt) {
   setTimeout(() => toast(tr('Tocá "Reiniciar" para subir de nuevo.')), 4200);
 }
 
+// =====================================================================
+// ===== JUEGO 7: TROLL LAND (parte 1: la ciudad para romper) =====
+// =====================================================================
+// Desde la plaza sale una cinta corta a un portal que te lleva a Troll Land (lejos, al sur).
+// Ahí hay una ciudad de bloques para romper con martillo, bombas de caca, bola de demolición y meteorito.
+// Cada bloque roto da una moneda. Los vecinos la vuelven a construir solos, así que nunca se termina.
+const TL = { x: -75, z: 178, r: 31 };
+const TROLL_TOOLS = [
+  { id: 'hammer', ico: '🔨', es: 'Martillo', price: 0, range: 5.5, rad: 0.6, cd: 0.22 },
+  { id: 'bomb', ico: '💩', es: 'Bomba de caca', price: 400, range: 16, rad: 2.3, cd: 1.1 },
+  { id: 'ball', ico: '⚫', es: 'Bola de demolición', price: 2500, range: 18, rad: 3.6, cd: 2.6 },
+  { id: 'meteor', ico: '☄️', es: 'Meteorito', gems: 40, range: 26, rad: 5.4, cd: 5 },
+];
+const TT_BY = {}; TROLL_TOOLS.forEach((t) => { TT_BY[t.id] = t; });
+
+// ---------- guardado ----------
+const TR_KEY = 'troll_v1';
+let trs = { tools: { hammer: 1 }, tool: 'hammer', total: 0, best: 0 };
+try { const s = JSON.parse(localStorage.getItem(TR_KEY) || 'null'); if (s) trs = Object.assign(trs, s); } catch (e) { /* nada */ }
+let trSaveT = 0;
+function trSave(now) { if (!now) { clearTimeout(trSaveT); trSaveT = setTimeout(() => trSave(true), 2000); return; } try { localStorage.setItem(TR_KEY, JSON.stringify(trs)); } catch (e) { /* nada */ } save(); }
+
+const troll = new THREE.Group(); scene.add(troll);
+cullZone(troll, TL.x, TL.z, TL.r + 10);
+
+// ---------- el piso de Troll Land ----------
+{
+  const base = new THREE.Mesh(new THREE.CircleGeometry(TL.r + 1, 72), new THREE.MeshStandardMaterial({ color: '#b9a6e0', roughness: 0.95 }));
+  base.rotation.x = -Math.PI / 2; base.position.set(TL.x, 0.02, TL.z); base.receiveShadow = true; troll.add(base);
+  const road = new THREE.Mesh(new THREE.RingGeometry(8.6, 11.4, 64), new THREE.MeshStandardMaterial({ color: '#6c6478', roughness: 0.9, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+  road.rotation.x = -Math.PI / 2; road.position.set(TL.x, 0.03, TL.z); troll.add(road);
+  // cerco de caramelo alrededor
+  const postM = new THREE.MeshStandardMaterial({ color: '#ff5fa2', roughness: 0.5 }), postW = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.5 });
+  const pg = new THREE.Group(); troll.add(pg);
+  for (let i = 0; i < 64; i++) {
+    const a = i / 64 * Math.PI * 2, p = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 1.4, 8), i % 2 ? postM : postW);
+    p.position.set(TL.x + Math.cos(a) * (TL.r + 0.4), 0.7, TL.z + Math.sin(a) * (TL.r + 0.4)); pg.add(p);
+  }
+  mergeChildren(pg);
+}
+
+// ---------- la ciudad (bloques de 1x1x1) ----------
+const TR_COLS = ['#ff6b6b', '#ffd23f', '#4ecdc4', '#a06cd5', '#ff9f43', '#5f9ef5', '#7bd389', '#f78fb3', '#ffffff', '#b98b5e', '#3d3d48', '#c8d0d8'];
+const trCells = []; // { i, j, k, c, alive }
+const trMap = new Map(); // "i,j,k" -> índice
+const trKey = (i, j, k) => i + ',' + j + ',' + k;
+function trAdd(i, j, k, c) { const key = trKey(i, j, k); if (trMap.has(key)) return; trMap.set(key, trCells.length); trCells.push({ i, j, k, c, alive: true }); }
+function trBox(i0, j0, k0, w, d, h, c, hollow, skip) {
+  for (let k = k0; k < k0 + h; k++) for (let i = i0; i < i0 + w; i++) for (let j = j0; j < j0 + d; j++) {
+    const edge = i === i0 || i === i0 + w - 1 || j === j0 || j === j0 + d - 1;
+    if (hollow && !edge) continue;
+    if (skip && skip(i - i0, j - j0, k - k0)) continue;
+    trAdd(i, j, k, c);
+  }
+}
+{
+  // castillo en el centro
+  trBox(-5, -5, 0, 10, 10, 4, 11, true, (x, y, z) => (y === 0 && (x === 4 || x === 5) && z < 2));
+  for (let x = 0; x < 10; x += 2) { trAdd(-5 + x, -5, 4, 11); trAdd(-5 + x, 4, 4, 11); trAdd(-5, -5 + x, 4, 11); trAdd(4, -5 + x, 4, 11); }
+  for (const [a, b] of [[-6, -6], [3, -6], [-6, 3], [3, 3]]) { trBox(a, b, 0, 3, 3, 7, 3, true); trBox(a, b, 7, 3, 3, 1, 0, false); }
+  trBox(-1, -1, 0, 2, 2, 9, 1, false); trAdd(-1, -1, 9, 0); // torre del medio con bandera roja
+  // casas alrededor
+  const houseCols = [[0, 8], [4, 9], [6, 0], [7, 3], [2, 9], [5, 0], [1, 8], [3, 0]];
+  for (let n = 0; n < 8; n++) {
+    const a = n / 8 * Math.PI * 2 + 0.2, cx = Math.round(Math.cos(a) * 16), cz = Math.round(Math.sin(a) * 16);
+    const [wall, roof] = houseCols[n];
+    trBox(cx - 2, cz - 2, 0, 5, 4, 3, wall, true, (x, y, z) => (y === 0 && x === 2 && z < 2) || (z === 1 && (x === 0 || x === 4) && y === 1));
+    trBox(cx - 2, cz - 2, 3, 5, 4, 1, roof, false); trBox(cx - 1, cz - 1, 4, 3, 2, 1, roof, false);
+  }
+  // torres de colores en las diagonales
+  for (let n = 0; n < 4; n++) {
+    const a = n / 4 * Math.PI * 2 + Math.PI / 4, cx = Math.round(Math.cos(a) * 23), cz = Math.round(Math.sin(a) * 23);
+    for (let k = 0; k < 9; k++) trBox(cx - 1, cz - 1, k, 3, 3, 1, [2, 5, 7, 4][(n + k) % 4], true);
+    trBox(cx - 1, cz - 1, 9, 3, 3, 1, 1, false);
+  }
+  // autitos en la calle
+  for (let n = 0; n < 6; n++) {
+    const a = n / 6 * Math.PI * 2 + 0.5, cx = Math.round(Math.cos(a) * 10), cz = Math.round(Math.sin(a) * 10), col = [0, 5, 1, 6, 3, 4][n];
+    trBox(cx - 1, cz - 2, 0, 1, 1, 1, 10); trBox(cx + 1, cz - 2, 0, 1, 1, 1, 10); trBox(cx - 1, cz + 1, 0, 1, 1, 1, 10); trBox(cx + 1, cz + 1, 0, 1, 1, 1, 10);
+    trBox(cx - 1, cz - 2, 1, 3, 4, 1, col); trBox(cx - 1, cz - 1, 2, 3, 2, 1, 8);
+  }
+}
+const TR_N = trCells.length;
+const trMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(0.98, 0.98, 0.98), new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.65 }), TR_N);
+trMesh.castShadow = true; trMesh.receiveShadow = true; troll.add(trMesh);
+const trM4 = new THREE.Matrix4(), trZero = new THREE.Matrix4().makeScale(0, 0, 0), trCol = new THREE.Color();
+function trPos(c) { return [TL.x + c.i + 0.5, c.k + 0.5, TL.z + c.j + 0.5]; }
+function trSetMat(n, s) { const c = trCells[n], [x, y, z] = trPos(c); trM4.makeScale(s, s, s).setPosition(x, y, z); trMesh.setMatrixAt(n, s > 0 ? trM4 : trZero); }
+for (let n = 0; n < TR_N; n++) { trSetMat(n, 1); trMesh.setColorAt(n, trCol.set(TR_COLS[trCells[n].c])); }
+trMesh.instanceMatrix.needsUpdate = true; if (trMesh.instanceColor) trMesh.instanceColor.needsUpdate = true;
+
+// ---------- choques con los bloques (lo usa el movimiento del muñeco) ----------
+function trollCollide(px, py, pz) {
+  if (Math.abs(px - TL.x) > TL.r + 3 || Math.abs(pz - TL.z) > TL.r + 3) return -1;
+  let top = -1;
+  const i0 = Math.floor(px - PR - TL.x), i1 = Math.floor(px + PR - TL.x), j0 = Math.floor(pz - PR - TL.z), j1 = Math.floor(pz + PR - TL.z);
+  const k0 = Math.max(0, Math.floor(py)), k1 = Math.floor(py + PH - 0.001);
+  for (let i = i0; i <= i1; i++) for (let j = j0; j <= j1; j++) for (let k = k0; k <= k1; k++) {
+    const n = trMap.get(trKey(i, j, k));
+    if (n !== undefined && trCells[n].alive) top = Math.max(top, k + 1);
+  }
+  return top;
+}
+
+// ---------- pedacitos que saltan ----------
+const DEB_N = 160;
+const debMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(0.32, 0.32, 0.32), new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.7 }), DEB_N);
+troll.add(debMesh);
+const debs = []; for (let i = 0; i < DEB_N; i++) { debs.push({ life: 0, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, r: 0 }); debMesh.setMatrixAt(i, trZero); debMesh.setColorAt(i, trCol.set('#ffffff')); }
+let debNext = 0;
+function debSpawn(x, y, z, col, n, power) {
+  for (let q = 0; q < n; q++) {
+    const d = debs[debNext], i = debNext; debNext = (debNext + 1) % DEB_N;
+    d.life = 0.9 + Math.random() * 0.6; d.x = x; d.y = y; d.z = z; const a = Math.random() * Math.PI * 2, sp = (1.5 + Math.random() * 3) * (power || 1);
+    d.vx = Math.cos(a) * sp; d.vz = Math.sin(a) * sp; d.vy = 3 + Math.random() * 4 * (power || 1); d.r = Math.random() * 3;
+    debMesh.setColorAt(i, trCol.set(col));
+  }
+  if (debMesh.instanceColor) debMesh.instanceColor.needsUpdate = true;
+}
+const debQ = new THREE.Quaternion(), debE = new THREE.Euler(), debS = new THREE.Vector3(), debP = new THREE.Vector3();
+function debTick(dt) {
+  let any = false;
+  for (let i = 0; i < DEB_N; i++) {
+    const d = debs[i]; if (d.life <= 0) continue;
+    any = true; d.life -= dt;
+    d.vy -= 20 * dt; d.x += d.vx * dt; d.y += d.vy * dt; d.z += d.vz * dt; d.r += dt * 8;
+    if (d.y < 0.16) { d.y = 0.16; d.vy *= -0.35; d.vx *= 0.6; d.vz *= 0.6; }
+    const s = d.life <= 0 ? 0 : Math.min(1, d.life * 3);
+    debE.set(d.r, d.r * 0.7, 0); debQ.setFromEuler(debE); debS.set(s, s, s); debP.set(d.x, d.y, d.z);
+    trM4.compose(debP, debQ, debS); debMesh.setMatrixAt(i, trM4);
+  }
+  if (any || debTick.was) debMesh.instanceMatrix.needsUpdate = true;
+  debTick.was = any;
+}
+
+// ---------- romper y reconstruir ----------
+const trRespawn = []; // { n, t }
+const trGrow = new Map(); // n -> 0..1
+let trSession = 0, trCoinsPending = 0, trCoinT = 0;
+function trBreak(n, power) {
+  const c = trCells[n]; if (!c.alive) return false;
+  c.alive = false; trSetMat(n, 0); trGrow.delete(n);
+  const [x, y, z] = trPos(c);
+  debSpawn(x, y, z, TR_COLS[c.c], power > 1 ? 1 : 2, power);
+  trRespawn.push({ n, t: performance.now() / 1000 + 22 + Math.random() * 25 });
+  trSession++; trs.total++; trCoinsPending++;
+  return true;
+}
+// rompe todo lo que está dentro de una esfera; devuelve cuántos
+function trBlast(x, y, z, rad, power) {
+  let cnt = 0;
+  const i0 = Math.floor(x - rad - TL.x), i1 = Math.floor(x + rad - TL.x), j0 = Math.floor(z - rad - TL.z), j1 = Math.floor(z + rad - TL.z), k0 = Math.max(0, Math.floor(y - rad)), k1 = Math.floor(y + rad);
+  for (let i = i0; i <= i1; i++) for (let j = j0; j <= j1; j++) for (let k = k0; k <= k1; k++) {
+    const n = trMap.get(trKey(i, j, k)); if (n === undefined) continue;
+    const [bx, by, bz] = trPos(trCells[n]);
+    if ((bx - x) ** 2 + (by - y) ** 2 + (bz - z) ** 2 <= rad * rad && trBreak(n, power)) cnt++;
+  }
+  if (cnt) trMesh.instanceMatrix.needsUpdate = true;
+  return cnt;
+}
+function trRespawnTick(dt) {
+  const now = performance.now() / 1000, p = player.position;
+  let changed = false;
+  for (let q = trRespawn.length - 1; q >= 0; q--) {
+    const r = trRespawn[q]; if (r.t > now) continue;
+    const c = trCells[r.n], [x, y, z] = trPos(c);
+    // si hay alguien parado ahí, espera un poco
+    if (Math.abs(p.x - x) < 0.9 && Math.abs(p.z - z) < 0.9 && p.y < y + 0.6 && p.y + PH > y - 0.6) { r.t = now + 2; continue; }
+    c.alive = true; trGrow.set(r.n, 0); trRespawn.splice(q, 1);
+  }
+  for (const [n, g] of trGrow) {
+    const ng = Math.min(1, g + dt * 3.5); trSetMat(n, ng < 1 ? 0.2 + 0.8 * Math.sin(ng * Math.PI / 2) * (1 + 0.15 * Math.sin(ng * Math.PI)) : 1);
+    if (ng >= 1) trGrow.delete(n); else trGrow.set(n, ng);
+    changed = true;
+  }
+  if (changed) trMesh.instanceMatrix.needsUpdate = true;
+}
+
+// ---------- herramientas ----------
+const trRay = new THREE.Raycaster(), trV2 = new THREE.Vector2();
+const trProj = []; // bombas y bolas en el aire
+const projMats = { bomb: new THREE.MeshStandardMaterial({ color: '#8a5523', roughness: 0.6 }), ball: new THREE.MeshStandardMaterial({ color: '#2c2c34', roughness: 0.3, metalness: 0.6 }), meteor: new THREE.MeshStandardMaterial({ color: '#ff7a1a', roughness: 0.5, emissive: '#ff4400', emissiveIntensity: 0.9 }) };
+const projGeo = new THREE.SphereGeometry(0.5, 16, 12);
+let trCd = 0;
+function trTool() { return TT_BY[trs.tool] || TT_BY.hammer; }
+function trollTap(cx, cy) {
+  if (trCd > 0) return;
+  const tool = trTool();
+  trV2.set(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1);
+  trRay.setFromCamera(trV2, camera);
+  const hit = trRay.intersectObject(trMesh, false).find((h) => h.instanceId !== undefined && trCells[h.instanceId].alive);
+  let target = null;
+  if (hit) target = hit.point.clone();
+  else if (tool.id !== 'hammer') { // al piso
+    const t = -trRay.ray.origin.y / trRay.ray.direction.y;
+    if (t > 0) target = trRay.ray.origin.clone().add(trRay.ray.direction.clone().multiplyScalar(t));
+  }
+  if (!target) return;
+  const p = player.position, dist = Math.hypot(target.x - p.x, target.z - p.z);
+  if (dist > tool.range) { if (tool.id === 'hammer') toast(tr('¡Acercate más para romper!')); return; }
+  facing = Math.atan2(target.x - p.x, target.z - p.z);
+  trCd = tool.cd;
+  if (tool.id === 'hammer') {
+    if (!hit) return;
+    const n = hit.instanceId, c = trCells[n];
+    trBreak(n, 1);
+    // a veces se lleva uno de al lado
+    const nb = [[1, 0, 0], [-1, 0, 0], [0, 0, 1], [0, 0, -1], [0, 1, 0]][Math.floor(Math.random() * 5)];
+    if (Math.random() < 0.45) { const m = trMap.get(trKey(c.i + nb[0], c.j + nb[2], c.k + nb[1])); if (m !== undefined) trBreak(m, 1); }
+    trMesh.instanceMatrix.needsUpdate = true;
+    playS(['mine0', 'mine1', 'mine2', 'mine3', 'mine4'][Math.floor(Math.random() * 5)], 0.6, 0.9 + Math.random() * 0.3);
+    trSwing = 0.25;
+  } else {
+    // se tira desde arriba (bola y meteorito) o desde la mano (bomba)
+    const m = new THREE.Mesh(projGeo, projMats[tool.id]);
+    const big = tool.id === 'ball' ? 1.6 : tool.id === 'meteor' ? 2.4 : 0.7;
+    m.scale.setScalar(big); m.castShadow = true; troll.add(m);
+    const from = tool.id === 'bomb' ? new THREE.Vector3(p.x, p.y + 1.6, p.z) : new THREE.Vector3(target.x + (tool.id === 'meteor' ? 14 : 2), target.y + (tool.id === 'meteor' ? 34 : 18), target.z - (tool.id === 'meteor' ? 10 : 1));
+    trProj.push({ m, from, to: target.clone(), t: 0, dur: tool.id === 'bomb' ? 0.55 : tool.id === 'ball' ? 0.75 : 1.1, tool, arc: tool.id === 'bomb' ? 3 : 0 });
+    playS(tool.id === 'bomb' ? 'cg_shot1' : 'soltar_pieza', 0.6, tool.id === 'meteor' ? 0.6 : 1);
+    trSwing = 0.3;
+  }
+}
+let trSwing = 0;
+function trProjTick(dt) {
+  for (let q = trProj.length - 1; q >= 0; q--) {
+    const pr = trProj[q]; pr.t += dt / pr.dur;
+    const k = Math.min(1, pr.t);
+    pr.m.position.lerpVectors(pr.from, pr.to, k); pr.m.position.y += Math.sin(Math.PI * k) * pr.arc;
+    pr.m.rotation.x += dt * 8;
+    if (pr.tool.id === 'meteor' && Math.random() < 0.6) debSpawn(pr.m.position.x, pr.m.position.y, pr.m.position.z, Math.random() < 0.5 ? '#ff7a1a' : '#ffd23f', 1, 0.3);
+    if (k >= 1) {
+      troll.remove(pr.m);
+      trProj.splice(q, 1);
+      const t = pr.to, tool = pr.tool;
+      const cnt = trBlast(t.x, Math.max(0.5, t.y), t.z, tool.rad, tool.id === 'bomb' ? 1.4 : 2.2);
+      if (tool.id === 'bomb') { if (typeof poopBurst === 'function') poopBurst(t.clone(), new THREE.Vector3(0, 1, 0), true); playS('cg_splat' + (1 + Math.floor(Math.random() * 3)), 0.8); }
+      else { playS('impacto_fuerte', 0.9, tool.id === 'meteor' ? 0.6 : 0.85); debSpawn(t.x, 0.5, t.z, '#9a8f86', 10, 1.6); }
+      const d = Math.hypot(t.x - player.position.x, t.z - player.position.z);
+      if (d < 14) trShake = Math.max(trShake, (tool.id === 'meteor' ? 0.7 : tool.id === 'ball' ? 0.45 : 0.2) * (1 - d / 14));
+      if (cnt > 6) popText('¡' + cnt + '!', new THREE.Vector3(t.x, t.y + 2, t.z), '#ffd23f');
+    }
+  }
+}
+let trShake = 0;
+
+// ---------- vecinos: los que rompen y los que arreglan ----------
+const trBots = [];
+function trBotsMake() {
+  for (let i = 0; i < 5; i++) {
+    const R = brng(7300 + i * 31), builder = i >= 3;
+    const c = { bot: true, obj: new THREE.Group(), lugar: 70 + i, phase: 0, walk: 0, spd: 0, builder, target: null, wait: Math.random() * 2, swing: 0, hitT: 0, speed: builder ? 2.2 : 2.8 };
+    c.look = botLook(R); if (builder) { c.look.hat = 'gorra'; c.look.hatColor = '#ffd23f'; }
+    c.av = makeAvatar(c.look); c.obj.add(c.av.g); c.obj.traverse((m) => { if (m.isMesh) m.castShadow = false; });
+    const a = i / 5 * Math.PI * 2; c.obj.position.set(TL.x + Math.cos(a) * 12.5, 0, TL.z + Math.sin(a) * 12.5);
+    troll.add(c.obj); trBots.push(c);
+  }
+}
+function trBotPick(c) {
+  if (c.builder) {
+    // va a donde hay que reconstruir
+    const r = trRespawn[Math.floor(Math.random() * trRespawn.length)];
+    if (r) { const [x, , z] = trPos(trCells[r.n]); return [x + (Math.random() - 0.5) * 2, z + 1.6]; }
+  } else {
+    // busca un bloque vivo cerca de la calle
+    for (let tries = 0; tries < 12; tries++) {
+      const n = Math.floor(Math.random() * TR_N), cc = trCells[n];
+      if (cc.alive && cc.k <= 2) { const [x, , z] = trPos(cc); const a = Math.atan2(z - TL.z, x - TL.x); return [x + Math.cos(a) * 1.4, z + Math.sin(a) * 1.4, n]; }
+    }
+  }
+  const a = Math.random() * Math.PI * 2, r = 10 + Math.random() * 1.5; return [TL.x + Math.cos(a) * r, TL.z + Math.sin(a) * r];
+}
+function trBotsTick(dt, t, near) {
+  if (near && !trBots.length) trBotsMake();
+  for (const c of trBots) {
+    c.obj.visible = near; if (!near) continue;
+    const o = c.obj; let sp = 0;
+    if (c.wait > 0) {
+      c.wait -= dt;
+      // golpea mientras espera
+      if (c.target && c.target[2] !== undefined && !c.builder) {
+        c.hitT -= dt;
+        if (c.hitT <= 0) {
+          c.hitT = 0.55; c.swing = 0.25;
+          const [x, , z] = trPos(trCells[c.target[2]]);
+          if (Math.random() < 0.12) { if (Math.hypot(x - player.position.x, z - player.position.z) < 30) playS('cg_splat2', 0.25); trBlast(x, 1.2, z, 1.7, 1.2); }
+          else if (trBreak(c.target[2], 1)) { trMesh.instanceMatrix.needsUpdate = true; if (Math.hypot(x - player.position.x, z - player.position.z) < 18) playS('mine' + Math.floor(Math.random() * 5), 0.25); }
+          // sigue con el de arriba
+          const cc = trCells[c.target[2]], up = trMap.get(trKey(cc.i, cc.j, cc.k + 1));
+          if (up !== undefined && trCells[up].alive) c.target[2] = up;
+        }
+      } else if (c.builder) { c.hitT -= dt; if (c.hitT <= 0) { c.hitT = 0.7; c.swing = 0.25; } }
+      if (c.wait <= 0) c.target = null;
+    } else {
+      if (!c.target) c.target = trBotPick(c);
+      const [tx, tz] = c.target, dx = tx - o.position.x, dz = tz - o.position.z, d = Math.hypot(dx, dz);
+      if (d < 0.25) { c.wait = c.builder ? 2.5 + Math.random() * 2 : 2.2 + Math.random() * 2.5; if (c.target[2] !== undefined) { const [x, , z] = trPos(trCells[c.target[2]]); c.face = Math.atan2(x - o.position.x, z - o.position.z); } }
+      else {
+        // si choca con un bloque, se da vuelta
+        const nx = o.position.x + dx / d * Math.min(d, c.speed * dt), nz = o.position.z + dz / d * Math.min(d, c.speed * dt);
+        if (trollCollide(nx, 0.05, nz) > 0.6) { c.target = null; c.wait = 0.3; }
+        else { o.position.x = nx; o.position.z = nz; c.face = Math.atan2(dx, dz); sp = c.speed; }
+      }
+    }
+    if (c.face !== undefined) o.rotation.y = angleLerp(o.rotation.y, c.face, 1 - Math.exp(-10 * dt));
+    c.spd += (sp - c.spd) * Math.min(1, dt * 8);
+    c.walk += ((c.spd > 0.4 ? 1 : 0) - c.walk) * (1 - Math.exp(-10 * dt));
+    c.phase += dt * (c.spd * 1.75 + 0.0001);
+    animateRemote(c, c.spd, 1, t, dt);
+    if (c.swing > 0) { c.swing -= dt; const k = c.swing / 0.25; c.av.J.R.arm.rotation.x = -2.6 * Math.sin(k * Math.PI); }
+    remoteFace(c, c.wait > 0 && !c.builder ? 1 : 0, dt);
+  }
+}
+
+// ---------- portales (plaza <-> Troll Land) ----------
+function makePortal(color) {
+  const g = new THREE.Group();
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.22, 12, 40), new THREE.MeshStandardMaterial({ color, roughness: 0.3, emissive: color, emissiveIntensity: 0.6 }));
+  ring.position.y = 1.7; g.add(ring);
+  const cv = document.createElement('canvas'); cv.width = cv.height = 128; const x = cv.getContext('2d');
+  for (let r = 64; r > 0; r -= 4) { x.fillStyle = (r / 4) % 2 ? '#7b3fe4' : '#ff5fa2'; x.beginPath(); x.arc(64, 64, r, 0, Math.PI * 2); x.fill(); }
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(1.42, 32), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, opacity: 0.85, side: THREE.DoubleSide }));
+  disc.position.y = 1.7; g.add(disc); g.userData.disc = disc;
+  return g;
+}
+const TROLL_DIR = PLAZA_EXITS.troll;
+const plazaPortal = (() => {
+  const dx = TROLL_DIR.x, dz = TROLL_DIR.z, L = PLAZA.r + 6.5;
+  const sx = PLAZA.x + dx * (PLAZA.r - 1.2), sz = PLAZA.z + dz * (PLAZA.r - 1.2), ex = PLAZA.x + dx * L, ez = PLAZA.z + dz * L;
+  const px = -dz * 1.6, pz = dx * 1.6;
+  addBelt(sx - px, sz - pz, ex - px, ez - pz, '#ff5fa2');
+  addBelt(ex + px, ez + pz, sx + px, sz + pz, '#e6a91e');
+  plazaSign(dx, dz, [tr('Troll Land'), tr('Juego 7')], '#ff5fa2');
+  const g = makePortal('#ff5fa2'); g.position.set(ex + dx * 2.6, 0, ez + dz * 2.6); g.rotation.y = Math.atan2(dx, dz); scene.add(g);
+  arch(ex + dx * 2.6, ez + dz * 2.6, Math.atan2(dx, dz), [tr('TROLL LAND'), tr('Juego 7')], '#ff5fa2');
+  return g;
+})();
+const landPortal = makePortal('#ffd23f'); landPortal.position.set(TL.x, 0, TL.z - TL.r + 2.2); troll.add(landPortal);
+const TL_IN = { x: TL.x, z: TL.z - TL.r + 5.2 };
+let portalCd = 0;
+function portalsTick(dt) {
+  const tt = performance.now() / 1000;
+  plazaPortal.userData.disc.rotation.z = tt * 2; landPortal.userData.disc.rotation.z = -tt * 2;
+  if (portalCd > 0) { portalCd -= dt; return; }
+  if (mode !== 'play') return;
+  const p = player.position;
+  if (Math.hypot(p.x - plazaPortal.position.x, p.z - plazaPortal.position.z) < 1.1 && p.y < 2) {
+    p.set(TL_IN.x, 0, TL_IN.z); vy = 0; facing = 0; camYaw = Math.PI; portalCd = 1.2; trFlash(); playS('puerta_abre', 0.6);
+  } else if (Math.hypot(p.x - landPortal.position.x, p.z - landPortal.position.z) < 1.1 && p.y < 2) {
+    const back = 5.0; p.set(plazaPortal.position.x - TROLL_DIR.x * back, 0, plazaPortal.position.z - TROLL_DIR.z * back);
+    vy = 0; facing = Math.atan2(-TROLL_DIR.x, -TROLL_DIR.z); camYaw = facing + Math.PI; portalCd = 1.2; trFlash(); playS('puerta_abre', 0.6);
+  }
+}
+function trFlash() { const f = $('trFlash'); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); }
+
+// ---------- límites ----------
+function clampTroll() {
+  const p = player.position, dx = p.x - TL.x, dz = p.z - TL.z, d = Math.hypot(dx, dz);
+  if (d > TL.r + 6) return false;
+  if (d > TL.r - 0.5) { p.x = TL.x + dx / d * (TL.r - 0.5); p.z = TL.z + dz / d * (TL.r - 0.5); }
+  return true;
+}
+
+// ---------- pantalla ----------
+function trBuildBar() {
+  const bar = $('trTools'); bar.innerHTML = '';
+  for (const t of TROLL_TOOLS) {
+    const b = document.createElement('button'), have = !!trs.tools[t.id];
+    b.className = 'trTool' + (trs.tool === t.id ? ' sel' : '') + (have ? '' : ' locked');
+    b.innerHTML = `<span class="ico">${t.ico}</span><small>${have ? tr(t.es) : t.gems ? '💎 ' + t.gems : '🪙 ' + fmt(t.price)}</small>`;
+    b.onclick = (e) => {
+      e.stopPropagation();
+      if (!trs.tools[t.id]) {
+        if (t.gems) { if (st.gems < t.gems) { toast(tr('Te faltan {0} gemas.', t.gems - st.gems)); return; } st.gems -= t.gems; }
+        else { if (st.coins < t.price) { toast(tr('Te faltan {0} monedas.', fmt(t.price - st.coins))); return; } st.coins -= t.price; }
+        trs.tools[t.id] = 1; updateHud(); sfx('coin'); happy(); toast(tr('¡Nueva herramienta: {0}!', tr(t.es)));
+      }
+      trs.tool = t.id; trSave(); trBuildBar(); sfx('click');
+    };
+    bar.appendChild(b);
+  }
+}
+function updateTrHud() {
+  $('trCoins').textContent = fmt(st.coins); $('trGems').textContent = fmt(st.gems);
+  $('trCount').textContent = fmt(trSession);
+}
+
+// ---------- cada cuadro ----------
+var inTroll = false;
+function trollTick(dt, t) {
+  const p = player.position, dC = Math.hypot(p.x - TL.x, p.z - TL.z);
+  portalsTick(dt);
+  const now = mode === 'play' && dC < TL.r + 2;
+  if (now !== inTroll) {
+    inTroll = now;
+    document.body.classList.toggle('troll', now);
+    if (now) { trSession = 0; trBuildBar(); updateTrHud(); banner(tr('TROLL LAND')); setTimeout(() => toast(tr('¡Rompé todo! Tocá los bloques para destruirlos. Cada bloque es una moneda.')), 1200); }
+    else { if (trSession > trs.best) trs.best = trSession; trSave(true); }
+  }
+  const near = mode === 'play' && dC < TL.r + 60;
+  if (trCd > 0) trCd -= dt;
+  if (near) { debTick(dt); trProjTick(dt); trRespawnTick(dt); }
+  trBotsTick(dt, t, near);
+  if (!inTroll) return;
+  // las monedas se suman de a poco (sin redibujar todo el tiempo)
+  trCoinT -= dt;
+  if (trCoinsPending && trCoinT <= 0) { st.coins += trCoinsPending; trCoinsPending = 0; trCoinT = 0.25; updateHud(); updateTrHud(); trSave(); }
+  // la cámara no se mete adentro de los edificios: se acerca al muñeco si hay bloques en el medio
+  {
+    const hx = p.x, hy = p.y + 1.5, hz = p.z, cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
+    const L = Math.hypot(cx - hx, cy - hy, cz - hz), steps = Math.ceil(L / 0.25);
+    for (let s = 1; s <= steps; s++) {
+      const k = s / steps, x = hx + (cx - hx) * k, y = hy + (cy - hy) * k, z = hz + (cz - hz) * k;
+      const n = trMap.get(trKey(Math.floor(x - TL.x), Math.floor(z - TL.z), Math.floor(y)));
+      if (n !== undefined && trCells[n].alive) { const kk = Math.max(0.12, (s - 1.6) / steps); camera.position.set(hx + (cx - hx) * kk, hy + (cy - hy) * kk, hz + (cz - hz) * kk); break; }
+    }
+  }
+  if (trShake > 0) { trShake = Math.max(0, trShake - dt * 1.8); camera.position.x += (Math.random() - 0.5) * trShake; camera.position.y += (Math.random() - 0.5) * trShake; }
+}
+
 function tick() {
   requestAnimationFrame(tick);
   try { tickInner(); } catch (e) { safe('cuadro', () => { throw e; }); }
@@ -7424,7 +7874,7 @@ function tickInner() {
   }
   // no salir del campo
   const r = Math.hypot(player.position.x, player.position.z);
-  if (!clampPets() && !clampCongo() && !clampMarket() && !clampObby()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(Math.abs(player.position.x) < 5 ? 80 : 58, player.position.z)); }
+  if (!clampTroll() && !clampPets() && !clampCongo() && !clampMarket() && !clampObby()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(Math.abs(player.position.x) < 5 ? 80 : 58, player.position.z)); }
   player.rotation.y = facing;
 
   // animación de los huesos
