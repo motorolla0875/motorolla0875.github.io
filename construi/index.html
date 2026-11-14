@@ -396,6 +396,53 @@
   #trFlash.on { animation: trfl .7s ease-out; }
   @keyframes trfl { 0% { opacity: .95; } 100% { opacity: 0; } }
   @media (orientation: landscape) and (max-height: 520px) { body.is-touch #trTop { top: 6px !important; } body.is-touch #trTop div { font-size: 15px !important; padding: 3px 10px !important; } body.is-touch .trTool { width: 52px !important; height: 54px !important; } body.is-touch #trTools { gap: 5px !important; } body.is-touch .trTool .ico { font-size: 22px !important; } body.is-touch .trTool small { font-size: 9px !important; } }
+  #bathHud, #bathRide { display: none; }
+  body.bath #bathHud { display: block; }
+  body.bathride #bathRide { display: block; }
+  body.bath #topBox, body.bath #shopBtn, body.bath #help { display: none !important; }
+  body.bathride #topBox, body.bathride #shopBtn, body.bathride #help, body.bathride #leftBtns, body.bathride #stickZone, body.bathride #stick, body.bathride #jumpBtn, body.bathride #runBtn, body.bathride #tools, body.bathride #hotbar, body.bathride #structHint, body.bathride #flyRow { display: none !important; }
+  #brTop { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); display: flex; gap: 8px; pointer-events: none; }
+  #brTop div { background: rgba(20,60,110,.86); color: #fff; border-radius: 14px; padding: 5px 14px; display: flex; align-items: center; gap: 7px; font-size: 22px; font-weight: 700; white-space: nowrap; }
+  #brBtns { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
+  #brBtns .toy { width: 104px; padding: 9px 6px; font-size: 15px; position: relative; }
+  #brSpinDot { position: absolute; right: -4px; top: -4px; width: 14px; height: 14px; border-radius: 50%; background: #e2493b; border: 2px solid #fff; }
+  #brBar { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); width: min(46vw, 420px); height: 26px; border-radius: 14px; background: rgba(20,30,50,.6); border: 3px solid #fff; overflow: hidden; pointer-events: none; }
+  #brFill { height: 100%; width: 0; background: linear-gradient(90deg, #3cb4ff, #7bd389); }
+  #brPct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 16px; text-shadow: 0 1px 2px #000; }
+  #brInfo { position: absolute; right: 12px; top: 10px; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; pointer-events: none; }
+  #brInfo div { background: rgba(20,60,110,.86); color: #fff; border-radius: 12px; padding: 4px 12px; font-size: 18px; font-weight: 700; }
+  #brBig { position: absolute; left: 0; right: 0; top: 28%; text-align: center; color: #fff; font-size: 64px; font-weight: 700; text-shadow: 0 4px 0 #2a1840, 0 0 18px rgba(0,0,0,.4); pointer-events: none; }
+  #brTip { position: absolute; left: 0; right: 0; top: 52px; text-align: center; color: #fff; font-size: 18px; font-weight: 700; text-shadow: 0 2px 3px #000; pointer-events: none; }
+  .brBtn { position: absolute; bottom: 18px; width: 92px; height: 92px; border-radius: 50%; border: 4px solid #fff; background: rgba(60,180,255,.82); color: #fff; font-size: 34px; font-weight: 700; font-family: inherit; pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none; box-shadow: 0 5px 0 rgba(0,0,0,.25); overflow: hidden; }
+  .brBtn.on { transform: scale(.94); background: rgba(40,140,220,.95); }
+  #brL { left: 18px; } #brR { left: 124px; }
+  #brJ { right: 22px; width: 108px; height: 108px; font-size: 17px; background: rgba(255,200,40,.92); color: #2a1840; }
+  #brJc { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: rgba(0,0,0,.35); pointer-events: none; }
+  #brRes { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(10,20,40,.35); pointer-events: auto; }
+  #brRes.open { display: flex; }
+  #brRes .card { background: #faf6eb; border: 4px solid #2a1840; border-radius: 22px; padding: 14px 22px; text-align: center; width: min(430px, 92vw); }
+  #brRes h2 { margin: 0 0 6px; font-size: 26px; }
+  #brRes p { margin: 4px 0; font-size: 18px; font-weight: 700; color: #2a1840; }
+  #brRes .tags { color: #3fbf5a; min-height: 4px; }
+  #brRes .row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+  #brRes .toy { padding: 10px 14px; font-size: 16px; }
+  .brSw { width: 44px; height: 44px; border-radius: 12px; border: 4px solid; display: flex; align-items: center; justify-content: center; font-size: 22px; flex: none; }
+  .brStat { display: inline-block; width: 52px; height: 8px; background: #e2dccb; border-radius: 4px; overflow: hidden; vertical-align: middle; margin-right: 6px; }
+  .brStat i { display: block; height: 100%; background: #3cb4ff; }
+  #brWheelBox { position: relative; width: 240px; height: 240px; margin: 6px auto; }
+  #brWheel { width: 240px; height: 240px; }
+  #brWheelBox:after { content: ''; position: absolute; left: 50%; top: -6px; transform: translateX(-50%); border: 14px solid transparent; border-top: 22px solid #e2493b; }
+  #brSpinInfo { text-align: center; font-weight: 700; margin: 4px 0 8px; }
+  @media (orientation: landscape) and (max-height: 520px) {
+    body.is-touch #brTop { top: 6px !important; } body.is-touch #brTop div { font-size: 15px !important; padding: 3px 10px !important; }
+    body.is-touch #brBtns .toy { width: 86px !important; font-size: 13px !important; padding: 7px 4px !important; }
+    body.is-touch .brBtn { width: 78px !important; height: 78px !important; bottom: 12px !important; font-size: 28px !important; } body.is-touch #brR { left: 104px !important; }
+    body.is-touch #brJ { width: 92px !important; height: 92px !important; font-size: 14px !important; }
+    body.is-touch #brBig { font-size: 46px !important; } body.is-touch #brBar { height: 22px !important; top: 6px !important; } body.is-touch #brInfo div { font-size: 14px !important; }
+    body.is-touch #brTip { top: 40px !important; font-size: 14px !important; }
+    body.is-touch #brRes .card { padding: 8px 16px !important; } body.is-touch #brRes h2 { font-size: 20px !important; } body.is-touch #brRes p { font-size: 14px !important; margin: 2px 0 !important; }
+    body.is-touch #brWheelBox, body.is-touch #brWheel { width: 170px !important; height: 170px !important; }
+  }
   #obbyHud { display: none; }
   body.obby #obbyHud { display: block; }
   body.obby #topBox, body.obby #shopBtn, body.obby #help { display: none !important; }
@@ -542,6 +589,19 @@
     <div id="trTools"></div>
   </div>
   <div id="trFlash"></div>
+  <div id="bathHud">
+    <div id="brTop"><div><span class="coin"></span><span id="brCoins">0</span></div><div><span class="gem"></span><span id="brGems">0</span></div></div>
+    <div id="brBtns"><button id="brShopBtn" class="toy">Bañeras</button><button id="brSpinBtn" class="toy">Ruleta<i id="brSpinDot"></i></button></div>
+  </div>
+  <div id="bathRide">
+    <div id="brBar"><div id="brFill"></div><span id="brPct">0%</span></div>
+    <div id="brInfo"><div id="brSpd">0 km/h</div><div>🔩 <span id="brNuts">0</span></div></div>
+    <div id="brTip"></div><div id="brBig"></div>
+    <button id="brL" class="brBtn">◀</button><button id="brR" class="brBtn">▶</button>
+    <button id="brJ" class="brBtn">SALTAR<i id="brJc"></i></button>
+    <div id="brRes"><div class="card"><h2 id="brResT"></h2><p id="brRes1"></p><p id="brRes2"></p><p id="brRes3"></p><p id="brRes4" class="tags"></p>
+      <div class="row"><button id="brRevive" class="toy gold">Revivir</button><button id="brAgain" class="toy">Bajar de nuevo</button><button id="brBack" class="toy gray">Volver</button></div></div></div>
+  </div>
   <div id="obbyHud">
     <div id="obTop"><div class="stg" id="obStage"></div><div>⏱ <span id="obTime">0:00.0</span></div><div><span class="coin"></span><span id="obCoins">0</span></div></div>
     <div id="obFloor"></div>
@@ -599,6 +659,9 @@
 <div id="gpassPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="gpassList"></div></div></div></div>
 <div id="mkpassPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="mkpassList"></div></div></div></div>
 <div id="pshopPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="pshopList"></div></div></div></div>
+<div id="brShopPanel" class="panel"><div class="card"><header><h2>Bañeras</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="brShopList"></div></div></div></div>
+<div id="brSpinPanel" class="panel"><div class="card" style="width:min(380px,94vw)"><header><h2>Ruleta</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="brWheelBox"><canvas id="brWheel" width="320" height="320"></canvas></div><p id="brSpinInfo"></p><button id="brSpinGo" class="toy gold" style="display:block;margin:0 auto;padding:10px 28px;font-size:18px">¡Girar!</button></div></div></div>
+<div id="brWorldPanel" class="panel"><div class="card" style="width:min(380px,94vw)"><header><h2 id="brWorldTitle">Mundo</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body" style="text-align:center"><div id="brWorldBody"></div><button id="brWorldBuy" class="toy gold">Desbloquear</button></div></div></div>
 <div id="hatch"><div id="hatchEggs"></div></div>
 <div id="fade"></div>
 <div id="rotate"><div class="ph"></div><div id="rotTxt">Girá el celular para jugar</div></div>
@@ -843,6 +906,19 @@ Object.assign(DICT, {
   'Tenés que quedarte con al menos una equipada.': ['Keep at least one equipped.', 'Fique com pelo menos um equipado.'],
   'Ya tenés el máximo de mascotas equipadas.': ['You already have the max equipped.', 'Você já tem o máximo equipado.'],
   'Mejor zona': ['Best zone', 'Melhor zona'], 'Volver a la plaza': ['Back to the plaza', 'Voltar para a praça'],
+  'Juego 8': ['Game 8', 'Jogo 8'], 'BATHTUB RUSH': ['BATHTUB RUSH', 'BATHTUB RUSH'], 'Bathtub Rush': ['Bathtub Rush', 'Bathtub Rush'], 'LLEGADA': ['FINISH', 'CHEGADA'], 'BAÑERAS': ['TUBS', 'BANHEIRAS'], 'Bañeras': ['Tubs', 'Banheiras'], 'Ruleta': ['Spin', 'Roleta'], 'SALTAR': ['JUMP', 'PULAR'],
+  'Bajar de nuevo': ['Ride again', 'Descer de novo'], 'Volver': ['Back', 'Voltar'], 'Revivir': ['Revive', 'Reviver'], '¡Girar!': ['Spin!', 'Girar!'], 'Mundo': ['World', 'Mundo'], 'Desbloquear': ['Unlock', 'Desbloquear'],
+  'Colinas de Piedra': ['Pebble Hills', 'Colinas de Pedra'], 'Pico de Lava': ['Lava Peak', 'Pico de Lava'], 'Paso Helado': ['Frosty Pass', 'Passo Gelado'], 'Cañón de Dulces': ['Candy Canyon', 'Cânion de Doces'],
+  'Bañera Vieja': ['Old Bathtub', 'Banheira Velha'], 'Bañera Patito': ['Rubber Duck Tub', 'Banheira Patinho'], 'Bañera Burbuja': ['Bubble Tub', 'Banheira Bolha'], 'Jacuzzi': ['Hot Tub', 'Jacuzzi'], 'Bañera de Oro': ['Golden Tub', 'Banheira de Ouro'], 'Bañera Cohete': ['Rocket Tub', 'Banheira Foguete'], 'Bañera Real': ['Royal Clawfoot', 'Banheira Real'],
+  '¡CONTRA UNA PIEDRA!': ['SMASHED INTO A ROCK!', 'BATEU NUMA PEDRA!'], '¡CHOCASTE UNA CAJA!': ['CRATE CRASH!', 'BATEU NUMA CAIXA!'], '¡CHAU MUÑECO DE NIEVE!': ['BYE BYE SNOWMAN!', 'TCHAU BONECO DE NEVE!'], '¡CHOCASTE UN CARAMELO!': ['CANDY CRASH!', 'BATEU NUM DOCE!'],
+  '¡QUEMA, QUEMA!': ['TOO HOT!', 'QUEIMA, QUEIMA!'], '¡TE CAÍSTE DEL CAMINO!': ['FELL OFF THE ROAD!', 'CAIU DA ESTRADA!'], '¡CAÍSTE MUY FUERTE!': ['LANDED TOO HARD!', 'CAIU MUITO FORTE!'], '¡LLEGASTE HASTA ABAJO!': ['YOU MADE IT TO THE BOTTOM!', 'VOCÊ CHEGOU LÁ EMBAIXO!'],
+  'Distancia: {0}%': ['Distance: {0}%', 'Distância: {0}%'], '¡Nuevo récord!': ['New record!', 'Novo recorde!'], 'Velocidad máx.: {0} km/h': ['Top speed: {0} km/h', 'Velocidade máx.: {0} km/h'], '{0} km/h': ['{0} km/h', '{0} km/h'],
+  'Bajando con amigos: ¡x2!': ['Riding with friends: x2!', 'Descendo com amigos: x2!'], '¡Tu bañera aguantó el golpe! (quedan {0})': ['Your tub took a hit! ({0} left)', 'Sua banheira aguentou o golpe! (restam {0})'],
+  '¡YA!': ['GO!', 'JÁ!'], '¡Saltá la lava y las piedras!': ['Jump over lava and rocks!', 'Pule a lava e as pedras!'], 'Las rampas te hacen volar. ¡Agarrá las tuercas en el aire!': ['Ramps send you flying. Grab the bolts in the air!', 'As rampas te fazem voar. Pegue as porcas no ar!'],
+  'Cada bañera es más rápida, dobla mejor o aguanta más golpes.': ['Each tub is faster, steers better or takes more hits.', 'Cada banheira é mais rápida, vira melhor ou aguenta mais batidas.'], 'Velocidad': ['Speed', 'Velocidade'], 'Manejo': ['Steering', 'Direção'], 'Armadura': ['Armor', 'Armadura'], 'Aterrizaje': ['Landing', 'Aterrissagem'],
+  'En uso': ['Equipped', 'Em uso'], 'Usar': ['Equip', 'Usar'], '¡Bañera nueva: {0}!': ['New tub: {0}!', 'Banheira nova: {0}!'], 'Desbloquealo para bajar este mundo.': ['Unlock it to ride this world.', 'Desbloqueie para descer este mundo.'], 'Primero desbloqueá {0}.': ['Unlock {0} first.', 'Primeiro desbloqueie {0}.'],
+  '¡Mundo nuevo: {0}!': ['New world unlocked: {0}!', 'Mundo novo: {0}!'], 'Próximo giro gratis en {0}': ['Next free spin in {0}', 'Próximo giro grátis em {0}'], '¡Giro gratis listo!': ['Free spin ready!', 'Giro grátis pronto!'], '¡Ganaste {0} monedas!': ['You won {0} coins!', 'Você ganhou {0} moedas!'],
+  'Pisá una puerta para bajar la montaña en bañera.': ['Step on a gate to ride down the mountain in a bathtub.', 'Pise numa porta para descer a montanha de banheira.'],
   'Juego 7': ['Game 7', 'Jogo 7'], 'Trampa para Pipo': ['Pipo trap', 'Armadilha para o Pipo'], '¡ATRAPASTE A PIPO!': ['YOU CAUGHT PIPO!', 'VOCÊ PEGOU O PIPO!'], '+{0} monedas y +{1} gemas': ['+{0} coins and +{1} gems', '+{0} moedas e +{1} gemas'],
   '¡Pipo se escapó de la jaula!': ['Pipo escaped the cage!', 'O Pipo fugiu da jaula!'], '¡Pipo cayó en la trampa! Corré a tocarlo.': ['Pipo fell in the trap! Run and touch him.', 'O Pipo caiu na armadilha! Corra e toque nele.'],
   '¡Pipo te robó {0} monedas! Atrapalo para recuperarlas x2.': ['Pipo stole {0} coins! Catch him to get them back x2.', 'O Pipo roubou {0} moedas! Pegue ele para recuperar x2.'],
@@ -993,6 +1069,7 @@ function reservedAt(x, z) {
   if (Math.abs(x + 72) < 19 && Math.abs(z - 116) < 19) return true;
   if (Math.hypot(x - 82, z - 122) < 38) return true;
   if (Math.hypot(x + 75, z - 178) < 34) return true;                       // Troll Land
+  if (x < -4 && x > -28 && z > 10 && z < 38 && Math.abs(x - (z - 42)) < 6) return true; // cinta al portal de Bathtub Rush
   if (x > 4 && x < 28 && z > 10 && z < 38 && Math.abs(x + (z - 42)) < 6) return true; // cinta al portal de Troll Land                       // Torre Loca
   if (x > 4 && x < 70 && z > 46 && z < 110 && Math.abs(x * 0.699 - (z - 42) * 0.716) < 5) return true; // cintas a la Torre Loca        // Mini Market                             // arena de la Guerra de Caca                                      // Huerta de la Suerte
   return false;
@@ -2522,6 +2599,7 @@ function act(clientX, clientY, alt) {
   if (inGarden) { gardenTap(clientX, clientY); return; }
   if (inCongo) { congoShoot(); return; }
   if (inTroll) { trollTap(clientX, clientY); return; }
+  if (brRun || inBath) return;
   if (inMarket || inObby) return;
   if (!inGame) return;
   const p = pickCell(clientX, clientY);
@@ -2989,7 +3067,7 @@ function updateHud() {
 let catTab = 'blocks';
 const CAT_TABS = [['blocks', 'Bloques'], ['premium', 'Premium'], ['daily', 'Colección'], ['deco', 'Muebles'], ['special', 'Especiales'], ['struct', 'Estructuras']].map(([a, n]) => [a, tr(n)]);
 function openCatalog(tab) { if (tab) catTab = tab; renderCatalog(); $('catalog').classList.add('open'); sfx('click'); }
-function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard', 'gshopPanel', 'gpassPanel', 'langPanel', 'cshopPanel', 'mkpassPanel']) $(id).classList.remove('open'); }
+function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard', 'gshopPanel', 'gpassPanel', 'langPanel', 'cshopPanel', 'mkpassPanel', 'brShopPanel', 'brSpinPanel', 'brWorldPanel']) $(id).classList.remove('open'); }
 function renderCatalog() {
   const tabs = $('catTabs'); tabs.innerHTML = '';
   for (const [id, name] of CAT_TABS) { const b = document.createElement('button'); b.textContent = name; b.className = catTab === id ? 'on' : ''; b.onclick = () => { catTab = id; renderCatalog(); }; tabs.appendChild(b); }
@@ -3337,7 +3415,7 @@ function buildTick(dt, t) {
   if (mode === 'play' && onGround && !sitting && gs > 0.8 && ss !== lastStepSign) stepSound();
   lastStepSign = ss;
   // cada parte por separado: si una falla, las demás siguen andando (el juego nunca se congela)
-  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t)); safe('obby', () => obbyTick(dt, t)); safe('troll', () => trollTick(dt, t)); safe('cull', () => zoneCullTick(dt));
+  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t)); safe('obby', () => obbyTick(dt, t)); safe('troll', () => trollTick(dt, t)); safe('bath', () => bathTick(dt, t)); safe('cull', () => zoneCullTick(dt));
   return night;
 }
 
@@ -3488,7 +3566,7 @@ const OBBY_C = { x: 82, z: 122 };
 const PLAZA_EXITS = (() => {
   const dir = (x, z) => { const l = Math.hypot(x, z); return { x: x / l, z: z / l, L: l }; };
   const ob = (() => { const a = Math.atan2(PLAZA.z - OBBY_C.z, PLAZA.x - OBBY_C.x); return dir(OBBY_C.x + Math.cos(a) * 26 - PLAZA.x, OBBY_C.z + Math.sin(a) * 26 - PLAZA.z); })();
-  return { construi: dir(0, -1), mascotas: dir(1, 0), congo: dir(0, 1), huerta: dir(-1, 0), market: dir(-75 - PLAZA.x, 98 - PLAZA.z), obby: ob, troll: dir(1, -1) };
+  return { construi: dir(0, -1), mascotas: dir(1, 0), congo: dir(0, 1), huerta: dir(-1, 0), market: dir(-75 - PLAZA.x, 98 - PLAZA.z), obby: ob, troll: dir(1, -1), bath: dir(-1, -1) };
 })();
 const OBBY_DIR = PLAZA_EXITS.obby;
 {
@@ -4990,7 +5068,7 @@ try { myName = localStorage.getItem('mj_nombre') || ''; } catch (e) { /* nada */
 if (!myName) myName = (LANG === 'en' ? 'Player' : LANG === 'pt' ? 'Jogador' : 'Jugador') + Math.floor(1000 + Math.random() * 9000);
 
 // ---------- guardado en la nube ----------
-const SAVE_KEYS = ['construi_v1', 'pets_v1', 'huerta_v1', 'congo_v1', 'market_v1', 'obby_v1', 'troll_v1', 'muneco-look', 'mj_nombre'];
+const SAVE_KEYS = ['construi_v1', 'pets_v1', 'huerta_v1', 'congo_v1', 'market_v1', 'obby_v1', 'troll_v1', 'bath_v1', 'muneco-look', 'mj_nombre'];
 function localBundle() { const d = {}; for (const k of SAVE_KEYS) { try { const v = localStorage.getItem(k); if (v != null) d[k] = v; } catch (e) { /* nada */ } } return d; }
 let lastCloud = '';
 async function cloudLoad() {
@@ -5261,6 +5339,7 @@ function remoteTick(dt, t) {
     // el nombre se apaga de a poco a lo lejos
     if (r.tag) { const op = Math.min(1, Math.max(0, (48 - dist) / 14)); r.tag.material.opacity = op; r.tag.visible = op > 0.02; }
     setHeld(r, a.h);
+    if (typeof brRemote === 'function') brRemote(r, fl);
     r.skip = !r.skip;
     if (dist > 45 && r.skip) { tickRemotePets(r, dt, t); continue; }
     animateRemote(r, r.spd, fl, t, dt);
@@ -5484,6 +5563,7 @@ function myFlags() {
   if (flying) f |= 8;
   if (performance.now() - netSwing < 350) f |= 16;
   if (inPets) f |= 64;
+  if (typeof brFlags === 'function') f |= brFlags();
   return f;
 }
 function netTick(dt, t) {
@@ -8275,6 +8355,909 @@ function pipoTick(dt, t) {
   } else if (pipoNear) { pipoNear = false; pipo.obj.visible = false; if (pipo.state === 'caught') pipo.state = 'run'; pipo.cage.visible = false; }
 }
 
+// =====================================================================
+// ===== JUEGO 8: BATHTUB RUSH (bajar la montaña en bañera) =====
+// =====================================================================
+// Pasado del juego de Roblox (roblox-juegos/bathtub-rush). Las cuentas se hacen en "studs" como en Roblox
+// (mismas velocidades, saltos y obstáculos) y se dibuja achicado: BK metros por stud.
+// Desde la plaza sale una cinta a un portal que lleva a la cima (lejos, detrás de la niebla).
+// Las bajadas están todavía más lejos: solo se arma la del mundo que estás bajando (una sola malla).
+const BK = 0.3, TUB_K = 0.22, BR_DS = 6;
+const BR = { x: 560, z: -40, r: 26 };
+const BR_CFG = { gravity: 90, start: 25, jump: 30, jumpCd: 4, ramp: 0.42, boost: 1.45, crashSlow: 0.45, finish: 1.5, friend: 2, bolt: 2, reviveBase: 30, revivePct: 2, maxRevives: 2 };
+const BR_WORLDS = [
+  { id: 'hills', es: 'Colinas de Piedra', stars: 1, cost: 0, mult: 2, length: 1800, slope: 10, width: 40, curve: 0.8, hazards: { rock: 4, crate: 3, ramp: 3, boost: 2, bolts: 4 }, road: '#464a56', side: '#6ebe5a', side2: '#5aa04b', line: '#ffdc46', sky: '#96d2ff', deco: 'tree' },
+  { id: 'lava', es: 'Pico de Lava', stars: 2, cost: 1500, mult: 4, length: 2400, slope: 12, width: 36, curve: 1, hazards: { rock: 4, crate: 2, ramp: 3, lava: 4, lavagap: 2, boost: 2, bolts: 4 }, road: '#3c343a', side: '#5f4646', side2: '#463234', line: '#ff9628', sky: '#ffaa78', deco: 'rock' },
+  { id: 'ice', es: 'Paso Helado', stars: 3, cost: 6000, mult: 7, ice: true, length: 3000, slope: 13, width: 34, curve: 1.15, hazards: { rock: 3, snowman: 4, ramp: 3, boost: 2, bolts: 4, crate: 2 }, road: '#aacdeb', side: '#f0f8ff', side2: '#d7e6f5', line: '#50a0ff', sky: '#c8e1ff', deco: 'pine' },
+  { id: 'candy', es: 'Cañón de Dulces', stars: 4, cost: 15000, mult: 12, length: 3600, slope: 14, width: 32, curve: 1.3, hazards: { candy: 4, crate: 2, ramp: 4, lava: 3, lavagap: 3, boost: 3, bolts: 5 }, road: '#f096c8', side: '#ffc8e6', side2: '#b4e6ff', line: '#ffffff', sky: '#ffd2f0', deco: 'lolly', lava: '#8c461e' },
+];
+BR_WORLDS.forEach((w, i) => { w.i = i; w.ox = 1600 + i * 1100; w.oz = 0; });
+const BR_TUBS = [
+  { id: 'classic', es: 'Bañera Vieja', price: 0, top: 70, accel: 0.55, steer: 32, armor: 0, landing: 62, body: '#f5f5f5', trim: '#bebec8' },
+  { id: 'duck', es: 'Bañera Patito', price: 400, top: 77, accel: 0.6, steer: 36, armor: 0, landing: 66, body: '#ffdc3c', trim: '#ff8c1e' },
+  { id: 'bubble', es: 'Bañera Burbuja', price: 1200, top: 84, accel: 0.65, steer: 38, armor: 1, landing: 70, body: '#78c8ff', trim: '#ffffff' },
+  { id: 'hot', es: 'Jacuzzi', price: 3000, top: 92, accel: 0.7, steer: 40, armor: 1, landing: 78, body: '#965f3c', trim: '#5adcdc' },
+  { id: 'golden', es: 'Bañera de Oro', price: 7000, top: 102, accel: 0.75, steer: 43, armor: 2, landing: 84, body: '#ffc83c', trim: '#fff5be', shiny: true },
+  { id: 'rocket', es: 'Bañera Cohete', price: 15000, top: 115, accel: 0.85, steer: 46, armor: 2, landing: 92, body: '#dc323c', trim: '#3c3c46', rocket: true },
+  { id: 'royal', es: 'Bañera Real', gems: 80, top: 108, accel: 0.8, steer: 45, armor: 3, landing: 95, body: '#9646c8', trim: '#ffd250', shiny: true },
+];
+const BT_BY = {}; BR_TUBS.forEach((t, i) => { t.i = i; BT_BY[t.id] = t; });
+const BR_SPIN = [{ c: 50, w: 30 }, { c: 100, w: 25 }, { c: 200, w: 18 }, { c: 350, w: 12 }, { c: 600, w: 8 }, { c: 1200, w: 5 }, { c: 3000, w: 2 }];
+
+// ---------- guardado ----------
+const BR_KEY = 'bath_v1';
+let brs = { owned: { classic: 1 }, tub: 'classic', worlds: { hills: 1 }, best: {}, lastSpin: 0, runs: 0 };
+try { const s = JSON.parse(localStorage.getItem(BR_KEY) || 'null'); if (s) brs = Object.assign(brs, s); } catch (e) { /* nada */ }
+let brSaveT = 0;
+function brSave(now) { if (!now) { clearTimeout(brSaveT); brSaveT = setTimeout(() => brSave(true), 1500); return; } try { localStorage.setItem(BR_KEY, JSON.stringify(brs)); } catch (e) { /* nada */ } save(); }
+
+// ---------- la bajada de cada mundo (siempre igual: sale de una semilla) ----------
+function brRng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const brTracks = [];
+function brTrack(wi) {
+  if (brTracks[wi]) return brTracks[wi];
+  const def = BR_WORLDS[wi], R = brRng(wi * 7919 + 13 + 7919), sl = def.slope * Math.PI / 180;
+  const num = (a, b) => a + R() * (b - a);
+  const waves = [0, 1, 2].map((k) => ({ a: [34, 16, 8][k] * Math.PI / 180 * def.curve * (0.8 + R() * 0.4), l: [210, 110, 60][k] * (0.85 + R() * 0.3), p: R() * Math.PI * 2 }));
+  const smooth = (k) => { k = Math.max(0, Math.min(1, k)); return k * k * (3 - 2 * k); };
+  const heading = (s) => { let h = 0; for (const w of waves) h += w.a * (Math.sin(s / w.l + w.p) - Math.sin(w.p)); return h * smooth((s - 20) / 90); };
+  const n = Math.ceil(def.length / BR_DS) + 12;
+  const px = new Float32Array(n + 1), py = new Float32Array(n + 1), pz = new Float32Array(n + 1), hd = new Float32Array(n + 1);
+  let x = def.ox, y = (60 + def.length * Math.sin(sl)) * BK, z = def.oz;
+  const cs = Math.cos(sl), ss = Math.sin(sl), st6 = BR_DS * BK;
+  for (let i = 0; i <= n; i++) {
+    const h = heading(i * BR_DS); px[i] = x; py[i] = y; pz[i] = z; hd[i] = h;
+    x += -Math.sin(h) * cs * st6; y += -ss * st6; z += -Math.cos(h) * cs * st6;
+  }
+  // obstáculos y tuercas (igual que en Roblox)
+  const W = def.width, half = W / 2, items = [], bolts = [], bag = [];
+  for (const k of Object.keys(def.hazards).sort()) for (let j = 0; j < def.hazards[k]; j++) bag.push(k);
+  bag.sort();
+  const boltRow = (s, bx, count, h) => { for (let k = 0; k < count; k++) bolts.push({ s: s + k * 5, x: bx, h }); };
+  let s = 130;
+  while (s < def.length - 70) {
+    const kind = bag[Math.floor(R() * bag.length)], ix = num(-half + 7, half - 7);
+    if (kind === 'rock' || kind === 'crate' || kind === 'snowman' || kind === 'candy') {
+      items.push({ kind, s, len: 5, x: ix, w: num(6, 10), h: 4.5 });
+      if (R() < 0.35) { const x2 = ix > 0 ? ix - num(13, 18) : ix + num(13, 18); if (Math.abs(x2) < half - 5) items.push({ kind, s: s + num(-4, 4), len: 5, x: x2, w: num(6, 9), h: 4.5 }); }
+      boltRow(s + 18, -ix * 0.6, 4, 2); s += num(40, 62);
+    } else if (kind === 'ramp') {
+      items.push({ kind: 'ramp', s, len: 10, x: ix, w: num(12, 16), h: 3 }); boltRow(s + 18, ix, 6, 9); s += num(55, 75);
+    } else if (kind === 'lava' || (kind === 'lavagap' && s < 450)) {
+      const w = num(W * 0.35, W * 0.55), lx = Math.max(-half + w / 2, Math.min(half - w / 2, ix));
+      items.push({ kind: 'lava', s, len: num(18, 30), x: lx, w, h: 0 }); s += num(50, 70);
+    } else if (kind === 'lavagap') {
+      items.push({ kind: 'ramp', s, len: 10, x: 0, w: W - 4, h: 3 }); items.push({ kind: 'lava', s: s + 16, len: 26, x: 0, w: W, h: 0, gap: true });
+      boltRow(s + 18, 0, 5, 10); s += num(75, 95);
+    } else if (kind === 'boost') {
+      items.push({ kind: 'boost', s, len: 8, x: ix, w: 10, h: 0 }); boltRow(s + 14, ix, 5, 2); s += num(40, 55);
+    } else { for (let k = 0; k <= 7; k++) bolts.push({ s: s + k * 5, x: ix + Math.sin(k * 0.6) * 5, h: 2 }); s += num(40, 55); }
+  }
+  items.sort((a, b) => a.s - b.s); bolts.sort((a, b) => a.s - b.s);
+  const t = { def, wi, n, px, py, pz, hd, sl, cs, ss, len: def.length, W, items, bolts };
+  brTracks[wi] = t;
+  return t;
+}
+// dónde queda un punto de la bajada: s metros recorridos (en studs), x al costado, h de alto. Devuelve en metros.
+const brF = { x: 0, y: 0, z: 0, h: 0 };
+function brAt(t, s) {
+  const f = Math.max(0, Math.min(t.n - 1.0001, s / BR_DS)), i = Math.floor(f), k = f - i;
+  brF.x = t.px[i] + (t.px[i + 1] - t.px[i]) * k; brF.y = t.py[i] + (t.py[i + 1] - t.py[i]) * k; brF.z = t.pz[i] + (t.pz[i + 1] - t.pz[i]) * k; brF.h = t.hd[i] + (t.hd[i + 1] - t.hd[i]) * k;
+  // antes de la salida sigue derecho para atrás (para la cámara)
+  if (s < 0) { const e = s * BK; brF.x += -Math.sin(brF.h) * t.cs * e; brF.y += -t.ss * e; brF.z += -Math.cos(brF.h) * t.cs * e; }
+  // pasado el final sigue derecho (la pileta)
+  if (s / BR_DS > t.n - 1) { const e = (s / BR_DS - (t.n - 1)) * BR_DS * BK; brF.x += -Math.sin(brF.h) * t.cs * e; brF.y += -t.ss * e; brF.z += -Math.cos(brF.h) * t.cs * e; }
+  return brF;
+}
+function brPoint(t, s, x, h, out) {
+  const f = brAt(t, s), sh = Math.sin(f.h), ch = Math.cos(f.h);
+  // derecha (ch, 0, -sh)   arriba (-sh*ss, cs, -ch*ss)
+  out.set(f.x + (ch * x - sh * t.ss * h) * BK, f.y + t.cs * h * BK, f.z + (-sh * x - ch * t.ss * h) * BK);
+  return out;
+}
+const brQ = new THREE.Quaternion(), brM4 = new THREE.Matrix4(), brVa = new THREE.Vector3(), brVb = new THREE.Vector3(), brVc = new THREE.Vector3();
+// orientación de la pista en s (como el CFrame de Roblox: adelante = -Z)
+function brQuat(t, h, out) {
+  const sh = Math.sin(h), ch = Math.cos(h);
+  brVa.set(ch, 0, -sh); brVb.set(-sh * t.ss, t.cs, -ch * t.ss); brVc.set(sh * t.cs, t.ss, ch * t.cs);
+  brM4.makeBasis(brVa, brVb, brVc); return out.setFromRotationMatrix(brM4);
+}
+
+// ---------- armar mallas con colores (todo en una sola malla = una sola llamada de dibujo) ----------
+function bgNew() { return { p: [], n: [], c: [] }; }
+const bgCol = new THREE.Color(), bgN = new THREE.Vector3(), bgA = new THREE.Vector3(), bgB = new THREE.Vector3();
+function bgTri(g, a, b, c, col) {
+  bgA.set(b[0] - a[0], b[1] - a[1], b[2] - a[2]); bgB.set(c[0] - a[0], c[1] - a[1], c[2] - a[2]); bgN.crossVectors(bgA, bgB).normalize();
+  bgCol.set(col);
+  for (const v of [a, b, c]) { g.p.push(v[0], v[1], v[2]); g.n.push(bgN.x, bgN.y, bgN.z); g.c.push(bgCol.r, bgCol.g, bgCol.b); }
+}
+function bgQuad(g, a, b, c, d, col) { bgTri(g, a, b, c, col); bgTri(g, a, c, d, col); }
+const bgNM = new THREE.Matrix3();
+function bgGeo(g, geo, m4, col) {
+  const src = geo.index ? (geo.userData.ni || (geo.userData.ni = geo.toNonIndexed())) : geo;
+  const P = src.attributes.position, N = src.attributes.normal; bgNM.getNormalMatrix(m4); bgCol.set(col);
+  for (let i = 0; i < P.count; i++) {
+    bgA.set(P.getX(i), P.getY(i), P.getZ(i)).applyMatrix4(m4); bgB.set(N.getX(i), N.getY(i), N.getZ(i)).applyMatrix3(bgNM).normalize();
+    g.p.push(bgA.x, bgA.y, bgA.z); g.n.push(bgB.x, bgB.y, bgB.z); g.c.push(bgCol.r, bgCol.g, bgCol.b);
+  }
+}
+function bgBuild(g) {
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(g.p, 3)); geo.setAttribute('normal', new THREE.Float32BufferAttribute(g.n, 3)); geo.setAttribute('color', new THREE.Float32BufferAttribute(g.c, 3));
+  geo.computeBoundingSphere(); return geo;
+}
+// formas base (se usan solo para copiar sus triángulos)
+const brBox = new THREE.BoxGeometry(1, 1, 1), brBall = new THREE.SphereGeometry(0.5, 12, 9), brCyl = new THREE.CylinderGeometry(0.5, 0.5, 1, 14), brCone = new THREE.ConeGeometry(0.5, 1, 10);
+const brS = new THREE.Vector3(), brP = new THREE.Vector3(), brQ2 = new THREE.Quaternion(), brE = new THREE.Euler(), brMo = new THREE.Matrix4();
+// pieza alineada con la pista: s,x,h en studs (centro), tamaño en studs, giro extra
+function bgOnTrack(g, t, geo, s, x, h, sx, sy, sz, col, rx = 0, ry = 0, rz = 0) {
+  brPoint(t, s, x, h, brP); brQuat(t, brAt(t, s).h, brQ);
+  if (rx || ry || rz) brQ.multiply(brQ2.setFromEuler(brE.set(rx, ry, rz)));
+  brMo.compose(brP, brQ, brS.set(sx * BK, sy * BK, sz * BK)); bgGeo(g, geo, brMo, col);
+}
+
+// ---------- materiales (los mismos para todo) ----------
+const brMatSolid = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
+const brMatGlow = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
+const brMatPool = new THREE.MeshBasicMaterial({ color: '#50aaff', transparent: true, opacity: 0.7 });
+const brMatBolt = new THREE.MeshStandardMaterial({ color: '#ffd23f', metalness: 0.15, roughness: 0.35, emissive: '#c88a00', emissiveIntensity: 0.45 });
+const brMatDeco = new THREE.MeshLambertMaterial({ color: '#ffffff' });
+const brBoltGeo = new THREE.CylinderGeometry(0.9 * BK, 0.9 * BK, 0.45 * BK, 6);
+const BR_DECO_GEO = { tree: new THREE.ConeGeometry(0.5, 1.3, 7).translate(0, 0.65, 0), rock: new THREE.DodecahedronGeometry(0.55).translate(0, 0.25, 0), pine: new THREE.ConeGeometry(0.35, 1.6, 7).translate(0, 0.8, 0), lolly: new THREE.SphereGeometry(0.5, 10, 8).translate(0, 0.9, 0) };
+const BR_DECO_COL = { tree: ['#4f9e3f', '#3d8a34', '#62b04c'], rock: ['#3a2a2a', '#552c22', '#2c2228'], pine: ['#ffffff', '#e6f2ff', '#cfe6d8'], lolly: ['#ff7ab8', '#7ad6ff', '#ffe066', '#b98aff'] };
+
+// ---------- la bajada armada (una a la vez) ----------
+const brRideG = new THREE.Group(); brRideG.visible = false; scene.add(brRideG);
+// carteles de salida y llegada (se reescriben, nunca se crean de nuevo)
+const brSignStart = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: signTexture(['Bathtub Rush'], { border: '#ffdc46', w: 3.2, h: 1, size: 130 }), side: THREE.DoubleSide }));
+const brSignEnd = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: signTexture([tr('LLEGADA')], { border: '#2a2a2a', w: 3.2, h: 1, size: 150 }), side: THREE.DoubleSide }));
+brRideG.add(brSignStart, brSignEnd);
+let brBuilt = -1, brBuiltMeshes = [], brBoltMesh = null;
+function brDisposeWorld() {
+  for (const m of brBuiltMeshes) { brRideG.remove(m); m.geometry.dispose(); if (m.isInstancedMesh && m.dispose) m.dispose(); }
+  brBuiltMeshes = []; brBoltMesh = null; brBuilt = -1;
+}
+function brBuildWorld(wi) {
+  if (brBuilt === wi) return;
+  brDisposeWorld();
+  const t = brTrack(wi), def = t.def, W = t.W, half = W / 2, sol = bgNew(), glow = bgNew();
+  const P = (i, x, h) => { const sh = Math.sin(t.hd[i]), ch = Math.cos(t.hd[i]); return [t.px[i] + (ch * x - sh * t.ss * h) * BK, t.py[i] + t.cs * h * BK, t.pz[i] + (-sh * x - ch * t.ss * h) * BK]; };
+  const n = t.n;
+  for (let i = 0; i < n; i++) {
+    // el camino y sus costados
+    bgQuad(sol, P(i, -half, 0), P(i, half, 0), P(i + 1, half, 0), P(i + 1, -half, 0), def.road);
+    for (const sd of [-1, 1]) {
+      const e = sd * half, o = sd * (half + 0.9), cc = i % 2 ? '#e63c3c' : '#fafafa';
+      bgQuad(sol, P(i, e, -1.2), P(i, e, 0), P(i + 1, e, 0), P(i + 1, e, -1.2), def.road);
+      bgQuad(sol, P(i, e - sd * 0.5, 0.4), P(i, o, 0.4), P(i + 1, o, 0.4), P(i + 1, e - sd * 0.5, 0.4), cc); // cordón
+      bgQuad(sol, P(i, e - sd * 0.5, 0), P(i, e - sd * 0.5, 0.4), P(i + 1, e - sd * 0.5, 0.4), P(i + 1, e - sd * 0.5, 0), cc);
+      bgQuad(sol, P(i, o, -0.2), P(i, o, 0.4), P(i + 1, o, 0.4), P(i + 1, o, -0.2), cc);
+    }
+    if (i % 3 === 0) { const s0 = i * BR_DS + 1.3, s1 = s0 + 3.4, q = (ss, x) => { brPoint(t, ss, x, 0.05, brVa); return [brVa.x, brVa.y, brVa.z]; }; bgQuad(sol, q(s0, -0.35), q(s0, 0.35), q(s1, 0.35), q(s1, -0.35), def.line); }
+    // la montaña: más abajo que el camino, así se nota que te caés
+    if (i % 4 === 1) { const col = Math.floor(i / 4) % 2 ? def.side2 : def.side; for (const sd of [-1, 1]) bgOnTrack(sol, t, brBox, (i + 2) * BR_DS, sd * (half + 37), -16, 70, 6, BR_DS * 4 + 2, col); }
+  }
+  // arcos de salida y llegada
+  const arch = (s, col, sign) => {
+    for (const sd of [-1, 1]) bgOnTrack(sol, t, brBox, s, sd * (half + 2), 7, 2, 16, 2, col);
+    bgOnTrack(sol, t, brBox, s, 0, 16, W + 6, 4, 2, col);
+    brPoint(t, s, 0, 21, sign.position); brQuat(t, brAt(t, s).h, sign.quaternion); sign.scale.set(16 * BK, 5 * BK, 1);
+  };
+  arch(14, def.line, brSignStart); arch(t.len, '#282828', brSignEnd);
+  brSignStart.material.map.setLines([tr(def.es), '⭐'.repeat(def.stars)], { border: def.line });
+  bgOnTrack(sol, t, brBox, -5, 0, -1, W + 10, 2, 24, def.side); // donde arranca
+  // obstáculos
+  const lavaC = def.lava || '#ff6e14';
+  for (const it of t.items) {
+    const m = it.s + it.len / 2;
+    if (it.kind === 'rock') bgOnTrack(sol, t, brBox, m, it.x, it.h / 2, it.w, it.h, it.len + 1, '#78736e', 0.2, 0.5, 0.15);
+    else if (it.kind === 'crate') { bgOnTrack(sol, t, brBox, m, it.x, it.h / 2, it.w, it.h, it.len + 1, '#aa7846'); bgOnTrack(sol, t, brBox, m, it.x, it.h / 2, it.w + 0.2, 0.6, it.len + 1.2, '#7a5230'); }
+    else if (it.kind === 'snowman') { bgOnTrack(sol, t, brBall, m, it.x, 2.2, 4.5, 4.5, 4.5, '#ffffff'); bgOnTrack(sol, t, brBall, m, it.x, 5.4, 3, 3, 3, '#ffffff'); bgOnTrack(sol, t, brCone, m - 1.8, it.x, 5.5, 0.5, 1.4, 0.5, '#ff8c1e', -Math.PI / 2); }
+    else if (it.kind === 'candy') { for (let k = 0; k < 3; k++) bgOnTrack(sol, t, brCyl, m, it.x, 0.75 + k * 1.5, it.w * 0.8, 1.5, it.w * 0.8, k % 2 ? '#ffffff' : '#ff5078'); }
+    else if (it.kind === 'ramp') {
+      // cuña: empieza en el piso y sube hasta h al final
+      const a = it.s, b = it.s + it.len, l = it.x - it.w / 2, r = it.x + it.w / 2, Y = '#ffc828', Y2 = '#e0a010';
+      const pt = (s, x, h) => { brPoint(t, s, x, h, brVa); return [brVa.x, brVa.y, brVa.z]; };
+      bgQuad(sol, pt(a, l, 0), pt(a, r, 0), pt(b, r, it.h), pt(b, l, it.h), Y);
+      bgQuad(sol, pt(b, l, 0), pt(b, r, 0), pt(b, r, it.h), pt(b, l, it.h), Y2);
+      bgTri(sol, pt(a, l, 0), pt(b, l, 0), pt(b, l, it.h), Y2); bgTri(sol, pt(a, r, 0), pt(b, r, 0), pt(b, r, it.h), Y2);
+    } else if (it.kind === 'lava') bgOnTrack(glow, t, brBox, m, it.x, 0.1, it.w, 0.3, it.len, lavaC);
+    else if (it.kind === 'boost') {
+      bgOnTrack(glow, t, brBox, m, it.x, 0.1, it.w, 0.2, it.len, '#3cdcff');
+      const pt = (s, x) => { brPoint(t, s, x, 0.3, brVa); return [brVa.x, brVa.y, brVa.z]; };
+      for (const k of [0.25, 0.6]) { const ss = it.s + it.len * k; bgTri(glow, pt(ss, it.x - 3), pt(ss, it.x + 3), pt(ss + 2.6, it.x), '#ffffff'); }
+    }
+  }
+  const mk = (geo, mat) => { const m = new THREE.Mesh(geo, mat); m.receiveShadow = true; m.frustumCulled = false; brRideG.add(m); brBuiltMeshes.push(m); return m; };
+  mk(bgBuild(sol), brMatSolid); mk(bgBuild(glow), brMatGlow);
+  // la pileta de llegada
+  const pool = new THREE.Mesh(new THREE.PlaneGeometry((W + 30) * BK, 70 * BK), brMatPool);
+  brPoint(t, t.len + 40, 0, -6, pool.position); brQuat(t, brAt(t, t.len + 40).h, pool.quaternion); pool.quaternion.multiply(brQ2.setFromEuler(brE.set(-Math.PI / 2 + t.def.slope * Math.PI / 180, 0, 0)));
+  brRideG.add(pool); brBuiltMeshes.push(pool);
+  // adornos a los costados (árboles, piedras, pinos o caramelos): una sola malla
+  const R = brRng(wi * 31 + 5), spots = [];
+  for (let s = 20; s < t.len + 60; s += 22) for (const sd of [-1, 1]) if (R() < 0.75) spots.push([s + R() * 10, sd * (half + 8 + R() * 30), 2.5 + R() * 4.5]);
+  const deco = new THREE.InstancedMesh(BR_DECO_GEO[def.deco], brMatDeco, spots.length), cols = BR_DECO_COL[def.deco];
+  spots.forEach(([s, x, sc], i) => { brPoint(t, s, x, -13, brP); brQ.identity(); brQ.setFromEuler(brE.set(0, R() * 6, 0)); brMo.compose(brP, brQ, brS.set(sc * BK * 3, sc * BK * 3, sc * BK * 3)); deco.setMatrixAt(i, brMo); deco.setColorAt(i, bgCol.set(cols[i % cols.length])); });
+  deco.frustumCulled = false; brRideG.add(deco); brBuiltMeshes.push(deco);
+  // tuercas: todas en una malla; las que agarrás desaparecen
+  brBoltMesh = new THREE.InstancedMesh(brBoltGeo, brMatBolt, Math.max(1, t.bolts.length)); brBoltMesh.frustumCulled = false; brBoltMesh.castShadow = true;
+  brRideG.add(brBoltMesh); brBuiltMeshes.push(brBoltMesh);
+  brResetBolts(t);
+  brBuilt = wi;
+}
+function brBoltMatrix(t, b, spin) {
+  brPoint(t, b.s, b.x, b.h + 1.4, brP); brQuat(t, brAt(t, b.s).h, brQ);
+  brQ.multiply(brQ2.setFromEuler(brE.set(0, spin, Math.PI / 2)));
+  return brMo.compose(brP, brQ, brS.set(1, 1, 1));
+}
+function brResetBolts(t) { if (!brBoltMesh) return; t.bolts.forEach((b, i) => brBoltMesh.setMatrixAt(i, brBoltMatrix(t, b, i))); brBoltMesh.instanceMatrix.needsUpdate = true; }
+
+// ---------- las bañeras (una malla por modelo, compartida por todos) ----------
+const brTubCache = {};
+function brTubModel(id) {
+  const def = BT_BY[id] || BT_BY.classic;
+  if (!brTubCache[id]) {
+    const g = bgNew(), fire = bgNew();
+    const add = (geo, x, y, z, sx, sy, sz, col, rx = 0, ry = 0, rz = 0, into = g) => { brMo.compose(brP.set(x, y + 1.2, z), brQ.setFromEuler(brE.set(rx, ry, rz)), brS.set(sx, sy, sz)); bgGeo(into, geo, brMo, col); };
+    add(brBox, 0, 0.2, 0, 5.2, 1, 8.4, def.body);
+    add(brBox, -2.6, 1.3, 0, 0.8, 2.4, 8.4, def.body); add(brBox, 2.6, 1.3, 0, 0.8, 2.4, 8.4, def.body);
+    add(brBox, 0, 1.3, 4.0, 5.2, 2.4, 0.8, def.body); add(brBox, 0, 1.1, -4.0, 5.2, 2.0, 0.8, def.body);
+    add(brCyl, -2.6, 2.55, 0, 1, 8.4, 1, def.trim, Math.PI / 2); add(brCyl, 2.6, 2.55, 0, 1, 8.4, 1, def.trim, Math.PI / 2);
+    add(brBox, 0, 1.6, 0, 4.2, 0.3, 7.2, '#78c8ff'); // el agua
+    add(brBox, 0, 3.2, 4.0, 0.5, 2.2, 0.5, '#c8c8d2'); add(brBox, 0, 4.2, 3.5, 0.5, 0.5, 1.4, '#c8c8d2'); // canilla
+    for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+      add(brCyl, sx * 2.7, -0.4, sz * 3, 1.8, 0.9, 1.8, '#232328', 0, 0, Math.PI / 2);
+      if (id === 'royal') add(brBall, sx * 2.3, -0.2, sz * 3.4, 1.2, 1.2, 1.2, def.trim);
+    }
+    if (id === 'duck') { add(brBall, 1.2, 2.4, -2.6, 1.8, 1.8, 1.8, '#ffdc3c'); add(brBox, 1.2, 2.3, -3.6, 0.8, 0.4, 0.8, '#ff8c1e'); }
+    if (id === 'hot') for (let k = 1; k <= 5; k++) add(brBall, Math.sin(k) * 1.5, 1.9, Math.cos(k * 1.7) * 2.6, 0.7, 0.7, 0.7, '#ffffff');
+    if (def.rocket) for (const sx of [-1.4, 1.4]) { add(brCyl, sx, 1.2, 5, 1.3, 2.6, 1.3, def.trim, Math.PI / 2); add(brBall, sx, 1.2, 6.5, 1.1, 1.1, 1.6, '#ffa028', 0, 0, 0, fire); }
+    const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: def.shiny ? 0.25 : 0.45, metalness: def.shiny ? 0.55 : 0.05 });
+    brTubCache[id] = { geo: bgBuild(g), mat, fire: fire.p.length ? bgBuild(fire) : null };
+  }
+  const c = brTubCache[id], grp = new THREE.Group();
+  const m = new THREE.Mesh(c.geo, c.mat); m.castShadow = true; grp.add(m);
+  if (c.fire) grp.add(new THREE.Mesh(c.fire, brMatGlow));
+  grp.scale.setScalar(TUB_K); grp.userData.id = id;
+  return grp;
+}
+// el muñeco va sentado un poco atrás del centro de la bañera; el grupo "jinete" mira hacia +Z
+function brSeatTub(rider, id) {
+  let tub = rider.userData.brTub;
+  if (tub && tub.userData.id === id) return tub;
+  if (tub) rider.remove(tub);
+  tub = brTubModel(id); tub.rotation.y = Math.PI; tub.position.set(0, 0, 0.6 * TUB_K);
+  rider.add(tub); rider.userData.brTub = tub; return tub;
+}
+function brUnseatTub(rider) { const tub = rider.userData.brTub; if (tub) { rider.remove(tub); rider.userData.brTub = null; } }
+
+// =====================================================================
+// ---------- la cima: el lugar de espera (portal, 4 puertas, bañeras y ruleta) ----------
+// =====================================================================
+const brLobby = new THREE.Group(); scene.add(brLobby);
+cullZone(brLobby, BR.x, BR.z, BR.r + 110);
+const brPads = []; // { x, z, kind, wi, lock, mesh }
+const brGateSigns = [];
+let brDisplayTub = null;
+const BR_WHEEL_COLS = ['#ff6b6b', '#ffd23f', '#4ecdc4', '#a06cd5', '#ff9f43', '#5f9ef5', '#7bd389'];
+function brWheelCanvas(size) {
+  const cv = document.createElement('canvas'); cv.width = cv.height = size; const g = cv.getContext('2d'), c = size / 2, n = BR_SPIN.length;
+  for (let i = 0; i < n; i++) {
+    const a0 = -Math.PI / 2 + (i - 0.5) * Math.PI * 2 / n, a1 = a0 + Math.PI * 2 / n;
+    g.fillStyle = BR_WHEEL_COLS[i]; g.beginPath(); g.moveTo(c, c); g.arc(c, c, c - 4, a0, a1); g.closePath(); g.fill();
+    g.save(); g.translate(c, c); g.rotate((a0 + a1) / 2); g.fillStyle = '#2a1840'; g.font = `700 ${Math.round(size * 0.075)}px Fredoka, sans-serif`; g.textAlign = 'right'; g.textBaseline = 'middle'; g.fillText(fmt(BR_SPIN[i].c), c - size * 0.06, 0); g.restore();
+  }
+  g.lineWidth = size * 0.03; g.strokeStyle = '#faf6eb'; g.beginPath(); g.arc(c, c, c - size * 0.02, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = '#faf6eb'; g.beginPath(); g.arc(c, c, size * 0.08, 0, Math.PI * 2); g.fill();
+  return cv;
+}
+{
+  const L = brLobby, C = BR;
+  // piso, borde y un camino de baldosas
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(C.r + 0.6, 64), toyMat('#7cc95b')); floor.rotation.x = -Math.PI / 2; floor.position.set(C.x, 0, C.z); floor.receiveShadow = true; L.add(floor);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(9, 11.2, 64), toyMat('#f3ead2')); ring.rotation.x = -Math.PI / 2; ring.position.set(C.x, 0.01, C.z); ring.receiveShadow = true; L.add(ring);
+  const wall = new THREE.Mesh(new THREE.TorusGeometry(C.r, 0.35, 8, 96), toyMat('#faf6eb')); wall.rotation.x = Math.PI / 2; wall.position.set(C.x, 0.3, C.z); L.add(wall);
+  // un patito de goma gigante en el medio (en un charco)
+  const pud = new THREE.Mesh(new THREE.CircleGeometry(4.2, 40), toyMat('#6cc4ff', 0.2)); pud.rotation.x = -Math.PI / 2; pud.position.set(C.x, 0.02, C.z); L.add(pud);
+  const duck = new THREE.Group(); duck.position.set(C.x, 0, C.z); L.add(duck);
+  const yel = toyMat('#ffd83d', 0.35);
+  addMesh(new THREE.SphereGeometry(1.7, 24, 16), yel, 0, 1.4, 0, duck).scale.set(1.25, 0.85, 1);
+  addMesh(new THREE.SphereGeometry(1.05, 24, 16), yel, 0.9, 3.05, 0, duck);
+  addMesh(new THREE.SphereGeometry(0.45, 16, 10), toyMat('#ff8c1e'), 1.9, 2.9, 0, duck).scale.set(1.3, 0.45, 0.9);
+  for (const sz of [-1, 1]) addMesh(new THREE.SphereGeometry(0.14, 10, 8), toyMat('#1e1e24'), 1.62, 3.35, sz * 0.42, duck);
+  addMesh(new THREE.SphereGeometry(0.7, 16, 10), yel, -1.9, 1.9, 0, duck).scale.set(1, 0.6, 1.2);
+  duck.rotation.y = Math.PI / 2;
+  colliders.push({ x: C.x, z: C.z, r: 2.3 });
+  // montañas de fondo (una sola malla)
+  const mg = bgNew(), R = brRng(99);
+  for (let k = 0; k < 11; k++) {
+    const a = k / 11 * Math.PI * 2 + R() * 0.3, d = 75 + R() * 40, rr = 22 + R() * 22, hh = 38 + R() * 50, x = C.x + Math.sin(a) * d, z = C.z - Math.cos(a) * d;
+    brMo.compose(brP.set(x, hh / 2 - 2, z), brQ.identity(), brS.set(rr * 2, hh, rr * 2)); bgGeo(mg, brCone, brMo, ['#6aa354', '#5c944a', '#7a8a96'][k % 3]);
+    brMo.compose(brP.set(x, hh - 2 - hh * 0.13, z), brQ.identity(), brS.set(rr * 0.56, hh * 0.28, rr * 0.56)); bgGeo(mg, brCone, brMo, '#ffffff');
+  }
+  const mm = new THREE.Mesh(bgBuild(mg), brMatSolid); L.add(mm);
+  // las 4 puertas, una por mundo (en orden de izquierda a derecha)
+  BR_WORLDS.forEach((w, i) => {
+    const a = (-54 + i * 36) * Math.PI / 180, gx = C.x + Math.sin(a) * 18.5, gz = C.z - Math.cos(a) * 18.5;
+    const g = new THREE.Group(); g.position.set(gx, 0, gz); g.rotation.y = Math.atan2(C.x - gx, C.z - gz); L.add(g);
+    for (const sd of [-1, 1]) { addMesh(new THREE.CylinderGeometry(0.3, 0.36, 4.6, 14), toyMat(w.line), sd * 2.6, 2.3, 0, g); addMesh(new THREE.SphereGeometry(0.4, 14, 10), toyMat('#ffd83d'), sd * 2.6, 4.75, 0, g); colliders.push({ x: gx + Math.cos(g.rotation.y) * sd * 2.6, z: gz - Math.sin(g.rotation.y) * sd * 2.6, r: 0.4 }); }
+    const tex = signTexture(['…'], { border: w.line, size: 120 }); brGateSigns[i] = tex;
+    addMesh(rbox(5.8, 2.6, 0.3, 0.12), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.5 }), 0, 4.6, 0, g);
+    // el camino que baja por atrás de la puerta (con el color del mundo)
+    const road = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.3, 9), toyMat(w.road)); road.position.set(0, -0.9, -4.6); road.rotation.x = -0.22; g.add(road);
+    const stripe = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.32, 9), toyMat(w.line)); stripe.position.set(0, -0.88, -4.6); stripe.rotation.x = -0.22; g.add(stripe);
+    const pad = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.12, 32), toyMat(w.line, 0.3)); const px = C.x + Math.sin(a) * 14.6, pz = C.z - Math.cos(a) * 14.6; pad.position.set(px, 0.06, pz); L.add(pad);
+    brPads.push({ x: px, z: pz, kind: 'world', wi: i, lock: false, mesh: pad });
+  });
+  // la tienda de bañeras (oeste) con la bañera que usás girando
+  {
+    const x = C.x - 17.5, z = C.z;
+    addMesh(new THREE.CylinderGeometry(2.2, 2.4, 0.8, 32), toyMat('#faf6eb'), x, 0.4, z, L); colliders.push({ x, z, r: 2.3 });
+    brDisplayTub = new THREE.Group(); brDisplayTub.position.set(x, 0.8, z); brDisplayTub.scale.setScalar(2.4); L.add(brDisplayTub);
+    const sg = new THREE.Group(); sg.position.set(x - 2.6, 0, z); sg.rotation.y = Math.PI / 2; L.add(sg);
+    addMesh(new THREE.CylinderGeometry(0.12, 0.14, 4.2, 10), toyMat('#b5814f'), 0, 2.1, 0, sg);
+    addMesh(rbox(4.2, 1.6, 0.2, 0.1), new THREE.MeshStandardMaterial({ map: signTexture([tr('BAÑERAS')], { border: '#5f9ef5', size: 150 }), roughness: 0.5 }), 0, 4.1, 0, sg);
+    const pad = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.12, 32), toyMat('#5f9ef5', 0.3)); pad.position.set(C.x - 13, 0.06, z); L.add(pad);
+    brPads.push({ x: C.x - 13, z, kind: 'shop', lock: false, mesh: pad });
+  }
+  // la ruleta (este)
+  {
+    const x = C.x + 17.5, z = C.z;
+    const wtex = new THREE.CanvasTexture(brWheelCanvas(256)); wtex.anisotropy = 4;
+    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.3, 0.3, 40), [toyMat('#faf6eb'), new THREE.MeshBasicMaterial({ map: wtex }), toyMat('#faf6eb')]);
+    wheel.rotation.z = Math.PI / 2; wheel.position.set(x, 3.2, z); L.add(wheel); brLobby.userData.wheel = wheel;
+    addMesh(new THREE.BoxGeometry(0.5, 3, 0.5), toyMat('#a06cd5'), x + 0.4, 1.5, z, L); colliders.push({ x: x + 0.4, z, r: 0.5 });
+    addMesh(new THREE.ConeGeometry(0.35, 0.8, 3), toyMat('#e2493b'), x - 0.2, 5.75, z, L).rotation.z = Math.PI;
+    const pad = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.12, 32), toyMat('#a06cd5', 0.3)); pad.position.set(C.x + 13, 0.06, z); L.add(pad);
+    brPads.push({ x: C.x + 13, z, kind: 'spin', lock: false, mesh: pad });
+  }
+  L.traverse((o) => { if (o.isMesh && o !== floor) o.castShadow = true; });
+}
+function brRefreshLobby() {
+  BR_WORLDS.forEach((w, i) => {
+    const open = !!brs.worlds[w.id], best = brs.best[w.id] || 0;
+    brGateSigns[i].setLines([tr(w.es), '⭐'.repeat(w.stars) + (open ? (best ? '  ' + Math.floor(best) + '%' : '') : '  🔒 ' + fmt(w.cost))], { border: w.line });
+  });
+  if (brDisplayTub) { const id = brs.tub; if (!brDisplayTub.userData.id || brDisplayTub.userData.id !== id) { brDisplayTub.clear(); const m = brTubModel(id); m.scale.setScalar(TUB_K); brDisplayTub.add(m); brDisplayTub.userData.id = id; } }
+}
+brRefreshLobby();
+
+// ---------- portal en la plaza (cinta corta) y portal de vuelta ----------
+const BATH_DIR = PLAZA_EXITS.bath;
+const brPlazaPortal = (() => {
+  const dx = BATH_DIR.x, dz = BATH_DIR.z, L = PLAZA.r + 6.5;
+  const sx = PLAZA.x + dx * (PLAZA.r - 1.2), sz = PLAZA.z + dz * (PLAZA.r - 1.2), ex = PLAZA.x + dx * L, ez = PLAZA.z + dz * L;
+  const px = -dz * 1.6, pz = dx * 1.6;
+  addBelt(sx - px, sz - pz, ex - px, ez - pz, '#3cb4ff');
+  addBelt(ex + px, ez + pz, sx + px, sz + pz, '#e6a91e');
+  plazaSign(dx, dz, [tr('Bathtub Rush'), tr('Juego 8')], '#3cb4ff');
+  const g = makePortal('#3cb4ff'); g.position.set(ex + dx * 2.6, 0, ez + dz * 2.6); g.rotation.y = Math.atan2(dx, dz); scene.add(g);
+  arch(ex + dx * 2.6, ez + dz * 2.6, Math.atan2(dx, dz), [tr('BATHTUB RUSH'), tr('Juego 8')], '#3cb4ff');
+  return g;
+})();
+const brLobbyPortal = makePortal('#ffd23f'); brLobbyPortal.position.set(BR.x, 0, BR.z + BR.r - 2.2); brLobby.add(brLobbyPortal);
+const BR_IN = { x: BR.x, z: BR.z + BR.r - 10 };
+let brPortalCd = 0;
+function brPortalsTick(dt) {
+  const tt = performance.now() / 1000;
+  brPlazaPortal.userData.disc.rotation.z = tt * 2; brLobbyPortal.userData.disc.rotation.z = -tt * 2;
+  if (brPortalCd > 0) { brPortalCd -= dt; return; }
+  if (mode !== 'play' || brRun) return;
+  const p = player.position;
+  if (Math.hypot(p.x - brPlazaPortal.position.x, p.z - brPlazaPortal.position.z) < 1.1 && p.y < 2) {
+    p.set(BR_IN.x, 0, BR_IN.z); vy = 0; facing = Math.PI; camYaw = 0; brPortalCd = 1.2; trFlash(); playS('puerta_abre', 0.6);
+  } else if (Math.hypot(p.x - brLobbyPortal.position.x, p.z - brLobbyPortal.position.z) < 1.1 && p.y < 2) {
+    const back = 5.0; p.set(brPlazaPortal.position.x - BATH_DIR.x * back, 0, brPlazaPortal.position.z - BATH_DIR.z * back);
+    vy = 0; facing = Math.atan2(-BATH_DIR.x, -BATH_DIR.z); camYaw = facing + Math.PI; brPortalCd = 1.2; trFlash(); playS('puerta_abre', 0.6);
+  }
+}
+// límites: la cima es un círculo; mientras bajás, el muñeco va donde está la bañera
+function clampBath() {
+  const p = player.position;
+  if (brRun) { brPhys(); brPlace(); vy = 0; onGround = true; vel.set(0, 0, 0); return true; }
+  const dx = p.x - BR.x, dz = p.z - BR.z, d = Math.hypot(dx, dz);
+  if (d > BR.r + 8) return false;
+  if (d > BR.r - 0.7) { p.x = BR.x + dx / d * (BR.r - 0.7); p.z = BR.z + dz / d * (BR.r - 0.7); }
+  return true;
+}
+
+// =====================================================================
+// ---------- la bajada ----------
+// =====================================================================
+let brRun = null, brPhysT = 0;
+const brTubQ = new THREE.Quaternion(), brRiderQ = new THREE.Quaternion(), brFlip = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
+const brTubP = new THREE.Vector3(), brCamP = new THREE.Vector3(), brCamL = new THREE.Vector3(), brTmp = new THREE.Vector3();
+let brCamInit = false; const brFov0 = camera.fov;
+const brPct = (r) => Math.max(0, Math.min(100, r.lastS / r.t.len * 100));
+const brKeys = { l: 0, r: 0 };
+let brTouchSteer = 0;
+
+// sonidos: los de Legionia que ya tiene el mundo + algunos hechos con el navegador
+function brBeep(f, d = 0.16, type = 'square', vol = 0.18) {
+  const ac = audio(); if (!ac) return;
+  const t0 = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(); o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(vol * sfxScale, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + d); o.connect(g); g.connect(master); o.start(t0); o.stop(t0 + d + 0.02);
+}
+function brDing(k) { brBeep(1320 * (1 + (k % 5) * 0.06), 0.12, 'sine', 0.16); setTimeout(() => brBeep(1980 * (1 + (k % 5) * 0.06), 0.1, 'sine', 0.1), 50); }
+function brWhoosh(vol = 0.4) {
+  const ac = audio(); if (!ac) return;
+  const s = noise(0.6), f = ac.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.2; f.frequency.setValueAtTime(300, ac.currentTime); f.frequency.exponentialRampToValueAtTime(2600, ac.currentTime + 0.5);
+  const g = ac.createGain(); g.gain.setValueAtTime(vol * sfxScale, ac.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.6); s.connect(f); f.connect(g); g.connect(master); s.start();
+}
+function brSizzle() {
+  const ac = audio(); if (!ac) return;
+  const s = noise(0.9), f = ac.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 2500;
+  const g = ac.createGain(); g.gain.setValueAtTime(0.5 * sfxScale, ac.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.9); s.connect(f); f.connect(g); g.connect(master); s.start();
+}
+function brHorn() { brBeep(392, 0.35, 'sawtooth', 0.12); setTimeout(() => brBeep(523, 0.5, 'sawtooth', 0.12), 260); }
+let brWind = null, brNoiseBuf = null;
+function brWindStart() {
+  const ac = audio(); if (!ac || brWind) return;
+  if (!brNoiseBuf) { brNoiseBuf = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate); const d = brNoiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+  const src = ac.createBufferSource(); src.buffer = brNoiseBuf; src.loop = true;
+  const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 300; const g = ac.createGain(); g.gain.value = 0;
+  src.connect(f); f.connect(g); g.connect(master); src.start(); brWind = { src, f, g };
+}
+function brWindSet(v) { if (!brWind || !AC) return; const k = Math.min(1, v / 110); brWind.g.gain.setTargetAtTime(0.16 * k * sfxScale, AC.currentTime, 0.12); brWind.f.frequency.setTargetAtTime(250 + 1100 * k, AC.currentTime, 0.12); }
+function brWindStop() { if (!brWind) return; try { brWind.src.stop(); brWind.src.disconnect(); brWind.g.disconnect(); } catch (e) { /* nada */ } brWind = null; }
+const BR_CRASH_SND = { crash_rock: ['piedra1', 'impacto_fuerte'], crash_crate: ['madera_b1', 'madera2'], crash_snowman: ['tierra_b1', 'tierra2'], crash_candy: ['choqueb1', 'vidrio1'], crash_land: ['impacto_fuerte', 'choque_m1'] };
+
+function brStartRide(wi) {
+  const t = brTrack(wi), tub = BT_BY[brs.tub] || BT_BY.classic;
+  brBuildWorld(wi); brResetBolts(t); brRideG.visible = true;
+  brRun = { wi, t, tub, s: 6, lastS: 6, x: 0, h: 0, v: 0, xv: 0, vh: 0, boost: 0, armor: tub.armor, jumpReady: 0, maxSpeed: 0, bolts: 0, got: new Uint8Array(t.bolts.length), used: new Uint8Array(t.items.length), itemIdx: 0, boltIdx: 0, state: 'count', cd: 3, cdT: 0.35, timer: 0, reason: null, roll: 0, revives: 0, paid: 0, friend: false, shown: false, tipT: 4 };
+  brSeatTub(player, tub.id);
+  closePanels(); $('brRes').classList.remove('open');
+  document.body.classList.add('bathride'); document.body.classList.remove('bath');
+  $('brTip').textContent = wi === 0 ? tr('Las rampas te hacen volar. ¡Agarrá las tuercas en el aire!') : tr('¡Saltá la lava y las piedras!');
+  brCamInit = false; brPhysT = performance.now();
+  brWindStart(); brBotsStart(); trFlash();
+  brs.runs = (brs.runs || 0) + 1; brSave();
+  brPhys(); brPlace();
+}
+function brEndRide() {
+  const r = brRun; if (!r) return;
+  brPay(r);
+  brRun = null; brUnseatTub(player); brRideG.visible = false; brWindStop(); brBotsHide();
+  $('brRes').classList.remove('open'); $('brBig').textContent = '';
+  document.body.classList.remove('bathride');
+  camera.fov = brFov0; camera.updateProjectionMatrix();
+  player.quaternion.identity();
+  // vuelve a la cima, delante de la puerta de ese mundo (sin volver a pisarla)
+  const pad = brPads.find((p) => p.kind === 'world' && p.wi === r.wi);
+  const dx = BR.x - pad.x, dz = BR.z - pad.z, d = Math.hypot(dx, dz);
+  player.position.set(pad.x + dx / d * 3, 0, pad.z + dz / d * 3); pad.lock = true;
+  facing = Math.atan2(dx, dz); camYaw = facing + Math.PI; vy = 0; trFlash();
+  brRefreshLobby(); updateHud();
+}
+// lo que gana: por cuánto bajó, las tuercas, llegar abajo (x1.5) y bajar con otro jugador (x2)
+function brReward(r) {
+  const pct = brPct(r); let rew = pct * r.t.def.mult + r.bolts * BR_CFG.bolt; const tags = [];
+  if (pct >= 99.9) rew *= BR_CFG.finish;
+  if (r.friend) { rew *= BR_CFG.friend; tags.push(tr('Bajando con amigos: ¡x2!')); }
+  return [Math.floor(rew), tags];
+}
+// se paga lo que falta (si revivís y seguís, después se paga solo la diferencia)
+function brPay(r) { const [rew] = brReward(r); const d = rew - r.paid; if (d > 0) { st.coins += d; r.paid = rew; updateHud(); save(); } }
+function brCrash(reason) {
+  const r = brRun; if (!r || (r.state !== 'ride' && r.state !== 'falling')) return;
+  r.reason = reason; r.timer = 0; r.lastS = Math.max(r.lastS, Math.min(r.s, r.t.len));
+  if (reason === 'finish') { r.state = 'done'; trSplashSound(1); brHorn(); $('brBig').textContent = tr('¡LLEGASTE HASTA ABAJO!'); }
+  else {
+    r.state = 'crashing';
+    if (reason === 'crash_fall') trSplashSound(1); else if (reason === 'crash_lava') brSizzle(); else { const ss = BR_CRASH_SND[reason]; if (ss) { playS(ss[0], 0.8); playS(ss[1], 0.5); } }
+    shakeT = 0.6;
+  }
+}
+const BR_REASON = { crash_rock: '¡CONTRA UNA PIEDRA!', crash_crate: '¡CHOCASTE UNA CAJA!', crash_snowman: '¡CHAU MUÑECO DE NIEVE!', crash_candy: '¡CHOCASTE UN CARAMELO!', crash_lava: '¡QUEMA, QUEMA!', crash_fall: '¡TE CAÍSTE DEL CAMINO!', crash_land: '¡CAÍSTE MUY FUERTE!', finish: '¡LLEGASTE HASTA ABAJO!' };
+function brShowResult() {
+  const r = brRun; if (!r) return;
+  r.shown = true; $('brBig').textContent = '';
+  const pct = brPct(r), [rew, tags] = brReward(r), wid = r.t.def.id;
+  let record = false;
+  if (pct > (brs.best[wid] || 0)) { brs.best[wid] = Math.floor(pct * 10) / 10; record = true; brSave(); }
+  brPay(r);
+  $('brResT').textContent = tr(BR_REASON[r.reason] || '');
+  $('brResT').style.color = r.reason === 'finish' ? '#3fbf5a' : '#e0a010';
+  $('brRes1').textContent = tr('Distancia: {0}%', Math.floor(pct)) + (record ? '   ' + tr('¡Nuevo récord!') : '');
+  $('brRes2').textContent = tr('Velocidad máx.: {0} km/h', Math.floor(r.maxSpeed * 1.6));
+  $('brRes3').innerHTML = `<span class="coinS"></span>+${fmt(rew)} &nbsp; 🔩 ${r.bolts}`;
+  $('brRes4').textContent = tags.join('   ');
+  const can = r.reason !== 'finish' && r.revives < BR_CFG.maxRevives, cost = Math.floor(BR_CFG.reviveBase + pct * BR_CFG.revivePct);
+  $('brRevive').style.display = can ? '' : 'none'; $('brRevive').innerHTML = tr('Revivir') + ` (<span class="coinS"></span>${fmt(cost)})`; r.reviveCost = cost;
+  $('brRes').classList.add('open');
+  sfx(r.reason === 'finish' ? 'coin' : 'click');
+}
+function brRevive() {
+  const r = brRun; if (!r || !r.shown || r.reason === 'finish' || r.revives >= BR_CFG.maxRevives) return;
+  if (st.coins < r.reviveCost) { toast(tr('Te faltan {0} monedas.', fmt(r.reviveCost - st.coins))); sfx('click'); return; }
+  st.coins -= r.reviveCost; updateHud(); save();
+  r.revives++; r.s = Math.max(6, r.lastS - 24); r.x = 0; r.h = 0; r.vh = 0; r.xv = 0; r.v = 0; r.roll = 0; r.reason = null; r.itemIdx = 0; r.boltIdx = 0; r.boost = 0;
+  r.state = 'count'; r.cd = 2; r.cdT = 0.2; r.shown = false; r.revived = true;
+  $('brRes').classList.remove('open'); sfx('coin');
+}
+function brJump() {
+  const r = brRun; if (!r || r.state !== 'ride' || r.h > 0.05) return;
+  const now = performance.now() / 1000; if (now < r.jumpReady) return;
+  r.vh = BR_CFG.jump; r.jumpReady = now + BR_CFG.jumpCd; playS('jump1', 0.6, 1.2);
+}
+// choques y premios de la pista (igual que en Roblox)
+function brCheckTrack(r) {
+  const t = r.t, onG = r.h <= 0.05;
+  while (r.itemIdx < t.items.length && t.items[r.itemIdx].s + t.items[r.itemIdx].len < r.s - 2) r.itemIdx++;
+  for (let i = r.itemIdx; i < t.items.length; i++) {
+    const it = t.items[i]; if (it.s > r.s + 2) break;
+    if (r.used[i] || r.s < it.s - 1 || r.s > it.s + it.len + 1) continue;
+    const dx = Math.abs(r.x - it.x);
+    if (it.kind === 'ramp') { if (onG && dx < it.w / 2 + 0.5) { r.used[i] = 1; r.vh = Math.max(r.vh, r.v * BR_CFG.ramp); playS('jump2', 0.6, 0.8); } }
+    else if (it.kind === 'lava') { if (onG && dx < it.w / 2 + 1 && !(r.ghost > 0)) { brCrash('crash_lava'); return; } }
+    else if (it.kind === 'boost') { if (onG && dx < it.w / 2 + 1) { r.used[i] = 1; r.boost = 2.5; brWhoosh(0.5); } }
+    else if (dx < it.w / 2 + 2.4 && r.h < it.h) {
+      r.used[i] = 1;
+      if (r.ghost > 0) continue; // recién revivido: pasa a través un ratito
+      if (r.armor > 0) { r.armor--; r.v *= BR_CFG.crashSlow; playS('choque_m1', 0.7); toast(tr('¡Tu bañera aguantó el golpe! (quedan {0})', r.armor)); }
+      else { brCrash('crash_' + it.kind); return; }
+    }
+  }
+  while (r.boltIdx < t.bolts.length && t.bolts[r.boltIdx].s < r.s - 4) r.boltIdx++;
+  for (let j = r.boltIdx; j < t.bolts.length; j++) {
+    const b = t.bolts[j]; if (b.s > r.s + 4) break;
+    if (!r.got[j] && Math.abs(b.s - r.s) < 3.5 && Math.abs(b.x - r.x) < 4 && Math.abs(b.h - (r.h + 1.5)) < 4.5) {
+      r.got[j] = 1; r.bolts++; brBoltMesh.setMatrixAt(j, trZero); brBoltMesh.instanceMatrix.needsUpdate = true; brDing(r.bolts);
+    }
+  }
+}
+// la física de la bañera (se llama antes de mover la cámara)
+function brPhys() {
+  const r = brRun; if (!r) return;
+  const now = performance.now(), dt = Math.min(1 / 20, Math.max(0, (now - brPhysT) / 1000)); brPhysT = now;
+  const t = r.t, def = r.tub;
+  if (r.state === 'count') {
+    r.cdT -= dt;
+    if (r.cdT <= 0) {
+      if (r.cd > 0) { $('brBig').textContent = String(r.cd); brBeep(660); r.cd--; r.cdT = 0.7; }
+      else { $('brBig').textContent = tr('¡YA!'); brBeep(990, 0.3); r.state = 'ride'; r.v = BR_CFG.start * (r.revived ? 1.4 : 1); r.goT = 0.8; if (r.revived) r.ghost = 1.6; }
+    }
+  } else if (r.state === 'ride' || r.state === 'falling') {
+    if (r.ghost > 0) { r.ghost -= dt; const tb = player.userData.brTub; if (tb) tb.visible = r.ghost <= 0 || Math.floor(r.ghost * 10) % 2 === 0; }
+    if (r.goT > 0) { r.goT -= dt; if (r.goT <= 0 && $('brBig').textContent === tr('¡YA!')) $('brBig').textContent = ''; }
+    let top = def.top;
+    if (r.boost > 0) { r.boost -= dt; top *= BR_CFG.boost; }
+    r.v += (top - r.v) * def.accel * dt;
+    let steer = brTouchSteer;
+    if (keys.KeyA || keys.ArrowLeft) steer = -1; else if (keys.KeyD || keys.ArrowRight) steer = 1;
+    const grip = t.def.ice ? 2.2 : 10;
+    r.xv += (steer * def.steer - r.xv) * Math.min(1, grip * dt);
+    if (r.state === 'falling') r.xv *= 0.98;
+    r.x += r.xv * dt;
+    if (r.h > 0 || r.vh > 0) {
+      r.vh -= BR_CFG.gravity * dt; r.h += r.vh * dt;
+      if (r.h <= 0 && r.state === 'ride') {
+        if (r.vh < -def.landing * 0.55) { r.h = 0; brCrash('crash_land'); }
+        else { if (r.vh < -12) { playS('land' + Math.floor(Math.random() * 3), 0.6); trPuff(player.position.x, player.position.y + 0.3, player.position.z, 6, dropMat, dropGeo, 2); } r.h = 0; r.vh = 0; }
+      }
+    }
+    r.s += r.v * dt; r.maxSpeed = Math.max(r.maxSpeed, r.v); r.lastS = Math.max(r.lastS, Math.min(r.s, t.len));
+    if (r.state === 'ride' && Math.abs(r.x) > t.W / 2 + 0.6 && r.h <= 0.05) { r.state = 'falling'; r.vh = -4; r.h = -0.01; r.timer = 0; }
+    if (r.state === 'falling') { r.timer += dt; r.h -= dt * 6; if (r.timer > 0.6) { r.state = 'ride'; brCrash('crash_fall'); } }
+    if (r.state === 'ride') { brCheckTrack(r); if (r.s >= t.len && brRun === r && r.state === 'ride') brCrash('finish'); }
+  } else if (r.state === 'crashing') {
+    r.timer += dt; r.v *= Math.max(0, 1 - 2.5 * dt); r.s += r.v * dt; r.roll += dt * 9;
+    r.h = Math.max(r.h, 0) + Math.sin(Math.min(r.timer, 1) * Math.PI) * 3 * dt;
+    if (r.timer > 1 && !r.shown) brShowResult();
+  } else if (r.state === 'done') {
+    r.timer += dt; r.v *= Math.max(0, 1 - 1.5 * dt); r.s += r.v * dt; r.h = Math.max(-3, r.h - 6 * dt);
+    if (r.timer > 1.2 && !r.shown) brShowResult();
+  }
+}
+// pone la bañera (y al muñeco adentro) donde corresponde
+function brPlace() {
+  const r = brRun, t = r.t, def = r.tub;
+  const yaw = -r.xv / Math.max(1, def.steer) * 0.35, pitch = r.h > 0.05 ? Math.max(-0.35, Math.min(0.35, r.vh / 120)) : 0;
+  brPoint(t, r.s, r.x, r.h, brTubP); brQuat(t, brAt(t, r.s).h, brTubQ);
+  brTubQ.multiply(brQ2.setFromEuler(brE.set(pitch, yaw, -yaw * 0.6 + r.roll)));
+  brRiderQ.copy(brTubQ).multiply(brFlip);
+  player.position.copy(brTubP).add(brTmp.set(0, 0.1, -0.6 * TUB_K).applyQuaternion(brRiderQ));
+  player.quaternion.copy(brRiderQ);
+  facing = brAt(t, r.s).h + Math.PI - yaw;
+}
+// cámara atrás y arriba (devuelve true mientras bajás, así no se usa la cámara normal)
+function bathCam(dt) {
+  const r = brRun; if (!r) return false;
+  player.quaternion.copy(brRiderQ);
+  // sentado en la bañera, con las piernas estiradas; en el aire levanta los brazos
+  if (bones) {
+    bones.legL.rotation.x = bones.legR.rotation.x = -1.45; bones.kneeL.rotation.x = bones.kneeR.rotation.x = 0.35;
+    const air = r.h > 0.3 || r.state === 'crashing';
+    bones.armL.rotation.x = bones.armR.rotation.x = air ? -0.2 : -0.5; bones.armL.rotation.z = air ? -2.3 : -0.55; bones.armR.rotation.z = air ? 2.3 : 0.55;
+    bones.hips.rotation.set(0, 0, 0); bones.hips.position.y = bones.hipY;
+  }
+  const t = r.t;
+  brPoint(t, r.s - 18, r.x * 0.5, 10 + Math.max(0, r.h) * 0.4, brTmp);
+  const look = brVa.set(0, 2 * BK, -14 * BK).applyQuaternion(brTubQ).add(brTubP);
+  if (!brCamInit) { brCamP.copy(brTmp); brCamL.copy(look); brCamInit = true; }
+  const k = Math.min(1, dt * 8); brCamP.lerp(brTmp, k); brCamL.lerp(look, Math.min(1, dt * 12));
+  camera.position.copy(brCamP); camera.lookAt(brCamL);
+  if (shakeT > 0) { shakeT -= dt; camera.position.x += (Math.random() - 0.5) * shakeT * 0.5; camera.position.y += (Math.random() - 0.5) * shakeT * 0.5; }
+  const fov = 62 + Math.max(0, Math.min(18, (r.v - 60) * 0.25));
+  if (Math.abs(camera.fov - fov) > 0.3) { camera.fov += (fov - camera.fov) * Math.min(1, dt * 4); camera.updateProjectionMatrix(); }
+  return true;
+}
+
+// =====================================================================
+// ---------- vecinos que bajan con vos (solo si no hay otro jugador en ese mundo) ----------
+// =====================================================================
+const brBots = [];
+function brBotsMake() {
+  for (let i = 0; i < 3; i++) {
+    const R = brng(8100 + i * 37);
+    const c = { bot: true, obj: new THREE.Group(), lugar: 90 + i, phase: 0, walk: 0, spd: 0, s: 0, x: 0, v: 0, xv: 0, h: 0, vh: 0, state: 'off', timer: 0, roll: 0, think: 0, tx: 0, blind: 0 };
+    c.look = botLook(R); c.av = makeAvatar(c.look); c.obj.add(c.av.g); c.obj.visible = false; brRideG.add(c.obj);
+    brBots.push(c);
+  }
+}
+function brBotsStart() {
+  if (!brBots.length) brBotsMake();
+  const r = brRun, owned = BR_TUBS.filter((tb) => !tb.gems);
+  brBots.forEach((c, i) => {
+    c.tub = owned[Math.min(owned.length - 1, Math.floor(Math.random() * (2 + r.wi * 1.5)))];
+    brSeatTub(c.obj, c.tub.id);
+    c.s = 6 - (i + 1) * 9; c.x = [-11, 11, 0][i]; c.lane = c.x * 0.5; c.v = 0; c.xv = 0; c.h = 0; c.vh = 0; c.roll = 0; c.state = 'wait'; c.skill = 0.86 + Math.random() * 0.12; c.used = new Set();
+    c.obj.visible = true;
+  });
+}
+function brBotsHide() { for (const c of brBots) { c.obj.visible = false; c.state = 'off'; } }
+function brBotRespawn(c, r) {
+  c.s = Math.max(6, Math.min(r.t.len - 80, r.s - 25 - Math.random() * 30)); c.x = (Math.random() - 0.5) * r.t.W * 0.5; c.v = Math.max(BR_CFG.start, r.v * 0.85); c.xv = 0; c.h = 0; c.vh = 0; c.roll = 0;
+  c.state = 'ride'; c.used = new Set(); c.obj.visible = true;
+}
+function brBotTarget(c, t) {
+  let want = c.lane;
+  const blocks = [], ahead = Math.max(45, c.v * 0.95);
+  for (const it of t.items) {
+    if (it.s > c.s + ahead) break; if (it.s + it.len < c.s + 3) continue;
+    if (it.kind === 'boost' || (it.kind === 'ramp' && it.w < t.W - 6)) { if (!blocks.length) want = it.x; continue; }
+    if (it.kind === 'ramp' || it.gap) continue; // la lava de lado a lado se salta con la rampa
+    // solo la fila de obstáculos más cercana (los que están casi a la misma altura de la bajada)
+    if (blocks.length && it.s > blocks.s0 + 10) break;
+    if (!blocks.length) blocks.s0 = it.s;
+    blocks.push([it.x - it.w / 2 - 3.6, it.x + it.w / 2 + 3.6]);
+  }
+  const lim = t.W / 2 - 2.5;
+  want = Math.max(-lim, Math.min(lim, want));
+  if (c.blind > 0 || !blocks.length) return want;
+  // junta los obstáculos que se tocan y busca el hueco libre más cerca
+  blocks.sort((a, b) => a[0] - b[0]);
+  const m = [];
+  for (const b of blocks) { const l = m[m.length - 1]; if (l && b[0] <= l[1]) l[1] = Math.max(l[1], b[1]); else m.push([b[0], b[1]]); }
+  const hit = m.find(([a, z]) => want > a && want < z); if (!hit) return want;
+  const L = hit[0] - 0.5, Rr = hit[1] + 0.5, okL = L > -lim, okR = Rr < lim;
+  if (okL && (!okR || Math.abs(c.x - L) <= Math.abs(c.x - Rr))) return L; // del lado donde ya está
+  if (okR) return Rr;
+  return want;
+}
+function brBotsTick(dt, t) {
+  const r = brRun; if (!r) return;
+  const tr2 = r.t;
+  // ¿hay otro jugador bajando el mismo mundo? entonces no hacen falta los vecinos
+  const crowd = r.friendNow;
+  for (const c of brBots) {
+    if (crowd) { c.obj.visible = false; continue; }
+    if (c.state === 'off') continue;
+    if (c.state === 'wait') { if (r.state === 'ride') { c.state = 'ride'; c.v = BR_CFG.start; } }
+    else if (c.state === 'ride') {
+      const def = c.tub;
+      c.v += (def.top * c.skill - c.v) * def.accel * dt;
+      c.think -= dt; if (c.think <= 0) { c.think = 0.15; if (c.blind > 0) c.blind -= 0.15; else if (Math.random() < 0.003) c.blind = 0.6; c.tx = brBotTarget(c, tr2); }
+      const want = Math.max(-1, Math.min(1, (c.tx - c.x) * 0.35)) * def.steer;
+      c.xv += (want - c.xv) * Math.min(1, (tr2.def.ice ? 2.2 : 10) * dt); c.x += c.xv * dt;
+      if (c.h > 0 || c.vh > 0) { c.vh -= BR_CFG.gravity * dt; c.h += c.vh * dt; if (c.h <= 0) { c.h = 0; c.vh = 0; } }
+      c.s += c.v * dt;
+      // rampas, turbos y choques
+      for (let i = 0; i < tr2.items.length; i++) {
+        const it = tr2.items[i]; if (it.s > c.s + 2) break; if (it.s + it.len < c.s - 2 || c.used.has(i)) continue;
+        const dx = Math.abs(c.x - it.x), onG = c.h <= 0.05;
+        if (it.kind === 'ramp') { if (onG && dx < it.w / 2 + 0.5) { c.used.add(i); c.vh = c.v * BR_CFG.ramp; } }
+        else if (it.kind === 'boost') { if (onG && dx < it.w / 2 + 1) { c.used.add(i); c.v = def.top * BR_CFG.boost; } }
+        else if (it.kind === 'lava') { if (onG && dx < it.w / 2 + 1 && !it.gap) { c.state = 'crash'; c.timer = 0; c.why = 'lava'; } else if (onG && it.gap) { c.vh = BR_CFG.jump; } }
+        else if (dx < it.w / 2 + 2.4 && c.h < it.h) { c.used.add(i); c.state = 'crash'; c.timer = 0; c.why = it.kind + ' dx' + (c.x - it.x).toFixed(1) + ' w' + it.w.toFixed(1) + ' tx' + c.tx.toFixed(1) + ' b' + c.blind.toFixed(1) + ' h' + c.h.toFixed(1); }
+      }
+      if (Math.abs(c.x) > tr2.W / 2) c.x = Math.sign(c.x) * tr2.W / 2;
+      if (c.s >= tr2.len) { c.state = 'gone'; c.obj.visible = false; }
+      // que no se alejen mucho de vos
+      if (r.state === 'ride' && Math.abs(c.s - r.s) > 260) brBotRespawn(c, r);
+    } else if (c.state === 'crash') {
+      c.timer += dt; c.v *= Math.max(0, 1 - 2.5 * dt); c.s += c.v * dt; c.roll += dt * 9;
+      if (c.timer > 2.4) { if (r.state === 'ride') brBotRespawn(c, r); else { c.obj.visible = false; c.state = 'gone'; } }
+    }
+    if (!c.obj.visible) continue;
+    const yaw = -c.xv / Math.max(1, c.tub.steer) * 0.35;
+    brPoint(tr2, c.s, c.x, c.h, c.obj.position); brQuat(tr2, brAt(tr2, c.s).h, c.obj.quaternion);
+    c.obj.quaternion.multiply(brQ2.setFromEuler(brE.set(c.h > 0.05 ? Math.max(-0.35, Math.min(0.35, c.vh / 120)) : 0, yaw, -yaw * 0.6 + c.roll))).multiply(brFlip);
+    c.obj.position.add(brTmp.set(0, 0.1, -0.6 * TUB_K).applyQuaternion(c.obj.quaternion));
+    // de lejos no se anima (ahorra)
+    if (Math.abs(c.s - r.s) < 90) {
+      animateRemote(c, 0, 5, t, dt);
+      const B = c.av.J; if (B && B.L) { B.L.knee.rotation.x = B.R.knee.rotation.x = 0.35; B.L.leg.rotation.x = B.R.leg.rotation.x = -1.45; const air = c.h > 0.3; B.L.arm.rotation.z = air ? -2.3 : -0.55; B.R.arm.rotation.z = air ? 2.3 : 0.55; }
+      remoteFace(c, c.state === 'crash' ? 1 : 0, dt);
+    }
+  }
+}
+
+// ---------- online: los otros ven tu bañera; si alguien baja el mismo mundo, x2 ----------
+function brFlags() { const r = brRun; if (!r) return 0; return 32 | 4 | (r.tub.i << 8) | (r.wi << 12); }
+function brRemote(r, fl) {
+  if (fl & 32) {
+    const tb = BR_TUBS[(fl >> 8) & 15] || BR_TUBS[0];
+    brSeatTub(r.obj, tb.id); r.brW = (fl >> 12) & 15; r.brT = performance.now();
+  } else if (r.obj.userData.brTub) { brUnseatTub(r.obj); r.brW = -1; }
+}
+function brFriendNow(wi) {
+  if (typeof remotes === 'undefined') return false;
+  const now = performance.now();
+  for (const r of remotes.values()) if (r.brW === wi && now - (r.brT || 0) < 2500) return true;
+  return false;
+}
+
+// =====================================================================
+// ---------- pantalla: tienda de bañeras, mundos, ruleta ----------
+// =====================================================================
+const brStat = (v, max) => `<span class="brStat"><i style="width:${Math.round(Math.min(1, v / max) * 100)}%"></i></span>`;
+function openBrShop() {
+  closePanels();
+  const box = $('brShopList'); box.innerHTML = `<p class="note">${tr('Cada bañera es más rápida, dobla mejor o aguanta más golpes.')}</p>`;
+  for (const tb of BR_TUBS) {
+    const own = !!brs.owned[tb.id], use = brs.tub === tb.id;
+    const row = document.createElement('div'); row.className = 'shopRow';
+    row.innerHTML = `<span class="brSw" style="background:${tb.body};border-color:${tb.trim}">🛁</span><div><b>${tr(tb.es)}</b><small>${tr('Velocidad')} ${brStat(tb.top - 50, 65)} ${tr('Manejo')} ${brStat(tb.steer - 25, 21)}<br>${tr('Armadura')} ${brStat(tb.armor, 3)} ${tr('Aterrizaje')} ${brStat(tb.landing - 50, 45)}</small></div>`;
+    const b = document.createElement('button');
+    b.className = 'toy' + (use ? ' gray' : own ? '' : ' gold');
+    b.innerHTML = use ? tr('En uso') : own ? tr('Usar') : tb.gems ? `<span class="gemS"></span>${tb.gems}` : `<span class="coinS"></span>${fmt(tb.price)}`;
+    b.onclick = () => {
+      if (use) return;
+      if (!own) {
+        if (tb.gems) { if (st.gems < tb.gems) { toast(tr('Te faltan {0} gemas.', tb.gems - st.gems)); sfx('click'); return; } st.gems -= tb.gems; }
+        else { if (st.coins < tb.price) { toast(tr('Te faltan {0} monedas.', fmt(tb.price - st.coins))); sfx('click'); return; } st.coins -= tb.price; }
+        brs.owned[tb.id] = 1; happy(); toast(tr('¡Bañera nueva: {0}!', tr(tb.es)));
+      }
+      brs.tub = tb.id; brSave(); updateHud(); brRefreshLobby(); sfx('coin'); openBrShop();
+    };
+    row.appendChild(b); box.appendChild(row);
+  }
+  $('brShopPanel').classList.add('open'); sfx('click');
+}
+let brWorldAsk = -1;
+function openBrWorld(wi) {
+  closePanels(); brWorldAsk = wi;
+  const w = BR_WORLDS[wi], prev = BR_WORLDS[wi - 1];
+  const ok = !prev || brs.worlds[prev.id];
+  $('brWorldTitle').textContent = tr(w.es);
+  $('brWorldBody').innerHTML = `<p>${'⭐'.repeat(w.stars)}</p><p>${ok ? tr('Desbloquealo para bajar este mundo.') : tr('Primero desbloqueá {0}.', tr(prev.es))}</p>`;
+  $('brWorldBuy').style.display = ok ? '' : 'none';
+  $('brWorldBuy').innerHTML = tr('Desbloquear') + ` <span class="coinS"></span>${fmt(w.cost)}`;
+  $('brWorldPanel').classList.add('open'); sfx('click');
+}
+function brBuyWorld() {
+  const w = BR_WORLDS[brWorldAsk]; if (!w) return;
+  if (st.coins < w.cost) { toast(tr('Te faltan {0} monedas.', fmt(w.cost - st.coins))); sfx('click'); return; }
+  st.coins -= w.cost; brs.worlds[w.id] = 1; brSave(); updateHud(); closePanels(); happy(); sfx('coin');
+  banner(tr('¡Mundo nuevo: {0}!', tr(w.es))); brRefreshLobby();
+}
+// ruleta: un giro gratis por día
+const BR_SPIN_WAIT = 24 * 3600 * 1000;
+let brSpinning = false, brWheelRot = 0;
+function brSpinLeft() { return Math.max(0, (brs.lastSpin || 0) + BR_SPIN_WAIT - Date.now()); }
+function brHms(ms) { const s = Math.ceil(ms / 1000); return [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60].map((v) => String(v).padStart(2, '0')).join(':'); }
+function openBrSpin() {
+  closePanels();
+  const cv = $('brWheel'); if (!cv.dataset.done) { cv.dataset.done = 1; const src = brWheelCanvas(320); cv.getContext('2d').drawImage(src, 0, 0); }
+  brSpinInfo(); $('brSpinPanel').classList.add('open'); sfx('click');
+}
+function brSpinInfo() { const w = brSpinLeft(); $('brSpinInfo').textContent = w ? tr('Próximo giro gratis en {0}', brHms(w)) : tr('¡Giro gratis listo!'); $('brSpinGo').disabled = !!w || brSpinning; }
+function brSpinGo() {
+  if (brSpinning || brSpinLeft()) return;
+  let tot = 0; for (const p of BR_SPIN) tot += p.w;
+  let x = Math.random() * tot, k = 0; for (; k < BR_SPIN.length - 1; k++) { x -= BR_SPIN[k].w; if (x < 0) break; }
+  brSpinning = true; brs.lastSpin = Date.now(); brSave(); brSpinInfo();
+  // la porción k queda arriba (donde está la flecha)
+  const seg = 360 / BR_SPIN.length; brWheelRot += 360 * 5 + ((360 - k * seg) - (brWheelRot % 360) + 360) % 360;
+  const cv = $('brWheel'); cv.style.transition = 'transform 3.2s cubic-bezier(.15,.85,.25,1)'; cv.style.transform = `rotate(${brWheelRot}deg)`;
+  let ticks = 0; const tk = setInterval(() => { brBeep(1200 - ticks * 25, 0.04, 'square', 0.08); if (++ticks > 26) clearInterval(tk); }, 110);
+  setTimeout(() => {
+    brSpinning = false; st.coins += BR_SPIN[k].c; updateHud(); save(); happy(); sfx('coin');
+    banner(tr('¡Ganaste {0} monedas!', fmt(BR_SPIN[k].c))); brSpinInfo();
+  }, 3300);
+}
+
+// ---------- cada cuadro ----------
+var inBath = false;
+let brHidWorld = false;
+let brHudT = 0;
+function bathTick(dt, t) {
+  brPortalsTick(dt);
+  const p = player.position, inLobby = mode === 'play' && !brRun && Math.hypot(p.x - BR.x, p.z - BR.z) < BR.r + 2;
+  if (inLobby !== inBath) {
+    inBath = inLobby; document.body.classList.toggle('bath', inLobby);
+    if (inLobby) { brRefreshLobby(); updateBrHud(); if (!brs.seen) { brs.seen = 1; brSave(); banner(tr('BATHTUB RUSH')); setTimeout(() => toast(tr('Pisá una puerta para bajar la montaña en bañera.')), 1200); } }
+  }
+  const near = brRun || Math.hypot(p.x - BR.x, p.z - BR.z) < BR.r + 150;
+  // si te fuiste lejos de la cima, se libera la bajada armada (memoria del celular)
+  if (!near && brBuilt >= 0) brDisposeWorld();
+  // el pasto y los bloques del barrio se dibujan siempre: en la montaña no se ven, así que se apagan (menos trabajo)
+  if (near !== brHidWorld) { brHidWorld = !!near; grass.visible = !near; buildRoot.visible = !near; }
+  if (near) {
+    // el cielo y la luz del mundo (siempre de día en la montaña)
+    const sky = brRun ? brRun.t.def.sky : BR_WORLDS[0].sky;
+    bgCol.set(sky); scene.fog.color.copy(bgCol);
+    if (skyMat) { skyMat.uniforms.top.value.set(sky).lerp(DAY_SKY.top, 0.55); skyMat.uniforms.bottom.value.copy(bgCol); }
+    sun.intensity = 0.87; hemi.intensity = 0.57;
+    if (brSkyMesh) brSkyMesh.position.copy(camera.position);
+    trFxTick(dt);
+  } else if (brSkyMesh && brSkyMesh.position.lengthSq()) brSkyMesh.position.set(0, 0, 0);
+  if (inBath) {
+    if (brDisplayTub) brDisplayTub.rotation.y += dt * 0.8;
+    // puertas y mostradores: se activan al pisarlos
+    for (const pd of brPads) {
+      const d = Math.hypot(p.x - pd.x, p.z - pd.z);
+      if (d > 2.2) pd.lock = false;
+      if (d < 1.3 && !pd.lock && p.y < 1) {
+        pd.lock = true;
+        if (pd.kind === 'shop') openBrShop();
+        else if (pd.kind === 'spin') openBrSpin();
+        else if (brs.worlds[BR_WORLDS[pd.wi].id]) brStartRide(pd.wi);
+        else openBrWorld(pd.wi);
+      }
+    }
+    brHudT -= dt; if (brHudT <= 0) { brHudT = 0.5; updateBrHud(); }
+  }
+  const r = brRun; if (!r) return;
+  // bañera: agua que salpica, viento, tuercas que giran, vecinos
+  r.friendNow = brFriendNow(r.wi); if (r.friendNow && r.state === 'ride') r.friend = true;
+  if (r.state === 'ride' && r.h <= 0.05 && Math.random() < dt * 14) { brPoint(r.t, r.s + 4, r.x + (Math.random() - 0.5) * 4, 1, brTmp); trPuff(brTmp.x, brTmp.y, brTmp.z, 1, dropMat, dropGeo, 1.3); }
+  brWindSet(r.state === 'ride' ? r.v : 0);
+  if (brBoltMesh) {
+    const tt = performance.now() / 1000 * 3; let ch = false;
+    for (let j = r.boltIdx; j < r.t.bolts.length; j++) { const b = r.t.bolts[j]; if (b.s > r.s + 140) break; if (!r.got[j]) { brBoltMesh.setMatrixAt(j, brBoltMatrix(r.t, b, tt + j)); ch = true; } }
+    if (ch) brBoltMesh.instanceMatrix.needsUpdate = true;
+  }
+  brBotsTick(dt, t);
+  if (r.tipT > 0) { r.tipT -= dt; if (r.tipT <= 0) $('brTip').textContent = ''; }
+  brHudT -= dt;
+  if (brHudT <= 0) {
+    brHudT = 0.1;
+    const pct = Math.max(0, Math.min(100, r.s / r.t.len * 100));
+    $('brFill').style.width = pct.toFixed(1) + '%'; $('brPct').textContent = Math.floor(pct) + '%';
+    $('brSpd').textContent = tr('{0} km/h', Math.floor(r.v * 1.6)); $('brNuts').textContent = r.bolts;
+    const cool = Math.max(0, Math.min(1, (r.jumpReady - performance.now() / 1000) / BR_CFG.jumpCd)); $('brJc').style.height = (cool * 100).toFixed(0) + '%';
+  }
+}
+let brSkyMesh = null;
+scene.traverse((o) => { if (o.isMesh && o.material === skyMat) brSkyMesh = o; });
+function updateBrHud() {
+  $('brCoins').textContent = fmt(st.coins); $('brGems').textContent = fmt(st.gems);
+  $('brSpinDot').style.display = brSpinLeft() ? 'none' : '';
+}
+// botones de la pantalla
+{
+  const hold = (id, dir) => {
+    const b = $(id);
+    b.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); brTouchSteer = dir; b.classList.add('on'); });
+    const up = (e) => { if (brTouchSteer === dir) brTouchSteer = 0; b.classList.remove('on'); };
+    b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('pointerleave', up);
+  };
+  hold('brL', -1); hold('brR', 1);
+  $('brJ').addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); brJump(); });
+  addEventListener('keydown', (e) => { if (brRun && (e.code === 'Space' || e.code === 'KeyW' || e.code === 'ArrowUp')) brJump(); });
+  $('brRevive').onclick = (e) => { e.stopPropagation(); brRevive(); };
+  $('brAgain').onclick = (e) => { e.stopPropagation(); const wi = brRun ? brRun.wi : 0; if (brRun) brPay(brRun); brRun = null; brStartRide(wi); };
+  $('brBack').onclick = (e) => { e.stopPropagation(); brEndRide(); };
+  $('brShopBtn').onclick = () => openBrShop();
+  $('brSpinBtn').onclick = () => openBrSpin();
+  $('brSpinGo').onclick = () => brSpinGo();
+  $('brWorldBuy').onclick = () => brBuyWorld();
+}
+
 function tick() {
   requestAnimationFrame(tick);
   try { tickInner(); } catch (e) { safe('cuadro', () => { throw e; }); }
@@ -8329,7 +9312,7 @@ function tickInner() {
   }
   // no salir del campo
   const r = Math.hypot(player.position.x, player.position.z);
-  if (!clampTroll() && !clampPets() && !clampCongo() && !clampMarket() && !clampObby()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(Math.abs(player.position.x) < 5 ? 80 : 58, player.position.z)); }
+  if (!clampBath() && !clampTroll() && !clampPets() && !clampCongo() && !clampMarket() && !clampObby()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(Math.abs(player.position.x) < 5 ? 80 : 58, player.position.z)); }
   player.rotation.y = facing;
 
   // animación de los huesos
@@ -8435,6 +9418,8 @@ function tickInner() {
     const target = tmp.copy(player.position).add(new THREE.Vector3(0, ty, 0));
     camera.position.lerp(new THREE.Vector3(target.x + Math.sin(edYaw) * d, target.y + 0.3, target.z + Math.cos(edYaw) * d), 1 - Math.exp(-8 * dt));
     camera.lookAt(target);
+  } else if (typeof bathCam === 'function' && bathCam(dt)) {
+    // bajando en bañera: la cámara la maneja Bathtub Rush
   } else {
     const target = tmp.copy(player.position).add(new THREE.Vector3(0, 1.6, 0));
     const cx = target.x + Math.sin(camYaw) * Math.cos(camPitch) * camDist;
