@@ -538,7 +538,7 @@
     <div id="cFeed"></div>
   </div>
   <div id="trollHud">
-    <div id="trTop"><div class="cnt">💥 <span id="trCount">0</span></div><div>🤡 <span id="trTrolls">0</span></div><div><span class="coin"></span><span id="trCoins">0</span></div><div><span class="gem"></span><span id="trGems">0</span></div></div>
+    <div id="trTop"><div class="cnt">💥 <span id="trCount">0</span></div><div>🤡 <span id="trTrolls">0</span></div><div>🧌 <span id="trPipo">0</span></div><div><span class="coin"></span><span id="trCoins">0</span></div><div><span class="gem"></span><span id="trGems">0</span></div></div>
     <div id="trTools"></div>
   </div>
   <div id="trFlash"></div>
@@ -843,7 +843,11 @@ Object.assign(DICT, {
   'Tenés que quedarte con al menos una equipada.': ['Keep at least one equipped.', 'Fique com pelo menos um equipado.'],
   'Ya tenés el máximo de mascotas equipadas.': ['You already have the max equipped.', 'Você já tem o máximo equipado.'],
   'Mejor zona': ['Best zone', 'Melhor zona'], 'Volver a la plaza': ['Back to the plaza', 'Voltar para a praça'],
-  'Juego 7': ['Game 7', 'Jogo 7'], 'Banana': ['Banana', 'Banana'], 'Almohadón de pedo': ['Whoopee cushion', 'Almofada de pum'], 'Globo de agua': ['Water balloon', 'Balão de água'], 'Rayo pollito': ['Chick ray', 'Raio pintinho'],
+  'Juego 7': ['Game 7', 'Jogo 7'], 'Trampa para Pipo': ['Pipo trap', 'Armadilha para o Pipo'], '¡ATRAPASTE A PIPO!': ['YOU CAUGHT PIPO!', 'VOCÊ PEGOU O PIPO!'], '+{0} monedas y +{1} gemas': ['+{0} coins and +{1} gems', '+{0} moedas e +{1} gemas'],
+  '¡Pipo se escapó de la jaula!': ['Pipo escaped the cage!', 'O Pipo fugiu da jaula!'], '¡Pipo cayó en la trampa! Corré a tocarlo.': ['Pipo fell in the trap! Run and touch him.', 'O Pipo caiu na armadilha! Corra e toque nele.'],
+  '¡Pipo te robó {0} monedas! Atrapalo para recuperarlas x2.': ['Pipo stole {0} coins! Catch him to get them back x2.', 'O Pipo roubou {0} moedas! Pegue ele para recuperar x2.'],
+  '¡Pipo te robó {0} monedas! Alcanzalo antes de que se vaya.': ['Pipo stole {0} coins! Catch him before he leaves.', 'O Pipo roubou {0} moedas! Alcance ele antes que fuja.'],
+  'Pipo se fue con tus monedas a Troll Land.': ['Pipo ran off to Troll Land with your coins.', 'O Pipo fugiu para a Troll Land com suas moedas.'], '¡VIENE PIPO!': ['HERE COMES PIPO!', 'O PIPO ESTÁ VINDO!'], '¡Otro jugador atrapó a Pipo!': ['Another player caught Pipo!', 'Outro jogador pegou o Pipo!'], 'Banana': ['Banana', 'Banana'], 'Almohadón de pedo': ['Whoopee cushion', 'Almofada de pum'], 'Globo de agua': ['Water balloon', 'Balão de água'], 'Rayo pollito': ['Chick ray', 'Raio pintinho'],
   '¡Te convirtieron en pollito!': ['You got turned into a chick!', 'Te transformaram em pintinho!'], '¡Te tiraron un pedo!': ['Someone farted on you!', 'Soltaram um pum em você!'], '¡Te mojaron!': ['You got soaked!', 'Te molharam!'], '¡Te resbalaste!': ['You slipped!', 'Você escorregou!'],
   '¡Está muy lejos!': ['Too far!', 'Muito longe!'], 'Tocá a un jugador o a un vecino.': ['Tap a player or a neighbor.', 'Toque em um jogador ou vizinho.'], '¡Compraste {0} x{1}!': ['You bought {0} x{1}!', 'Você comprou {0} x{1}!'], 'Troll Land': ['Troll Land', 'Troll Land'], 'TROLL LAND': ['TROLL LAND', 'TROLL LAND'],
   'Martillo': ['Hammer', 'Martelo'], 'Bomba de caca': ['Poop bomb', 'Bomba de cocô'], 'Bola de demolición': ['Wrecking ball', 'Bola de demolição'], 'Meteorito': ['Meteor', 'Meteoro'],
@@ -7802,7 +7806,7 @@ function trBuildBar() {
 }
 function updateTrHud() {
   $('trCoins').textContent = fmt(st.coins); $('trGems').textContent = fmt(st.gems);
-  $('trCount').textContent = fmt(trSession); $('trTrolls').textContent = fmt(trs.trolls);
+  $('trCount').textContent = fmt(trSession); $('trTrolls').textContent = fmt(trs.trolls); $('trPipo').textContent = fmt(trs.pipo || 0);
 }
 
 // ---------- cada cuadro ----------
@@ -7821,8 +7825,9 @@ function trollTick(dt, t) {
   if (trCd > 0) trCd -= dt;
   if (near) { debTick(dt); trProjTick(dt); trRespawnTick(dt); }
   trBotsTick(dt, t, near);
+  pipoTick(dt, t);
+  if (near || pipo.where === 'plot') trFxTick(dt);
   if (near) {
-    trFxTick(dt);
     const nowS = performance.now() / 1000;
     for (let i = trBananas.length - 1; i >= 0; i--) {
       const bn = trBananas[i];
@@ -7924,14 +7929,14 @@ const puffGeo = new THREE.SphereGeometry(0.35, 10, 8), dropGeo = new THREE.Spher
 const trFx = []; // nubecitas y gotas que viven un ratito
 function trPuff(x, y, z, n, mat, geo, up) {
   for (let i = 0; i < n; i++) {
-    const m = new THREE.Mesh(geo || puffGeo, mat || puffMat); m.position.set(x + (Math.random() - 0.5) * 0.6, y + Math.random() * 0.3, z + (Math.random() - 0.5) * 0.6); troll.add(m);
+    const m = new THREE.Mesh(geo || puffGeo, mat || puffMat); m.position.set(x + (Math.random() - 0.5) * 0.6, y + Math.random() * 0.3, z + (Math.random() - 0.5) * 0.6); scene.add(m);
     trFx.push({ m, life: 0.9 + Math.random() * 0.5, vx: (Math.random() - 0.5) * 2, vy: (up || 1) * (0.6 + Math.random()), vz: (Math.random() - 0.5) * 2, grow: geo ? 0 : 0.7 });
   }
 }
 function trFxTick(dt) {
   for (let i = trFx.length - 1; i >= 0; i--) {
     const f = trFx[i]; f.life -= dt;
-    if (f.life <= 0) { troll.remove(f.m); trFx.splice(i, 1); continue; }
+    if (f.life <= 0) { scene.remove(f.m); trFx.splice(i, 1); continue; }
     f.m.position.x += f.vx * dt; f.m.position.y += f.vy * dt; f.m.position.z += f.vz * dt;
     if (f.grow) { f.m.scale.multiplyScalar(1 + f.grow * dt); f.vy *= 0.96; } else f.vy -= 9 * dt;
   }
@@ -8028,14 +8033,15 @@ function trApply(kind, x, z, targetId, fromMe) {
 function trUseItem(item, cx, cy) {
   if (!trs.items[item.id]) { trBuyItem(item); return; }
   const p = player.position;
-  if (item.id === 'banana' || item.id === 'water') {
+  if (item.id === 'banana' || item.id === 'water' || item.id === 'trap') {
     const g = trGroundPoint(cx, cy); if (!g) return;
     if (Math.hypot(g.x - p.x, g.z - p.z) > item.range) { toast(tr('¡Está muy lejos!')); return; }
     if (item.id === 'water') {
       // el globo vuela hasta ahí
       const m = new THREE.Mesh(tg('gb', () => new THREE.SphereGeometry(0.28, 12, 10)), tg('gm', () => new THREE.MeshStandardMaterial({ color: '#ff5fa2', roughness: 0.3 }))); troll.add(m);
       trProj.push({ m, from: new THREE.Vector3(p.x, p.y + 1.6, p.z), to: new THREE.Vector3(g.x, 0.3, g.z), t: 0, dur: 0.5, arc: 2.5, tool: { id: 'water', rad: 0, cd: 0 } });
-    } else trApply('banana', g.x, g.z, '', true);
+    } else if (item.id === 'trap') { trPlaceTrap(g.x, g.z); sfx('click'); trs.items.trap--; trSave(); trBuildBar(); trCd = 0.35; return; }
+    else trApply('banana', g.x, g.z, '', true);
     netSend({ t: 'evt', e: (item.id === 'banana' ? 'tb' : 'tw') + g.x.toFixed(1) + ',' + g.z.toFixed(1) });
   } else {
     const t = trPickTarget(cx, cy);
@@ -8057,6 +8063,7 @@ function trBuyItem(item) {
 // lo que llega por la red
 function trollNet(id, e, d) {
   if (!e || e[0] !== 't' || e.length < 2) return;
+  if (e === 'tp') { const r = typeof remotes !== 'undefined' && remotes.get(id); if (inTroll && pipo.where !== 'plot' && pipo.state !== 'gone') { pipo.state = 'gone'; pipo.wait = 25; pipo.obj.visible = false; pipo.cage.visible = false; toast(tr('¡Otro jugador atrapó a Pipo!')); } return; }
   const k = { b: 'banana', w: 'water', f: 'fart', c: 'chick' }[e[1]]; if (!k) return;
   if (k === 'banana' || k === 'water') { const [x, z] = e.slice(2).split(',').map(Number); if (isFinite(x) && isFinite(z) && Math.hypot(x - TL.x, z - TL.z) < TL.r + 2) trApply(k, x, z, '', false); }
   else trApply(k, 0, 0, String(d || ''), false);
@@ -8077,6 +8084,195 @@ function trBotsTroll(dt) {
   } else if (r < 0.8) { // banana en tu camino
     const a = facing; trDropBanana(p.x + Math.sin(a) * 2.2, p.z + Math.cos(a) * 2.2);
   } else { trFxOn(c, 'fart'); }
+}
+
+// =====================================================================
+// ===== TROLL LAND (parte 3: Pipo el troll) =====
+// =====================================================================
+// Pipo corre por Troll Land haciendo travesuras. No se deja tocar: hay que atraparlo con una trampa 🪤.
+// A veces visita tu terreno de Construí, te roba unas monedas y sale corriendo: si lo alcanzás, te las devuelve x2.
+TROLL_ITEMS.push({ id: 'trap', ico: '🪤', es: 'Trampa para Pipo', pack: 3, price: 300, range: 9 });
+TI_BY.trap = TROLL_ITEMS[TROLL_ITEMS.length - 1];
+trs.pipo = trs.pipo || 0; // cuántas veces lo atrapaste
+
+function trLaugh(vol) { // "ji ji ji" inventado
+  const ac = audio(); if (!ac) return;
+  for (let i = 0; i < 4; i++) {
+    const t0 = ac.currentTime + i * 0.12, o = ac.createOscillator(); o.type = 'square';
+    const f0 = 620 - i * 40; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(f0 * 1.35, t0 + 0.05); o.frequency.exponentialRampToValueAtTime(f0 * 0.9, t0 + 0.09);
+    const f = ac.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1400; f.Q.value = 2;
+    const g = ac.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.35 * (vol || 1) * sfxScale, t0 + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.1);
+    o.connect(f); f.connect(g); g.connect(master); o.start(t0); o.stop(t0 + 0.11);
+  }
+}
+
+// ---------- el muñeco de Pipo (verde, cresta violeta, orejas puntudas) ----------
+const pipo = { obj: new THREE.Group(), phase: 0, walk: 0, spd: 0, swing: 0, state: 'off', target: null, wait: 0, face: 0, prankT: 9, caughtT: 0, stolen: 0, where: '', visitT: 100, dodgeT: 0 };
+{
+  pipo.look = { skin: '#a8e07a', hair: 'cresta', hairColor: '#9b6bdf', hat: 'ninguno', hatColor: '#e2493b', shirt: 'musculosa', shirtColor: '#f08a24', pants: 'corto', pantsColor: '#8a6a4a', shoes: 'bota', shoesColor: '#7a4a2a', face: 'normal' };
+  pipo.av = makeAvatar(pipo.look); pipo.obj.add(pipo.av.g);
+  const earMat = new THREE.MeshStandardMaterial({ color: '#a8e07a', roughness: 0.6 }), earGeo = new THREE.ConeGeometry(0.1, 0.42, 8);
+  let headY = 1.5; pipo.av.g.updateMatrixWorld(true);
+  { const bb = new THREE.Box3().setFromObject(pipo.av.g); headY = bb.max.y - 0.3; }
+  for (const s of [-1, 1]) { const e = new THREE.Mesh(earGeo, earMat); e.rotation.z = -s * 1.25; e.position.set(s * 0.42, headY, 0); pipo.av.g.add(e); }
+  // bolsa de monedas que lleva cuando te roba
+  const bag = new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 8), new THREE.MeshStandardMaterial({ color: '#d9b25a', roughness: 0.8 })); bag.position.set(0.3, 0.9, -0.25); bag.visible = false; pipo.av.g.add(bag); pipo.bag = bag;
+  // jaula
+  const cage = new THREE.Group(), bm = new THREE.MeshStandardMaterial({ color: '#c8d0d8', roughness: 0.3, metalness: 0.7 }), barG = new THREE.CylinderGeometry(0.04, 0.04, 2.3, 6);
+  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, b = new THREE.Mesh(barG, bm); b.position.set(Math.cos(a) * 0.75, 1.15, Math.sin(a) * 0.75); cage.add(b); }
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.82, 0.82, 0.1, 20), bm); top.position.y = 2.3; cage.add(top);
+  const bot = new THREE.Mesh(new THREE.CylinderGeometry(0.82, 0.82, 0.08, 20), bm); bot.position.y = 0.04; cage.add(bot);
+  cage.visible = false; pipo.obj.add(cage); pipo.cage = cage;
+  pipo.obj.visible = false; scene.add(pipo.obj);
+}
+
+// ---------- trampas en el piso ----------
+const trTraps = []; // { g, x, z }
+function makeTrap() {
+  const g = new THREE.Group();
+  const base = new THREE.Mesh(tg('tp1', () => new THREE.BoxGeometry(0.9, 0.08, 0.6)), tg('tm1', () => new THREE.MeshStandardMaterial({ color: '#b98b5e', roughness: 0.8 }))); base.position.y = 0.04; g.add(base);
+  const bar = new THREE.Mesh(tg('tp2', () => new THREE.TorusGeometry(0.3, 0.03, 6, 16, Math.PI)), tg('tm2', () => new THREE.MeshStandardMaterial({ color: '#c8d0d8', metalness: 0.7, roughness: 0.3 }))); bar.rotation.y = Math.PI / 2; bar.position.y = 0.08; g.add(bar);
+  // la carnada: una torta
+  const cake = new THREE.Mesh(tg('tp3', () => new THREE.CylinderGeometry(0.16, 0.16, 0.14, 14)), tg('tm3', () => new THREE.MeshStandardMaterial({ color: '#f78fb3', roughness: 0.6 }))); cake.position.y = 0.16; g.add(cake);
+  const cherry = new THREE.Mesh(tg('tp4', () => new THREE.SphereGeometry(0.05, 8, 6)), tg('tm4', () => new THREE.MeshStandardMaterial({ color: '#e2493b', roughness: 0.4 }))); cherry.position.y = 0.27; g.add(cherry);
+  return g;
+}
+function trPlaceTrap(x, z) {
+  const g = makeTrap(); g.position.set(x, 0, z); troll.add(g); trTraps.push({ g, x, z });
+  if (trTraps.length > 6) { const o = trTraps.shift(); troll.remove(o.g); }
+}
+
+// ---------- caminar ----------
+function pipoMove(dt, tx, tz, speed, solid) {
+  const o = pipo.obj, dx = tx - o.position.x, dz = tz - o.position.z, d = Math.hypot(dx, dz);
+  if (d < 0.2) return true;
+  const st2 = Math.min(d, speed * dt), nx = o.position.x + dx / d * st2, nz = o.position.z + dz / d * st2;
+  if (solid && trollCollide(nx, 0.05, nz) > 0.6) { pipo.target = null; return true; }
+  o.position.x = nx; o.position.z = nz; pipo.face = Math.atan2(dx, dz); pipo.cur = speed; return false;
+}
+function pipoStreet() { const a = Math.random() * Math.PI * 2, r = 9.5 + Math.random() * 3; return [TL.x + Math.cos(a) * r, TL.z + Math.sin(a) * r]; }
+function pipoAnim(dt, t) {
+  const c = pipo;
+  pipo.obj.rotation.y = angleLerp(pipo.obj.rotation.y, pipo.face, 1 - Math.exp(-12 * dt));
+  c.spd += ((c.cur || 0) - c.spd) * Math.min(1, dt * 8); c.cur = 0;
+  c.walk += ((c.spd > 0.4 ? 1 : 0) - c.walk) * (1 - Math.exp(-10 * dt));
+  c.phase += dt * (c.spd * 1.75 + 0.0001);
+  animateRemote(c, c.spd, 1, t, dt);
+  if (c.swing > 0) { c.swing -= dt; const k = c.swing / 0.25; c.av.J.R.arm.rotation.x = -2.6 * Math.sin(k * Math.PI); }
+  remoteFace(c, 1, dt);
+}
+function pipoCaughtReward() {
+  const coins = 300 + c2(pipo.stolen), gems = 5;
+  st.coins += coins; st.gems += gems; trs.pipo++; pipo.stolen = 0; pipo.bag.visible = false;
+  updateHud(); updateTrHud(); trSave(); sfx('coin'); happy(); banner(tr('¡ATRAPASTE A PIPO!'));
+  toast(tr('+{0} monedas y +{1} gemas', fmt(coins), gems));
+  netSend({ t: 'evt', e: 'tp' });
+}
+function c2(n) { return n * 2; }
+
+// ---------- Pipo en Troll Land ----------
+function pipoLandTick(dt, t) {
+  const o = pipo.obj, p = player.position, dP = Math.hypot(o.position.x - p.x, o.position.z - p.z);
+  if (pipo.state === 'caught') {
+    pipo.caughtT -= dt; pipo.cage.visible = true; pipo.face += dt * 3;
+    if (Math.random() < dt * 1.2) trPeep(0.3);
+    if (inTroll && dP < 2.4) { // lo tocaste: premio
+      pipoCaughtReward(); pipo.state = 'gone'; pipo.wait = 25; o.visible = false; pipo.cage.visible = false; trPuff(o.position.x, 1, o.position.z, 10);
+      return;
+    }
+    if (pipo.caughtT <= 0) { pipo.state = 'run'; pipo.cage.visible = false; trLaugh(0.8); if (inTroll) toast(tr('¡Pipo se escapó de la jaula!')); }
+    pipoAnim(dt, t); return;
+  }
+  if (pipo.state === 'gone') { pipo.wait -= dt; if (pipo.wait <= 0) { pipo.state = 'run'; const [x, z] = pipoStreet(); o.position.set(x, 0, z); o.visible = true; trPuff(x, 1, z, 8); } return; }
+  pipo.state = 'run'; o.visible = true;
+  // ¿pisó una trampa?
+  for (let i = trTraps.length - 1; i >= 0; i--) {
+    const tp = trTraps[i];
+    if (Math.hypot(tp.x - o.position.x, tp.z - o.position.z) < 0.7) {
+      troll.remove(tp.g); trTraps.splice(i, 1);
+      pipo.state = 'caught'; pipo.caughtT = 9; o.position.set(tp.x, 0, tp.z); pipo.target = null; playS('choque_m1', 0.7, 0.8); trPeep(1);
+      if (inTroll) toast(tr('¡Pipo cayó en la trampa! Corré a tocarlo.'));
+      pipoAnim(dt, t); return;
+    }
+  }
+  // si te acercás, salta lejos riéndose
+  if (pipo.dodgeT > 0) pipo.dodgeT -= dt;
+  if (inTroll && dP < 1.6 && pipo.dodgeT <= 0) {
+    pipo.dodgeT = 1.2; const a = Math.atan2(o.position.x - p.x, o.position.z - p.z);
+    let nx = o.position.x + Math.sin(a) * 5, nz = o.position.z + Math.cos(a) * 5;
+    if (Math.hypot(nx - TL.x, nz - TL.z) > TL.r - 3 || trollCollide(nx, 0.05, nz) > 0.6) [nx, nz] = pipoStreet();
+    trPuff(o.position.x, 0.8, o.position.z, 5); o.position.set(nx, 0, nz); trPuff(nx, 0.8, nz, 5); trLaugh(0.9); pipo.target = null;
+  }
+  // a dónde va: si hay una torta cerca, va a comerla; si estás cerca, se escapa
+  if (!pipo.target || pipoMove(dt, pipo.target[0], pipo.target[1], pipo.target[2], true)) {
+    let bait = null, bd = 13;
+    for (const tp of trTraps) { const d = Math.hypot(tp.x - o.position.x, tp.z - o.position.z); if (d < bd) { bd = d; bait = tp; } }
+    if (bait && Math.random() < 0.7) pipo.target = [bait.x, bait.z, 3.2];
+    else if (inTroll && dP < 7) { const a = Math.atan2(o.position.x - p.x, o.position.z - p.z), r = 6; let tx = o.position.x + Math.sin(a) * r, tz = o.position.z + Math.cos(a) * r; if (Math.hypot(tx - TL.x, tz - TL.z) > TL.r - 3) [tx, tz] = pipoStreet(); pipo.target = [tx, tz, 5.5]; }
+    else { const [x, z] = pipoStreet(); pipo.target = [x, z, 3.4]; }
+  }
+  // travesuras: banana en tu camino, te roba monedas, o un pedo al vecino
+  pipo.prankT -= dt;
+  if (inTroll && pipo.prankT <= 0 && dP < 10) {
+    pipo.prankT = 16 + Math.random() * 12; pipo.swing = 0.25; trLaugh(1);
+    const r = Math.random();
+    if (r < 0.4) { trDropBanana(p.x + Math.sin(facing) * 2.2, p.z + Math.cos(facing) * 2.2); }
+    else if (r < 0.75 && st.coins > 50) { const n = Math.min(200, Math.floor(st.coins * 0.03)); st.coins -= n; pipo.stolen += n; pipo.bag.visible = true; updateHud(); updateTrHud(); toast(tr('¡Pipo te robó {0} monedas! Atrapalo para recuperarlas x2.', fmt(n))); }
+    else { const c = trBots[Math.floor(Math.random() * trBots.length)]; if (c) trFxOn(c, 'fart'); }
+  }
+  pipoAnim(dt, t);
+}
+
+// ---------- Pipo visita tu terreno de Construí ----------
+function inMyPlot() { const p = player.position; return mode === 'play' && p.x > X0 - 1 && p.x < X0 + CELLS + 1 && p.z > Z0 - 1 && p.z < Z0 + CELLS + 1; }
+function pipoVisitTick(dt, t) {
+  const o = pipo.obj, p = player.position;
+  if (pipo.state === 'visit-in') {
+    if (pipoMove(dt, pipo.target[0], pipo.target[1], 4.2, false)) {
+      // llegó: te roba y sale corriendo
+      const n = Math.min(300, Math.max(10, Math.floor(st.coins * 0.05)));
+      const got = Math.min(n, st.coins); st.coins -= got; pipo.stolen += got; pipo.bag.visible = true; updateHud();
+      pipo.swing = 0.25; trLaugh(1); toast(tr('¡Pipo te robó {0} monedas! Alcanzalo antes de que se vaya.', fmt(got)));
+      // salta lejos de vos y sale corriendo para afuera
+      const a = Math.atan2(o.position.x - p.x, o.position.z - p.z) + (Math.random() - 0.5);
+      trPuff(o.position.x, 0.8, o.position.z, 5); o.position.x += Math.sin(a) * 4; o.position.z += Math.cos(a) * 4; trPuff(o.position.x, 0.8, o.position.z, 5);
+      pipo.target = [o.position.x + Math.sin(a) * 40, o.position.z + Math.cos(a) * 40]; pipo.state = 'visit-out'; pipo.wait = 14; pipo.grace = 0.8;
+    }
+  } else if (pipo.state === 'visit-out') {
+    pipo.wait -= dt; pipo.grace -= dt;
+    if (pipo.grace <= 0 && Math.hypot(o.position.x - p.x, o.position.z - p.z) < 1.5) {
+      const back = pipo.stolen * 2; st.coins += back; st.gems += 2; pipo.stolen = 0; pipo.bag.visible = false; trs.pipo++;
+      updateHud(); trSave(); sfx('coin'); happy(); banner(tr('¡ATRAPASTE A PIPO!')); toast(tr('+{0} monedas y +{1} gemas', fmt(back), 2));
+      trPuff(o.position.x, 1, o.position.z, 10); pipoLeave(); return;
+    }
+    if (pipoMove(dt, pipo.target[0], pipo.target[1], 5.2, false) || pipo.wait <= 0) { trLaugh(0.7); toast(tr('Pipo se fue con tus monedas a Troll Land.')); pipoLeave(); return; }
+  }
+  pipoAnim(dt, t);
+}
+function pipoLeave() { pipo.state = 'gone'; pipo.wait = 3; pipo.where = ''; pipo.obj.visible = false; pipo.visitT = 180 + Math.random() * 120; }
+
+let pipoNear = false;
+function pipoTick(dt, t) {
+  const p = player.position, dC = Math.hypot(p.x - TL.x, p.z - TL.z);
+  const nearLand = mode === 'play' && dC < TL.r + 40;
+  // visitas al terreno
+  if (pipo.where === 'plot') { if (mode !== 'play') { pipoLeave(); return; } pipoVisitTick(dt, t); return; }
+  if (inMyPlot()) {
+    pipo.visitT -= dt;
+    if (pipo.visitT <= 0 && st.coins >= 50) {
+      // aparece en un borde del terreno y va hacia vos
+      const side = Math.floor(Math.random() * 4), k = Math.random() * CELLS;
+      const sx = side === 0 ? X0 - 3 : side === 1 ? X0 + CELLS + 3 : X0 + k, sz = side === 2 ? Z0 - 3 : side === 3 ? Z0 + CELLS + 3 : Z0 + k;
+      pipo.where = 'plot'; pipo.state = 'visit-in'; pipo.obj.position.set(sx, 0, sz); pipo.obj.visible = true; pipo.cage.visible = false;
+      pipo.target = [p.x + (Math.random() - 0.5) * 3, p.z + (Math.random() - 0.5) * 3];
+      trPuff(sx, 1, sz, 8); trLaugh(1); banner(tr('¡VIENE PIPO!'));
+      return;
+    }
+  }
+  if (nearLand) {
+    if (!pipoNear) { pipoNear = true; if (pipo.state !== 'caught') { pipo.state = 'run'; const [x, z] = pipoStreet(); pipo.obj.position.set(x, 0, z); } }
+    pipoLandTick(dt, t);
+  } else if (pipoNear) { pipoNear = false; pipo.obj.visible = false; if (pipo.state === 'caught') pipo.state = 'run'; pipo.cage.visible = false; }
 }
 
 function tick() {
