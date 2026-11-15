@@ -396,6 +396,7 @@
   #trFlash.on { animation: trfl .7s ease-out; }
   @keyframes trfl { 0% { opacity: .95; } 100% { opacity: 0; } }
   @media (orientation: landscape) and (max-height: 520px) { body.is-touch #trTop { top: 6px !important; } body.is-touch #trTop div { font-size: 15px !important; padding: 3px 10px !important; } body.is-touch .trTool { width: 52px !important; height: 54px !important; } body.is-touch #trTools { gap: 5px !important; } body.is-touch .trTool .ico { font-size: 22px !important; } body.is-touch .trTool small { font-size: 9px !important; } }
+  .plIco { width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; font-size: 30px; }
   #bathHud, #bathRide { display: none; }
   body.bath #bathHud { display: block; }
   body.bathride #bathRide { display: block; }
@@ -480,6 +481,7 @@
   #petTop div { background: rgba(30,40,25,.85); color: #fff; border-radius: 14px; padding: 5px 14px; display: flex; align-items: center; gap: 7px; font-size: 22px; font-weight: 700; }
   .gem { width: 18px; height: 18px; background: linear-gradient(135deg, #b8f6ff, #3cc8f0 55%, #1e8aa0); transform: rotate(45deg); border-radius: 3px; box-shadow: inset 0 0 0 2px #1e8aa0; flex: none; }
   .coinS { display: inline-block; width: 15px; height: 15px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe680, #f0b429 60%, #c98a12); vertical-align: -2px; margin: 0 3px 0 6px; }
+.gemS { display: inline-block; width: 13px; height: 13px; background: linear-gradient(135deg, #b8f1ff, #3cb4dc 60%, #1a7fa8); transform: rotate(45deg); vertical-align: -1px; margin: 0 5px 0 7px; border-radius: 2px; }
   #petBtns { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; pointer-events: auto; }
   #petBtns .toy { width: 92px; padding: 9px 6px; font-size: 14px; }
   #pUpBtn { background: var(--lg-gold) !important; } #pIdxBtn { background: #4fa0e6 !important; } #pShopBtn { background: #b45aff !important; }
@@ -659,6 +661,7 @@
 <div id="gpassPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="gpassList"></div></div></div></div>
 <div id="mkpassPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="mkpassList"></div></div></div></div>
 <div id="pshopPanel" class="panel"><div class="card"><header><h2>Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="pshopList"></div></div></div></div>
+<div id="plShopPanel" class="panel"><div class="card"><header><h2 id="plShopTitle">Tienda</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="plShopList"></div></div></div></div>
 <div id="brShopPanel" class="panel"><div class="card"><header><h2>Bañeras</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="brShopList"></div></div></div></div>
 <div id="brSpinPanel" class="panel"><div class="card" style="width:min(380px,94vw)"><header><h2>Ruleta</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body"><div id="brWheelBox"><canvas id="brWheel" width="320" height="320"></canvas></div><p id="brSpinInfo"></p><button id="brSpinGo" class="toy gold" style="display:block;margin:0 auto;padding:10px 28px;font-size:18px">¡Girar!</button></div></div></div>
 <div id="brWorldPanel" class="panel"><div class="card" style="width:min(380px,94vw)"><header><h2 id="brWorldTitle">Mundo</h2><button class="toy closeB" data-close>Cerrar</button></header><div class="body" style="text-align:center"><div id="brWorldBody"></div><button id="brWorldBuy" class="toy gold">Desbloquear</button></div></div></div>
@@ -906,6 +909,11 @@ Object.assign(DICT, {
   'Tenés que quedarte con al menos una equipada.': ['Keep at least one equipped.', 'Fique com pelo menos um equipado.'],
   'Ya tenés el máximo de mascotas equipadas.': ['You already have the max equipped.', 'Você já tem o máximo equipado.'],
   'Mejor zona': ['Best zone', 'Melhor zona'], 'Volver a la plaza': ['Back to the plaza', 'Voltar para a praça'],
+  'Veterinaria': ['Pet Shop', 'Pet Shop'], 'Kiosco de Caca': ['Poop Kiosk', 'Quiosque de Cocô'], 'Alquiler de Autos': ['Car Rental', 'Aluguel de Carros'], '¡Muy pronto!': ['Coming soon!', 'Em breve!'], 'Semillería': ['Seed Shop', 'Loja de Sementes'], 'Cotillón Troll': ['Troll Party Shop', 'Loja Troll'], 'Corralón': ['Hardware Store', 'Loja de Materiais'], 'Ropa': ['Clothes', 'Roupas'], 'Vestuario': ['Wardrobe', 'Guarda-roupa'],
+  '¡Muy pronto vas a poder alquilar autos acá!': ['Very soon you will be able to rent cars here!', 'Em breve você vai poder alugar carros aqui!'], 'Tus monedas de mascotas: {0}': ['Your pet coins: {0}', 'Suas moedas de pets: {0}'], 'Huevo: {0}': ['Egg: {0}', 'Ovo: {0}'], 'Sale una mascota de {0}.': ['Hatches a pet from {0}.', 'Sai um pet de {0}.'],
+  'Abrí más zonas en el Reino de Mascotas para tener más huevos.': ['Unlock more zones in the Pet Kingdom to get more eggs.', 'Abra mais zonas no Reino dos Pets para ter mais ovos.'], 'Pases de mascotas': ['Pet passes', 'Passes de pets'], 'Triple huevo, más velocidad y más.': ['Triple hatch, more speed and more.', 'Ovo triplo, mais velocidade e mais.'], 'Ver': ['See', 'Ver'],
+  'Ya la tenés': ['You have it', 'Você já tem'], 'Herramienta para romper Troll Land': ['Tool to smash Troll Land', 'Ferramenta para quebrar a Troll Land'], '¡Oferta del día!': ['Deal of the day!', 'Oferta do dia!'], 'Paquete de {0}. Tenés {1}.': ['Pack of {0}. You have {1}.', 'Pacote de {0}. Você tem {1}.'],
+  '¡Hola! ¿Qué vas a llevar?': ['Hi! What will you take?', 'Oi! O que vai levar?'], '¡Bienvenido! Mirá lo que tengo.': ['Welcome! Look what I have.', 'Bem-vindo! Olha o que eu tenho.'], '¡Buenas! Tengo de todo.': ['Hello! I have everything.', 'Olá! Tenho de tudo.'], 'Avenida de los Juegos': ['Games Avenue', 'Avenida dos Jogos'], 'AVENIDA DE LOS JUEGOS': ['GAMES AVENUE', 'AVENIDA DOS JOGOS'], '8 juegos': ['8 games', '8 jogos'],
   'Juego 8': ['Game 8', 'Jogo 8'], 'BATHTUB RUSH': ['BATHTUB RUSH', 'BATHTUB RUSH'], 'Bathtub Rush': ['Bathtub Rush', 'Bathtub Rush'], 'LLEGADA': ['FINISH', 'CHEGADA'], 'BAÑERAS': ['TUBS', 'BANHEIRAS'], 'Bañeras': ['Tubs', 'Banheiras'], 'Ruleta': ['Spin', 'Roleta'], 'SALTAR': ['JUMP', 'PULAR'],
   'Bajar de nuevo': ['Ride again', 'Descer de novo'], 'Volver': ['Back', 'Voltar'], 'Revivir': ['Revive', 'Reviver'], '¡Girar!': ['Spin!', 'Girar!'], 'Mundo': ['World', 'Mundo'], 'Desbloquear': ['Unlock', 'Desbloquear'],
   'Colinas de Piedra': ['Pebble Hills', 'Colinas de Pedra'], 'Pico de Lava': ['Lava Peak', 'Pico de Lava'], 'Paso Helado': ['Frosty Pass', 'Passo Gelado'], 'Cañón de Dulces': ['Candy Canyon', 'Cânion de Doces'],
@@ -1057,7 +1065,7 @@ const bladeGeo = new THREE.BufferGeometry();
 // lugares sin pasto alto ni adornos: el terreno, la plaza y las cintas
 function reservedAt(x, z) {
   for (const zz of [0, -40, -80, -120]) for (const xx of [0, -40, 40, -80, 80]) if (Math.abs(x - xx) < 18.4 && Math.abs(z - zz) < 18.4) return true; // terrenos del barrio
-  if (Math.hypot(x, z - 42) < 15.6) return true;                            // plaza
+  if (Math.hypot(x, z - 42) < 29) return true;                              // plaza y sus locales
   if (Math.abs(x) < 5 && z > 15 && z < 36) return true;                    // cintas a Construí Todo
   if (Math.abs(x) < 14 && z > 50) return true;                             // la avenida de los juegos
   if (x < -14 && x > -79 && z > 60 && z < 99) return true;                 // Huerta de la Suerte
@@ -3063,7 +3071,7 @@ function updateHud() {
 let catTab = 'blocks';
 const CAT_TABS = [['blocks', 'Bloques'], ['premium', 'Premium'], ['daily', 'Colección'], ['deco', 'Muebles'], ['special', 'Especiales'], ['struct', 'Estructuras']].map(([a, n]) => [a, tr(n)]);
 function openCatalog(tab) { if (tab) catTab = tab; renderCatalog(); $('catalog').classList.add('open'); sfx('click'); }
-function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard', 'gshopPanel', 'gpassPanel', 'langPanel', 'cshopPanel', 'mkpassPanel', 'brShopPanel', 'brSpinPanel', 'brWorldPanel']) $(id).classList.remove('open'); }
+function closePanels() { for (const id of ['catalog', 'menu', 'shop', 'land', 'confirm', 'petsPanel', 'upPanel', 'idxPanel', 'pshopPanel', 'petCard', 'gshopPanel', 'gpassPanel', 'langPanel', 'cshopPanel', 'mkpassPanel', 'brShopPanel', 'brSpinPanel', 'brWorldPanel', 'plShopPanel']) $(id).classList.remove('open'); }
 function renderCatalog() {
   const tabs = $('catTabs'); tabs.innerHTML = '';
   for (const [id, name] of CAT_TABS) { const b = document.createElement('button'); b.textContent = name; b.className = catTab === id ? 'on' : ''; b.onclick = () => { catTab = id; renderCatalog(); }; tabs.appendChild(b); }
@@ -3411,7 +3419,7 @@ function buildTick(dt, t) {
   if (mode === 'play' && onGround && !sitting && gs > 0.8 && ss !== lastStepSign) stepSound();
   lastStepSign = ss;
   // cada parte por separado: si una falla, las demás siguen andando (el juego nunca se congela)
-  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t)); safe('obby', () => obbyTick(dt, t)); safe('troll', () => trollTick(dt, t)); safe('bath', () => bathTick(dt, t)); safe('cull', () => zoneCullTick(dt));
+  safe('belt', () => beltTick(dt)); safe('zona', zoneTick); safe('mascotas', petsZone); safe('mascotas2', () => petsTick(dt, t)); safe('portal', () => portalTick(dt)); safe('huerta', () => gardenTick(dt, t)); safe('congo', () => congoTick(dt, t)); safe('market', () => marketTick(dt, t)); safe('obby', () => obbyTick(dt, t)); safe('troll', () => trollTick(dt, t)); safe('bath', () => bathTick(dt, t)); safe('plaza', () => plazaTick(dt)); safe('cull', () => zoneCullTick(dt));
   return night;
 }
 
@@ -3555,7 +3563,7 @@ document.title = tr('Construí Todo');
 // =====================================================================
 // ===== PLAZA Y CINTAS: el muñeco se sube a la cinta y va de juego en juego =====
 // =====================================================================
-const PLAZA = { x: 0, z: 42, r: 14 };
+const PLAZA = { x: 0, z: 42, r: 20 };
 // ----- la avenida de los juegos: sale de la plaza hacia el norte; los juegos quedan a los costados -----
 // (la Guerra de Caca está al fondo, de frente)
 const AV = { half: 12, z0: PLAZA.z + PLAZA.r - 1.2, z1: 236 };
@@ -3694,7 +3702,7 @@ function gameDoor(side, ex, ez, color, signLines, archLines, neon, opts = {}) {
   return R;
 }
 // ¿se puede caminar acá sin estar en ningún juego? (barrio, plaza y avenida)
-function baseWalk(x, z) { return (z <= 57.5 && z >= -139 && Math.abs(x) <= 99) || (Math.abs(x) <= AV.half - 0.5 && z >= 50 && z <= AV.z1 + 8); }
+function baseWalk(x, z) { return (z <= 57.5 && z >= -139 && Math.abs(x) <= 99) || Math.hypot(x - PLAZA.x, z - PLAZA.z) < PLAZA.r - 0.5 || (Math.abs(x) <= AV.half - 0.5 && z >= 50 && z <= AV.z1 + 8); }
 // límites del camino y del juego: se resbala por el borde (como contra una pared)
 function farClamp(inside, st) {
   const p = player.position, beyond = (x, z) => !baseWalk(x, z);
@@ -9291,6 +9299,168 @@ function updateBrHud() {
   $('brSpinBtn').onclick = () => openBrSpin();
   $('brSpinGo').onclick = () => brSpinGo();
   $('brWorldBuy').onclick = () => brBuyWorld();
+}
+
+// =====================================================================
+// ===== LA PLAZA: locales alrededor (cada local es otra puerta a la tienda de un juego) =====
+// =====================================================================
+// Lo que comprás acá es lo mismo que adentro del juego (mismas monedas, mismo guardado).
+// Cada local: paredes, toldo a rayas, mostrador, un vendedor y su cartel de neón arriba.
+const SHOPS = [
+  { id: 'vet', a: 36, es: 'Veterinaria', sub: 'Reino de Mascotas', neon: '#4aa8ff', wall: '#d5ecff', aw: '#4aa8ff', goods: ['#ffd23f', '#ff9fc8', '#9be37a'], open: () => openVet() },
+  { id: 'tubs', a: 9, es: 'Bañeras', sub: 'Bathtub Rush', neon: '#38f6ff', wall: '#dff7ff', aw: '#3cb4ff', goods: ['#ffffff', '#ffdc3c', '#78c8ff'], open: () => openBrShop() },
+  { id: 'poop', a: -18, es: 'Kiosco de Caca', sub: 'Guerra de Caca', neon: '#ff8a2b', wall: '#f4e2c8', aw: '#8a5523', goods: ['#8a5523', '#6b3f16', '#ff8a2b'], open: () => openCShop() },
+  { id: 'cars', a: -45, es: 'Alquiler de Autos', sub: '¡Muy pronto!', neon: '#ffd23f', wall: '#fff3c4', aw: '#e2493b', goods: ['#e2493b', '#3c8cff', '#ffd23f'], open: () => toast(tr('¡Muy pronto vas a poder alquilar autos acá!')) },
+  { id: 'seeds', a: 144, es: 'Semillería', sub: 'Huerta de la Suerte', neon: '#d4ff3a', wall: '#e9f7d8', aw: '#5aa546', goods: ['#ff5a4a', '#ffd23f', '#7bd389'], open: () => openGShop() },
+  { id: 'troll', a: 171, es: 'Cotillón Troll', sub: 'Troll Land', neon: '#ff4fd8', wall: '#ffe0f4', aw: '#ff5fa2', goods: ['#ffe14d', '#9fd36a', '#ff5fa2'], open: () => openTrShop() },
+  { id: 'build', a: 198, es: 'Corralón', sub: 'Construí Todo', neon: '#3dff6e', wall: '#e3f3e0', aw: '#2ea046', goods: ['#c8823c', '#9aa0a6', '#e2493b'], open: () => openShop() },
+  { id: 'clothes', a: 225, es: 'Ropa', sub: 'Vestuario', neon: '#c06bff', wall: '#f0e4ff', aw: '#a06cd5', goods: ['#ff6b6b', '#5f9ef5', '#ffd23f'], open: () => enterEdit() },
+];
+const SHOP_R = PLAZA.r + 1.6; // donde empieza el mostrador
+const shopRoot = new THREE.Group(); scene.add(shopRoot);
+const shopStatic = new THREE.Group(); shopRoot.add(shopStatic);
+const shopMats = {};
+const sMat = (c, r = 0.6) => shopMats[c + r] || (shopMats[c + r] = new THREE.MeshStandardMaterial({ color: c, roughness: r }));
+// junta todas las piezas de un muñeco en pocas mallas (los vendedores no caminan: así se dibujan rápido)
+function bakeGroup(src) {
+  src.updateMatrixWorld(true);
+  const inv = new THREE.Matrix4().copy(src.matrixWorld).invert(), by = new Map(), out = new THREE.Group();
+  src.traverse((o) => {
+    if (!o.isMesh || Array.isArray(o.material)) return;
+    for (let v = o; v && v !== src; v = v.parent) if (!v.visible) return;
+    if (!by.has(o.material.uuid)) by.set(o.material.uuid, { mat: o.material, list: [] });
+    by.get(o.material.uuid).list.push(o);
+  });
+  const m4 = new THREE.Matrix4();
+  for (const { mat, list } of by.values()) {
+    const parts = list.map((o) => { const g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone(); g.applyMatrix4(m4.multiplyMatrices(inv, o.matrixWorld)); return g; });
+    let n = 0; for (const g of parts) n += g.attributes.position.count;
+    const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3), uv = new Float32Array(n * 2); let k = 0;
+    for (const g of parts) { pos.set(g.attributes.position.array, k * 3); if (g.attributes.normal) nor.set(g.attributes.normal.array, k * 3); if (g.attributes.uv) uv.set(g.attributes.uv.array, k * 2); k += g.attributes.position.count; g.dispose(); }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2)); geo.computeBoundingSphere();
+    const mesh = new THREE.Mesh(geo, mat); mesh.castShadow = true; out.add(mesh);
+  }
+  return out;
+}
+// cartel de neón sin poste (va arriba del techo)
+function neonBoard(parent, y, lines, neon, w = 5.2) {
+  const h = w * 0.42;
+  const back = new THREE.Mesh(rbox(w + 0.25, h + 0.2, 0.2, 0.08), sMat('#241a33')); back.position.set(0, y, -0.05); parent.add(back);
+  const ink = '#' + new THREE.Color(neon).lerp(new THREE.Color('#ffffff'), 0.55).getHexString();
+  const face = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: signTexture(lines, { bg: '#160f24', border: neon, ink, glow: neon, size: 125 }) }));
+  face.position.set(0, y, 0.07); parent.add(face);
+  const halo = new THREE.Mesh(new THREE.PlaneGeometry(w * 1.7, h * 2), new THREE.MeshBasicMaterial({ map: neonHaloTex, color: neon, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false }));
+  halo.position.set(0, y, -0.25); parent.add(halo);
+  neonSigns.push({ halo, ph: Math.random() * 6 });
+}
+const shopPads = [];
+SHOPS.forEach((S, i) => {
+  const a = S.a * Math.PI / 180, cx = PLAZA.x + Math.cos(a) * (SHOP_R + 2.4), cz = PLAZA.z + Math.sin(a) * (SHOP_R + 2.4);
+  const rot = Math.atan2(-Math.cos(a), -Math.sin(a)); // el frente (+z propio) mira al centro de la plaza
+  const g = new THREE.Group(); g.position.set(cx, 0, cz); g.rotation.y = rot; shopStatic.add(g);
+  const box = (w, h, d, c, x, y, z, r) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), sMat(c, r)); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; m.userData.st = 1; g.add(m); return m; };
+  box(7, 0.25, 5.2, '#efe6cf', 0, 0.12, 0, 0.8);            // piso del local
+  box(7, 3.4, 0.3, S.wall, 0, 1.7, -2.45);                   // pared de atrás
+  for (const sd of [-1, 1]) box(0.3, 3.4, 5.2, S.wall, sd * 3.35, 1.7, 0); // costados
+  box(7.6, 0.3, 5.8, '#faf6eb', 0, 3.5, -0.1, 0.5);          // techo
+  // toldo a rayas
+  for (let k = 0; k < 7; k++) { const t = box(1, 0.12, 2, k % 2 ? '#ffffff' : S.aw, -3 + k, 3.1, 2.9, 0.5); t.rotation.x = 0.38; }
+  // mostrador y estantes con mercadería de colores
+  box(5.2, 1.05, 0.9, '#b5814f', 0, 0.55, 1.2, 0.7); box(5.4, 0.12, 1.05, '#faf6eb', 0, 1.12, 1.2, 0.5);
+  for (const sy of [1.2, 2.2]) { box(5.8, 0.12, 0.6, '#b5814f', 0, sy, -2.0, 0.7); for (let k = 0; k < 5; k++) box(0.55, 0.5, 0.45, S.goods[(k + Math.round(sy)) % 3], -2.2 + k * 1.1, sy + 0.32, -2.0, 0.5); }
+  // cartel de neón arriba
+  neonBoard(g, 4.85, [tr(S.es), tr(S.sub)], S.neon);
+  // el vendedor (un vecino) detrás del mostrador
+  const look = botLook(brng(7000 + i * 13)); look.hat = 'gorra'; look.hatColor = S.aw;
+  const av = makeAvatar(look); av.g.position.set(0, 0.25, 0.2);
+  const tmp = new THREE.Group(); tmp.add(av.g); const vend = bakeGroup(tmp); vend.position.set(0, 0, 0); g.add(vend);
+  S.vendor = vend; S.jump = 0;
+  // choques: paredes y mostrador
+  const W = (lx, lz) => [cx + lx * Math.cos(rot) + lz * Math.sin(rot), cz - lx * Math.sin(rot) + lz * Math.cos(rot)];
+  for (let k = -3.3; k <= 3.31; k += 0.66) { const [x, z] = W(k, -2.45); colliders.push({ x, z, r: 0.4 }); }
+  for (const sd of [-1, 1]) for (let k = -2.3; k <= 2.4; k += 0.66) { const [x, z] = W(sd * 3.35, k); colliders.push({ x, z, r: 0.4 }); }
+  for (let k = -2.4; k <= 2.41; k += 0.6) { const [x, z] = W(k, 1.2); colliders.push({ x, z, r: 0.5 }); }
+  // dónde pararse para que te atiendan (delante del mostrador)
+  const [px, pz] = W(0, 3.1);
+  const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.06, 28), sMat(S.neon, 0.3)); pad.position.set(0, 0.04, 3.1); g.add(pad);
+  shopPads.push({ S, x: px, z: pz, lock: false });
+});
+// paredes, techos, toldos y estantes de todos los locales: se pasan a un solo grupo y se juntan por material (pocas piezas para dibujar)
+{
+  shopRoot.updateMatrixWorld(true);
+  const flat = new THREE.Group(); shopRoot.add(flat);
+  const list = []; shopStatic.traverse((o) => { if (o.isMesh && o.userData.st) list.push(o); });
+  for (const m of list) { m.matrixWorld.decompose(m.position, m.quaternion, m.scale); m.parent.remove(m); flat.add(m); }
+  mergeChildren(flat);
+}
+cullZone(shopRoot, PLAZA.x, PLAZA.z, SHOP_R + 8);
+
+// ---------- las tiendas que no tenían pantalla propia ----------
+function plOpen(title, fill) {
+  closePanels(); $('plShopTitle').textContent = title;
+  const box = $('plShopList'); box.innerHTML = ''; fill(box);
+  $('plShopPanel').classList.add('open'); sfx('click');
+}
+function plRow(box, ico, name, desc, btnHtml, cls, onBuy) {
+  const r = document.createElement('div'); r.className = 'shopRow';
+  r.innerHTML = `<span class="plIco">${ico}</span><div><b>${name}</b><small>${desc}</small></div>`;
+  const b = document.createElement('button'); b.className = 'toy ' + (cls || ''); b.innerHTML = btnHtml; b.onclick = onBuy;
+  r.appendChild(b); box.appendChild(r); return b;
+}
+// Veterinaria: huevos de las zonas que ya abriste (se pagan con las monedas de mascotas) y los pases
+function openVet() {
+  plOpen(tr('Veterinaria'), (box) => {
+    box.insertAdjacentHTML('beforeend', `<p class="note">${tr('Tus monedas de mascotas: {0}', fmt(ps.coins))}</p>`);
+    PZONES.forEach((z, i) => {
+      if (i >= ps.unlocked) return;
+      plRow(box, '🥚', tr('Huevo: {0}', z.name), tr('Sale una mascota de {0}.', z.name), `🐾 ${fmt(z.egg)}`, 'gold', () => { closePanels(); openEgg(i, 1); });
+    });
+    if (ps.unlocked < PZONES.length) box.insertAdjacentHTML('beforeend', `<p class="note">${tr('Abrí más zonas en el Reino de Mascotas para tener más huevos.')}</p>`);
+    plRow(box, '⭐', tr('Pases de mascotas'), tr('Triple huevo, más velocidad y más.'), tr('Ver'), '', () => openP('pshopPanel', renderPShop));
+  });
+}
+// Cotillón Troll: herramientas y trolleos (y una oferta del día a mitad de precio)
+function trOfferId() { const d = Math.floor(Date.now() / 86400000); return TROLL_ITEMS[d % TROLL_ITEMS.length].id; }
+function openTrShop() {
+  plOpen(tr('Cotillón Troll'), (box) => {
+    const off = trOfferId();
+    for (const t of TROLL_TOOLS) {
+      const have = !!trs.tools[t.id];
+      plRow(box, t.ico, tr(t.es), have ? tr('Ya la tenés') : tr('Herramienta para romper Troll Land'), have ? tr('Ya la tenés') : t.gems ? `<span class="gemS"></span>${t.gems}` : `<span class="coinS"></span>${fmt(t.price)}`, have ? 'gray' : 'gold', () => {
+        if (have) return;
+        if (t.gems) { if (st.gems < t.gems) { toast(tr('Te faltan {0} gemas.', t.gems - st.gems)); return; } st.gems -= t.gems; }
+        else { if (st.coins < t.price) { toast(tr('Te faltan {0} monedas.', fmt(t.price - st.coins))); return; } st.coins -= t.price; }
+        trs.tools[t.id] = 1; trSave(); trBuildBar(); updateHud(); sfx('coin'); happy(); toast(tr('¡Nueva herramienta: {0}!', tr(t.es))); openTrShop();
+      });
+    }
+    for (const it of TROLL_ITEMS) {
+      const sale = it.id === off && !it.gems, price = sale ? Math.round(it.price / 2) : it.price;
+      plRow(box, it.ico, tr(it.es) + (sale ? ' 🔥 ' + tr('¡Oferta del día!') : ''), tr('Paquete de {0}. Tenés {1}.', it.pack, trs.items[it.id] || 0), it.gems ? `<span class="gemS"></span>${it.gems}` : `<span class="coinS"></span>${fmt(price)}`, 'gold', () => {
+        if (it.gems) { if (st.gems < it.gems) { toast(tr('Te faltan {0} gemas.', it.gems - st.gems)); return; } st.gems -= it.gems; }
+        else { if (st.coins < price) { toast(tr('Te faltan {0} monedas.', fmt(price - st.coins))); return; } st.coins -= price; }
+        trs.items[it.id] = (trs.items[it.id] || 0) + it.pack; trSave(); trBuildBar(); updateHud(); sfx('coin'); happy();
+        toast(tr('¡Compraste {0} x{1}!', tr(it.es), it.pack)); openTrShop();
+      });
+    }
+  });
+}
+
+// ---------- cada cuadro: pisar delante del mostrador te atiende el vendedor ----------
+const SHOP_HI = ['¡Hola! ¿Qué vas a llevar?', '¡Bienvenido! Mirá lo que tengo.', '¡Buenas! Tengo de todo.'];
+function plazaTick(dt) {
+  const p = player.position;
+  if (Math.hypot(p.x - PLAZA.x, p.z - PLAZA.z) > SHOP_R + 10) return;
+  for (const sp of shopPads) {
+    const d = Math.hypot(p.x - sp.x, p.z - sp.z);
+    if (d > 2) sp.lock = false;
+    if (d < 1.05 && !sp.lock && mode === 'play' && p.y < 1) {
+      sp.lock = true; sp.S.jump = 0.45;
+      toast(tr(SHOP_HI[Math.floor(Math.random() * SHOP_HI.length)])); playS('agarrar', 0.5, 1.2);
+      setTimeout(() => sp.S.open(), 350);
+    }
+    const S = sp.S;
+    if (S.jump > 0) { S.jump -= dt; S.vendor.position.y = Math.sin((0.45 - S.jump) / 0.45 * Math.PI) * 0.35; if (S.jump <= 0) S.vendor.position.y = 0; }
+  }
 }
 
 function tick() {
