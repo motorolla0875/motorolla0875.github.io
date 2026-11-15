@@ -116,6 +116,7 @@
   .final { background: var(--night); color: #fff; border-radius: 32px; padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
   .final p { color: #C9CAEE; }
   .form { background: var(--night2); border-radius: 22px; padding: 26px; display: grid; gap: 14px; }
+  .final > div, .form label { min-width: 0; }
   .form label { display: grid; gap: 6px; font-weight: 700; font-size: 15px; }
   .form input, .form select { padding: 13px 14px; border-radius: 12px; border: 0; font: 500 16px "DM Sans", sans-serif; background: #fff; color: var(--ink); width: 100%; }
 
@@ -130,7 +131,7 @@
   }
   @media (max-width: 880px) {
     nav { display: none; }
-    .hero .wrap, .faq, .final { grid-template-columns: 1fr; }
+    .hero .wrap, .faq, .final { grid-template-columns: minmax(0, 1fr); }
     .hero .wrap { padding-top: 36px; }
     .phones { height: 430px; margin-top: 10px; }
     .phone { width: 180px; height: 368px; border-radius: 28px; padding: 8px; }
