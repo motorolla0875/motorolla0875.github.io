@@ -1037,7 +1037,7 @@ float n2(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
 float v = n2(vWorld.xz*0.15)*0.6 + n2(vWorld.xz*0.7)*0.3 + n2(vWorld.xz*3.)*0.1;
 diffuseColor.rgb *= mix(0.78, 1.18, v);`);
 };
-const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), groundMat);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(560, 700), groundMat); ground.position.z = 110;
 ground.rotation.x = -Math.PI / 2;
 ground.receiveShadow = true;
 scene.add(ground);
@@ -1057,22 +1057,17 @@ const bladeGeo = new THREE.BufferGeometry();
 // lugares sin pasto alto ni adornos: el terreno, la plaza y las cintas
 function reservedAt(x, z) {
   for (const zz of [0, -40, -80, -120]) for (const xx of [0, -40, 40, -80, 80]) if (Math.abs(x - xx) < 18.4 && Math.abs(z - zz) < 18.4) return true; // terrenos del barrio
-  if (Math.hypot(x, z - 42) < 11.6) return true;                            // plaza
+  if (Math.hypot(x, z - 42) < 15.6) return true;                            // plaza
   if (Math.abs(x) < 5 && z > 15 && z < 36) return true;                    // cintas a Construí Todo
-  if (x > 5 && x < 64 && Math.abs(z - 42) < 4.2) return true;              // cintas al juego 2
-  if (x > 52 && Math.abs(z - 42) < 18.5) return true;                      // Reino de Mascotas
-  if (x < -5 && x > -66 && Math.abs(z - 42) < 4.2) return true;            // cintas a la Huerta
-  if (x < -63 && z > 21) return true;
-  if (Math.abs(x) < 5 && z > 46 && z < 80) return true;                    // cintas a la Guerra de Caca
-  if (Math.abs(x) < 34 && z > 74) return true;
-  if (x < -4 && x > -92 && z > 46 && z < 138 && Math.abs(x * 0.5980 + (z - 42) * 0.8015) < 5) return true;   // cintas al Mini Market
-  if (Math.abs(x + 72) < 19 && Math.abs(z - 116) < 19) return true;
-  if (Math.hypot(x - 82, z - 122) < 38) return true;
-  if (Math.hypot(x + 130, z - 94) < 34) return true;                       // Troll Land
-  if (Math.hypot(x - 132, z - 88) < 23 || Math.hypot(x - 168, z - 116) < 30) return true; // Bathtub Rush y su montaña
-  const sg = (ax, az, bx, bz) => { const dx = bx - ax, dz = bz - az, L2 = dx * dx + dz * dz, k = Math.max(0, Math.min(1, ((x - ax) * dx + (z - az) * dz) / L2)); return Math.hypot(x - ax - dx * k, z - az - dz * k) < 5; };
-  if (sg(0, 42, -27.3, 54.4) || sg(-27.3, 54.4, -101, 83) || sg(0, 42, 29.1, 49.3) || sg(29.1, 49.3, 50, 66) || sg(50, 66, 113, 83)) return true; // cintas largas a Troll Land y Bathtub Rush                       // Torre Loca
-  if (x > 4 && x < 70 && z > 46 && z < 110 && Math.abs(x * 0.699 - (z - 42) * 0.716) < 5) return true; // cintas a la Torre Loca        // Mini Market                             // arena de la Guerra de Caca                                      // Huerta de la Suerte
+  if (Math.abs(x) < 14 && z > 50) return true;                             // la avenida de los juegos
+  if (x < -14 && x > -79 && z > 60 && z < 99) return true;                 // Huerta de la Suerte
+  if (x > 10 && x < 136 && Math.abs(z - 80) < 20) return true;             // Reino de Mascotas
+  if (Math.abs(x + 42) < 20 && Math.abs(z - 128) < 20) return true;        // Mini Market
+  if (x < -10 && x > -48 && z > 100 && z < 112) return true;               // camino al Mini Market
+  if (Math.hypot(x - 56, z - 142) < 38) return true;                       // Torre Loca
+  if (Math.hypot(x + 50, z - 190) < 34) return true;                       // Troll Land
+  if (Math.hypot(x - 40, z - 210) < 23 || Math.hypot(x - 86, z - 224) < 30) return true; // Bathtub Rush y su montaña
+  if (Math.abs(x) < 33 && z > 232) return true;                            // arena de la Guerra de Caca
   return false;
 }
 const offsets = new Float32Array(BLADES * 4);
@@ -3560,23 +3555,17 @@ document.title = tr('Construí Todo');
 // =====================================================================
 // ===== PLAZA Y CINTAS: el muñeco se sube a la cinta y va de juego en juego =====
 // =====================================================================
-const PLAZA = { x: 0, z: 42, r: 8.5 };
-// dónde quedan los juegos que salen en diagonal (Mini Market y Torre Loca)
-const OBBY_C = { x: 82, z: 122 };
-// salidas de la plaza (una por juego): la plaza se agranda sola si no entran bien las cintas y los carteles
+const PLAZA = { x: 0, z: 42, r: 14 };
+// ----- la avenida de los juegos: sale de la plaza hacia el norte; los juegos quedan a los costados -----
+// (la Guerra de Caca está al fondo, de frente)
+const AV = { half: 12, z0: PLAZA.z + PLAZA.r - 1.2, z1: 236 };
+// dónde queda la Torre Loca (a la derecha de la avenida)
+const OBBY_C = { x: 56, z: 142 };
+// salidas de la plaza: el barrio de Construí (sur) y la avenida (norte)
 const PLAZA_EXITS = (() => {
   const dir = (x, z) => { const l = Math.hypot(x, z); return { x: x / l, z: z / l, L: l }; };
-  const ob = (() => { const a = Math.atan2(PLAZA.z - OBBY_C.z, PLAZA.x - OBBY_C.x); return dir(OBBY_C.x + Math.cos(a) * 26 - PLAZA.x, OBBY_C.z + Math.sin(a) * 26 - PLAZA.z); })();
-  return { construi: dir(0, -1), mascotas: dir(1, 0), congo: dir(0, 1), huerta: dir(-1, 0), market: dir(-75 - PLAZA.x, 98 - PLAZA.z), obby: ob };
+  return { construi: dir(0, -1), avenida: dir(0, 1) };
 })();
-const OBBY_DIR = PLAZA_EXITS.obby;
-{
-  const angs = Object.values(PLAZA_EXITS).map((d) => Math.atan2(d.z, d.x)).sort((a, b) => a - b);
-  let gap = Math.PI * 2;
-  angs.forEach((a, i) => { const nx = i + 1 < angs.length ? angs[i + 1] : angs[0] + Math.PI * 2; gap = Math.min(gap, nx - a); });
-  // cada salida necesita unos 8.8 de ancho (las dos cintas + el cartel a la izquierda)
-  PLAZA.r = Math.max(8.5, Math.min(16, 8.8 / gap));
-}
 const hub = new THREE.Group();
 scene.add(hub);
 
@@ -3688,44 +3677,45 @@ function neonSign(x, z, rotY, lines, neon) {
 // el resplandor late despacito, como un tubo de neón
 function neonTick() { const t = performance.now() / 1000; for (const n of neonSigns) n.halo.material.opacity = 0.48 + Math.sin(t * 2.2 + n.ph) * 0.07 + (Math.sin(t * 23 + n.ph * 7) > 0.985 ? -0.25 : 0); }
 
-// ----- juegos más lejos (Troll Land y Bathtub Rush): un caminito sale de la plaza y desde ahí una cinta larga hasta el juego -----
-const FAR_R0 = 30;
-function farRoute(angDeg, mids, tx, tz, tr_) {
-  const a = angDeg * Math.PI / 180, pts = [[PLAZA.x + Math.cos(a) * FAR_R0, PLAZA.z + Math.sin(a) * FAR_R0]].concat(mids);
-  const [lx, lz] = pts[pts.length - 1], dx = tx - lx, dz = tz - lz, D = Math.hypot(dx, dz);
-  pts.push([tx - dx / D * (tr_ + 0.3), tz - dz / D * (tr_ + 0.3)]);
-  return { a, pts, end: pts[pts.length - 1], dir: [dx / D, dz / D] };
-}
-function farBelts(R, color, signLines, archLines, neon) {
-  const ca = Math.cos(R.a), sa = Math.sin(R.a), plen = FAR_R0 - PLAZA.r + 1;
-  const path = new THREE.Mesh(new THREE.PlaneGeometry(3, plen), new THREE.MeshStandardMaterial({ color: '#f3ead2', roughness: 0.7, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
-  path.rotation.set(-Math.PI / 2, 0, -Math.atan2(sa, ca) + Math.PI / 2); path.position.set(PLAZA.x + ca * (PLAZA.r - 0.5 + plen / 2), 0.025, PLAZA.z + sa * (PLAZA.r - 0.5 + plen / 2)); path.receiveShadow = true; hub.add(path);
-  R.segs = [];
-  for (let i = 0; i + 1 < R.pts.length; i++) {
-    let [ax, az] = R.pts[i], [bx, bz] = R.pts[i + 1];
-    const L = Math.hypot(bx - ax, bz - az), ux = (bx - ax) / L, uz = (bz - az) / L, ext = i + 2 < R.pts.length ? 0.9 : 0, pre = i > 0 ? 0.9 : 0;
-    ax -= ux * pre; az -= uz * pre; bx += ux * ext; bz += uz * ext;
-    const px = -uz * 1.6, pz = ux * 1.6;
-    addBelt(ax - px, az - pz, bx - px, bz - pz, color);
-    addBelt(bx + px, bz + pz, ax + px, az + pz, '#e6a91e');
-    R.segs.push({ ax, az, ux, uz, L: L + pre + ext });
-  }
-  const [sx, sz] = R.pts[0], s0 = R.segs[0];
-  neonSign(sx + s0.uz * 4.4 - s0.ux * 0.6, sz - s0.ux * 4.4 - s0.uz * 0.6, Math.atan2(s0.ux, s0.uz) + Math.PI, signLines, neon);
-  const [ex, ez] = R.end, [dx, dz] = R.dir;
-  arch(ex - dx * 1.2, ez - dz * 1.2, Math.atan2(dx, dz), archLines, color);
-  // ¿está en el pasillo de la cinta?
-  R.inside = (x, z) => R.segs.some((g) => { const qx = x - g.ax, qz = z - g.az, al = qx * g.ux + qz * g.uz; return al > -1.5 && al < g.L + 2 && Math.abs(-qx * g.uz + qz * g.ux) < 3.3; });
+// ----- la puerta de cada juego: un caminito desde la vereda de la avenida hasta la entrada, con su cartel de neón -----
+// side: -1 = a la izquierda de la avenida (oeste), 1 = a la derecha (este). (ex, ez) = entrada del juego.
+function gameDoor(side, ex, ez, color, signLines, archLines, neon, opts = {}) {
+  const sx = side * (AV.half - 1.5), sz = opts.sz !== undefined ? opts.sz : ez;
+  const L = Math.hypot(ex - sx, ez - sz), ux = (ex - sx) / L, uz = (ez - sz) / L;
+  // caminito de baldosas
+  const path = new THREE.Mesh(new THREE.PlaneGeometry(3.4, L + 1.5), new THREE.MeshStandardMaterial({ color: '#f3ead2', roughness: 0.7, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+  path.rotation.set(-Math.PI / 2, 0, Math.atan2(ux, uz)); path.position.set((sx + ex) / 2, 0.025, (sz + ez) / 2); path.receiveShadow = true; hub.add(path);
+  // cartel de neón en la vereda, a la izquierda de la puerta
+  // (mira hacia la plaza y un poco hacia el medio de la avenida, así se lee mientras venís)
+  if (!opts.noSign) neonSign(side * (AV.half - 0.9), sz - 4.6, Math.PI + side * 0.5, signLines, neon);
+  if (!opts.noArch) arch(ex - ux * 1.2, ez - uz * 1.2, Math.atan2(ux, uz), archLines, color);
+  const R = { side, sx, sz, ux, uz, L, end: [ex, ez], dir: [ux, uz] };
+  R.inside = (x, z) => { const qx = x - sx + ux * 2.5, qz = z - sz + uz * 2.5, al = qx * ux + qz * uz; return al > 0 && al < L + 5 && Math.abs(-qx * uz + qz * ux) < 2.2; };
   return R;
 }
-// límites del pasillo y del juego: se resbala por el borde (como contra una pared)
+// ¿se puede caminar acá sin estar en ningún juego? (barrio, plaza y avenida)
+function baseWalk(x, z) { return (z <= 57.5 && z >= -139 && Math.abs(x) <= 99) || (Math.abs(x) <= AV.half - 0.5 && z >= 50 && z <= AV.z1 + 8); }
+// límites del camino y del juego: se resbala por el borde (como contra una pared)
 function farClamp(inside, st) {
-  const p = player.position, beyond = (x, z) => z > 57.5 || x > 98.5 || x < -128.5;
+  const p = player.position, beyond = (x, z) => !baseWalk(x, z);
   if (inside(p.x, p.z)) { st.last = { x: p.x, z: p.z }; return beyond(p.x, p.z); }
   if (!st.last || !beyond(st.last.x, st.last.z) || Math.hypot(p.x - st.last.x, p.z - st.last.z) > 3) { st.last = null; return false; }
   if (inside(p.x, st.last.z)) p.z = st.last.z; else if (inside(st.last.x, p.z)) p.x = st.last.x; else { p.x = st.last.x; p.z = st.last.z; }
   st.last = { x: p.x, z: p.z };
   return true;
+}
+// límites del mundo cuando no estás en ningún juego
+let wcLast = null;
+function worldClamp() {
+  const p = player.position;
+  if (baseWalk(p.x, p.z)) { wcLast = { x: p.x, z: p.z }; return; }
+  if (wcLast && Math.hypot(p.x - wcLast.x, p.z - wcLast.z) < 3) {
+    if (baseWalk(p.x, wcLast.z)) p.z = wcLast.z; else if (baseWalk(wcLast.x, p.z)) p.x = wcLast.x; else { p.x = wcLast.x; p.z = wcLast.z; }
+    return;
+  }
+  p.x = Math.max(-99, Math.min(99, p.x)); p.z = Math.max(-139, p.z);
+  if (!baseWalk(p.x, p.z)) { if (Math.abs(p.x) <= AV.half - 0.5) p.z = Math.min(p.z, AV.z1 + 8); else p.z = Math.min(p.z, 57.5); }
+  wcLast = { x: p.x, z: p.z };
 }
 
 // ----- la plaza: piso de baldosas de juguete, borde y la estatua del muñeco -----
@@ -3810,12 +3800,32 @@ addBelt(-1.6, PLAZA.z - PLAZA.r + 1.2, -1.6, 19.2, '#2ea046');
 addBelt(1.6, 19.2, 1.6, PLAZA.z - PLAZA.r + 1.2, '#e6a91e');
 arch(0, 20.6, 0, [tr('CONSTRUÍ TODO'), tr('Juego 1')], '#2ea046');
 plazaSign(0, -1, [tr('Construí Todo'), tr('Juego 1')], '#2ea046', '#3dff6e');
-// próximo juego: cinta hacia el este que termina en una estación "pronto"
-// cintas largas hasta el Reino de Mascotas (se ve de lejos, llegás caminando por la cinta)
-addBelt(PLAZA.x + PLAZA.r - 1.2, PLAZA.z - 1.6, 63, PLAZA.z - 1.6, '#4fb3ee');
-addBelt(63, PLAZA.z + 1.6, PLAZA.x + PLAZA.r - 1.2, PLAZA.z + 1.6, '#e6a91e');
-plazaSign(1, 0, [tr('Reino de Mascotas'), tr('Juego 2')], '#4fb3ee', '#4aa8ff');
-// (el arco del Juego 2 es la entrada gigante del Reino de Mascotas, al final de la cinta)
+// ----- la avenida: calle, veredas, faroles y la cinta larga de ida y vuelta en el medio -----
+plazaSign(0, 1, [tr('Avenida de los Juegos'), tr('8 juegos')], '#ffd23f', '#ffd23f');
+addBelt(-1.6, AV.z0, -1.6, AV.z1, '#ffd23f');
+addBelt(1.6, AV.z1, 1.6, AV.z0, '#e6a91e');
+arch(0, AV.z0 + 2.5, 0, [tr('AVENIDA DE LOS JUEGOS')], '#ffd23f');
+{
+  const len = AV.z1 - AV.z0 + 10, cz = (AV.z0 + AV.z1) / 2 + 3;
+  const flat = (w, x, col, off) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, len), new THREE.MeshStandardMaterial({ color: col, roughness: 0.85, polygonOffset: true, polygonOffsetFactor: off, polygonOffsetUnits: off })); m.rotation.x = -Math.PI / 2; m.position.set(x, 0.012, cz); m.receiveShadow = true; hub.add(m); return m; };
+  flat(17, 0, '#4b4f5c', -1);                                   // la calle (por acá van a andar los autos)
+  for (const sd of [-1, 1]) flat(3.6, sd * 10.3, '#ebe2c8', -2); // veredas
+  // líneas blancas cortadas de los carriles y cordones
+  const lineMat = new THREE.MeshBasicMaterial({ color: '#f5f1e4' }), dash = new THREE.PlaneGeometry(0.25, 3), curb = toyMat('#d8cfb4');
+  const lines = new THREE.Group(); hub.add(lines);
+  for (let z = AV.z0 + 3; z < AV.z1; z += 7) for (const x of [-5.6, 5.6]) { const m = new THREE.Mesh(dash, lineMat); m.rotation.x = -Math.PI / 2; m.position.set(x, 0.03, z); lines.add(m); }
+  for (const sd of [-1, 1]) { const c = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.16, len), curb); c.position.set(sd * 8.5, 0.08, cz); c.receiveShadow = true; lines.add(c); }
+  // faroles a los dos lados (de noche alumbran)
+  const poleMat = toyMat('#3a3446'), bulbMat = new THREE.MeshBasicMaterial({ color: '#fff3c4' }), poleG = new THREE.CylinderGeometry(0.1, 0.13, 4.4, 8), armG = new THREE.BoxGeometry(1.1, 0.12, 0.12), bulbG = new THREE.SphereGeometry(0.3, 10, 8);
+  for (let z = AV.z0 + 8; z < AV.z1; z += 22) for (const sd of [-1, 1]) {
+    const x = sd * 11.4;
+    const p1 = new THREE.Mesh(poleG, poleMat); p1.position.set(x, 2.2, z); p1.castShadow = true; lines.add(p1);
+    const a1 = new THREE.Mesh(armG, poleMat); a1.position.set(x - sd * 0.5, 4.35, z); lines.add(a1);
+    const b1 = new THREE.Mesh(bulbG, bulbMat); b1.position.set(x - sd * 1.0, 4.15, z); lines.add(b1);
+    colliders.push({ x, z, r: 0.2 });
+  }
+  mergeChildren(lines); // todo junto: pocas piezas para dibujar
+}
 // portales: textura de remolino
 function swirlTex(c) {
   const cv = document.createElement('canvas'); cv.width = cv.height = 128; const g = cv.getContext('2d');
@@ -4074,9 +4084,11 @@ function petIcon(id, v) {
 // el mundo se arma en coordenadas propias (avanza hacia -z) y después se gira para que quede al final de la cinta
 const PW_ROT = -Math.PI / 2;
 const petWorld = new THREE.Group();
-petWorld.rotation.y = PW_ROT; petWorld.position.set(-21, 0, 42);
+// la entrada (z propio = -74) queda en la vereda derecha de la avenida
+const PW_ZC = 80;
+petWorld.rotation.y = PW_ROT; petWorld.position.set(AV.half + 1.5 - 74, 0, PW_ZC);
 scene.add(petWorld); petWorld.updateMatrixWorld(true);
-cullZone(petWorld, 120, 42, 75);
+cullZone(petWorld, AV.half + 1.5 + 67, PW_ZC, 75);
 const _pl = new THREE.Vector3();
 function PL() { return petWorld.worldToLocal(_pl.copy(player.position)); } // posición del muñeco en el mundo de mascotas
 const toWorld = (v) => petWorld.localToWorld(v.clone());
@@ -4583,9 +4595,13 @@ addEventListener('keydown', (e) => { if (!inPets || e.repeat) return; if (e.code
 
 // ===== límites del mundo de mascotas (no pasar los portones cerrados) =====
 var inPets = false;
+// la puerta en la avenida (el arco gigante es la entrada del mundo de mascotas)
+const PW_DOOR = gameDoor(1, AV.half + 3, PW_ZC, '#4fb3ee', [tr('Reino de Mascotas'), tr('Juego 2')], [], '#4aa8ff', { noArch: true });
+const pwDoorSt = {};
+function clampPetsDoor() { return farClamp((x, z) => PW_DOOR.inside(x, z) && x < AV.half + 2.4, pwDoorSt); }
 function clampPets() {
   const p = PL();
-  if (p.z > -74 || Math.abs(p.x) > PW_X + 8) return false;
+  if (p.z > -74 || Math.abs(p.x) > PW_X + 1.5) return false;
   // los costados del mundo (eje x propio = eje z de la escena)
   const cx = Math.max(-PW_X + 0.6, Math.min(PW_X - 0.6, p.x));
   if (cx !== p.x) { p.x = cx; vel.z = 0; }
@@ -4596,7 +4612,7 @@ function clampPets() {
   return true;
 }
 function petsZone() {
-  const now = mode === 'play' && PL().z < -74 && Math.abs(PL().x) < PW_X + 8;
+  const now = mode === 'play' && PL().z < -74 && Math.abs(PL().x) < PW_X + 1.5;
   if (now !== inPets) {
     inPets = now;
     document.body.classList.toggle('pets', now);
@@ -4711,19 +4727,19 @@ function gBasket() {
   return [n, v];
 }
 
-// ---------- el lugar: al oeste de la plaza, al final de la cinta ----------
-const HUERTA = { x0: -127, x1: -65, z0: 23, z1: 57.6 };
-const GF = { x: -98, z: 40.5 }, G_TILE = 2.5, G_STEP = 2.85;
+// ---------- el lugar: a la izquierda de la avenida, el primero ----------
+const HUERTA = { x0: -77, x1: -15, z0: 62, z1: 96.6 };
+const G_DOOR_Z = 81; // la entrada (lado de la avenida)
+const GF = { x: -48, z: 79.5 }, G_TILE = 2.5, G_STEP = 2.85;
 const garden = new THREE.Group(); scene.add(garden);
-cullZone(garden, -96, 40, 45);
+cullZone(garden, -46, 79, 45);
 const gStatic = new THREE.Group(); garden.add(gStatic); // lo que nunca se mueve (se junta al final)
 const gMat = (c, r = 0.6) => new THREE.MeshStandardMaterial({ color: c, roughness: r });
 function gMesh(geo, mat, x, y, z, parent = garden) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; parent.add(m); return m; }
-// cintas de ida y vuelta desde la plaza
-addBelt(PLAZA.x - PLAZA.r + 1.2, PLAZA.z - 1.6, -62, PLAZA.z - 1.6, '#5aa546');
-addBelt(-62, PLAZA.z + 1.6, PLAZA.x - PLAZA.r + 1.2, PLAZA.z + 1.6, '#e6a91e');
-arch(-64, 42, Math.PI / 2, [tr('HUERTA DE LA SUERTE'), tr('Juego 3')], '#5aa546');
-plazaSign(-1, 0, [tr('Huerta de la Suerte'), tr('Juego 3')], '#5aa546', '#d4ff3a');
+// la puerta en la avenida (a la izquierda)
+const G_DOOR = gameDoor(-1, HUERTA.x1 - 0.3, G_DOOR_Z, '#5aa546', [tr('Huerta de la Suerte'), tr('Juego 3')], [tr('HUERTA DE LA SUERTE'), tr('Juego 3')], '#d4ff3a');
+const gClampSt = {};
+function clampHuerta() { return farClamp((x, z) => (x > HUERTA.x0 + 0.2 && x < HUERTA.x1 + 0.6 && z > HUERTA.z0 + 0.2 && z < HUERTA.z1 - 0.2) || G_DOOR.inside(x, z), gClampSt); }
 {
   // pasto cortito de la huerta, camino de arena y cerco blanco
   const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d');
@@ -4733,7 +4749,7 @@ plazaSign(-1, 0, [tr('Huerta de la Suerte'), tr('Juego 3')], '#5aa546', '#d4ff3a
   const fl = new THREE.Mesh(new THREE.PlaneGeometry(W, D), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
   fl.rotation.x = -Math.PI / 2; fl.position.set((HUERTA.x0 + HUERTA.x1) / 2, 0.015, (HUERTA.z0 + HUERTA.z1) / 2); fl.receiveShadow = true; garden.add(fl);
   const path = new THREE.Mesh(new THREE.PlaneGeometry(26, 3.4), new THREE.MeshStandardMaterial({ color: '#e8d6a8', roughness: 0.9, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }));
-  path.rotation.x = -Math.PI / 2; path.position.set(-76, 0.02, 42); path.receiveShadow = true; garden.add(path);
+  path.rotation.x = -Math.PI / 2; path.position.set(-26, 0.02, G_DOOR_Z); path.receiveShadow = true; garden.add(path);
   const fence = gMat('#faf6eb', 0.5), postG = new THREE.CylinderGeometry(0.11, 0.13, 1.3, 8);
   const side = (ax, az, bx, bz, gapAt) => {
     const len = Math.hypot(bx - ax, bz - az), n = Math.round(len / 2);
@@ -4746,7 +4762,7 @@ plazaSign(-1, 0, [tr('Huerta de la Suerte'), tr('Juego 3')], '#5aa546', '#d4ff3a
   };
   side(HUERTA.x0, HUERTA.z0, HUERTA.x1, HUERTA.z0); side(HUERTA.x0, HUERTA.z1, HUERTA.x1, HUERTA.z1);
   side(HUERTA.x0, HUERTA.z0, HUERTA.x0, HUERTA.z1);
-  side(HUERTA.x1, HUERTA.z0, HUERTA.x1, HUERTA.z1, (x, z) => Math.abs(z - 42) < 4.5); // entrada
+  side(HUERTA.x1, HUERTA.z0, HUERTA.x1, HUERTA.z1, (x, z) => Math.abs(z - G_DOOR_Z) < 4.5); // entrada
   // flores y arbolitos de adorno en los bordes
   const fc = ['#ff6fa8', '#ffd83d', '#ffffff', '#b07cff', '#ff8a3d'];
   const FLOWER_STEM = gMat('#3c8c37'), FLOWER_MATS = fc.map((c) => gMat(c));
@@ -4756,7 +4772,7 @@ plazaSign(-1, 0, [tr('Huerta de la Suerte'), tr('Juego 3')], '#5aa546', '#d4ff3a
     gMesh(new THREE.SphereGeometry(0.14, 8, 6), FLOWER_MATS[i % fc.length], x, 0.45, z, gStatic).castShadow = false;
   }
   const TREE_WOOD = gMat('#8a5a32'), TREE_LEAF = gMat('#4fae4a'), TREE_APPLE = gMat('#e2493b');
-  for (const [x, z] of [[-123, 27], [-123, 54], [-110, 27], [-110, 54]]) {
+  for (const [x, z] of [[-73, 66], [-73, 93], [-60, 66], [-60, 93]]) {
     gMesh(new THREE.CylinderGeometry(0.25, 0.32, 1.6, 10), TREE_WOOD, x, 0.8, z, gStatic);
     gMesh(new THREE.SphereGeometry(1.35, 14, 10), TREE_LEAF, x, 2.4, z, gStatic);
     for (let k = 0; k < 5; k++) { const a = k * 1.3; gMesh(new THREE.SphereGeometry(0.2, 8, 6), TREE_APPLE, x + Math.cos(a) * 1.05, 2.3 + Math.sin(k) * 0.5, z + Math.sin(a) * 1.05, gStatic); }
@@ -4789,11 +4805,11 @@ function pad(x, z, color, lines) {
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthWrite: false })); sp.scale.set(2.6, 1.3, 1); sp.position.y = 2.2; g.add(sp);
   return { g, disc, sp, x, z, color };
 }
-stand(-71.5, 31, Math.PI / 2, '#2ea046', tr('SEMILLAS'));
-stand(-71.5, 53, Math.PI / 2, '#e6a91e', tr('VENDER'));
-const shopPad = pad(-69, 31, '#2ea046', [tr('Semillas'), tr('pisá acá')]);
-const sellPad = pad(-69, 53, '#e6a91e', [tr('Vender'), tr('pisá acá')]);
-const upPad = pad(-82, 34, '#e2493b', [tr('Mejora'), '']);
+stand(-21.5, 70, Math.PI / 2, '#2ea046', tr('SEMILLAS'));
+stand(-21.5, 92, Math.PI / 2, '#e6a91e', tr('VENDER'));
+const shopPad = pad(-19, 70, '#2ea046', [tr('Semillas'), tr('pisá acá')]);
+const sellPad = pad(-19, 92, '#e6a91e', [tr('Vender'), tr('pisá acá')]);
+const upPad = pad(-32, 73, '#e2493b', [tr('Mejora'), '']);
 
 // ---------- las casillas de tierra (6x6, se van desbloqueando) ----------
 const gTiles = {}; // key "r_c" -> { mesh, x, z, plant, stage, lbl, lblTxt }
@@ -6035,7 +6051,7 @@ function gardenBotsTick(dt, t, now) {
 // Versión con tu muñeco del Poop War de Roblox: dos equipos con lanzacacas, cada uno protege
 // su monstruo de caca y tiene que destruir el del otro. Si se acaba el tiempo, gana el monstruo con más vida.
 // Se juega en primera persona, 8 contra 8: vos en el equipo rojo con 7 vecinos; enfrente, 8 vecinos del azul.
-const CG = { cx: 0, cz: 150, hx: 28, hz: 70 }; // la arena (rojo al norte, azul al sur)
+const CG = { cx: 0, cz: 310, hx: 28, hz: 70 }; // la arena (rojo al norte, azul al sur)
 const CG_K = 0.4; // studs de Roblox → tamaño del muñeco
 const CG_CFG = {
   matchTime: 360, wait: 6, endTime: 8, respawn: 4, shield: 2.5,
@@ -6082,7 +6098,7 @@ function csSave() { try { localStorage.setItem(CG_KEY, JSON.stringify(cs)); } ca
 
 // ---------- la arena (castillo en ruinas embarrado) ----------
 const cg = new THREE.Group(); scene.add(cg);
-cullZone(cg, 0, 150, 80);
+cullZone(cg, CG.cx, CG.cz, 80);
 const cgStatic = new THREE.Group(); cg.add(cgStatic);
 const cMat = (c, r = 0.85, extra) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: r }, extra || {}));
 const C_STONE = cMat('#8c806e'), C_STONE2 = cMat('#73685a'), C_POOP = cMat('#6e3e1c', 0.5), C_POOP2 = cMat('#875023', 0.5), C_POOP3 = cMat('#553016', 0.6);
@@ -6188,11 +6204,9 @@ function stink(x, y, z, n, spread) {
   colliders.push({ x: CG.cx - 3, z: CG.cz, r: 2.1, h: 1.2 }, { x: CG.cx + 3, z: CG.cz, r: 2.1, h: 1.2 });
   stink(CG.cx, 2.5, CG.cz, 5, 2);
 }
-// cintas desde la plaza (hacia el sur) y arco de entrada
-addBelt(PLAZA.x - 1.6, PLAZA.z + PLAZA.r - 1.2, PLAZA.x - 1.6, CG.cz - CG.hz - 4, '#8a5523');
-addBelt(PLAZA.x + 1.6, CG.cz - CG.hz - 4, PLAZA.x + 1.6, PLAZA.z + PLAZA.r - 1.2, '#e6a91e');
+// arco de entrada al final de la avenida (de frente) y su cartel de neón
 arch(0, CG.cz - CG.hz - 3, 0, [tr('GUERRA DE CACA'), tr('Juego 4')], '#8a5523');
-plazaSign(0, 1, [tr('Guerra de Caca'), tr('Juego 4')], '#8a5523', '#ff8a2b');
+neonSign(-7.5, CG.cz - CG.hz - 8, Math.PI + 0.35, [tr('Guerra de Caca'), tr('Juego 4')], '#ff8a2b');
 mergeChildren(cgStatic);
 
 // ---------- monstruos de caca ----------
@@ -6823,7 +6837,7 @@ function mkIncome() { let t = 0; for (const id in mks.owned) if (MK_BY[id]) t +=
 const fmtMoney = (n) => '$' + fmt(Math.floor(n));
 
 // ---------- el lugar: al sureste de la plaza, al final de una cinta en diagonal ----------
-const MK = { x: -72, z: 116, k: 0.4 };
+const MK = { x: -42, z: 128, k: 0.4 };
 const mkW = (x, z) => [MK.x + x * MK.k, MK.z + z * MK.k]; // posición de Roblox (local) → mundo
 const market = new THREE.Group(); scene.add(market);
 const mMat = (c, r = 0.7, extra) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: r }, extra || {}));
@@ -6840,28 +6854,19 @@ function mWall(x, z, w, d, h) { // muro con choques (círculos a lo largo)
   const path = new THREE.Mesh(new THREE.PlaneGeometry(8 * MK.k, 30 * MK.k), mMat('#aaafaa', 0.95, { polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 }));
   path.rotation.x = -Math.PI / 2; const [px, pz] = mkW(0, -30); path.position.set(px, 0.03, pz); market.add(path);
 }
-// cinta en diagonal desde la plaza (sale al suroeste, entre la Huerta y la Guerra de Caca)
+// la puerta en la avenida (a la izquierda): un caminito hasta la vereda de entrada del súper
 const MK_END = { x: MK.x - 3, z: MK.z - 18 };
-const MK_DIR = (() => { const dx = MK_END.x - PLAZA.x, dz = MK_END.z - PLAZA.z, L = Math.hypot(dx, dz); return { x: dx / L, z: dz / L, L }; })();
-{
-  const dx = MK_DIR.x, dz = MK_DIR.z, L = MK_DIR.L - 1.5, sx = PLAZA.x + dx * (PLAZA.r - 1.2), sz = PLAZA.z + dz * (PLAZA.r - 1.2), ex = PLAZA.x + dx * L, ez = PLAZA.z + dz * L;
-  const px = -dz * 1.6, pz = dx * 1.6;
-  addBelt(sx - px, sz - pz, ex - px, ez - pz, '#1d9e75');
-  addBelt(ex + px, ez + pz, sx + px, sz + pz, '#e6a91e');
-  arch(ex + dx * 1.6, ez + dz * 1.6, Math.atan2(dx, dz), [tr('MINI MARKET'), tr('Juego 5')], '#1d9e75');
-  plazaSign(dx, dz, [tr('Mini Market'), tr('Juego 5')], '#1d9e75', '#2bffc8');
-}
-// límites: el pasillo de la cinta y el terreno del súper (lo demás lo maneja el mundo)
+const MK_DOOR = gameDoor(-1, MK_END.x, MK_END.z, '#1d9e75', [tr('Mini Market'), tr('Juego 5')], [tr('MINI MARKET'), tr('Juego 5')], '#2bffc8', { sz: MK_END.z - 4 });
+// límites: el camino y el terreno del súper (lo demás lo maneja el mundo)
 function mkInside(x, z) {
   if (x > MK.x - 17.6 && x < MK.x + 17.6 && z > MK.z - 17.6 && z < MK.z + 17.6) return true;
-  const px = x - PLAZA.x, pz = z - PLAZA.z, along = px * MK_DIR.x + pz * MK_DIR.z, side = -px * MK_DIR.z + pz * MK_DIR.x;
-  return along > 4 && along < MK_DIR.L + 4 && Math.abs(side) < 3.3;
+  return MK_DOOR.inside(x, z);
 }
 let mkLast = null;
 function clampMarket() {
-  const p = player.position, beyond = (z) => z > 57.5;
-  if (mkInside(p.x, p.z)) { mkLast = { x: p.x, z: p.z }; return beyond(p.z); }
-  if (!mkLast || !beyond(mkLast.z) || Math.hypot(p.x - mkLast.x, p.z - mkLast.z) > 3) { mkLast = null; return false; }
+  const p = player.position, beyond = (z, x) => !baseWalk(x, z);
+  if (mkInside(p.x, p.z)) { mkLast = { x: p.x, z: p.z }; return beyond(p.z, p.x); }
+  if (!mkLast || !beyond(mkLast.z, mkLast.x) || Math.hypot(p.x - mkLast.x, p.z - mkLast.z) > 3) { mkLast = null; return false; }
   // se resbala por el borde (como contra una pared)
   if (mkInside(p.x, mkLast.z)) p.z = mkLast.z; else if (mkInside(mkLast.x, p.z)) p.x = mkLast.x; else { p.x = mkLast.x; p.z = mkLast.z; }
   mkLast = { x: p.x, z: p.z };
@@ -7160,7 +7165,7 @@ obs.runStart = 0; // el reloj arranca de nuevo al entrar
 function obSave() { try { localStorage.setItem(OB_KEY, JSON.stringify(obs)); } catch (e) { /* nada */ } save(); }
 
 // ---------- cuentas de la torre ----------
-const OB_A0 = Math.atan2(PLAZA.z - OB.cz, PLAZA.x - OB.cx); // el checkpoint 0 mira hacia la plaza
+const OB_A0 = Math.PI; // el checkpoint 0 mira hacia la avenida (al oeste)
 function obPad(i) { const a = OB_A0 + i * Math.PI * 2 / OB.per; return new THREE.Vector3(OB.cx + Math.cos(a) * OB.R, i * OB.rise, OB.cz + Math.sin(a) * OB.R); }
 function obFloorOf(stage) { return Math.max(0, Math.min(OB_FLOORS.length - 1, Math.floor((Math.max(stage, 1) - 1) / OB.per))); }
 function obFloorAtY(y) { return obFloorOf(Math.floor(y / OB.rise) + 1); }
@@ -7329,27 +7334,17 @@ const obPath = []; // el camino completo para los vecinos
   const pt = obPad(OB_TOTAL); obPath.push([pt.x, pt.y, pt.z]);
 }
 
-// ---------- cinta desde la plaza ----------
-{
-  const dx = OBBY_DIR.x, dz = OBBY_DIR.z, p0 = obPad(0);
-  const L = Math.hypot(p0.x - PLAZA.x, p0.z - PLAZA.z) - 4.2;
-  const sx = PLAZA.x + dx * (PLAZA.r - 1.2), sz = PLAZA.z + dz * (PLAZA.r - 1.2), ex = PLAZA.x + dx * L, ez = PLAZA.z + dz * L;
-  const px = -dz * 1.6, pz = dx * 1.6;
-  addBelt(sx - px, sz - pz, ex - px, ez - pz, '#aa64ff');
-  addBelt(ex + px, ez + pz, sx + px, sz + pz, '#e6a91e');
-  arch(ex + dx * 1.6, ez + dz * 1.6, Math.atan2(dx, dz), [tr('TORRE LOCA'), tr('Juego 6')], '#aa64ff');
-  plazaSign(dx, dz, [tr('Torre Loca'), tr('Juego 6')], '#aa64ff', '#c06bff');
-}
+// ---------- la puerta en la avenida (a la derecha) ----------
+const OB_DOOR = (() => { const p0 = obPad(0); return gameDoor(1, p0.x - 3.4, p0.z, '#aa64ff', [tr('Torre Loca'), tr('Juego 6')], [tr('TORRE LOCA'), tr('Juego 6')], '#c06bff'); })();
 
-// ---------- límites: el pasillo de la cinta y el terreno de la torre ----------
+// ---------- límites: el camino y el terreno de la torre ----------
 function obInside(x, z) {
   if (Math.hypot(x - OB.cx, z - OB.cz) < OB.zone - 0.6) return true;
-  const px = x - PLAZA.x, pz = z - PLAZA.z, along = px * OBBY_DIR.x + pz * OBBY_DIR.z, side = -px * OBBY_DIR.z + pz * OBBY_DIR.x;
-  return along > 4 && along < OBBY_DIR.L + 6 && Math.abs(side) < 3.3;
+  return OB_DOOR.inside(x, z);
 }
 let obLast = null;
 function clampObby() {
-  const p = player.position, beyond = (x, z) => z > 57.5 || x > 52;
+  const p = player.position, beyond = (x, z) => !baseWalk(x, z);
   if (obInside(p.x, p.z)) { obLast = { x: p.x, z: p.z }; return beyond(p.x, p.z); }
   if (!obLast || !beyond(obLast.x, obLast.z) || Math.hypot(p.x - obLast.x, p.z - obLast.z) > 3) { obLast = null; return false; }
   if (obInside(p.x, obLast.z)) p.z = obLast.z; else if (obInside(obLast.x, p.z)) p.x = obLast.x; else { p.x = obLast.x; p.z = obLast.z; }
@@ -7447,7 +7442,7 @@ function obBack(hurt) {
 $('obBackBtn').onclick = () => { obBack(false); sfx('click'); };
 $('obExitBtn').onclick = () => {
   // bajar al piso sin perder tu etapa (para irte a otro juego)
-  const p = obPad(0); obClimb = false; player.position.set(p.x, 0, p.z); vy = 0; facing = Math.atan2(PLAZA.x - p.x, PLAZA.z - p.z); camYaw = facing + Math.PI; sfx('click');
+  const p = obPad(0); obClimb = false; player.position.set(p.x, 0, p.z); vy = 0; facing = -Math.PI / 2; camYaw = facing + Math.PI; sfx('click');
 };
 $('obRestartBtn').onclick = () => {
   closePanels(); obs.stage = 0; obs.runStart = 0; obs.skipped = 0; obSave(); obBack(false); updateObHud(); toast(tr('¡A subir de nuevo!')); sfx('click');
@@ -7564,9 +7559,9 @@ function obWin(tt) {
 // Desde la plaza sale una cinta corta a un portal que te lleva a Troll Land (lejos, al sur).
 // Ahí hay una ciudad de bloques para romper con martillo, bombas de caca, bola de demolición y meteorito.
 // Cada bloque roto da una moneda. Los vecinos la vuelven a construir solos, así que nunca se termina.
-const TL = { x: -130, z: 94, r: 31 };
-// cinta larga desde la plaza (sale por un caminito entre el Mini Market y la Huerta)
-const TROLL_ROUTE = farRoute(155.5, [], TL.x, TL.z, TL.r);
+const TL = { x: -50, z: 190, r: 31 };
+// la puerta en la avenida (a la izquierda, después del Mini Market)
+const TROLL_ROUTE = gameDoor(-1, TL.x + TL.r + 0.3, TL.z, '#ff5fa2', [tr('Troll Land'), tr('Juego 7')], [tr('TROLL LAND'), tr('Juego 7')], '#ff4fd8');
 const TROLL_TOOLS = [
   { id: 'hammer', ico: '🔨', es: 'Martillo', price: 0, range: 5.5, rad: 0.6, cd: 0.22 },
   { id: 'bomb', ico: '💩', es: 'Bomba de caca', price: 400, range: 16, rad: 2.3, cd: 1.1 },
@@ -7894,7 +7889,6 @@ function makePortal(color) {
   disc.position.y = 1.7; g.add(disc); g.userData.disc = disc;
   return g;
 }
-farBelts(TROLL_ROUTE, '#ff5fa2', [tr('Troll Land'), tr('Juego 7')], [tr('TROLL LAND'), tr('Juego 7')], '#ff4fd8');
 function trFlash() { const f = $('trFlash'); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); }
 
 // ---------- límites ----------
@@ -8407,9 +8401,9 @@ function pipoTick(dt, t) {
 // Desde la plaza sale una cinta larga hasta la cima (al pie de la montaña, se ve de lejos).
 // Las bajadas están todavía más lejos: solo se arma la del mundo que estás bajando (una sola malla).
 const BK = 0.3, TUB_K = 0.22, BR_DS = 6;
-const BR = { x: 132, z: 88, r: 20 };
-// cinta larga desde la plaza (sale por un caminito entre el Reino de Mascotas y la Torre Loca)
-const BR_ROUTE = farRoute(14, [[50, 66]], BR.x, BR.z, BR.r);
+const BR = { x: 40, z: 210, r: 20 };
+// la puerta en la avenida (a la derecha, después de la Torre Loca)
+const BR_ROUTE = gameDoor(1, BR.x - BR.r - 0.3, BR.z, '#3cb4ff', [tr('Bathtub Rush'), tr('Juego 8')], [tr('BATHTUB RUSH'), tr('Juego 8')], '#38f6ff');
 const BR_CFG = { gravity: 90, start: 25, jump: 30, jumpCd: 4, ramp: 0.42, boost: 1.45, crashSlow: 0.45, finish: 1.5, friend: 2, bolt: 2, reviveBase: 30, revivePct: 2, maxRevives: 2 };
 const BR_WORLDS = [
   { id: 'hills', es: 'Colinas de Piedra', stars: 1, cost: 0, mult: 2, length: 1800, slope: 10, width: 40, curve: 0.8, hazards: { rock: 4, crate: 3, ramp: 3, boost: 2, bolts: 4 }, road: '#464a56', side: '#6ebe5a', side2: '#5aa04b', line: '#ffdc46', sky: '#96d2ff', deco: 'tree' },
@@ -8701,7 +8695,6 @@ function brWheelCanvas(size) {
   g.fillStyle = '#faf6eb'; g.beginPath(); g.arc(c, c, size * 0.08, 0, Math.PI * 2); g.fill();
   return cv;
 }
-farBelts(BR_ROUTE, '#3cb4ff', [tr('Bathtub Rush'), tr('Juego 8')], [tr('BATHTUB RUSH'), tr('Juego 8')], '#38f6ff');
 const brTMs = {};
 const brTM = (c, r) => brTMs[c + (r || '')] || (brTMs[c + (r || '')] = toyMat(c, r));
 {
@@ -8765,7 +8758,7 @@ const brTM = (c, r) => brTMs[c + (r || '')] || (brTMs[c + (r || '')] = toyMat(c,
   mergeChildren(L, (o) => o === brDisplayTub); // menos piezas para dibujar
 }
 // la montaña de atrás (se ve desde la plaza): una sola malla
-const BR_MOUNT = { x: 168, z: 116 };
+const BR_MOUNT = { x: 88, z: 226 };
 {
   const mg = bgNew(), M = BR_MOUNT;
   const cone = (x, z, rr, hh, col, snow) => {
@@ -9233,9 +9226,10 @@ function bathTick(dt, t) {
     bgCol.set(sky); scene.fog.color.copy(bgCol);
     if (skyMat) { skyMat.uniforms.top.value.set(sky).lerp(DAY_SKY.top, 0.55); skyMat.uniforms.bottom.value.copy(bgCol); }
     sun.intensity = 0.87; hemi.intensity = 0.57;
-    if (brSkyMesh) brSkyMesh.position.copy(camera.position);
     trFxTick(dt);
-  } else if (brSkyMesh && brSkyMesh.position.lengthSq()) brSkyMesh.position.set(0, 0, 0);
+  }
+  // el cielo acompaña a la cámara (el mundo ahora es más largo que el cielo)
+  if (brSkyMesh) brSkyMesh.position.copy(camera.position);
   if (inBath) {
     if (brDisplayTub) brDisplayTub.rotation.y += dt * 0.8;
     // puertas y mostradores: se activan al pisarlos
@@ -9353,7 +9347,7 @@ function tickInner() {
   }
   // no salir del campo
   const r = Math.hypot(player.position.x, player.position.z);
-  if (!clampBath() && !clampTroll() && !clampPets() && !clampCongo() && !clampMarket() && !clampObby()) { player.position.x = Math.max(player.position.z > 22 && player.position.z < 59 ? -129 : -99, Math.min(99, player.position.x)); player.position.z = Math.max(-139, Math.min(Math.abs(player.position.x) < 5 ? 80 : 58, player.position.z)); }
+  if (!clampBath() && !clampTroll() && !clampPets() && !clampPetsDoor() && !clampHuerta() && !clampCongo() && !clampMarket() && !clampObby()) worldClamp();
   player.rotation.y = facing;
 
   // animación de los huesos
