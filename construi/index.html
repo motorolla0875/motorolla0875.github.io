@@ -402,6 +402,11 @@
   #taxiInfo { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); display: none; background: rgba(42,24,64,.85); color: #ffd23f; border-radius: 14px; padding: 6px 16px; font-weight: 700; font-size: 18px; pointer-events: none; }
   body.taxiride #taxiInfo { display: block; }
   body.taxiride #stickZone, body.taxiride #stick, body.taxiride #jumpBtn, body.taxiride #runBtn, body.taxiride #tools, body.taxiride #hotbar, body.taxiride #leftBtns { display: none !important; }
+  #carHud { display: none; } body.driving #carHud { display: block; }
+  #carTime { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); background: rgba(42,24,64,.85); color: #ffd23f; border-radius: 14px; padding: 5px 16px; font-weight: 700; font-size: 20px; pointer-events: none; }
+  #carOut { position: absolute; right: 12px; top: 12px; pointer-events: auto; background: #e2493b; color: #fff; padding: 8px 16px; }
+  #carHorn { right: 22px; bottom: 22px; background: rgba(255,200,40,.92); font-size: 38px; }
+  body.driving #jumpBtn, body.driving #runBtn, body.driving #tools, body.driving #hotbar, body.driving #leftBtns, body.driving #taxiBtn, body.driving #topBox, body.driving #help, body.driving #shopBtn { display: none !important; }
   #bathHud, #bathRide { display: none; }
   body.bath #bathHud { display: block; }
   body.bathride #bathRide { display: block; }
@@ -597,6 +602,7 @@
   </div>
   <div id="trFlash"></div>
   <button id="taxiBtn" class="toy">🚕 Taxi</button>
+  <div id="carHud"><div id="carTime">⏱ 5:00</div><button id="carOut" class="toy">Bajarse</button><button id="carHorn" class="brBtn">📯</button></div>
   <div id="taxiInfo"></div>
   <div id="bathHud">
     <div id="brTop"><div><span class="coin"></span><span id="brCoins">0</span></div><div><span class="gem"></span><span id="brGems">0</span></div></div>
@@ -924,6 +930,9 @@ Object.assign(DICT, {
   '¿A DÓNDE VAMOS?': ['WHERE TO?', 'PARA ONDE VAMOS?'], '¿A dónde vamos?': ['Where to?', 'Para onde vamos?'], 'Plaza': ['Plaza', 'Praça'], 'Volver a la plaza': ['Back to the plaza', 'Voltar para a praça'], '{0} jugando ahora': ['{0} playing now', '{0} jogando agora'],
   'El taxi te lleva solo hasta la puerta del juego. Cuesta {0} monedas.': ['The taxi takes you to the game door. It costs {0} coins.', 'O táxi te leva até a porta do jogo. Custa {0} moedas.'], '¡Tu taxi ya viene! Esperalo en la parada 🚕': ['Your taxi is coming! Wait at the stop 🚕', 'Seu táxi já vem! Espere no ponto 🚕'],
   'Viajando a {0}…': ['Going to {0}…', 'Indo para {0}…'], '¡Llegaste a {0}!': ['You arrived at {0}!', 'Você chegou em {0}!'], 'El taxi se fue. Pedilo de nuevo cuando quieras.': ['The taxi left. Call it again anytime.', 'O táxi foi embora. Chame de novo quando quiser.'], 'Tu taxi ya viene en camino.': ['Your taxi is on its way.', 'Seu táxi já está a caminho.'],
+  'Autito': ['Mini car', 'Carrinho'], 'Deportivo': ['Sports car', 'Esportivo'], 'Camioneta': ['Pickup truck', 'Caminhonete'], 'Auto Especial': ['Special car', 'Carro Especial'], '¡Manejá!': ['Drive!', 'Dirija!'], 'Bajarse': ['Get out', 'Sair'],
+  '¡A manejar! Tenés 5 minutos.': ['Let\'s drive! You have 5 minutes.', 'Bora dirigir! Você tem 5 minutos.'], '¡Se terminó el alquiler! El auto volvió al local.': ['Rental is over! The car went back to the shop.', 'O aluguel acabou! O carro voltou para a loja.'],
+  'Lo manejás con el joystick por todo el mundo durante 5 minutos. No entra a los juegos.': ['Drive it with the joystick around the world for 5 minutes. It can\'t go into the games.', 'Dirija com o joystick pelo mundo por 5 minutos. Não entra nos jogos.'], 'Velocidad {0} km/h': ['Speed {0} km/h', 'Velocidade {0} km/h'], 'Ya estás manejando un auto.': ['You are already driving a car.', 'Você já está dirigindo um carro.'],
   'Juego 8': ['Game 8', 'Jogo 8'], 'BATHTUB RUSH': ['BATHTUB RUSH', 'BATHTUB RUSH'], 'Bathtub Rush': ['Bathtub Rush', 'Bathtub Rush'], 'LLEGADA': ['FINISH', 'CHEGADA'], 'BAÑERAS': ['TUBS', 'BANHEIRAS'], 'Bañeras': ['Tubs', 'Banheiras'], 'Ruleta': ['Spin', 'Roleta'], 'SALTAR': ['JUMP', 'PULAR'],
   'Bajar de nuevo': ['Ride again', 'Descer de novo'], 'Volver': ['Back', 'Voltar'], 'Revivir': ['Revive', 'Reviver'], '¡Girar!': ['Spin!', 'Girar!'], 'Mundo': ['World', 'Mundo'], 'Desbloquear': ['Unlock', 'Desbloquear'],
   'Colinas de Piedra': ['Pebble Hills', 'Colinas de Pedra'], 'Pico de Lava': ['Lava Peak', 'Pico de Lava'], 'Paso Helado': ['Frosty Pass', 'Passo Gelado'], 'Cañón de Dulces': ['Candy Canyon', 'Cânion de Doces'],
@@ -2613,7 +2622,7 @@ function act(clientX, clientY, alt) {
   if (inGarden) { gardenTap(clientX, clientY); return; }
   if (inCongo) { congoShoot(); return; }
   if (inTroll) { trollTap(clientX, clientY); return; }
-  if (brRun || inBath || (typeof taxiRiding === 'function' && taxiRiding())) return;
+  if (brRun || inBath || (typeof taxiRiding === 'function' && taxiRiding()) || (typeof driving === 'function' && driving())) return;
   if (inMarket || inObby) return;
   if (!inGame) return;
   const p = pickCell(clientX, clientY);
@@ -3811,7 +3820,7 @@ function beltAt(x, z) {
   return null;
 }
 // altura del piso en un punto (las cintas están un poquito levantadas)
-function floorAt(x, z) { return beltAt(x, z) ? BELT_H : (typeof congoFloor === 'function' ? congoFloor(x, z) : 0); }
+function floorAt(x, z) { return beltAt(x, z) ? BELT_H : Math.max(typeof congoFloor === 'function' ? congoFloor(x, z) : 0, typeof rampAt === 'function' ? rampAt(x, z) : 0); }
 
 // cintas de la estación "Construí Todo": ida (izquierda) y vuelta (derecha)
 addBelt(-1.6, PLAZA.z - PLAZA.r + 1.2, -1.6, 19.2, '#2ea046');
@@ -8812,6 +8821,7 @@ function brInside(x, z) { return Math.hypot(x - BR.x, z - BR.z) < BR.r - 0.7 || 
 function clampBath() {
   if (brRun) { brPhys(); brPlace(); vy = 0; onGround = true; vel.set(0, 0, 0); return true; }
   if (typeof taxiRiding === 'function' && taxiRiding()) { taxiPlace(); vy = 0; onGround = true; vel.set(0, 0, 0); return true; }
+  if (typeof driving === 'function' && driving()) { carPlace(); vy = 0; onGround = true; vel.set(0, 0, 0); return true; }
   return farClamp(brInside, brClampSt);
 }
 
@@ -9140,13 +9150,13 @@ function brBotsTick(dt, t) {
 }
 
 // ---------- online: los otros ven tu bañera; si alguien baja el mismo mundo, x2 ----------
-function brFlags() { const r = brRun; if (!r) return typeof taxiRiding === 'function' && taxiRiding() ? (TX_FLAG | 4) : 0; return 32 | 4 | (r.tub.i << 8) | (r.wi << 12); }
+function brFlags() { const r = brRun; if (!r) return typeof taxiRiding === 'function' && taxiRiding() ? (TX_FLAG | 4) : typeof carFlags === 'function' ? carFlags() : 0; return 32 | 4 | (r.tub.i << 8) | (r.wi << 12); }
 function brRemote(r, fl) {
   if (fl & 32) {
     const tb = BR_TUBS[(fl >> 8) & 15] || BR_TUBS[0];
     brSeatTub(r.obj, tb.id); r.brW = (fl >> 12) & 15; r.brT = performance.now();
   } else if (r.obj.userData.brTub) { brUnseatTub(r.obj); r.brW = -1; }
-  if (typeof txRemote === 'function') txRemote(r, fl);
+  if (typeof txRemote === 'function') { txRemote(r, fl); carRemote(r, fl); }
 }
 function brFriendNow(wi) {
   if (typeof remotes === 'undefined') return false;
@@ -9322,7 +9332,7 @@ const SHOPS = [
   { id: 'vet', a: 36, es: 'Veterinaria', sub: 'Reino de Mascotas', neon: '#4aa8ff', wall: '#d5ecff', aw: '#4aa8ff', goods: ['#ffd23f', '#ff9fc8', '#9be37a'], open: () => openVet() },
   { id: 'tubs', a: 9, es: 'Bañeras', sub: 'Bathtub Rush', neon: '#38f6ff', wall: '#dff7ff', aw: '#3cb4ff', goods: ['#ffffff', '#ffdc3c', '#78c8ff'], open: () => openBrShop() },
   { id: 'poop', a: -18, es: 'Kiosco de Caca', sub: 'Guerra de Caca', neon: '#ff8a2b', wall: '#f4e2c8', aw: '#8a5523', goods: ['#8a5523', '#6b3f16', '#ff8a2b'], open: () => openCShop() },
-  { id: 'cars', a: -45, es: 'Alquiler de Autos', sub: '¡Muy pronto!', neon: '#ffd23f', wall: '#fff3c4', aw: '#e2493b', goods: ['#e2493b', '#3c8cff', '#ffd23f'], open: () => toast(tr('¡Muy pronto vas a poder alquilar autos acá!')) },
+  { id: 'cars', a: -45, es: 'Alquiler de Autos', sub: '¡Manejá!', neon: '#ffd23f', wall: '#fff3c4', aw: '#e2493b', goods: ['#e2493b', '#3c8cff', '#ffd23f'], open: () => toast(tr('¡Muy pronto vas a poder alquilar autos acá!')) },
   { id: 'seeds', a: 144, es: 'Semillería', sub: 'Huerta de la Suerte', neon: '#d4ff3a', wall: '#e9f7d8', aw: '#5aa546', goods: ['#ff5a4a', '#ffd23f', '#7bd389'], open: () => openGShop() },
   { id: 'troll', a: 171, es: 'Cotillón Troll', sub: 'Troll Land', neon: '#ff4fd8', wall: '#ffe0f4', aw: '#ff5fa2', goods: ['#ffe14d', '#9fd36a', '#ff5fa2'], open: () => openTrShop() },
   { id: 'build', a: 198, es: 'Corralón', sub: 'Construí Todo', neon: '#3dff6e', wall: '#e3f3e0', aw: '#2ea046', goods: ['#c8823c', '#9aa0a6', '#e2493b'], open: () => openShop() },
@@ -9460,7 +9470,7 @@ function openTrShop() {
 // ---------- cada cuadro: pisar delante del mostrador te atiende el vendedor ----------
 const SHOP_HI = ['¡Hola! ¿Qué vas a llevar?', '¡Bienvenido! Mirá lo que tengo.', '¡Buenas! Tengo de todo.'];
 function plazaTick(dt) {
-  taxiTick(dt); taxiUiTick(dt);
+  taxiTick(dt); taxiUiTick(dt); carTick(dt);
   const p = player.position;
   if (Math.hypot(p.x - PLAZA.x, p.z - PLAZA.z) > SHOP_R + 10) return;
   for (const sp of shopPads) {
@@ -9620,7 +9630,7 @@ function txAlong(path, d, out) {
 }
 // pedir un taxi a un juego
 function callTaxi(id) {
-  const dest = DEST_BY[id]; if (!dest || taxi) return;
+  const dest = DEST_BY[id]; if (!dest || taxi || drive) return;
   if (st.coins < TAXI_PRICE) { toast(tr('Te faltan {0} monedas.', fmt(TAXI_PRICE - st.coins))); sfx('click'); return; }
   closePanels();
   const p = player.position;
@@ -9690,7 +9700,7 @@ function taxiPlace() {
   player.quaternion.copy(taxiCar.quaternion); facing = taxiCar.rotation.y;
 }
 function taxiCam(dt) {
-  if (!taxi || taxi.state !== 'riding') return false;
+  if (!taxi || taxi.state !== 'riding') return typeof carCam === 'function' ? carCam(dt) : false;
   player.quaternion.copy(taxiCar.quaternion);
   if (bones) { bones.legL.rotation.x = bones.legR.rotation.x = -1.45; bones.kneeL.rotation.x = bones.kneeR.rotation.x = 1.35; bones.armL.rotation.z = -0.3; bones.armR.rotation.z = 0.3; bones.hips.position.y = bones.hipY; }
   txCam.set(0, 4.6, -8.5).applyQuaternion(taxiCar.quaternion).add(taxiCar.position);
@@ -9724,11 +9734,204 @@ $('taxiBtn').onclick = () => { if (taxi) { toast(tr('Tu taxi ya viene en camino.
 let txBtnT = 0;
 function taxiUiTick(dt) {
   txBtnT -= dt; if (txBtnT > 0) return; txBtnT = 0.3;
-  const p = player.position, show = mode === 'play' && !brRun && !taxiRiding() && (inPlaza(p) || onAvenue(p));
+  const p = player.position, show = mode === 'play' && !brRun && !taxiRiding() && !drive && (inPlaza(p) || onAvenue(p));
   document.body.classList.toggle('taxiok', show);
   // el cartel grande se actualiza seguido si estás cerca
   if (Math.hypot(p.x - BIG_P.x, p.z - BIG_P.z) < 90) drawBig(false);
 }
+
+// =====================================================================
+// ===== ALQUILER DE AUTOS: lo manejás vos con el joystick, por casi todo el mundo =====
+// =====================================================================
+// No entran a los juegos ni a los terrenos del barrio. Si hay gente adelante, frenan solos.
+const CARS = [
+  { id: 'mini', es: 'Autito', body: '#ff6b6b', price: 50, top: 15, acc: 8, turn: 2.2, sc: 0.85 },
+  { id: 'sport', es: 'Deportivo', body: '#3c8cff', price: 150, top: 24, acc: 13, turn: 2.0, sc: 1, low: 1 },
+  { id: 'truck', es: 'Camioneta', body: '#7bd389', price: 150, top: 17, acc: 9, turn: 1.7, sc: 1.2 },
+  { id: 'special', es: 'Auto Especial', body: '#a06cd5', trim: '#ffd23f', gems: 15, top: 28, acc: 16, turn: 2.3, sc: 1.05 },
+];
+const CAR_TIME = 300; // 5 minutos
+const CAR_FLAG = 1 << 17;
+const carModels = {};
+function carModel(type) {
+  const c = CARS.find((k) => k.id === type) || CARS[0];
+  const g = makeCarModel(c.body, c.trim || null); g.scale.set(c.sc, c.low ? 0.93 : c.sc, c.sc * (c.low ? 1.08 : 1));
+  return g;
+}
+// rampas y lomitas en el pasto (para saltar con el auto; caminando también se suben)
+const RAMPS = [
+  { x: 50, z: 38, rot: Math.PI / 2, len: 9, w: 5, h: 1.8 }, { x: 80, z: 28, rot: -Math.PI / 2, len: 9, w: 5, h: 1.8 },
+  { x: -50, z: 38, rot: -Math.PI / 2, len: 9, w: 5, h: 1.8 }, { x: -80, z: 28, rot: Math.PI / 2, len: 9, w: 5, h: 1.8 },
+];
+const BUMPS = [{ x: 42, z: 52, r: 4.5, h: 0.9 }, { x: 66, z: 46, r: 5, h: 1.1 }, { x: -42, z: 52, r: 4.5, h: 0.9 }, { x: -66, z: 46, r: 5, h: 1.1 }];
+function rampAt(x, z) {
+  let h = 0;
+  for (const r of RAMPS) {
+    const dx = x - r.x, dz = z - r.z, al = dx * Math.sin(r.rot) + dz * Math.cos(r.rot), sd = dx * Math.cos(r.rot) - dz * Math.sin(r.rot);
+    if (Math.abs(sd) < r.w / 2 && al > -r.len / 2 && al < r.len / 2) h = Math.max(h, r.h * (al + r.len / 2) / r.len);
+  }
+  for (const b of BUMPS) { const d2 = (x - b.x) ** 2 + (z - b.z) ** 2; if (d2 < b.r * b.r) h = Math.max(h, b.h * (1 - d2 / (b.r * b.r))); }
+  return h;
+}
+{
+  const g = bgNew(), P = (r, al, sd, h) => [r.x + Math.sin(r.rot) * al + Math.cos(r.rot) * sd, h, r.z + Math.cos(r.rot) * al - Math.sin(r.rot) * sd];
+  for (const r of RAMPS) {
+    const a = -r.len / 2, b = r.len / 2, l = -r.w / 2, rr = r.w / 2;
+    for (let k = 0; k < 6; k++) { // franjas amarillas y negras
+      const a0 = a + (b - a) * k / 6, a1 = a + (b - a) * (k + 1) / 6, h0 = r.h * k / 6, h1 = r.h * (k + 1) / 6;
+      bgQuad(g, P(r, a0, l, h0), P(r, a0, rr, h0), P(r, a1, rr, h1), P(r, a1, l, h1), k % 2 ? '#2a2a2a' : '#ffc828');
+    }
+    bgQuad(g, P(r, b, l, 0), P(r, b, rr, 0), P(r, b, rr, r.h), P(r, b, l, r.h), '#e0a010');
+    bgTri(g, P(r, a, l, 0), P(r, b, l, 0), P(r, b, l, r.h), '#e0a010'); bgTri(g, P(r, a, rr, 0), P(r, b, rr, 0), P(r, b, rr, r.h), '#e0a010');
+  }
+  for (const b of BUMPS) for (let i = 0; i < 16; i++) for (let j = 0; j < 4; j++) {
+    const a0 = i / 16 * Math.PI * 2, a1 = (i + 1) / 16 * Math.PI * 2, r0 = b.r * j / 4, r1 = b.r * (j + 1) / 4;
+    const p = (rad, a) => [b.x + Math.cos(a) * rad, b.h * (1 - (rad * rad) / (b.r * b.r)) + 0.02, b.z + Math.sin(a) * rad];
+    bgQuad(g, p(r0, a0), p(r1, a0), p(r1, a1), p(r0, a1), (i + j) % 2 ? '#7cc95b' : '#6ab84a');
+  }
+  const m = new THREE.Mesh(bgBuild(g), brMatSolid); m.receiveShadow = true; hub.add(m);
+}
+// dónde no puede entrar un auto
+function carBlocked(x, z) {
+  if (x < -265 || x > 265 || z < -225 || z > 430) return true;
+  if (x > HUERTA.x0 - 1 && x < HUERTA.x1 + 1 && z > HUERTA.z0 - 1 && z < HUERTA.z1 + 1) return true;
+  if (x > AV.half + 1 && x < 140 && Math.abs(z - PW_ZC) < PW_X + 2) return true;
+  if (Math.abs(x - MK.x) < 19 && Math.abs(z - MK.z) < 19) return true;
+  if (Math.hypot(x - OB.cx, z - OB.cz) < OB.zone + 1) return true;
+  if (Math.hypot(x - TL.x, z - TL.z) < TL.r + 1.5) return true;
+  if (Math.hypot(x - BR.x, z - BR.z) < BR.r + 1.5 || Math.hypot(x - BR_MOUNT.x, z - BR_MOUNT.z) < 26) return true;
+  if (Math.abs(x - CG.cx) < CG.hx + 2 && z > CG.cz - CG.hz - 1.5 && z < CG.cz + CG.hz + 2) return true;
+  for (const [sx, sz] of SLOTS) if (Math.abs(x - sx) < 18.4 && Math.abs(z - sz) < 18.4) return true;
+  return false;
+}
+function carHits(x, z) {
+  for (const c of colliders) { const dx = c.x - x, dz = c.z - z; if (Math.abs(dx) < 3 && Math.abs(dz) < 3 && dx * dx + dz * dz < (c.r + 1.05) ** 2) return true; }
+  return false;
+}
+let drive = null; // { type, x, z, h, v, y, vy, t, car }
+function driving() { return !!drive; }
+let carEngine = null;
+function carEngineStart() {
+  const ac = audio(); if (!ac || carEngine) return;
+  const o = ac.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 50;
+  const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 400; const g = ac.createGain(); g.gain.value = 0;
+  o.connect(f); f.connect(g); g.connect(master); o.start(); carEngine = { o, g };
+}
+function carEngineStop() { if (!carEngine) return; try { carEngine.o.stop(); carEngine.o.disconnect(); carEngine.g.disconnect(); } catch (e) { /* nada */ } carEngine = null; }
+function carHorn() { brBeep(415, 0.28, 'square', 0.16); setTimeout(() => brBeep(330, 0.32, 'square', 0.16), 120); }
+function rentCar(c) {
+  if (drive || taxi) return;
+  if (c.gems) { if (st.gems < c.gems) { toast(tr('Te faltan {0} gemas.', c.gems - st.gems)); sfx('click'); return; } st.gems -= c.gems; }
+  else { if (st.coins < c.price) { toast(tr('Te faltan {0} monedas.', fmt(c.price - st.coins))); sfx('click'); return; } st.coins -= c.price; }
+  updateHud(); save(); closePanels();
+  // el auto aparece en la plaza, delante del local
+  const a = -45 * Math.PI / 180, x = PLAZA.x + Math.cos(a) * (PLAZA.r - 6), z = PLAZA.z + Math.sin(a) * (PLAZA.r - 6);
+  const car = carModel(c.id); scene.add(car);
+  drive = { type: c.id, def: c, x, z, h: 0, v: 0, y: 0, vy: 0, pitch: 0, t: CAR_TIME, car, honk: 0 };
+  carPlaceCar(); txCamInit = false; document.body.classList.add('driving');
+  carEngineStart(); sfx('coin'); playS('puerta_abre', 0.5, 1.1); toast(tr('¡A manejar! Tenés 5 minutos.'));
+}
+function carExit(msg) {
+  const D = drive; if (!D) return;
+  drive = null; carEngineStop(); document.body.classList.remove('driving');
+  // te bajás por la izquierda; si ahí no se puede caminar, te deja en la vereda más cerca
+  let x = D.x + Math.cos(D.h) * 1.9, z = D.z - Math.sin(D.h) * 1.9;
+  if (!baseWalk(x, z)) {
+    if (z > 57.5 && z < AV.z1 + 6) { x = Math.sign(x || 1) * (AV.half - 1.2); } else { x = Math.max(-98, Math.min(98, x)); z = Math.max(-138, Math.min(57, z)); }
+    if (carBlocked(x, z) && !baseWalk(x, z)) { x = PLAZA.x; z = PLAZA.z - 6; }
+  }
+  player.position.set(x, 0, z); player.quaternion.identity(); facing = D.h; camYaw = D.h + Math.PI; vy = 0;
+  scene.remove(D.car); D.car.traverse((o) => { if (o.isMesh && o.geometry) o.geometry.dispose(); });
+  trPuff(D.x, 0.8, D.z, 8); playS('puerta_abre', 0.5, 1.1);
+  if (msg) toast(msg);
+}
+function carPlaceCar() {
+  const D = drive; D.car.position.set(D.x, D.y, D.z); D.car.rotation.set(D.pitch, D.h, 0, 'YXZ');
+}
+function carTick(dt) {
+  const D = drive; if (!D) return;
+  D.t -= dt;
+  if (D.t <= 0) { carExit(tr('¡Se terminó el alquiler! El auto volvió al local.')); return; }
+  const c = D.def;
+  // manejo: joystick (arriba acelera, abajo frena / marcha atrás, a los costados dobla) o teclas
+  let thr = -joy.y, str = -joy.x;
+  if (Math.abs(thr) < 0.12) thr = 0; if (Math.abs(str) < 0.12) str = 0;
+  if (keys.KeyW || keys.ArrowUp) thr = 1; if (keys.KeyS || keys.ArrowDown) thr = -1;
+  if (keys.KeyA || keys.ArrowLeft) str = 1; if (keys.KeyD || keys.ArrowRight) str = -1;
+  const air = D.y > rampAt(D.x, D.z) + 0.05;
+  if (!air) {
+    if (thr > 0) D.v += c.acc * thr * dt; else if (thr < 0) D.v += (D.v > 0.5 ? 2.2 : 0.8) * c.acc * thr * dt;
+    else D.v *= Math.max(0, 1 - 1.4 * dt);
+    D.v = Math.max(-6, Math.min(c.top, D.v));
+    D.h += str * c.turn * Math.max(-1, Math.min(1, D.v / 6)) * dt;
+  }
+  // gente adelante: frena solo (no se atropella a nadie)
+  if (D.v > 0.5 && typeof remotes !== 'undefined') {
+    const fx = Math.sin(D.h), fz = Math.cos(D.h);
+    for (const r of remotes.values()) { const dx = r.obj.position.x - D.x, dz = r.obj.position.z - D.z, al = dx * fx + dz * fz; if (al > 0 && al < 3.5 && Math.abs(dx * fz - dz * fx) < 1.4) { D.v = Math.min(D.v, 0.4); if (D.honk <= 0) { D.honk = 2; carHorn(); } } }
+  }
+  if (D.honk > 0) D.honk -= dt;
+  // moverse (si choca, rebota)
+  const nx = D.x + Math.sin(D.h) * D.v * dt, nz = D.z + Math.cos(D.h) * D.v * dt, fx = Math.sin(D.h) * 1.2, fz = Math.cos(D.h) * 1.2, sg = D.v >= 0 ? 1 : -1;
+  if (carBlocked(nx + fx * sg, nz + fz * sg) || carHits(nx + fx * sg, nz + fz * sg) || carHits(nx, nz)) {
+    if (Math.abs(D.v) > 6) { playS('choque_m1', 0.5); shakeT = 0.25; }
+    D.v = -D.v * 0.3;
+  } else { D.x = nx; D.z = nz; }
+  // las cintas te empujan un poquito
+  const b = beltAt(D.x, D.z); if (b && !air) { D.x += b.ux * 2.2 * dt; D.z += b.uz * 2.2 * dt; }
+  // rampas y lomitas: sube, y si viene rápido, salta
+  const gnd = rampAt(D.x, D.z);
+  if (air || D.vy > 0) { D.vy -= 22 * dt; D.y += D.vy * dt; if (D.y <= gnd) { if (D.vy < -8) { playS('land1', 0.6); shakeT = 0.2; } D.y = gnd; D.vy = 0; } }
+  else {
+    const ahead = rampAt(D.x + Math.sin(D.h) * 0.6, D.z + Math.cos(D.h) * 0.6);
+    if (D.y - gnd > 0.25 && Math.abs(D.v) > 4) D.vy = Math.abs(D.v) * 0.25; else D.y = gnd;
+    if (gnd > 0 && ahead < gnd - 0.15 && Math.abs(D.v) > 6) { D.vy = Math.abs(D.v) * 0.32; } // sale volando de la rampa
+  }
+  const slope = Math.atan2(rampAt(D.x + Math.sin(D.h) * 1.2, D.z + Math.cos(D.h) * 1.2) - rampAt(D.x - Math.sin(D.h) * 1.2, D.z - Math.cos(D.h) * 1.2), 2.4);
+  D.pitch += ((D.y > gnd + 0.05 ? -Math.atan2(D.vy, Math.max(4, Math.abs(D.v))) * 0.6 : -slope) - D.pitch) * Math.min(1, dt * 8);
+  carPlaceCar();
+  if (carEngine && AC) { carEngine.o.frequency.setTargetAtTime(45 + Math.abs(D.v) * 5, AC.currentTime, 0.1); carEngine.g.gain.setTargetAtTime(0.05 * sfxScale, AC.currentTime, 0.2); }
+  const s = Math.max(0, Math.ceil(D.t)); $('carTime').textContent = '⏱ ' + Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+}
+const CAR_SEAT = new THREE.Vector3(0.42, 0.08, 0.2);
+function carPlace() {
+  const D = drive;
+  player.position.copy(CAR_SEAT).multiplyScalar(D.def.sc).applyQuaternion(D.car.quaternion).add(D.car.position);
+  player.quaternion.copy(D.car.quaternion); facing = D.h;
+}
+function carCam(dt) {
+  const D = drive; if (!D) return false;
+  player.quaternion.copy(D.car.quaternion);
+  if (bones) { bones.legL.rotation.x = bones.legR.rotation.x = -1.45; bones.kneeL.rotation.x = bones.kneeR.rotation.x = 1.35; bones.armL.rotation.x = bones.armR.rotation.x = -1.2; bones.armL.rotation.z = -0.15; bones.armR.rotation.z = 0.15; bones.hips.position.y = bones.hipY; }
+  const back = 8 + D.v * 0.12;
+  txCam.set(D.x - Math.sin(D.h) * back, D.y + 4.2, D.z - Math.cos(D.h) * back);
+  txLook.set(D.x + Math.sin(D.h) * 5, D.y + 1.2, D.z + Math.cos(D.h) * 5);
+  if (!txCamInit) { camera.position.copy(txCam); txCamInit = true; }
+  camera.position.lerp(txCam, Math.min(1, dt * 5)); camera.lookAt(txLook);
+  if (shakeT > 0) { shakeT -= dt; camera.position.x += (Math.random() - 0.5) * shakeT; camera.position.y += (Math.random() - 0.5) * shakeT; }
+  return true;
+}
+// los otros te ven manejando tu auto
+function carRemote(r, fl) {
+  const t = (fl >> 18) & 3, id = CARS[t] ? CARS[t].id : 'mini';
+  if (fl & CAR_FLAG) {
+    if (!r.obj.userData.car || r.obj.userData.car.userData.id !== id) {
+      if (r.obj.userData.car) r.obj.remove(r.obj.userData.car);
+      const c = carModel(id); c.userData.id = id; c.position.copy(CAR_SEAT).multiplyScalar(-(CARS[t] || CARS[0]).sc); c.position.y = -0.25; r.obj.add(c); r.obj.userData.car = c;
+    }
+  } else if (r.obj.userData.car) { const c = r.obj.userData.car; r.obj.remove(c); c.traverse((o) => { if (o.isMesh && o.geometry) o.geometry.dispose(); }); r.obj.userData.car = null; }
+}
+function carFlags() { return drive ? (CAR_FLAG | 4 | (CARS.findIndex((c) => c.id === drive.type) << 18)) : 0; }
+function openRent() {
+  plOpen(tr('Alquiler de Autos'), (box) => {
+    box.insertAdjacentHTML('beforeend', `<p class="note">${tr('Lo manejás con el joystick por todo el mundo durante 5 minutos. No entra a los juegos.')}</p>`);
+    for (const c of CARS) plRow(box, '🚗', tr(c.es), tr('Velocidad {0} km/h', Math.round(c.top * 3.6)), c.gems ? `<span class="gemS"></span>${c.gems}` : `<span class="coinS"></span>${fmt(c.price)}`, 'gold', () => rentCar(c));
+  });
+}
+SHOP_BY_ID_cars: { const S = SHOPS.find((k) => k.id === 'cars'); S.open = () => (drive ? toast(tr('Ya estás manejando un auto.')) : openRent()); }
+$('carHorn').addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); carHorn(); });
+$('carOut').onclick = (e) => { e.stopPropagation(); carExit(); };
+addEventListener('keydown', (e) => { if (drive && e.code === 'KeyH') carHorn(); });
 
 function tick() {
   requestAnimationFrame(tick);
