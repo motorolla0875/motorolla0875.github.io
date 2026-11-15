@@ -9495,7 +9495,7 @@ function openTrShop() {
 // ---------- cada cuadro: pisar delante del mostrador te atiende el vendedor ----------
 const SHOP_HI = ['¡Hola! ¿Qué vas a llevar?', '¡Bienvenido! Mirá lo que tengo.', '¡Buenas! Tengo de todo.'];
 function plazaTick(dt) {
-  taxiTick(dt); taxiUiTick(dt); carTick(dt);
+  taxiTick(dt); taxiUiTick(dt); carTick(dt); walkersTick(dt, performance.now() / 1000);
   const p = player.position;
   if (Math.hypot(p.x - PLAZA.x, p.z - PLAZA.z) > SHOP_R + 10) return;
   for (const sp of shopPads) {
@@ -9957,6 +9957,102 @@ SHOP_BY_ID_cars: { const S = SHOPS.find((k) => k.id === 'cars'); S.open = () => 
 $('carHorn').addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); carHorn(); });
 $('carOut').onclick = (e) => { e.stopPropagation(); carExit(); };
 addEventListener('keydown', (e) => { if (drive && e.code === 'KeyH') carHorn(); });
+
+// ----- gente caminando por la avenida y la plaza (vecinos de mentira, solo se ven cerca tuyo) -----
+const WK_N = 9, WK_DOORS = [G_DOOR, MK_DOOR, TROLL_ROUTE, BR_ROUTE, PW_DOOR, OB_DOOR].filter(Boolean);
+const walkers = [], wkRoot = new THREE.Group(); scene.add(wkRoot);
+let wkOn = false;
+function wkMake(i) {
+  const look = botLook(brng(9100 + i * 37)), av = makeAvatar(look);
+  av.g.traverse((m) => { if (m.isMesh) m.castShadow = !isTouch; });
+  const obj = new THREE.Group(); obj.add(av.g); obj.visible = false; wkRoot.add(obj);
+  return { i, obj, av, look, lugar: i, phase: Math.random() * 6, walk: 0, heldCode: 0, lookV: 0, st: 'off' };
+}
+const wkAvZ0 = PLAZA.z + PLAZA.r - 1, wkAvZ1 = AV.z1 - 2;
+const wkRand = (a, b) => a + Math.random() * (b - a);
+function wkArea(p) {
+  if (brRun || inBath || p.y > 6) return false;
+  if (Math.hypot(p.x - PLAZA.x, p.z - PLAZA.z) < PLAZA.r + 10) return true;
+  return Math.abs(p.x) < AV.half + 8 && p.z > PLAZA.z && p.z < AV.z1 + 12;
+}
+// lo pone en un lugar nuevo, lejos de vos (así no aparece de golpe en la cara)
+function wkSpawn(w) {
+  const p = player.position, inPlaza = Math.hypot(p.x - PLAZA.x, p.z - PLAZA.z) < PLAZA.r + 6;
+  for (let tries = 0; tries < 12; tries++) {
+    const r = Math.random(), kind = inPlaza ? (r < 0.55 ? 'plaza' : r < 0.8 ? 'side' : 'belt') : (r < 0.55 ? 'side' : r < 0.75 ? 'exit' : r < 0.9 ? 'belt' : 'plaza');
+    const dz = Math.random() < 0.5 ? 1 : -1, zz = Math.max(wkAvZ0, Math.min(wkAvZ1, p.z + dz * wkRand(14, 42)));
+    let x, z;
+    if (kind === 'side') { w.side = Math.random() < 0.5 ? -1 : 1; w.lane = w.side * (AV.half - 1.5 + wkRand(-0.5, 0.6)); x = w.lane; z = zz; w.dz = Math.random() < 0.5 ? 1 : -1; w.v = wkRand(1.5, 2.3); }
+    else if (kind === 'belt') { w.side = Math.random() < 0.5 ? -1 : 1; x = w.side * 1.6 + wkRand(-0.3, 0.3); z = zz; w.dz = w.side < 0 ? 1 : -1; w.v = 0; }
+    else if (kind === 'exit') {
+      const ds = WK_DOORS.filter((d) => Math.abs(d.sz - p.z) < 45 && Math.hypot(d.end[0] - p.x, d.end[1] - p.z) > 12); if (!ds.length) continue;
+      w.door = ds[(Math.random() * ds.length) | 0]; w.k = w.door.L; x = w.door.end[0]; z = w.door.end[1]; w.v = wkRand(1.5, 2.1);
+    } else {
+      w.ang = Math.random() * Math.PI * 2; w.rad = PLAZA.r - wkRand(2.2, 3.4); x = PLAZA.x + Math.cos(w.ang) * w.rad; z = PLAZA.z + Math.sin(w.ang) * w.rad;
+      w.dir = Math.random() < 0.5 ? 1 : -1; w.v = wkRand(1.4, 2); w.stop = 0; w.goal = w.ang + w.dir * wkRand(0.6, 2.2);
+    }
+    if (Math.hypot(x - p.x, z - p.z) < 11) continue;
+    w.st = kind; w.obj.position.set(x, kind === 'belt' ? BELT_H : 0, z); w.obj.visible = true; w.wait = 0;
+    return true;
+  }
+  w.st = 'off'; w.obj.visible = false; return false;
+}
+function wkFace(w, dx, dz, dt) { if (dx || dz) w.obj.rotation.y = angleLerp(w.obj.rotation.y, Math.atan2(dx, dz), 1 - Math.exp(-8 * dt)); }
+function walkersTick(dt, t) {
+  const p = player.position, on = wkArea(p);
+  if (!on) { if (wkOn) { wkOn = false; for (const w of walkers) { w.st = 'off'; w.obj.visible = false; } } return; }
+  if (!walkers.length) for (let i = 0; i < WK_N; i++) walkers.push(wkMake(i));
+  wkOn = true;
+  for (const w of walkers) {
+    const o = w.obj.position;
+    if (w.st === 'off' || Math.hypot(o.x - p.x, o.z - p.z) > 48) { wkSpawn(w); continue; }
+    let sp = 0, dx = 0, dz = 0;
+    if (w.st === 'side') {
+      if (w.wait > 0) { w.wait -= dt; } // se para a mirar un ratito
+      else {
+        sp = w.v; dz = w.dz; o.z += dz * sp * dt; dx = (w.lane - o.x) * 0.5; o.x += dx * dt;
+        if (Math.random() < dt * 0.04) { w.wait = wkRand(1.5, 4); }
+        // entra a un juego que le queda de paso
+        for (const d of WK_DOORS) if (d.side === w.side && Math.abs(o.z - d.sz) < sp * dt * 1.2 + 0.05 && Math.random() < 0.45) { w.st = 'enter'; w.door = d; w.k = 0; o.x = d.sx; o.z = d.sz; break; }
+        if (o.z < wkAvZ0 - 2 || o.z > wkAvZ1 + 4) w.dz = -w.dz;
+      }
+    } else if (w.st === 'enter' || w.st === 'exit') {
+      const d = w.door, s = w.st === 'enter' ? 1 : -1; sp = w.v || 1.8; w.k += s * sp * dt;
+      o.x = d.sx + d.ux * w.k; o.z = d.sz + d.uz * w.k; dx = d.ux * s; dz = d.uz * s;
+      if (w.st === 'enter' && w.k > d.L + 1) { w.st = 'off'; w.obj.visible = false; continue; } // entró al juego
+      if (w.st === 'exit' && w.k <= 0) { w.st = 'side'; w.side = d.side; w.lane = d.sx; w.dz = Math.random() < 0.5 ? 1 : -1; w.v = wkRand(1.5, 2.3); }
+    } else if (w.st === 'belt') {
+      o.z += w.dz * BELT_SPEED * dt; dz = w.dz * 0.01;
+      if (o.z < AV.z0 + 1 || o.z > AV.z1 - 1) { w.st = 'off'; w.obj.visible = false; continue; }
+    } else if (w.st === 'plaza') {
+      if (w.stop > 0) { // mirando un negocio
+        w.stop -= dt; dx = Math.cos(w.ang); dz = Math.sin(w.ang);
+        if (w.stop <= 0) { w.dir = Math.random() < 0.5 ? 1 : -1; w.goal = w.ang + w.dir * wkRand(0.6, 2.4); }
+      } else {
+        sp = w.v; const da = w.dir * sp * dt / w.rad; w.ang += da;
+        o.x = PLAZA.x + Math.cos(w.ang) * w.rad; o.z = PLAZA.z + Math.sin(w.ang) * w.rad;
+        dx = -Math.sin(w.ang) * w.dir; dz = Math.cos(w.ang) * w.dir;
+        if ((w.goal - w.ang) * w.dir <= 0) {
+          // si quedó frente a un negocio se para a mirarlo; si no, sigue caminando
+          const deg = ((w.ang * 180 / Math.PI) % 360 + 360) % 360;
+          const near = SHOPS.find((S) => Math.abs(((deg - S.a) % 360 + 540) % 360 - 180) < 9);
+          if (near) { w.ang = near.a * Math.PI / 180; w.stop = wkRand(3, 6); }
+          else w.goal = w.ang + w.dir * wkRand(0.6, 2.2);
+        }
+      }
+    }
+    // no se encima con otro vecino
+    for (const u of walkers) { if (u === w || u.st === 'off' || u.st === 'belt') continue; const ex = o.x - u.obj.position.x, ez = o.z - u.obj.position.z, ed = Math.hypot(ex, ez); if (ed < 0.8 && ed > 0.001) { o.x += ex / ed * (0.8 - ed) * 0.5; o.z += ez / ed * (0.8 - ed) * 0.5; } }
+    // si te le ponés adelante, te esquiva
+    const qx = o.x - p.x, qz = o.z - p.z, qd = Math.hypot(qx, qz);
+    if (qd < 0.9 && qd > 0.01 && w.st !== 'belt') { o.x += qx / qd * (0.9 - qd); o.z += qz / qd * (0.9 - qd); }
+    wkFace(w, dx, dz, dt);
+    w.spd = sp; w.walk += ((sp > 0.4 ? 1 : 0) - w.walk) * (1 - Math.exp(-10 * dt)); w.phase += dt * (sp * 1.75 + 0.0001);
+    const far = Math.hypot(qx, qz) > 26; w.skip = !w.skip;
+    if (far && w.skip) continue;
+    animateRemote(w, sp, 1, t, far ? dt * 2 : dt); remoteFace(w, -1, dt);
+  }
+}
 
 function tick() {
   requestAnimationFrame(tick);
