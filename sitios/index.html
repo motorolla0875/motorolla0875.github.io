@@ -69,7 +69,7 @@
   .step p { margin: 0; color: var(--mute); }
   .step:nth-child(1) .n { color: var(--blue); } .step:nth-child(2) .n { color: var(--sun); } .step:nth-child(3) .n { color: var(--mint); }
 
-  .examples { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .examples { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .ex { text-decoration: none; background: var(--white); border-radius: 16px; overflow: hidden; border: 1px solid var(--line); transition: transform .2s; }
   .ex:hover { transform: translateY(-3px); }
   .ex img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
@@ -115,10 +115,11 @@
 
   .final { background: var(--night); color: #fff; border-radius: 32px; padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
   .final p { color: #C9CAEE; }
-  .form { background: var(--night2); border-radius: 22px; padding: 26px; display: grid; gap: 14px; }
+  .form { background: var(--night2); border-radius: 22px; padding: 26px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .form .btn { white-space: normal; text-align: center; }
   .final > div, .form label { min-width: 0; }
   .form label { display: grid; gap: 6px; font-weight: 700; font-size: 15px; }
-  .form input, .form select { padding: 13px 14px; border-radius: 12px; border: 0; font: 500 16px "DM Sans", sans-serif; background: #fff; color: var(--ink); width: 100%; }
+  .form input, .form select { min-width: 0; padding: 13px 14px; border-radius: 12px; border: 0; font: 500 16px "DM Sans", sans-serif; background: #fff; color: var(--ink); width: 100%; }
 
   footer { padding: 34px 0 44px; color: var(--mute); font-size: 15px; }
   footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; align-items: center; }
@@ -126,9 +127,6 @@
   .float { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 40; width: 58px; height: 58px; border-radius: 50%; background: #25D366; color: #fff; display: grid; place-items: center; box-shadow: 0 10px 26px rgba(37,211,102,.45); }
   .float svg { width: 30px; height: 30px; }
 
-  @media (max-width: 980px) {
-    .examples { grid-template-columns: repeat(3, 1fr); }
-  }
   @media (max-width: 880px) {
     nav { display: none; }
     .hero .wrap, .faq, .final { grid-template-columns: minmax(0, 1fr); }
@@ -142,7 +140,8 @@
     .plans { gap: 26px; }
     .examples { grid-template-columns: repeat(2, 1fr); }
     .faq aside { position: static; }
-    .final { padding: 28px; border-radius: 24px; }
+    .final { padding: 22px 16px; border-radius: 24px; gap: 22px; }
+    .form { padding: 18px 14px; }
     section { padding: 60px 0; }
   }
   @media (max-width: 420px) { header .btn span { display: none; } .phone.p1, .phone.p3 { opacity: .9; } }
@@ -274,6 +273,7 @@ const ex = [
   ["inmobiliaria", "Umbral", "Inmobiliaria", "KtOid0FLjqU"],
   ["taller", "Pistón", "Taller mecánico", "XP8o9_Arwqg"],
   ["contador", "Balance", "Estudio contable", "3Hgqb3xHfbA"],
+  ["verduleria", "La Canasta", "Verdulería", "GPxxXAbzsXU"],
 ];
 document.getElementById("examples").innerHTML = ex.map(([p, n, r, img]) => `<a class="ex" href="../ejemplos/${p}/" target="_blank" rel="noopener"><img src="https://unsplash.com/photos/${img}/download?w=500" alt="" loading="lazy"><div><b>${n}</b><small>${r}</small></div></a>`).join("");
 
