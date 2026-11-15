@@ -8540,12 +8540,15 @@ function bgTri(g, a, b, c, col) {
 }
 function bgQuad(g, a, b, c, d, col) { bgTri(g, a, b, c, col); bgTri(g, a, c, d, col); }
 const bgNM = new THREE.Matrix3();
-function bgGeo(g, geo, m4, col) {
+// shade: la luz ya viene "pintada" en el color (para piezas que brillan y no dependen de la luz del sol)
+const bgL = new THREE.Vector3(0.3, 0.85, 0.4).normalize();
+function bgGeo(g, geo, m4, col, shade) {
   const src = geo.index ? (geo.userData.ni || (geo.userData.ni = geo.toNonIndexed())) : geo;
   const P = src.attributes.position, N = src.attributes.normal; bgNM.getNormalMatrix(m4); bgCol.set(col);
   for (let i = 0; i < P.count; i++) {
     bgA.set(P.getX(i), P.getY(i), P.getZ(i)).applyMatrix4(m4); bgB.set(N.getX(i), N.getY(i), N.getZ(i)).applyMatrix3(bgNM).normalize();
-    g.p.push(bgA.x, bgA.y, bgA.z); g.n.push(bgB.x, bgB.y, bgB.z); g.c.push(bgCol.r, bgCol.g, bgCol.b);
+    const k = shade ? 0.62 + 0.38 * Math.max(0, bgB.dot(bgL)) : 1;
+    g.p.push(bgA.x, bgA.y, bgA.z); g.n.push(bgB.x, bgB.y, bgB.z); g.c.push(bgCol.r * k, bgCol.g * k, bgCol.b * k);
   }
 }
 function bgBuild(g) {
@@ -8560,7 +8563,7 @@ const brS = new THREE.Vector3(), brP = new THREE.Vector3(), brQ2 = new THREE.Qua
 function bgOnTrack(g, t, geo, s, x, h, sx, sy, sz, col, rx = 0, ry = 0, rz = 0) {
   brPoint(t, s, x, h, brP); brQuat(t, brAt(t, s).h, brQ);
   if (rx || ry || rz) brQ.multiply(brQ2.setFromEuler(brE.set(rx, ry, rz)));
-  brMo.compose(brP, brQ, brS.set(sx * BK, sy * BK, sz * BK)); bgGeo(g, geo, brMo, col);
+  brMo.compose(brP, brQ, brS.set(sx * BK, sy * BK, sz * BK)); bgGeo(g, geo, brMo, col, g.shade);
 }
 
 // ---------- materiales (los mismos para todo) ----------
@@ -8613,30 +8616,52 @@ function brBuildWorld(wi) {
   arch(14, def.line, brSignStart); arch(t.len, '#282828', brSignEnd);
   brSignStart.material.map.setLines([tr(def.es), '⭐'.repeat(def.stars)], { border: def.line });
   bgOnTrack(sol, t, brBox, -5, 0, -1, W + 10, 2, 24, def.side); // donde arranca
-  // obstáculos
-  const lavaC = def.lava || '#ff6e14';
+  // obstáculos: con colores fuertes que brillan (no dependen de la luz) y un aviso pintado en la calle antes de cada uno
+  const lavaC = def.lava ? '#c8662a' : '#ff6e14', haz = bgNew(); haz.shade = true;
+  const pt = (s, x, h) => { brPoint(t, s, x, h, brVa); return [brVa.x, brVa.y, brVa.z]; };
+  const warn = (it) => { // triángulo rojo con borde blanco, unos metros antes
+    const s0 = it.s - 16, x = it.x;
+    bgTri(glow, pt(s0, x - 2.6, 0.07), pt(s0, x + 2.6, 0.07), pt(s0 + 4.2, x, 0.07), '#ffffff');
+    bgTri(glow, pt(s0 + 0.55, x - 1.75, 0.09), pt(s0 + 0.55, x + 1.75, 0.09), pt(s0 + 3.3, x, 0.09), '#ff2a2a');
+  };
+  const beacon = (m, x, h) => bgOnTrack(glow, t, brBall, m, x, h + 0.7, 1.4, 1.4, 1.4, '#fff36b'); // lucecita arriba
   for (const it of t.items) {
     const m = it.s + it.len / 2;
-    if (it.kind === 'rock') bgOnTrack(sol, t, brBox, m, it.x, it.h / 2, it.w, it.h, it.len + 1, '#78736e', 0.2, 0.5, 0.15);
-    else if (it.kind === 'crate') { bgOnTrack(sol, t, brBox, m, it.x, it.h / 2, it.w, it.h, it.len + 1, '#aa7846'); bgOnTrack(sol, t, brBox, m, it.x, it.h / 2, it.w + 0.2, 0.6, it.len + 1.2, '#7a5230'); }
-    else if (it.kind === 'snowman') { bgOnTrack(sol, t, brBall, m, it.x, 2.2, 4.5, 4.5, 4.5, '#ffffff'); bgOnTrack(sol, t, brBall, m, it.x, 5.4, 3, 3, 3, '#ffffff'); bgOnTrack(sol, t, brCone, m - 1.8, it.x, 5.5, 0.5, 1.4, 0.5, '#ff8c1e', -Math.PI / 2); }
-    else if (it.kind === 'candy') { for (let k = 0; k < 3; k++) bgOnTrack(sol, t, brCyl, m, it.x, 0.75 + k * 1.5, it.w * 0.8, 1.5, it.w * 0.8, k % 2 ? '#ffffff' : '#ff5078'); }
-    else if (it.kind === 'ramp') {
-      // cuña: empieza en el piso y sube hasta h al final
-      const a = it.s, b = it.s + it.len, l = it.x - it.w / 2, r = it.x + it.w / 2, Y = '#ffc828', Y2 = '#e0a010';
-      const pt = (s, x, h) => { brPoint(t, s, x, h, brVa); return [brVa.x, brVa.y, brVa.z]; };
-      bgQuad(sol, pt(a, l, 0), pt(a, r, 0), pt(b, r, it.h), pt(b, l, it.h), Y);
-      bgQuad(sol, pt(b, l, 0), pt(b, r, 0), pt(b, r, it.h), pt(b, l, it.h), Y2);
-      bgTri(sol, pt(a, l, 0), pt(b, l, 0), pt(b, l, it.h), Y2); bgTri(sol, pt(a, r, 0), pt(b, r, 0), pt(b, r, it.h), Y2);
-    } else if (it.kind === 'lava') bgOnTrack(glow, t, brBox, m, it.x, 0.1, it.w, 0.3, it.len, lavaC);
-    else if (it.kind === 'boost') {
+    if (it.kind === 'rock') {
+      bgOnTrack(haz, t, brBox, m, it.x, it.h / 2, it.w, it.h, it.len + 1, '#ff3d33', 0.08, 0.35, 0.06);
+      bgOnTrack(haz, t, brBox, m, it.x, it.h * 0.62, it.w + 0.3, 0.7, it.len + 1.3, '#ffd23f', 0.08, 0.35, 0.06);
+      bgOnTrack(haz, t, brBox, m, it.x, it.h * 0.45, it.w + 0.3, 0.45, it.len + 1.3, '#1e1e24', 0.08, 0.35, 0.06);
+      beacon(m, it.x, it.h); warn(it);
+    } else if (it.kind === 'crate') {
+      bgOnTrack(haz, t, brBox, m, it.x, it.h / 2, it.w, it.h, it.len + 1, '#ff9a1f');
+      for (const hh of [0.3, it.h - 0.3]) bgOnTrack(haz, t, brBox, m, it.x, hh, it.w + 0.2, 0.6, it.len + 1.2, '#7a3d10');
+      beacon(m, it.x, it.h); warn(it);
+    } else if (it.kind === 'snowman') {
+      bgOnTrack(haz, t, brBall, m, it.x, 2.2, 4.5, 4.5, 4.5, '#ffffff'); bgOnTrack(haz, t, brBall, m, it.x, 5.4, 3, 3, 3, '#ffffff');
+      bgOnTrack(haz, t, brCyl, m, it.x, 4.1, 3.2, 0.7, 3.2, '#ff2a4a'); bgOnTrack(haz, t, brCone, m - 1.8, it.x, 5.5, 0.6, 1.6, 0.6, '#ff8c1e', -Math.PI / 2);
+      bgOnTrack(haz, t, brCyl, m, it.x, 7.2, 2.2, 1.2, 2.2, '#1e1e24'); warn(it);
+    } else if (it.kind === 'candy') {
+      for (let k = 0; k < 3; k++) bgOnTrack(haz, t, brCyl, m, it.x, 0.75 + k * 1.5, it.w * 0.8, 1.5, it.w * 0.8, k % 2 ? '#ffffff' : '#ff2f8a');
+      beacon(m, it.x, it.h); warn(it);
+    } else if (it.kind === 'ramp') {
+      // cuña: empieza en el piso y sube hasta h al final (amarilla con franjas: es buena)
+      const a = it.s, b = it.s + it.len, l = it.x - it.w / 2, r = it.x + it.w / 2;
+      for (let k = 0; k < 4; k++) { const a0 = a + (b - a) * k / 4, a1 = a + (b - a) * (k + 1) / 4; bgQuad(glow, pt(a0, l, it.h * k / 4), pt(a0, r, it.h * k / 4), pt(a1, r, it.h * (k + 1) / 4), pt(a1, l, it.h * (k + 1) / 4), k % 2 ? '#ffe680' : '#ffc828'); }
+      bgQuad(haz, pt(b, l, 0), pt(b, r, 0), pt(b, r, it.h), pt(b, l, it.h), '#e0a010');
+      bgTri(haz, pt(a, l, 0), pt(b, l, 0), pt(b, l, it.h), '#e0a010'); bgTri(haz, pt(a, r, 0), pt(b, r, 0), pt(b, r, it.h), '#e0a010');
+    } else if (it.kind === 'lava') {
+      bgOnTrack(glow, t, brBox, m, it.x, 0.1, it.w, 0.3, it.len, lavaC);
+      for (let k = 0; k < 4; k++) bgOnTrack(glow, t, brBall, it.s + it.len * (0.15 + k * 0.23), it.x + (k % 2 ? -1 : 1) * it.w * 0.2, 0.3, 2, 1, 2, '#ffe14a'); // burbujas
+      if (it.gap) { for (let k = 0; k < 8; k++) { const x0 = -it.w / 2 + k * it.w / 8; bgQuad(glow, pt(it.s - 12, x0, 0.07), pt(it.s - 12, x0 + it.w / 16, 0.07), pt(it.s - 9, x0 + it.w / 16, 0.07), pt(it.s - 9, x0, 0.07), '#ff2a2a'); } }
+      else warn(it);
+    } else if (it.kind === 'boost') {
       bgOnTrack(glow, t, brBox, m, it.x, 0.1, it.w, 0.2, it.len, '#3cdcff');
-      const pt = (s, x) => { brPoint(t, s, x, 0.3, brVa); return [brVa.x, brVa.y, brVa.z]; };
-      for (const k of [0.25, 0.6]) { const ss = it.s + it.len * k; bgTri(glow, pt(ss, it.x - 3), pt(ss, it.x + 3), pt(ss + 2.6, it.x), '#ffffff'); }
+      const pp = (s, x) => { brPoint(t, s, x, 0.3, brVa); return [brVa.x, brVa.y, brVa.z]; };
+      for (const k of [0.25, 0.6]) { const ss = it.s + it.len * k; bgTri(glow, pp(ss, it.x - 3), pp(ss, it.x + 3), pp(ss + 2.6, it.x), '#ffffff'); }
     }
   }
   const mk = (geo, mat) => { const m = new THREE.Mesh(geo, mat); m.receiveShadow = true; m.frustumCulled = false; brRideG.add(m); brBuiltMeshes.push(m); return m; };
-  mk(bgBuild(sol), brMatSolid); mk(bgBuild(glow), brMatGlow);
+  mk(bgBuild(sol), brMatSolid); mk(bgBuild(glow), brMatGlow); mk(bgBuild(haz), brMatGlow);
   // la pileta de llegada
   const pool = new THREE.Mesh(new THREE.PlaneGeometry((W + 30) * BK, 70 * BK), brMatPool);
   brPoint(t, t.len + 40, 0, -6, pool.position); brQuat(t, brAt(t, t.len + 40).h, pool.quaternion); pool.quaternion.multiply(brQ2.setFromEuler(brE.set(-Math.PI / 2 + t.def.slope * Math.PI / 180, 0, 0)));
