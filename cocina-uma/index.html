@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Cocina Uma</title>
+<meta name="theme-color" content="#2b6fd6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; height: 100%; background: #1d3f7a; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+  canvas { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  #girar { position: fixed; inset: 0; display: none; place-items: center; text-align: center; background: #2b6fd6; color: #fff; font: 600 26px Fredoka, system-ui, sans-serif; padding: 30px; }
+  @media (orientation: portrait) and (max-width: 900px) { #girar { display: grid; } }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="girar"><div>Girá el celular<br><span style="font-size:60px">↻</span></div></div>
+<script>
+"use strict";
+// ═══════════════════════ COCINA UMA ═══════════════════════
+// Los clientes piden pizza. Armala con los ingredientes, cocinala en el horno
+// y entregala antes de que se les acabe la paciencia.
+
+const W = 1376, H = 768;
+const cv = document.getElementById("c");
+const cx = cv.getContext("2d");
+let esc = 1, dpr = 1;
+
+function ajustar() {
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  esc = Math.min(window.innerWidth / W, window.innerHeight / H);
+  cv.width = Math.round(W * esc * dpr);
+  cv.height = Math.round(H * esc * dpr);
+  cv.style.width = Math.round(W * esc) + "px";
+  cv.style.height = Math.round(H * esc) + "px";
+}
+window.addEventListener("resize", ajustar);
+ajustar();
+
+// ───── imágenes ─────
+const NOMBRES = ["fondo", "mostrador", "portada", "uma-saluda", "uma-cocina", "uma-camina", "uma-piensa",
+  "abuela-feliz", "abuela-enojada", "abuelo-feliz", "abuelo-enojado", "chico-feliz", "chico-enojado",
+  "nena-feliz", "nena-enojada", "i-masa", "i-salsa", "i-queso", "i-tomate", "i-aceitunas", "i-jamon",
+  "i-morron", "i-albahaca", "i-oregano", "p-salsa", "p-queso", "p-cocida", "p-quemada"];
+const IMG = {};
+let cargadas = 0;
+for (const n of NOMBRES) {
+  const im = new Image();
+  im.onload = () => cargadas++;
+  im.onerror = () => cargadas++;
+  im.src = "img/" + n + ".webp";
+  IMG[n] = im;
+}
+
+// ───── guardado (en este celular) ─────
+const GUARDA = "cocina-uma-v1";
+let prog = { estrellas: {}, monedas: 0, sonido: true };
+try { Object.assign(prog, JSON.parse(localStorage.getItem(GUARDA) || "{}")); } catch (e) {}
+function guardar() { try { localStorage.setItem(GUARDA, JSON.stringify(prog)); } catch (e) {} }
+
+// ───── sonidos (hechos con código, sin archivos) ─────
+let ac = null;
+function audio() {
+  if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+  if (ac && ac.state === "suspended") ac.resume();
+  return ac;
+}
+function tono(f, dur, tipo = "sine", vol = 0.18, cuando = 0, f2 = null) {
+  if (!prog.sonido) return;
+  const a = audio(); if (!a) return;
+  const t = a.currentTime + cuando;
+  const o = a.createOscillator(), g = a.createGain();
+  o.type = tipo; o.frequency.setValueAtTime(f, t);
+  if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.05);
+}
+const SFX = {
+  toque: () => tono(660, 0.08, "triangle", 0.12),
+  ingrediente: () => { tono(520, 0.07, "triangle", 0.13); tono(780, 0.09, "triangle", 0.1, 0.05); },
+  horno: () => tono(220, 0.25, "sawtooth", 0.05, 0, 120),
+  listo: () => { tono(988, 0.12, "sine", 0.16); tono(1319, 0.2, "sine", 0.14, 0.1); },
+  quemado: () => { tono(180, 0.4, "sawtooth", 0.07, 0, 90); },
+  caja: () => { tono(1046, 0.08, "square", 0.08); tono(1568, 0.16, "square", 0.08, 0.07); tono(2093, 0.2, "sine", 0.1, 0.14); },
+  mal: () => { tono(300, 0.18, "square", 0.08, 0, 200); tono(200, 0.25, "square", 0.08, 0.15, 140); },
+  enojado: () => tono(240, 0.3, "sawtooth", 0.06, 0, 150),
+  llega: () => { tono(784, 0.1, "sine", 0.1); tono(988, 0.12, "sine", 0.1, 0.08); },
+  gana: () => [523, 659, 784, 1046].forEach((f, i) => tono(f, 0.22, "triangle", 0.14, i * 0.12)),
+  pierde: () => [392, 330, 262].forEach((f, i) => tono(f, 0.3, "triangle", 0.12, i * 0.18)),
+  tacho: () => tono(140, 0.15, "square", 0.06, 0, 80),
+};
+
+// ───── recetas y niveles ─────
+const RECETAS = {
+  muzza:     { nombre: "Muzzarella",     top: [] },
+  aceitunas: { nombre: "Con aceitunas",  top: ["aceitunas"] },
+  jamon:     { nombre: "Jamón",          top: ["jamon"] },
+  margarita: { nombre: "Margarita",      top: ["tomate", "albahaca"] },
+  jym:       { nombre: "Jamón y morrón", top: ["jamon", "morron"] },
+  napo:      { nombre: "Napolitana",     top: ["tomate", "oregano"] },
+  especial:  { nombre: "Especial",       top: ["jamon", "morron", "aceitunas"] },
+};
+const DESBLOQUEO = ["muzza", "aceitunas", "jamon", "margarita", "jym", "napo", "especial"];
+const TOPPINGS = ["tomate", "aceitunas", "jamon", "morron", "albahaca", "oregano"];
+const NIVELES = [];
+for (let i = 0; i < 12; i++) {
+  NIVELES.push({
+    recetas: DESBLOQUEO.slice(0, Math.min(DESBLOQUEO.length, 1 + i)),
+    meta: 60 + i * 30,
+    tiempo: 90 + Math.min(i, 6) * 5,
+    cada: Math.max(4.2, 9 - i * 0.5),      // segundos entre clientes
+    paciencia: Math.max(20, 34 - i * 1.3),  // segundos que esperan
+  });
+}
+const PERSONAS = ["abuela", "abuelo", "chico", "nena"];
+const PRECIO_BASE = 10, PRECIO_TOP = 4;
+
+// ───── estado del juego ─────
+let pantalla = "carga";      // carga · titulo · niveles · juego · fin
+let nivel = 0;
+let J = null;                // la partida
+let t = 0;                   // reloj general
+let toques = [];             // zonas tocables de la pantalla actual
+
+const SLOTS = [345, 605, 865];
+const HORNO = { x: 1100, y: 300 };
+const TABLA = { x: 688, y: 590, r: 92 };
+const BANDEJA = [{ x: 1020, y: 470 }, { x: 1130, y: 470 }, { x: 1240, y: 470 }];
+
+function nuevaPartida(n) {
+  nivel = n;
+  const N = NIVELES[n];
+  J = {
+    N, monedas: 0, tiempo: N.tiempo, prox: 1.2, clientes: [null, null, null],
+    pizza: null,                 // la que estás armando en la tabla
+    horno: [null, null],         // hasta 2 pizzas cocinándose
+    bandeja: [null, null, null], // pizzas listas esperando
+    efectos: [], uma: "uma-saluda", umaT: 0, atendidos: 0, perdidos: 0, terminado: false,
+    ingredientes: ["masa", "salsa", "queso"].concat(TOPPINGS.filter(tp => N.recetas.some(r => RECETAS[r].top.includes(tp)))),
+    pausa: false,
+  };
+  pantalla = "juego";
+}
+
+function nuevoCliente(i) {
+  const N = J.N;
+  const ocupados = J.clientes.filter(Boolean).map(c => c.quien);
+  const libres = PERSONAS.filter(p => !ocupados.includes(p));
+  const quien = libres[Math.floor(Math.random() * libres.length)] || PERSONAS[0];
+  // las recetas nuevas salen más seguido
+  const rs = N.recetas;
+  const receta = Math.random() < 0.35 ? rs[rs.length - 1] : rs[Math.floor(Math.random() * rs.length)];
+  J.clientes[i] = { quien, receta, pac: N.paciencia, pacMax: N.paciencia, estado: "entra", x: i % 2 ? W + 150 : -150, dest: SLOTS[i], t: 0 };
+  SFX.llega();
+  J.uma = "uma-piensa"; J.umaT = 1.2;
+}
+
+// ───── armar pizzas ─────
+function tocarIngrediente(k) {
+  const p = J.pizza;
+  if (k === "masa") {
+    if (p) { aviso("Ya hay una masa en la tabla", TABLA.x, TABLA.y - 120); return; }
+    J.pizza = { salsa: false, queso: false, top: [], pos: [] };
+  } else {
+    if (!p) { aviso("Primero la masa", TABLA.x, TABLA.y - 120); SFX.mal(); return; }
+    if (k === "salsa") p.salsa = true;
+    else if (k === "queso") p.queso = true;
+    else if (!p.top.includes(k)) {
+      p.top.push(k);
+      // dónde caen los pedacitos en la pizza
+      const n = k === "oregano" ? 14 : 6;
+      for (let j = 0; j < n; j++) {
+        const a = Math.random() * Math.PI * 2, r = 18 + Math.random() * 52;
+        p.pos.push({ k, x: Math.cos(a) * r, y: Math.sin(a) * r, rot: Math.random() * 6.28 });
+      }
+    }
+  }
+  J.uma = "uma-cocina"; J.umaT = 0.7;
+  SFX.ingrediente();
+  J.efectos.push({ tipo: "pop", x: TABLA.x, y: TABLA.y, t: 0 });
+}
+
+function alHorno() {
+  const p = J.pizza;
+  if (!p) return;
+  if (!p.salsa || !p.queso) { aviso("Le falta salsa y queso", TABLA.x, TABLA.y - 120); SFX.mal(); return; }
+  const i = J.horno.indexOf(null);
+  if (i < 0) { aviso("El horno está lleno", HORNO.x, HORNO.y - 170); SFX.mal(); return; }
+  J.horno[i] = Object.assign(p, { coc: 0 });
+  J.pizza = null;
+  SFX.horno();
+}
+
+// tiempos del horno
+const COCIDA = 5, QUEMADA = 12;
+
+function sacarDelHorno(i) {
+  const p = J.horno[i];
+  if (!p) return;
+  if (p.coc < COCIDA) { aviso("Todavía está cruda", HORNO.x, HORNO.y - 170); return; }
+  J.horno[i] = null;
+  if (p.coc >= QUEMADA) { aviso("¡Se quemó! Va al tacho", HORNO.x, HORNO.y - 170); SFX.tacho(); return; }
+  if (!entregar(p)) {
+    const b = J.bandeja.indexOf(null);
+    if (b >= 0) J.bandeja[b] = p;
+    else { aviso("No hay lugar en la bandeja", HORNO.x, HORNO.y - 170); J.horno[i] = p; }
+  }
+}
+
+function coincide(p, receta) {
+  const r = RECETAS[receta].top;
+  return p.top.length === r.length && r.every(x => p.top.includes(x));
+}
+
+// entrega la pizza al cliente que la pidió (el que esté más apurado)
+function entregar(p) {
+  let mejor = -1;
+  J.clientes.forEach((c, i) => {
+    if (c && c.estado === "espera" && coincide(p, c.receta) && (mejor < 0 || c.pac < J.clientes[mejor].pac)) mejor = i;
+  });
+  if (mejor < 0) return false;
+  const c = J.clientes[mejor];
+  const precio = PRECIO_BASE + PRECIO_TOP * RECETAS[c.receta].top.length;
+  const propina = Math.round(precio * 0.5 * (c.pac / c.pacMax));
+  J.monedas += precio + propina;
+  J.atendidos++;
+  c.estado = "feliz"; c.t = 0;
+  J.efectos.push({ tipo: "plata", txt: "+" + (precio + propina), x: SLOTS[mejor], y: 230, t: 0 });
+  if (propina >= 4) J.efectos.push({ tipo: "texto", txt: "¡Propina!", x: SLOTS[mejor], y: 180, t: 0 });
+  J.efectos.push({ tipo: "entrega", p, x: SLOTS[mejor], y: 360, t: 0 });
+  J.uma = "uma-saluda"; J.umaT = 1;
+  SFX.caja();
+  return true;
+}
+
+function tocarBandeja(i) {
+  const p = J.bandeja[i];
+  if (!p) return;
+  if (entregar(p)) J.bandeja[i] = null;
+  else { aviso("Nadie pidió esa pizza", BANDEJA[i].x, BANDEJA[i].y - 70); SFX.mal(); }
+}
+
+function tirar() {
+  if (!J.pizza) return;
+  J.pizza = null;
+  SFX.tacho();
+}
+
+function aviso(txt, x, y) {
+  J.efectos.push({ tipo: "aviso", txt, x, y, t: 0 });
+}
+
+// ───── actualización ─────
+function actualizar(dt) {
+  t += dt;
+  if (pantalla !== "juego" || J.pausa || J.terminado) return;
+  J.tiempo -= dt;
+  if (J.umaT > 0) { J.umaT -= dt; if (J.umaT <= 0) J.uma = "uma-saluda"; }
+  // llegan clientes
+  J.prox -= dt;
+  if (J.prox <= 0 && J.tiempo > 6) {
+    const libres = [0, 1, 2].filter(i => !J.clientes[i]);
+    if (libres.length) nuevoCliente(libres[Math.floor(Math.random() * libres.length)]);
+    J.prox = J.N.cada * (0.8 + Math.random() * 0.4);
+  }
+  // clientes
+  J.clientes.forEach((c, i) => {
+    if (!c) return;
+    c.t += dt;
+    if (c.estado === "entra") {
+      c.x += (c.dest - c.x) * Math.min(1, dt * 4.5);
+      if (Math.abs(c.x - c.dest) < 3) { c.x = c.dest; c.estado = "espera"; }
+    } else if (c.estado === "espera") {
+      c.pac -= dt;
+      if (c.pac <= 0) { c.estado = "enojado"; c.t = 0; J.perdidos++; SFX.enojado(); J.efectos.push({ tipo: "texto", txt: "¡Me voy!", x: c.x, y: 200, t: 0 }); }
+    } else if (c.estado === "feliz" || c.estado === "enojado") {
+      if (c.t > 0.9) {
+        const sale = i % 2 ? W + 200 : -200;
+        c.x += (sale - c.x) * Math.min(1, dt * 3);
+        if (Math.abs(c.x - sale) < 40) J.clientes[i] = null;
+      }
+    }
+  });
+  // horno
+  J.horno.forEach(p => {
+    if (!p) return;
+    const antes = p.coc;
+    p.coc += dt;
+    if (antes < COCIDA && p.coc >= COCIDA) SFX.listo();
+    if (antes < QUEMADA && p.coc >= QUEMADA) SFX.quemado();
+  });
+  J.efectos = J.efectos.filter(e => (e.t += dt) < (e.tipo === "aviso" ? 1.4 : 1.1));
+  // fin del nivel
+  if (J.tiempo <= 0) {
+    J.tiempo = 0; J.terminado = true;
+    const N = J.N;
+    const est = J.monedas >= N.meta * 1.8 ? 3 : J.monedas >= N.meta * 1.4 ? 2 : J.monedas >= N.meta ? 1 : 0;
+    J.estrellas = est;
+    if (est > 0) {
+      prog.estrellas[nivel] = Math.max(prog.estrellas[nivel] || 0, est);
+      prog.monedas += J.monedas;
+      guardar();
+      SFX.gana();
+    } else SFX.pierde();
+    setTimeout(() => { pantalla = "fin"; }, 600);
+  }
+}
+
+// ───── dibujo ─────
+function img(n, x, y, w, h, alfa = 1) {
+  const im = IMG[n];
+  if (!im || !im.complete || !im.naturalWidth) return;
+  if (h == null) h = w * im.naturalHeight / im.naturalWidth;
+  cx.globalAlpha = alfa;
+  cx.drawImage(im, x - w / 2, y - h / 2, w, h);
+  cx.globalAlpha = 1;
+}
+function imgPie(n, x, pie, alto) {   // dibuja apoyado en los pies
+  const im = IMG[n];
+  if (!im || !im.naturalWidth) return;
+  const w = alto * im.naturalWidth / im.naturalHeight;
+  cx.drawImage(im, x - w / 2, pie - alto, w, alto);
+}
+function redondo(x, y, w, h, r) {
+  cx.beginPath(); cx.roundRect(x, y, w, h, r);
+}
+function texto(s, x, y, tam, col = "#fff", borde = "#5a2d12", alin = "center", peso = 700) {
+  cx.font = `${peso} ${tam}px Fredoka, system-ui, sans-serif`;
+  cx.textAlign = alin; cx.textBaseline = "middle";
+  if (borde) { cx.lineJoin = "round"; cx.lineWidth = Math.max(4, tam * 0.2); cx.strokeStyle = borde; cx.strokeText(s, x, y); }
+  cx.fillStyle = col; cx.fillText(s, x, y);
+}
+function boton(s, x, y, w, h, al, col = "#2f86ff", tam = 34) {
+  const apretado = presion && presion.x > x - w / 2 && presion.x < x + w / 2 && presion.y > y - h / 2 && presion.y < y + h / 2;
+  const dy = apretado ? 4 : 0;
+  redondo(x - w / 2, y - h / 2 + 6, w, h, h / 2); cx.fillStyle = "rgba(0,0,0,.25)"; cx.fill();
+  redondo(x - w / 2, y - h / 2 + dy, w, h, h / 2); cx.fillStyle = col; cx.fill();
+  cx.lineWidth = 5; cx.strokeStyle = "#fff"; cx.stroke();
+  texto(s, x, y + dy, tam, "#fff", "rgba(0,0,0,.25)");
+  toques.push({ x: x - w / 2, y: y - h / 2, w, h, al });
+}
+function zona(x, y, w, h, al) { toques.push({ x, y, w, h, al }); }
+
+// una pizza con sus ingredientes, vista de arriba
+function dibujarPizza(p, x, y, r) {
+  const cocida = p.coc != null && p.coc >= COCIDA;
+  const quemada = p.coc != null && p.coc >= QUEMADA;
+  const base = quemada ? "p-quemada" : cocida ? "p-cocida" : p.queso ? "p-queso" : p.salsa ? "p-salsa" : "i-masa";
+  img(base, x, y, r * 2.15, base === "i-masa" ? r * 1.9 : r * 2.15);
+  for (const q of p.pos) {
+    const s = r / 92;
+    cx.save(); cx.translate(x + q.x * s, y + q.y * s); cx.rotate(q.rot);
+    if (quemada) cx.filter = "brightness(.45)";
+    else if (cocida) cx.filter = "brightness(.9) saturate(1.15)";
+    if (q.k === "oregano") { cx.fillStyle = "#5c6b2a"; cx.fillRect(-2 * s, -2 * s, 4 * s, 4 * s); }
+    else {
+      const tam = { tomate: 26, aceitunas: 22, jamon: 30, morron: 30, albahaca: 26 }[q.k] * s;
+      img("i-" + q.k, 0, 0, tam * 1.6);
+    }
+    cx.filter = "none";
+    cx.restore();
+  }
+}
+
+// el globito con el pedido
+function dibujarPedido(c) {
+  const R = RECETAS[c.receta];
+  const n = R.top.length;
+  const w = Math.max(150, 96 + n * 48), h = 104, x = c.x, y = 138;
+  cx.save();
+  redondo(x - w / 2, y - h / 2, w, h, 26); cx.fillStyle = "#fff"; cx.fill();
+  cx.lineWidth = 4; cx.strokeStyle = "#c9a07a"; cx.stroke();
+  cx.beginPath(); cx.moveTo(x - 14, y + h / 2 - 2); cx.lineTo(x, y + h / 2 + 18); cx.lineTo(x + 14, y + h / 2 - 2); cx.fillStyle = "#fff"; cx.fill();
+  img("p-queso", x - w / 2 + 48, y - 8, 70);
+  R.top.forEach((tp, i) => img("i-" + tp, x - w / 2 + 108 + i * 50, y - 8, 48));
+  texto(R.nombre, x, y + 36, 19, "#7a3b16", null);
+  // paciencia
+  const f = Math.max(0, c.pac / c.pacMax);
+  redondo(x - w / 2 + 14, y + h / 2 + 22, w - 28, 12, 6); cx.fillStyle = "rgba(0,0,0,.25)"; cx.fill();
+  redondo(x - w / 2 + 14, y + h / 2 + 22, (w - 28) * f, 12, 6);
+  cx.fillStyle = f > 0.5 ? "#4fd16a" : f > 0.25 ? "#ffc23d" : "#ff5a4a"; cx.fill();
+  cx.restore();
+}
+
+function dibujarJuego() {
+  img("fondo", W / 2, H / 2, W, H);
+  // horno: pizzas cocinándose
+  J.horno.forEach((p, i) => {
+    const x = HORNO.x - 60 + i * 120, y = HORNO.y - 205;
+    if (!p) return;
+    const f = Math.min(1, p.coc / COCIDA);
+    const lista = p.coc >= COCIDA && p.coc < QUEMADA;
+    const quem = p.coc >= QUEMADA;
+    cx.save();
+    cx.beginPath(); cx.arc(x, y, 52, 0, Math.PI * 2); cx.fillStyle = quem ? "#3a2a22" : lista ? "#2fbf5a" : "rgba(30,40,70,.75)"; cx.fill();
+    cx.lineWidth = 9; cx.strokeStyle = "rgba(255,255,255,.35)"; cx.beginPath(); cx.arc(x, y, 46, 0, Math.PI * 2); cx.stroke();
+    cx.strokeStyle = quem ? "#7a1d12" : lista ? "#fff" : "#ffc23d";
+    const g = quem ? 1 : lista ? 1 - (p.coc - COCIDA) / (QUEMADA - COCIDA) : f;
+    cx.beginPath(); cx.arc(x, y, 46, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * g); cx.stroke();
+    cx.restore();
+    dibujarPizza(p, x, y, 30 + (lista ? Math.sin(t * 8) * 1.5 : 0));
+    if (lista) texto("¡LISTA!", x, y + 70, 22, "#fff", "#1c7a36");
+    if (quem) { texto("QUEMADA", x, y + 70, 20, "#fff", "#7a1d12"); for (let k = 0; k < 3; k++) { cx.fillStyle = "rgba(80,80,80,.35)"; cx.beginPath(); cx.arc(x - 20 + k * 20, y - 40 - ((t * 40 + k * 20) % 50), 12, 0, 6.3); cx.fill(); } }
+    zona(x - 60, y - 60, 120, 140, () => sacarDelHorno(i));
+  });
+  zona(HORNO.x - 220, HORNO.y - 120, 440, 230, () => { if (J.pizza) alHorno(); });
+  // Uma, a la izquierda
+  imgPie(J.uma, 150, 585 + Math.sin(t * 2.2) * 3, 340);
+  // clientes
+  J.clientes.forEach((c) => {
+    if (!c) return;
+    const enojado = c.estado === "enojado" || (c.estado === "espera" && c.pac / c.pacMax < 0.3);
+    const salto = c.estado === "feliz" ? Math.abs(Math.sin(c.t * 9)) * 14 : c.estado === "entra" ? Math.abs(Math.sin(c.t * 10)) * 6 : 0;
+    const temblor = c.estado === "espera" && c.pac / c.pacMax < 0.15 ? Math.sin(t * 40) * 2 : 0;
+    imgPie(c.quien + (enojado ? "-enojado" : "-feliz"), c.x + temblor, 585 - salto, 360);
+  });
+  img("mostrador", W / 2, 414 + 177, W, 354);
+  J.clientes.forEach(c => { if (c && c.estado === "espera") dibujarPedido(c); });
+  // tabla de armar
+  cx.save();
+  cx.beginPath(); cx.ellipse(TABLA.x, TABLA.y + 8, TABLA.r + 26, TABLA.r + 20, 0, 0, Math.PI * 2); cx.fillStyle = "rgba(60,30,10,.25)"; cx.fill();
+  cx.beginPath(); cx.ellipse(TABLA.x, TABLA.y, TABLA.r + 26, TABLA.r + 20, 0, 0, Math.PI * 2); cx.fillStyle = "#e9c48f"; cx.fill();
+  cx.lineWidth = 5; cx.strokeStyle = "#a8743f"; cx.stroke();
+  cx.restore();
+  if (J.pizza) {
+    dibujarPizza(J.pizza, TABLA.x, TABLA.y, TABLA.r);
+    if (J.pizza.salsa && J.pizza.queso) texto("Tocá la pizza o el horno para cocinarla", TABLA.x, TABLA.y - TABLA.r - 30, 20, "#fff", "#7a3b16");
+    zona(TABLA.x - TABLA.r, TABLA.y - TABLA.r, TABLA.r * 2, TABLA.r * 2, alHorno);
+  } else {
+    texto("Tocá la MASA para empezar", TABLA.x, TABLA.y, 22, "#7a3b16", null, "center", 600);
+  }
+  // tacho
+  const tx = TABLA.x + 150, ty = TABLA.y + 60;
+  cx.fillStyle = "#7d8a99"; redondo(tx - 26, ty - 30, 52, 62, 10); cx.fill();
+  cx.fillStyle = "#5d6a79"; redondo(tx - 32, ty - 40, 64, 14, 6); cx.fill();
+  texto("✕", tx, ty + 2, 26, "#fff", null);
+  zona(tx - 40, ty - 50, 80, 90, tirar);
+  // ingredientes
+  const ks = J.ingredientes;
+  const base = ks.slice(0, 3), tops = ks.slice(3);
+  base.forEach((k, i) => botonIngrediente(k, 95 + i * 135, 600));
+  tops.forEach((k, i) => {
+    const fila = tops.length > 3 ? Math.floor(i / 3) : 0;
+    const col = tops.length > 3 ? i % 3 : i;
+    botonIngrediente(k, 935 + col * 140, tops.length > 3 ? 545 + fila * 112 : 600, tops.length > 3 ? 92 : 112);
+  });
+  // bandeja de pizzas listas
+  J.bandeja.forEach((p, i) => {
+    const b = BANDEJA[i];
+    if (!p) return;
+    cx.beginPath(); cx.arc(b.x, b.y, 44, 0, 6.3); cx.fillStyle = "rgba(255,255,255,.85)"; cx.fill();
+    dibujarPizza(p, b.x, b.y, 36);
+    zona(b.x - 48, b.y - 48, 96, 96, () => tocarBandeja(i));
+  });
+  // arriba: monedas, meta y reloj
+  const N = J.N;
+  redondo(18, 14, 330, 66, 33); cx.fillStyle = "rgba(255,255,255,.92)"; cx.fill();
+  cx.beginPath(); cx.arc(52, 47, 22, 0, 6.3); cx.fillStyle = "#ffc23d"; cx.fill(); cx.lineWidth = 4; cx.strokeStyle = "#d98e10"; cx.stroke();
+  texto("$", 52, 48, 26, "#fff", "#d98e10");
+  texto(J.monedas + " / " + N.meta, 90, 48, 32, "#7a3b16", null, "left");
+  const f = Math.min(1, J.monedas / N.meta);
+  redondo(90, 66, 240, 8, 4); cx.fillStyle = "#eadbc8"; cx.fill();
+  redondo(90, 66, 240 * f, 8, 4); cx.fillStyle = "#4fd16a"; cx.fill();
+  redondo(W / 2 - 90, 14, 180, 66, 33); cx.fillStyle = "rgba(255,255,255,.92)"; cx.fill();
+  const seg = Math.ceil(J.tiempo);
+  texto(Math.floor(seg / 60) + ":" + String(seg % 60).padStart(2, "0"), W / 2, 48, 36, J.tiempo < 10 ? "#e0352b" : "#7a3b16", null);
+  texto("Nivel " + (nivel + 1), W - 210, 47, 28, "#fff", "#7a3b16");
+  // pausa
+  cx.beginPath(); cx.arc(W - 56, 47, 32, 0, 6.3); cx.fillStyle = "rgba(255,255,255,.92)"; cx.fill();
+  cx.fillStyle = "#7a3b16"; cx.fillRect(W - 66, 33, 7, 28); cx.fillRect(W - 53, 33, 7, 28);
+  zona(W - 90, 14, 70, 70, () => { J.pausa = true; });
+  // efectos
+  for (const e of J.efectos) {
+    const k = e.t;
+    if (e.tipo === "plata") texto(e.txt, e.x, e.y - k * 70, 40, "#ffd34a", "#7a4a00");
+    else if (e.tipo === "texto") texto(e.txt, e.x, e.y - k * 40, 30, "#fff", "#c0392b");
+    else if (e.tipo === "aviso") { cx.globalAlpha = Math.min(1, (1.4 - k) * 3); texto(e.txt, e.x, e.y - k * 20, 26, "#fff", "#c0392b"); cx.globalAlpha = 1; }
+    else if (e.tipo === "pop") { cx.globalAlpha = 1 - k / 1.1; cx.lineWidth = 6; cx.strokeStyle = "#fff"; cx.beginPath(); cx.arc(e.x, e.y, TABLA.r + k * 60, 0, 6.3); cx.stroke(); cx.globalAlpha = 1; }
+    else if (e.tipo === "entrega") { cx.globalAlpha = 1 - k / 1.1; dibujarPizza(e.p, e.x, e.y - k * 40, 40); cx.globalAlpha = 1; }
+  }
+  if (J.pausa) dibujarPausa();
+}
+
+function botonIngrediente(k, x, y, tam = 112) {
+  const apretado = presion && Math.hypot(presion.x - x, presion.y - y) < tam / 2;
+  cx.beginPath(); cx.arc(x, y + 5, tam / 2, 0, 6.3); cx.fillStyle = "rgba(60,30,10,.3)"; cx.fill();
+  cx.beginPath(); cx.arc(x, y + (apretado ? 4 : 0), tam / 2, 0, 6.3); cx.fillStyle = "#fff6e8"; cx.fill();
+  cx.lineWidth = 5; cx.strokeStyle = "#c9a07a"; cx.stroke();
+  img("i-" + k, x, y + (apretado ? 4 : 0), tam * (k === "oregano" ? 0.5 : 0.82));
+  zona(x - tam / 2, y - tam / 2, tam, tam, () => tocarIngrediente(k));
+}
+
+function velo(a = 0.55) { cx.fillStyle = `rgba(20,40,90,${a})`; cx.fillRect(0, 0, W, H); }
+function cartel(w, h) {
+  redondo(W / 2 - w / 2, H / 2 - h / 2, w, h, 36); cx.fillStyle = "#fff6e8"; cx.fill();
+  cx.lineWidth = 8; cx.strokeStyle = "#e8a54a"; cx.stroke();
+}
+
+function dibujarPausa() {
+  toques = [];
+  velo();
+  cartel(560, 420);
+  texto("Pausa", W / 2, H / 2 - 140, 54, "#fff", "#e0352b");
+  boton("SEGUIR", W / 2, H / 2 - 40, 320, 80, () => { J.pausa = false; }, "#2fbf5a");
+  boton(prog.sonido ? "SONIDO: SÍ" : "SONIDO: NO", W / 2, H / 2 + 60, 320, 70, () => { prog.sonido = !prog.sonido; guardar(); }, "#2f86ff", 28);
+  boton("SALIR", W / 2, H / 2 + 150, 320, 70, () => { pantalla = "niveles"; }, "#e0352b", 28);
+}
+
+function dibujarTitulo() {
+  img("fondo", W / 2, H / 2, W, H);
+  velo(0.25);
+  const ims = IMG.portada;
+  cx.save(); cx.beginPath(); cx.arc(400, 390, 280, 0, 6.3); cx.clip();
+  img("portada", 400, 390, 600, 600);
+  cx.restore();
+  cx.lineWidth = 14; cx.strokeStyle = "#fff"; cx.beginPath(); cx.arc(400, 390, 280, 0, 6.3); cx.stroke();
+  const s = 1 + Math.sin(t * 2.5) * 0.02;
+  cx.save(); cx.translate(960, 230); cx.scale(s, s);
+  texto("Cocina", 0, -50, 96, "#fff", "#e0352b");
+  texto("Uma", 0, 60, 132, "#ffd34a", "#e0352b");
+  cx.restore();
+  boton("JUGAR", 960, 480, 340, 100, () => { audio(); pantalla = "niveles"; }, "#2fbf5a", 46);
+  texto("Atendé a todos antes de que se enojen", 960, 590, 26, "#fff", "#7a3b16");
+}
+
+function dibujarNiveles() {
+  img("fondo", W / 2, H / 2, W, H);
+  velo(0.5);
+  texto("Elegí un nivel", W / 2, 80, 58, "#fff", "#e0352b");
+  const total = Object.values(prog.estrellas).reduce((a, b) => a + b, 0);
+  texto("★ " + total, W - 120, 80, 40, "#ffd34a", "#7a4a00");
+  boton("‹", 80, 80, 90, 80, () => { pantalla = "titulo"; }, "#2f86ff", 50);
+  NIVELES.forEach((N, i) => {
+    const col = i % 6, fila = Math.floor(i / 6);
+    const x = 230 + col * 183, y = 280 + fila * 230;
+    const abierto = i === 0 || (prog.estrellas[i - 1] || 0) > 0;
+    const est = prog.estrellas[i] || 0;
+    cx.beginPath(); cx.arc(x, y + 6, 70, 0, 6.3); cx.fillStyle = "rgba(0,0,0,.25)"; cx.fill();
+    cx.beginPath(); cx.arc(x, y, 70, 0, 6.3); cx.fillStyle = abierto ? "#fff6e8" : "#9aa7bd"; cx.fill();
+    cx.lineWidth = 7; cx.strokeStyle = abierto ? "#e8a54a" : "#6c7891"; cx.stroke();
+    if (abierto) {
+      texto(String(i + 1), x, y - 6, 54, "#e0352b", null);
+      for (let k = 0; k < 3; k++) texto("★", x - 38 + k * 38, y + 92, 36, k < est ? "#ffd34a" : "rgba(255,255,255,.35)", k < est ? "#a86a00" : null);
+      zona(x - 70, y - 70, 140, 140, () => { audio(); SFX.toque(); intro(i); });
+    } else {
+      cx.fillStyle = "#5c6880"; redondo(x - 22, y - 6, 44, 34, 6); cx.fill();
+      cx.lineWidth = 7; cx.strokeStyle = "#5c6880"; cx.beginPath(); cx.arc(x, y - 8, 15, Math.PI, 0); cx.stroke();
+    }
+  });
+}
+
+let introN = 0;
+function intro(i) { introN = i; pantalla = "intro"; }
+function dibujarIntro() {
+  img("fondo", W / 2, H / 2, W, H);
+  velo();
+  cartel(760, 560);
+  const N = NIVELES[introN];
+  texto("Nivel " + (introN + 1), W / 2, H / 2 - 220, 56, "#fff", "#e0352b");
+  texto("Juntá $" + N.meta + " en " + N.tiempo + " segundos", W / 2, H / 2 - 145, 32, "#7a3b16", null);
+  const nueva = N.recetas[N.recetas.length - 1];
+  const R = RECETAS[nueva];
+  texto(introN === 0 ? "Primera pizza:" : "¡Pizza nueva!", W / 2, H / 2 - 80, 28, "#e0352b", null);
+  img("p-cocida", W / 2 - 150, H / 2 + 20, 130);
+  texto(R.nombre, W / 2 + 60, H / 2 - 10, 36, "#7a3b16", null);
+  const pasos = ["masa", "salsa", "queso"].concat(R.top);
+  pasos.forEach((k, i) => img("i-" + k, W / 2 - 20 + i * 52 - (pasos.length - 3) * 10, H / 2 + 52, 46));
+  imgPie("uma-saluda", W / 2 - 300, H / 2 + 250, 230);
+  boton("¡A COCINAR!", W / 2 + 60, H / 2 + 185, 360, 90, () => nuevaPartida(introN), "#2fbf5a", 40);
+}
+
+function dibujarFin() {
+  dibujarJuego();
+  toques = [];
+  velo();
+  cartel(700, 520);
+  const est = J.estrellas;
+  texto(est > 0 ? "¡Nivel superado!" : "¡Casi!", W / 2, H / 2 - 190, 54, "#fff", est > 0 ? "#2fbf5a" : "#e0352b");
+  for (let k = 0; k < 3; k++) {
+    const sc = k < est ? 1 + Math.max(0, 0.3 - (t % 99) * 0) : 1;
+    texto("★", W / 2 - 110 + k * 110, H / 2 - 80, 110 * sc, k < est ? "#ffd34a" : "#e3d6c4", k < est ? "#a86a00" : "#c9b8a3");
+  }
+  texto("Juntaste $" + J.monedas + " de $" + J.N.meta, W / 2, H / 2 + 20, 32, "#7a3b16", null);
+  texto("Atendiste a " + J.atendidos + (J.perdidos ? " · se fueron " + J.perdidos : ""), W / 2, H / 2 + 62, 26, "#9a6a46", null);
+  imgPie(est > 0 ? "uma-saluda" : "uma-piensa", W / 2 - 270, H / 2 + 250, 200);
+  if (est > 0 && nivel < NIVELES.length - 1) boton("SIGUIENTE", W / 2 + 60, H / 2 + 150, 300, 84, () => intro(nivel + 1), "#2fbf5a", 36);
+  else boton("REINTENTAR", W / 2 + 60, H / 2 + 150, 300, 84, () => intro(nivel), "#2fbf5a", 36);
+  boton("NIVELES", W / 2 + 60, H / 2 + 230, 220, 56, () => { pantalla = "niveles"; }, "#2f86ff", 24);
+}
+
+function dibujarCarga() {
+  cx.fillStyle = "#2b6fd6"; cx.fillRect(0, 0, W, H);
+  texto("Cocina Uma", W / 2, H / 2 - 60, 80, "#fff", "#1a4a9a");
+  const f = cargadas / NOMBRES.length;
+  redondo(W / 2 - 300, H / 2 + 40, 600, 26, 13); cx.fillStyle = "rgba(255,255,255,.25)"; cx.fill();
+  redondo(W / 2 - 300, H / 2 + 40, 600 * f, 26, 13); cx.fillStyle = "#fff"; cx.fill();
+  if (cargadas >= NOMBRES.length) pantalla = "titulo";
+}
+
+// ───── bucle ─────
+let ultimo = performance.now();
+function cuadro(ahora) {
+  const dt = Math.min(0.05, (ahora - ultimo) / 1000);
+  ultimo = ahora;
+  actualizar(dt);
+  cx.setTransform(esc * dpr, 0, 0, esc * dpr, 0, 0);
+  toques = [];
+  if (pantalla === "carga") dibujarCarga();
+  else if (pantalla === "titulo") dibujarTitulo();
+  else if (pantalla === "niveles") dibujarNiveles();
+  else if (pantalla === "intro") dibujarIntro();
+  else if (pantalla === "juego") dibujarJuego();
+  else if (pantalla === "fin") dibujarFin();
+  requestAnimationFrame(cuadro);
+}
+requestAnimationFrame(cuadro);
+
+// ───── toques ─────
+let presion = null;
+function punto(e) {
+  const r = cv.getBoundingClientRect();
+  return { x: (e.clientX - r.left) / esc, y: (e.clientY - r.top) / esc };
+}
+cv.addEventListener("pointerdown", e => {
+  e.preventDefault();
+  audio();
+  const p = punto(e);
+  presion = p;
+  // de arriba para abajo: lo último dibujado gana
+  for (let i = toques.length - 1; i >= 0; i--) {
+    const z = toques[i];
+    if (p.x >= z.x && p.x <= z.x + z.w && p.y >= z.y && p.y <= z.y + z.h) { z.al(); break; }
+  }
+});
+window.addEventListener("pointerup", () => { presion = null; });
+document.addEventListener("visibilitychange", () => { if (document.hidden && J && pantalla === "juego") J.pausa = true; });
+
+// para las pruebas automáticas
+window.__cu = { get J() { return J; }, get pantalla() { return pantalla; }, nuevaPartida, tocarIngrediente, alHorno, sacarDelHorno, tocarBandeja, RECETAS, COCIDA, QUEMADA, set pantalla(v) { pantalla = v; } };
+</script>
+</body>
+</html>
