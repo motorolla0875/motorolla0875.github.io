@@ -603,7 +603,7 @@ function dibujarJuego() {
   if (nivelMejora("cartel")) img("t-cartel", 470, 62 + Math.sin(t * 2) * 2, 110);
   // pizzas en el horno
   J.horno.forEach((p, i) => {
-    const x = HORNO.x - 60 + i * 120, y = HORNO.y - 205;
+    const x = HORNO.x - 60 + i * 120, y = HORNO.y - 178;
     if (!p) return;
     const lista = cocida(p) && !quemada(p), quem = quemada(p);
     const f = Math.min(1, p.coc / J.E.cocida);
