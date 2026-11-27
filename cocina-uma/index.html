@@ -27,9 +27,12 @@ const cv = document.getElementById("c");
 const cx = cv.getContext("2d");
 let esc = 1, dpr = 1;
 
+let bannerAlto = 0;   // lo que ocupa el banner de abajo (el juego se achica para no quedar tapado)
 function ajustar() {
   dpr = Math.min(window.devicePixelRatio || 1, 2);
-  esc = Math.min(window.innerWidth / W, window.innerHeight / H);
+  const alto = window.innerHeight - bannerAlto;
+  esc = Math.min(window.innerWidth / W, alto / H);
+  cv.style.top = Math.round(alto / 2) + "px";
   cv.width = Math.round(W * esc * dpr);
   cv.height = Math.round(H * esc * dpr);
   cv.style.width = Math.round(W * esc) + "px";
@@ -827,7 +830,7 @@ function dibujarIntro() {
     });
   }
   imgPie("uma-saluda", W / 2 - 300, H / 2 + 250, 230);
-  boton(T("cocinar"), W / 2 + 60, H / 2 + 185, 380, 90, () => nuevaPartida(introN), "#2fbf5a", 40);
+  boton(T("cocinar"), W / 2 + 60, H / 2 + 185, 380, 90, () => antesDeJugar(introN, () => nuevaPartida(introN)), "#2fbf5a", 40);
   boton("‹", W / 2 - 340, H / 2 - 220, 70, 60, () => { pantalla = "niveles"; }, "#2f86ff", 40);
 }
 
@@ -956,6 +959,39 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden && J && pantalla === "juego") J.pausa = true;
   musicaSeguir();
 });
+
+// ───── PUBLICIDAD (Google AdMob, solo en la app de Android) ─────
+// Banner abajo siempre. Anuncio de pantalla completa al empezar el nivel 1, 3, 5... (uno sí, uno no).
+// AHORA SON ANUNCIOS DE PRUEBA de Google. Para producción: cambiar ADS por los bloques reales de AdMob
+// (y en el workflow, el APPLICATION_ID de la app real).
+const ADS = { banner: "ca-app-pub-3940256099942544/6300978111", inter: "ca-app-pub-3940256099942544/1033173712" };
+const AM = () => { const C = window.Capacitor; return C && C.isNativePlatform && C.isNativePlatform() && C.getPlatform() === "android" && C.Plugins && C.Plugins.AdMob ? C.Plugins.AdMob : null; };
+let interCargado = false, enAnuncio = false;
+function cargarInter() { const M = AM(); if (!M) return; M.prepareInterstitial({ adId: ADS.inter }).then(() => { interCargado = true; }).catch(() => { interCargado = false; setTimeout(cargarInter, 30000); }); }
+async function arrancarAnuncios() {
+  const M = AM(); if (!M) return;
+  try { const ci = await M.requestConsentInfo(); if (ci && ci.isConsentFormAvailable && ci.status === "REQUIRED") await M.showConsentForm(); } catch (e) {}
+  try { await M.initialize({}); } catch (e) { return; }
+  M.addListener("bannerAdSizeChanged", z => { bannerAlto = z && z.height ? z.height : 0; ajustar(); });
+  M.showBanner({ adId: ADS.banner, adSize: "ADAPTIVE_BANNER", position: "BOTTOM_CENTER", margin: 0 }).catch(() => {});
+  cargarInter();
+}
+// antes de cocinar: en los niveles 1, 3, 5... muestra el anuncio y después arranca (si no está cargado, arranca igual)
+async function antesDeJugar(n, seguir) {
+  const M = AM();
+  if (!M || n % 2 !== 0 || !interCargado) { if (M && !interCargado) cargarInter(); seguir(); return; }
+  if (enAnuncio) return; enAnuncio = true;
+  const hs = []; let fin = false;
+  const listo = () => { if (fin) return; fin = true; hs.forEach(h => { try { h.remove(); } catch (e) {} }); interCargado = false; enAnuncio = false; cargarInter(); musicaSeguir(); seguir(); };
+  try {
+    hs.push(await M.addListener("interstitialAdDismissed", listo));
+    hs.push(await M.addListener("interstitialAdFailedToShow", listo));
+    for (const m of Object.values(MUSICA)) m.pause();
+    await M.showInterstitial();
+  } catch (e) { listo(); }
+  setTimeout(listo, 120000);
+}
+if (AM()) arrancarAnuncios();
 
 // para las pruebas automáticas
 window.__cu = { get J() { return J; }, get pantalla() { return pantalla; }, set pantalla(v) { pantalla = v; },
