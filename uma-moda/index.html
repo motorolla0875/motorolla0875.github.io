@@ -515,7 +515,7 @@ $("bIdioma").onclick = () => { const l = ["es", "en", "pt"]; idioma = l[(l.index
 ["bVolverTitulo", "bVolverNiv", "bSalir"].forEach(i => { $(i).innerHTML = ICO.volver; });
 
 // ───── PUBLICIDAD (Google AdMob, solo en la app de Android) ─────
-// Banner abajo siempre. Anuncio de pantalla completa al empezar el desafío 1, 3, 5... (uno sí, uno no).
+// Banner abajo siempre. Anuncio de pantalla completa cada vez que se empieza un desafío (también al repetir o pasar al siguiente).
 // AHORA SON ANUNCIOS DE PRUEBA de Google. Para producción: cambiar ADS por los bloques reales de AdMob.
 const ADS = { banner: "ca-app-pub-3940256099942544/6300978111", inter: "ca-app-pub-3940256099942544/1033173712" };
 const AM = () => { const C = window.Capacitor; return C && C.isNativePlatform && C.isNativePlatform() && C.getPlatform() === "android" && C.Plugins && C.Plugins.AdMob ? C.Plugins.AdMob : null; };
@@ -531,7 +531,7 @@ async function arrancarAnuncios() {
 }
 async function antesDeJugar(n, seguir) {
   const M = AM();
-  if (!M || n % 2 !== 0 || !interCargado) { if (M && !interCargado) cargarInter(); seguir(); return; }
+  if (!M || !interCargado) { if (M && !interCargado) cargarInter(); seguir(); return; }
   if (enAnuncio) return; enAnuncio = true; musicaSeguir();
   const hs = []; let fin = false;
   const listo = () => { if (fin) return; fin = true; hs.forEach(h => { try { h.remove(); } catch (e) {} }); interCargado = false; enAnuncio = false; cargarInter(); seguir(); musicaSeguir(); };
