@@ -84,8 +84,8 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
 .tab.on{background:var(--lila);color:#fff}
 .tira{display:flex;gap:10px;overflow-x:auto;padding:4px 12px 6px;scroll-snap-type:x proximity;scrollbar-width:none}
 .tira::-webkit-scrollbar{display:none}
-.item{flex:0 0 auto;width:88px;height:96px;border-radius:20px;background:#fff6fb;border:3px solid #f6d3e7;position:relative;display:grid;place-items:center;scroll-snap-align:start;padding:6px}
-.item img{max-width:100%;max-height:100%;object-fit:contain;pointer-events:none}
+.item{flex:0 0 auto;width:92px;height:104px;border-radius:20px;background:#fff6fb;border:3px solid #f6d3e7;position:relative;display:grid;place-items:center;scroll-snap-align:start;padding:6px}
+.item img{width:100%;height:100%;object-fit:contain;pointer-events:none}
 .item.puesto{border-color:var(--rosa);background:#ffe3f2}
 .item.puesto::after{content:"";position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;background:var(--rosa) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat;box-shadow:0 2px 0 var(--rosa-osc)}
 .item.bloq img{filter:grayscale(.6) brightness(.9);opacity:.55}
@@ -127,8 +127,8 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
 #compra{position:absolute;inset:0;z-index:8;display:none;align-items:center;justify-content:center;background:rgba(60,10,50,.45)}
 #compra.on{display:flex}
 #compra .caja{background:#fff;border-radius:28px;padding:18px;width:min(86%,340px);text-align:center}
-#compra .prev{height:140px;display:grid;place-items:center;background:#fff6fb;border-radius:20px;margin-bottom:12px}
-#compra .prev img{max-height:126px;max-width:90%}
+#compra .prev{height:200px;display:grid;place-items:center;background:#fff6fb;border-radius:20px;margin-bottom:12px}
+#compra .prev img{max-height:186px;max-width:90%}
 #compra .fila{display:flex;gap:10px;justify-content:center;margin-top:12px}
 #aviso{position:absolute;left:50%;top:18%;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:10px 18px;border-radius:999px;font-weight:600;z-index:9;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 #aviso.on{opacity:1}
@@ -226,7 +226,7 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
 const $ = id => document.getElementById(id);
 
 // ───── piezas: posición dentro de la imagen de Uma (768 x 1376) ─────
-const POS = {"base":[39,20,659,1328],"ar_lila":[217,597,342,234],"ab_tutu":[167,825,442,433],"zp_blancas":[266,1252,244,95],"ar_frutilla":[211,597,364,300],"ab_shortjean":[238,891,300,154],"zp_doradas":[267,1258,242,90],"ar_campera":[169,572,437,311],"ab_lunares":[208,812,394,431],"zp_rojas":[253,1237,261,111],"ar_rayo":[231,585,316,283],"ab_dorada":[209,862,357,216],"zp_botasnegras":[247,1154,264,193],"ar_diez":[207,591,367,302],"ab_deporte":[238,887,300,346],"zp_deporte":[250,1227,265,120],"ar_sueter":[148,583,480,315],"ab_corderoy":[165,892,439,261],"zp_lluvia":[240,1147,279,200],"ar_cuello":[208,581,359,292],"ab_escocesa":[205,867,398,176],"zp_guillermina":[266,1037,243,310],"ar_girasol":[270,599,267,288],"ab_polllerajean":[230,857,377,228],"zp_ojotas":[265,1274,246,77],"ar_gasa":[194,600,388,271],"ab_floreada":[170,865,436,423],"zp_chatitas":[132,1282,376,73],"ar_rayas":[211,596,358,287],"ab_jean":[250,877,334,361],"zp_botitas":[254,1232,258,115],"ar_unicornio":[152,595,472,308],"ab_calzas":[180,897,417,368],"zp_plateadas":[263,1259,251,88],"ar_corazon":[211,596,353,311],"ar_buzo":[150,556,477,362],"ar_volados":[222,596,330,322],"ve_princesa":[0,552,759,807],"ve_tul":[36,597,701,540],"ve_jardinero":[208,592,373,545],"ve_lana":[136,561,499,618],"ve_verano":[173,578,427,570],"ac_mono":[208,42,371,201],"ac_cartera":[350,665,243,362],"ac_corona":[239,127,299,129],"ac_anteojos":[212,344,351,144],"ac_flor":[180,55,479,253],"ac_panuelo":[278,554,212,139],"ac_mochila":[38,770,245,374],"ve_ballet":[73,599,630,472],"pe_rubio":[69,20,629,716],"ac_auriculares":[111,65,553,492],"ac_redondos":[253,329,265,159],"ac_bufanda":[255,514,278,339],"ac_sombrero":[56,72,665,339],"ac_collar":[330,583,115,192],"ac_bolso":[433,798,274,485]};
+const POS = {"base":[39,20,659,1328],"ar_lila":[217,597,342,234],"ab_tutu":[167,825,442,433],"zp_blancas":[266,1252,244,95],"ar_frutilla":[211,597,364,300],"ab_shortjean":[238,891,300,154],"zp_doradas":[267,1258,242,90],"ar_campera":[169,572,437,311],"ab_lunares":[208,812,394,431],"zp_rojas":[253,1237,261,111],"ar_rayo":[231,585,316,283],"ab_dorada":[209,862,357,216],"zp_botasnegras":[247,1154,264,193],"ar_diez":[207,591,367,302],"ab_deporte":[238,887,300,346],"zp_deporte":[250,1227,265,120],"ar_sueter":[148,583,480,315],"ab_corderoy":[165,892,439,261],"zp_lluvia":[240,1147,279,200],"ar_cuello":[208,581,359,292],"ab_escocesa":[205,867,398,176],"zp_guillermina":[266,1037,243,310],"ar_girasol":[270,599,267,288],"ab_polllerajean":[230,857,377,228],"zp_ojotas":[265,1274,246,77],"ar_gasa":[194,600,388,271],"ab_floreada":[170,865,436,423],"zp_chatitas":[132,1282,376,73],"ar_rayas":[211,596,358,287],"ab_jean":[250,877,334,361],"zp_botitas":[254,1232,258,115],"ar_unicornio":[152,595,472,308],"ab_calzas":[180,897,417,368],"zp_plateadas":[263,1259,251,88],"ar_corazon":[211,596,353,311],"ar_buzo":[150,556,477,362],"ar_volados":[222,596,330,322],"ve_princesa":[0,552,759,807],"ve_tul":[36,597,701,540],"ve_jardinero":[208,592,373,545],"ve_lana":[136,561,499,618],"ve_verano":[173,578,427,570],"ac_mono":[208,42,371,201],"ac_cartera":[350,665,243,362],"ac_corona":[239,127,299,129],"ac_anteojos":[212,344,351,144],"ac_flor":[180,55,479,253],"ac_panuelo":[278,554,212,139],"ac_mochila":[38,770,245,374],"ve_ballet":[73,599,630,472],"pe_rubio":[69,20,629,716],"ac_auriculares":[111,65,553,492],"ac_redondos":[253,329,265,159],"ac_bufanda":[255,514,278,339],"ac_sombrero":[56,72,665,339],"ac_collar":[330,583,115,192],"ac_bolso":[433,798,274,485],"pe_rosa":[69,20,629,717],"pe_violeta":[69,20,629,717],"pe_negro":[66,18,634,734]};
 
 // temas: e escuela · p playa · q parque · f fiesta · d desfile
 // [id, temas, precio]  (precio 0 = la tenés desde el principio)
@@ -240,7 +240,7 @@ const CATALOGO = {
        ["zp_doradas","pf",40],["zp_chatitas","fd",40],["zp_botitas","eq",40],["zp_botasnegras","df",50],["zp_plateadas","dqf",60]],
   ac: [["ac_mono","ef",0],["ac_panuelo","qe",30],["ac_mochila","e",30],["ac_bufanda","eq",30],["ac_bolso","p",30],["ac_flor","pqf",40],["ac_sombrero","pq",40],
        ["ac_anteojos","pd",40],["ac_redondos","ed",40],["ac_auriculares","qe",40],["ac_collar","fd",40],["ac_cartera","fd",40],["ac_corona","df",60]],
-  pe: [["pe_castano","",0],["pe_rubio","",60]],
+  pe: [["pe_castano","",0],["pe_rubio","",60],["pe_rosa","",70],["pe_violeta","",70],["pe_negro","",60]],
 };
 const ITEM = {}; for (const [cat, l] of Object.entries(CATALOGO)) for (const [id, t, p] of l) ITEM[id] = { id, cat, temas: t, precio: p };
 // grupos: de cada uno va uno solo
@@ -413,7 +413,7 @@ function estaPuesto(id) { const it = ITEM[id]; return it.cat === "ac" ? prog.pue
 function armarTira() {
   $("tira").innerHTML = CATALOGO[tab].map(([id, , precio]) => {
     const ok = tiene(id);
-    return `<button class="item ${estaPuesto(id) ? "puesto" : ""} ${ok ? "" : "bloq"}" data-id="${id}"><img src="img/${id}.webp" alt="" loading="lazy">
+    return `<button class="item ${estaPuesto(id) ? "puesto" : ""} ${ok ? "" : "bloq"}" data-id="${id}"><img src="img/th_${id}.webp" alt="" loading="lazy">
       ${ok ? "" : `<span class="precio">${ICO.moneda}${precio}</span>`}</button>`;
   }).join("");
 }
@@ -434,7 +434,7 @@ function ponerSacar(id) {
 let aComprar = null;
 function pedirCompra(id) {
   aComprar = id; const it = ITEM[id];
-  $("compraImg").src = `img/${id}.webp`;
+  $("compraImg").src = `img/th_${id}.webp`;
   $("compraTxt").textContent = T("compraTxt");
   $("compraSi").innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px">${ICO.moneda.replace("<svg", '<svg width="24" height="24"')}${it.precio}</span>`;
   $("compra").classList.add("on");
