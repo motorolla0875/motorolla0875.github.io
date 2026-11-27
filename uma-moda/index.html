@@ -130,6 +130,13 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
 #compra .prev{height:200px;display:grid;place-items:center;background:#fff6fb;border-radius:20px;margin-bottom:12px}
 #compra .prev img{max-height:186px;max-width:90%}
 #compra .fila{display:flex;gap:10px;justify-content:center;margin-top:12px}
+#video{position:absolute;inset:0;z-index:8;display:none;align-items:center;justify-content:center;background:rgba(60,10,50,.45)}
+#video.on{display:flex}
+#video .caja{background:#fff;border-radius:28px;padding:20px 18px 22px;width:min(88%,360px);text-align:center}
+#video .moneda-grande{width:86px;height:86px;margin:0 auto;animation:latido 1.2s ease-in-out infinite}
+#video .moneda-grande svg{width:100%;height:100%}
+#prueba{position:absolute;inset:0;z-index:12;display:none;flex-direction:column;align-items:center;justify-content:center;background:#1c1020;color:#fff;font-weight:600;font-size:22px}
+#prueba.on{display:flex}
 #aviso{position:absolute;left:50%;top:18%;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:10px 18px;border-radius:999px;font-weight:600;z-index:9;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 #aviso.on{opacity:1}
 #carga{position:absolute;inset:0;z-index:20;background:var(--crema);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-weight:600}
@@ -214,6 +221,13 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
     <div id="compraTxt" style="font-weight:600;font-size:19px"></div>
     <div class="fila"><button class="btn chico lila" id="compraNo" data-t="no">No</button><button class="btn chico verde" id="compraSi"></button></div>
   </div></div>
+  <div id="video"><div class="caja">
+    <div class="moneda-grande"></div>
+    <div id="videoTit" style="font-weight:700;font-size:23px;margin:6px 0 4px"></div>
+    <div id="videoTxt" style="font-weight:500;font-size:17px;color:#7a4b6c"></div>
+    <div class="fila" style="flex-direction:column;align-items:center;gap:12px;margin-top:16px"><button class="btn verde" id="videoSi"></button><button class="btn chico lila" id="videoNo" data-t="no">No</button></div>
+  </div></div>
+  <div id="prueba"><div>Anuncio de prueba</div><div id="pruebaSeg" style="font-size:44px;font-weight:700;margin-top:10px">3</div></div>
   <div id="aviso"></div>
 </div>
 
@@ -260,7 +274,7 @@ const minimoDe = n => n < 10 ? 1 : 2;   // estrellas para pasar
 // ───── textos ─────
 const TX = {
   es: { nombre: "Uma Moda", sub: "Juegos de chicas", jugar: "Jugar", desafios: "Desafíos", vestir: "Vestir a Uma", listo: "¡Lista!",
-    nivel: "Desafío {0}", pasar: "Para pasar: {0}", no: "No", comprar: "Comprar", compraTxt: "¿La comprás?", faltan: "Te faltan monedas",
+    nivel: "Desafío {0}", pasar: "Para pasar: {0}", no: "No", comprar: "Comprar", compraTxt: "¿La comprás?", faltan: "Te faltan monedas", videoTit: "¡Te faltan monedas!", videoTxt: "Mirá un video y te regalamos {0} monedas.", videoBtn: "Ver video", sinVideo: "No hay videos ahora. Probá en un rato.", gano: "¡Ganaste {0} monedas!",
     tabs: { ar: "Arriba", ab: "Abajo", ve: "Vestidos", zp: "Zapatos", ac: "Accesorios", pe: "Pelo" }, quitar: "Sacar",
     res: ["Probá otra vez", "¡Bien!", "¡Muy linda!", "¡Perfecta!"], siguiente: "Siguiente", repetir: "Otra vez", menu: "Desafíos",
     dice: ["No va con el tema", "Puede mejorar", "¡Me gusta!", "¡Hermosa!", "¡Me encanta!"],
@@ -270,7 +284,7 @@ const TX = {
       f: [["Fiesta de cumpleaños", "¡Uma está invitada a un cumple!"], ["Fiesta sorpresa", "Algo que brille para festejar."]],
       d: [["Gran desfile", "Uma desfila en la pasarela. ¡Que brille!"], ["Noche de gala", "El look más elegante de todos."]] } },
   en: { nombre: "Uma Fashion Style", sub: "Dress Up Games", jugar: "Play", desafios: "Challenges", vestir: "Dress up Uma", listo: "Ready!",
-    nivel: "Challenge {0}", pasar: "To pass: {0}", no: "No", comprar: "Buy", compraTxt: "Buy it?", faltan: "Not enough coins",
+    nivel: "Challenge {0}", pasar: "To pass: {0}", no: "No", comprar: "Buy", compraTxt: "Buy it?", faltan: "Not enough coins", videoTit: "Not enough coins!", videoTxt: "Watch a video and get {0} free coins.", videoBtn: "Watch video", sinVideo: "No videos right now. Try again later.", gano: "You got {0} coins!",
     tabs: { ar: "Tops", ab: "Bottoms", ve: "Dresses", zp: "Shoes", ac: "Accessories", pe: "Hair" }, quitar: "Remove",
     res: ["Try again", "Good!", "So pretty!", "Perfect!"], siguiente: "Next", repetir: "Again", menu: "Challenges",
     dice: ["Not the theme", "Could be better", "I like it!", "Lovely!", "I love it!"],
@@ -280,7 +294,7 @@ const TX = {
       f: [["Birthday party", "Uma is invited to a party!"], ["Surprise party", "Something sparkly to celebrate."]],
       d: [["Big fashion show", "Uma walks the runway. Make her shine!"], ["Gala night", "The most elegant look of all."]] } },
   pt: { nombre: "Uma Moda", sub: "Jogos de meninas", jugar: "Jogar", desafios: "Desafios", vestir: "Vestir a Uma", listo: "Pronta!",
-    nivel: "Desafio {0}", pasar: "Para passar: {0}", no: "Não", comprar: "Comprar", compraTxt: "Comprar?", faltan: "Faltam moedas",
+    nivel: "Desafio {0}", pasar: "Para passar: {0}", no: "Não", comprar: "Comprar", compraTxt: "Comprar?", faltan: "Faltam moedas", videoTit: "Faltam moedas!", videoTxt: "Assista a um vídeo e ganhe {0} moedas.", videoBtn: "Ver vídeo", sinVideo: "Sem vídeos agora. Tente mais tarde.", gano: "Você ganhou {0} moedas!",
     tabs: { ar: "Blusas", ab: "Saias e calças", ve: "Vestidos", zp: "Sapatos", ac: "Acessórios", pe: "Cabelo" }, quitar: "Tirar",
     res: ["Tente de novo", "Bom!", "Muito linda!", "Perfeita!"], siguiente: "Próximo", repetir: "De novo", menu: "Desafios",
     dice: ["Não combina", "Pode melhorar", "Gostei!", "Linda!", "Amei!"],
@@ -442,12 +456,31 @@ function pedirCompra(id) {
 $("compraNo").onclick = () => { $("compra").classList.remove("on"); };
 $("compraSi").onclick = () => {
   const it = ITEM[aComprar]; $("compra").classList.remove("on");
-  if (prog.monedas < it.precio) { aviso(T("faltan")); sfx("mal", 0.5); return; }
+  if (prog.monedas < it.precio) { ofrecerVideo(it.id); return; }
   prog.monedas -= it.precio; prog.tengo.push(it.id); guardar(); sfx("compra", 0.8); monedas();
   ponerSacar(it.id);
 };
 $("tabs").onclick = e => { const b = e.target.closest(".tab"); if (!b) return; tab = b.dataset.c; armarTabs(); armarTira(); $("tira").scrollLeft = 0; sfx("toque", 0.5); };
 $("tira").onclick = e => { const b = e.target.closest(".item"); if (!b) return; const id = b.dataset.id; if (tiene(id)) ponerSacar(id); else pedirCompra(id); };
+
+// ───── video con premio: si no te alcanza, mirás un video y ganás monedas ─────
+const PREMIO = 250;
+let paraComprar = null;
+function ofrecerVideo(id) {
+  paraComprar = id; sfx("mal", 0.4);
+  $("video").querySelector(".moneda-grande").innerHTML = ICO.moneda;
+  $("videoTit").textContent = T("videoTit"); $("videoTxt").textContent = T("videoTxt", PREMIO);
+  $("videoSi").innerHTML = `<span style="display:inline-flex;align-items:center;gap:8px">${T("videoBtn")} +${PREMIO}</span>`;
+  $("video").classList.add("on");
+}
+$("videoNo").onclick = () => { $("video").classList.remove("on"); sfx("toque"); };
+$("videoSi").onclick = async () => {
+  $("video").classList.remove("on");
+  const ok = await verVideoPremio();
+  if (!ok) { aviso(T("sinVideo")); return; }
+  prog.monedas += PREMIO; guardar(); monedas(); sfx("monedas", 0.8); aviso(T("gano", PREMIO));
+  if (paraComprar && prog.monedas >= ITEM[paraComprar].precio) setTimeout(() => pedirCompra(paraComprar), 700);
+};
 
 // ───── puntaje y desfile ─────
 function puntaje() {
@@ -517,7 +550,7 @@ $("bIdioma").onclick = () => { const l = ["es", "en", "pt"]; idioma = l[(l.index
 // ───── PUBLICIDAD (Google AdMob, solo en la app de Android) ─────
 // Banner abajo siempre. Anuncio de pantalla completa cada vez que se empieza un desafío (también al repetir o pasar al siguiente).
 // AHORA SON ANUNCIOS DE PRUEBA de Google. Para producción: cambiar ADS por los bloques reales de AdMob.
-const ADS = { banner: "ca-app-pub-3940256099942544/6300978111", inter: "ca-app-pub-3940256099942544/1033173712" };
+const ADS = { banner: "ca-app-pub-3940256099942544/6300978111", inter: "ca-app-pub-3940256099942544/1033173712", premio: "ca-app-pub-3940256099942544/5224354917" };
 const AM = () => { const C = window.Capacitor; return C && C.isNativePlatform && C.isNativePlatform() && C.getPlatform() === "android" && C.Plugins && C.Plugins.AdMob ? C.Plugins.AdMob : null; };
 let interCargado = false, enAnuncio = false;
 function cargarInter() { const M = AM(); if (!M) return; M.prepareInterstitial({ adId: ADS.inter }).then(() => { interCargado = true; }).catch(() => { interCargado = false; setTimeout(cargarInter, 30000); }); }
@@ -527,7 +560,30 @@ async function arrancarAnuncios() {
   try { await M.initialize({}); } catch (e) { return; }
   M.addListener("bannerAdSizeChanged", z => { document.documentElement.style.setProperty("--banner", (z && z.height ? z.height : 0) + "px"); });
   M.showBanner({ adId: ADS.banner, adSize: "ADAPTIVE_BANNER", position: "BOTTOM_CENTER", margin: 0 }).catch(() => {});
-  cargarInter();
+  cargarInter(); cargarPremio();
+}
+let premioCargado = false;
+function cargarPremio() { const M = AM(); if (!M) return; M.prepareRewardVideoAd({ adId: ADS.premio }).then(() => { premioCargado = true; }).catch(() => { premioCargado = false; setTimeout(cargarPremio, 30000); }); }
+// muestra el video con premio; devuelve true si lo miró hasta el final
+function verVideoPremio() {
+  const M = AM();
+  if (!M) {   // en la web: un anuncio de prueba de 3 segundos
+    return new Promise(ok => { const p = $("prueba"); let n = 3; $("pruebaSeg").textContent = n; p.classList.add("on");
+      const t = setInterval(() => { n--; $("pruebaSeg").textContent = n; if (n <= 0) { clearInterval(t); p.classList.remove("on"); ok(true); } }, 1000); });
+  }
+  return new Promise(async ok => {
+    let dado = false, fin = false; const hs = [];
+    const terminar = r => { if (fin) return; fin = true; hs.forEach(h => { try { h.remove(); } catch (e) {} }); premioCargado = false; enAnuncio = false; cargarPremio(); musicaSeguir(); ok(r); };
+    try {
+      if (!premioCargado) await M.prepareRewardVideoAd({ adId: ADS.premio });
+      enAnuncio = true; musicaSeguir();
+      hs.push(await M.addListener("onRewardedVideoAdReward", () => { dado = true; }));
+      hs.push(await M.addListener("onRewardedVideoAdDismissed", () => terminar(dado)));
+      hs.push(await M.addListener("onRewardedVideoAdFailedToShow", () => terminar(false)));
+      M.showRewardVideoAd().then(() => { dado = true; }).catch(() => terminar(false));
+    } catch (e) { terminar(false); }
+    setTimeout(() => terminar(dado), 150000);
+  });
 }
 async function antesDeJugar(n, seguir) {
   const M = AM();
