@@ -40,11 +40,12 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
 .uma img{position:absolute;display:block;pointer-events:none}
 
 /* titulo */
-#titulo .marca{position:relative;z-index:2;text-align:center;margin-top:calc(env(safe-area-inset-top,0px) + 4vh)}
+#titulo .marca{position:relative;z-index:2;text-align:center;margin-top:calc(env(safe-area-inset-top,0px) + 2vh)}
+#logo{display:block;width:min(78%,360px);margin:0 auto -6px;filter:drop-shadow(0 6px 10px rgba(120,20,70,.25))}
 #titulo h1{margin:0;font-size:clamp(46px,15vw,74px);line-height:.9;color:#fff;font-weight:700;letter-spacing:.01em;
   text-shadow:0 4px 0 var(--rosa-osc),0 8px 0 rgba(90,20,60,.25);-webkit-text-stroke:2px var(--rosa-osc);paint-order:stroke fill}
 #titulo .sub{display:inline-block;margin-top:10px;background:var(--lila);color:#fff;font-weight:600;font-size:clamp(16px,4.8vw,22px);padding:4px 16px;border-radius:999px;box-shadow:0 3px 0 #6235c4}
-#titulo .escenario{position:absolute;left:0;right:0;bottom:19%;height:56%}
+#titulo .escenario{position:absolute;left:0;right:0;bottom:19%;height:50%}
 #titulo .abajo{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 4%);display:flex;flex-direction:column;align-items:center;gap:14px;z-index:3}
 #titulo .ajustes{display:flex;gap:12px}
 .idioma{font-weight:700;font-size:16px}
@@ -144,7 +145,7 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
   <!-- titulo -->
   <section class="pant" id="titulo">
     <div class="fondo" style="background-image:url(img/fo_cuarto.webp)"></div>
-    <div class="marca"><h1 data-t="nombre">Uma Moda</h1><div class="sub" data-t="sub">Juegos de chicas</div></div>
+    <div class="marca"><img id="logo" src="img/logo_es.webp" alt="Uma Moda"><div class="sub" data-t="sub">Juegos de chicas</div></div>
     <div class="escenario"><div class="uma" id="umaTitulo"></div></div>
     <div class="abajo"><button class="btn" id="bJugar" data-t="jugar">Jugar</button>
       <div class="ajustes">
@@ -225,7 +226,7 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
 const $ = id => document.getElementById(id);
 
 // ───── piezas: posición dentro de la imagen de Uma (768 x 1376) ─────
-const POS = {"base":[39,20,659,1328],"ar_lila":[217,597,342,234],"ab_tutu":[167,825,442,433],"zp_blancas":[266,1252,244,95],"ar_frutilla":[211,597,358,291],"ab_shortjean":[238,882,300,163],"zp_doradas":[267,1258,242,90],"ar_campera":[169,572,437,311],"ab_lunares":[208,812,394,431],"zp_rojas":[253,1237,261,111],"ar_rayo":[231,585,316,283],"ab_dorada":[209,862,357,216],"zp_botasnegras":[247,1154,264,193],"ar_diez":[207,591,367,302],"ab_deporte":[238,887,300,346],"zp_deporte":[250,1227,265,120],"ar_sueter":[148,583,480,315],"ab_corderoy":[165,892,439,261],"zp_lluvia":[240,1147,279,200],"ar_cuello":[208,581,359,292],"ab_escocesa":[205,867,398,176],"zp_guillermina":[266,1037,243,310],"ar_girasol":[270,599,270,238],"ab_polllerajean":[230,831,377,254],"zp_ojotas":[265,1274,246,77],"ar_gasa":[194,600,388,271],"ab_floreada":[170,865,436,423],"zp_chatitas":[132,1282,376,73],"ar_rayas":[211,596,358,287],"ab_jean":[250,877,334,361],"zp_botitas":[254,1232,258,115],"ar_unicornio":[152,595,472,308],"ab_calzas":[180,897,417,368],"zp_plateadas":[263,1259,251,88],"ar_corazon":[211,596,353,311],"ar_buzo":[150,556,477,362],"ar_volados":[222,596,330,322],"ve_princesa":[0,552,759,807],"ve_tul":[36,597,701,540],"ve_jardinero":[208,592,373,545],"ve_lana":[136,561,499,618],"ve_verano":[173,578,427,570],"ac_mono":[208,42,371,201],"ac_cartera":[350,665,243,362],"ac_corona":[239,127,299,129],"ac_anteojos":[212,344,351,144],"ac_flor":[180,55,479,253],"ac_panuelo":[278,554,212,139],"ac_mochila":[38,770,245,374]};
+const POS = {"base":[39,20,659,1328],"ar_lila":[217,597,342,234],"ab_tutu":[167,825,442,433],"zp_blancas":[266,1252,244,95],"ar_frutilla":[211,597,364,300],"ab_shortjean":[238,891,300,154],"zp_doradas":[267,1258,242,90],"ar_campera":[169,572,437,311],"ab_lunares":[208,812,394,431],"zp_rojas":[253,1237,261,111],"ar_rayo":[231,585,316,283],"ab_dorada":[209,862,357,216],"zp_botasnegras":[247,1154,264,193],"ar_diez":[207,591,367,302],"ab_deporte":[238,887,300,346],"zp_deporte":[250,1227,265,120],"ar_sueter":[148,583,480,315],"ab_corderoy":[165,892,439,261],"zp_lluvia":[240,1147,279,200],"ar_cuello":[208,581,359,292],"ab_escocesa":[205,867,398,176],"zp_guillermina":[266,1037,243,310],"ar_girasol":[270,599,267,288],"ab_polllerajean":[230,857,377,228],"zp_ojotas":[265,1274,246,77],"ar_gasa":[194,600,388,271],"ab_floreada":[170,865,436,423],"zp_chatitas":[132,1282,376,73],"ar_rayas":[211,596,358,287],"ab_jean":[250,877,334,361],"zp_botitas":[254,1232,258,115],"ar_unicornio":[152,595,472,308],"ab_calzas":[180,897,417,368],"zp_plateadas":[263,1259,251,88],"ar_corazon":[211,596,353,311],"ar_buzo":[150,556,477,362],"ar_volados":[222,596,330,322],"ve_princesa":[0,552,759,807],"ve_tul":[36,597,701,540],"ve_jardinero":[208,592,373,545],"ve_lana":[136,561,499,618],"ve_verano":[173,578,427,570],"ac_mono":[208,42,371,201],"ac_cartera":[350,665,243,362],"ac_corona":[239,127,299,129],"ac_anteojos":[212,344,351,144],"ac_flor":[180,55,479,253],"ac_panuelo":[278,554,212,139],"ac_mochila":[38,770,245,374],"ve_ballet":[73,599,630,472],"pe_rubio":[69,20,629,716],"ac_auriculares":[111,65,553,492],"ac_redondos":[253,329,265,159],"ac_bufanda":[255,514,278,339],"ac_sombrero":[56,72,665,339],"ac_collar":[330,583,115,192],"ac_bolso":[433,798,274,485]};
 
 // temas: e escuela · p playa · q parque · f fiesta · d desfile
 // [id, temas, precio]  (precio 0 = la tenés desde el principio)
@@ -234,15 +235,18 @@ const CATALOGO = {
        ["ar_girasol","pq",30],["ar_sueter","eq",40],["ar_cuello","ef",40],["ar_unicornio","eqf",40],["ar_lila","fd",40],["ar_campera","eqd",50],["ar_rayo","df",50],["ar_gasa","fdq",50]],
   ab: [["ab_shortjean","pq",0],["ab_jean","eq",0],["ab_escocesa","e",0],["ab_deporte","qp",30],["ab_corderoy","eq",30],["ab_calzas","eq",30],
        ["ab_polllerajean","pqe",40],["ab_lunares","fdq",40],["ab_tutu","fd",50],["ab_floreada","fq",50],["ab_dorada","df",60]],
-  ve: [["ve_verano","pqf",0],["ve_jardinero","eqp",50],["ve_lana","ef",50],["ve_tul","fd",70],["ve_princesa","df",90]],
+  ve: [["ve_verano","pqf",0],["ve_ballet","fd",60],["ve_jardinero","eqp",50],["ve_lana","ef",50],["ve_tul","fd",70],["ve_princesa","df",90]],
   zp: [["zp_blancas","eq",0],["zp_ojotas","p",0],["zp_guillermina","ef",0],["zp_rojas","qe",30],["zp_deporte","q",30],["zp_lluvia","q",30],
        ["zp_doradas","pf",40],["zp_chatitas","fd",40],["zp_botitas","eq",40],["zp_botasnegras","df",50],["zp_plateadas","dqf",60]],
-  ac: [["ac_mono","ef",0],["ac_panuelo","qe",30],["ac_mochila","e",30],["ac_flor","pqf",40],["ac_anteojos","pd",40],["ac_cartera","fd",40],["ac_corona","df",60]],
+  ac: [["ac_mono","ef",0],["ac_panuelo","qe",30],["ac_mochila","e",30],["ac_bufanda","eq",30],["ac_bolso","p",30],["ac_flor","pqf",40],["ac_sombrero","pq",40],
+       ["ac_anteojos","pd",40],["ac_redondos","ed",40],["ac_auriculares","qe",40],["ac_collar","fd",40],["ac_cartera","fd",40],["ac_corona","df",60]],
+  pe: [["pe_castano","",0],["pe_rubio","",60]],
 };
 const ITEM = {}; for (const [cat, l] of Object.entries(CATALOGO)) for (const [id, t, p] of l) ITEM[id] = { id, cat, temas: t, precio: p };
-const CABEZA = ["ac_mono", "ac_corona", "ac_flor"];
+// grupos: de cada uno va uno solo
+const GRUPOS = [["ac_mono", "ac_corona", "ac_flor", "ac_sombrero", "ac_auriculares"], ["ac_anteojos", "ac_redondos"], ["ac_panuelo", "ac_bufanda", "ac_collar"]];
 // orden de las capas (de atrás para adelante)
-const CAPAS = ["zp", "ab", "ar", "ve", "ac_panuelo", "ac_cartera", "ac_mochila", "ac_anteojos", "ac_mono", "ac_corona", "ac_flor"];
+const CAPAS = ["zp", "ab", "ar", "ve", "pe", "ac_collar", "ac_panuelo", "ac_bufanda", "ac_cartera", "ac_mochila", "ac_bolso", "ac_redondos", "ac_anteojos", "ac_auriculares", "ac_sombrero", "ac_mono", "ac_corona", "ac_flor"];
 
 const TEMAS = {
   e: { fondo: "fo_escuela" }, p: { fondo: "fo_playa" }, q: { fondo: "fo_parque" }, f: { fondo: "fo_fiesta" }, d: { fondo: "fo_pasarela" },
@@ -257,7 +261,7 @@ const minimoDe = n => n < 10 ? 1 : 2;   // estrellas para pasar
 const TX = {
   es: { nombre: "Uma Moda", sub: "Juegos de chicas", jugar: "Jugar", desafios: "Desafíos", vestir: "Vestir a Uma", listo: "¡Lista!",
     nivel: "Desafío {0}", pasar: "Para pasar: {0}", no: "No", comprar: "Comprar", compraTxt: "¿La comprás?", faltan: "Te faltan monedas",
-    tabs: { ar: "Arriba", ab: "Abajo", ve: "Vestidos", zp: "Zapatos", ac: "Accesorios" }, quitar: "Sacar",
+    tabs: { ar: "Arriba", ab: "Abajo", ve: "Vestidos", zp: "Zapatos", ac: "Accesorios", pe: "Pelo" }, quitar: "Sacar",
     res: ["Probá otra vez", "¡Bien!", "¡Muy linda!", "¡Perfecta!"], siguiente: "Siguiente", repetir: "Otra vez", menu: "Desafíos",
     dice: ["No va con el tema", "Puede mejorar", "¡Me gusta!", "¡Hermosa!", "¡Me encanta!"],
     temas: { e: [["Primer día de clases", "Vestí a Uma para ir a la escuela."], ["Excursión de la escuela", "Ropa cómoda para salir con el grado."]],
@@ -267,7 +271,7 @@ const TX = {
       d: [["Gran desfile", "Uma desfila en la pasarela. ¡Que brille!"], ["Noche de gala", "El look más elegante de todos."]] } },
   en: { nombre: "Uma Fashion Style", sub: "Dress Up Games", jugar: "Play", desafios: "Challenges", vestir: "Dress up Uma", listo: "Ready!",
     nivel: "Challenge {0}", pasar: "To pass: {0}", no: "No", comprar: "Buy", compraTxt: "Buy it?", faltan: "Not enough coins",
-    tabs: { ar: "Tops", ab: "Bottoms", ve: "Dresses", zp: "Shoes", ac: "Accessories" }, quitar: "Remove",
+    tabs: { ar: "Tops", ab: "Bottoms", ve: "Dresses", zp: "Shoes", ac: "Accessories", pe: "Hair" }, quitar: "Remove",
     res: ["Try again", "Good!", "So pretty!", "Perfect!"], siguiente: "Next", repetir: "Again", menu: "Challenges",
     dice: ["Not the theme", "Could be better", "I like it!", "Lovely!", "I love it!"],
     temas: { e: [["First day of school", "Dress Uma for school."], ["School trip", "Comfy clothes for a class outing."]],
@@ -277,7 +281,7 @@ const TX = {
       d: [["Big fashion show", "Uma walks the runway. Make her shine!"], ["Gala night", "The most elegant look of all."]] } },
   pt: { nombre: "Uma Moda", sub: "Jogos de meninas", jugar: "Jogar", desafios: "Desafios", vestir: "Vestir a Uma", listo: "Pronta!",
     nivel: "Desafio {0}", pasar: "Para passar: {0}", no: "Não", comprar: "Comprar", compraTxt: "Comprar?", faltan: "Faltam moedas",
-    tabs: { ar: "Blusas", ab: "Saias e calças", ve: "Vestidos", zp: "Sapatos", ac: "Acessórios" }, quitar: "Tirar",
+    tabs: { ar: "Blusas", ab: "Saias e calças", ve: "Vestidos", zp: "Sapatos", ac: "Acessórios", pe: "Cabelo" }, quitar: "Tirar",
     res: ["Tente de novo", "Bom!", "Muito linda!", "Perfeita!"], siguiente: "Próximo", repetir: "De novo", menu: "Desafios",
     dice: ["Não combina", "Pode melhorar", "Gostei!", "Linda!", "Amei!"],
     temas: { e: [["Primeiro dia de aula", "Vista a Uma para a escola."], ["Passeio da escola", "Roupa confortável para sair com a turma."]],
@@ -347,6 +351,7 @@ function piezasPuestas(p = prog.puesto) {
   for (const capa of CAPAS) {
     if (capa.startsWith("ac_")) { if (p.ac.includes(capa)) out.push(capa); }
     else if (capa === "ve") { if (p.ve) out.push(p.ve); }
+    else if (capa === "pe") { if (p.pe && p.pe !== "pe_castano") out.push(p.pe); }
     else if (!p.ve || capa === "zp") { if (p[capa]) out.push(p[capa]); }
   }
   return out;
@@ -366,6 +371,7 @@ function aplicarIdioma() {
   document.querySelectorAll("[data-t]").forEach(el => { el.textContent = T(el.dataset.t); });
   document.title = T("nombre");
   $("bIdioma").textContent = idioma.toUpperCase();
+  $("logo").src = idioma === "en" ? "img/logo_en.webp" : "img/logo_es.webp"; $("logo").alt = T("nombre");
 }
 function iconosAjustes() { $("bSonido").innerHTML = ICO.sonido(prog.sonido); $("bMusica").innerHTML = ICO.musica(prog.musica); }
 
@@ -403,7 +409,7 @@ function irVestir() {
 function armarTabs() {
   $("tabs").innerHTML = Object.keys(CATALOGO).map(c => `<button class="tab ${c === tab ? "on" : ""}" data-c="${c}">${TX[idioma].tabs[c]}</button>`).join("");
 }
-function estaPuesto(id) { const it = ITEM[id]; return it.cat === "ac" ? prog.puesto.ac.includes(id) : prog.puesto[it.cat] === id; }
+function estaPuesto(id) { const it = ITEM[id]; return it.cat === "ac" ? prog.puesto.ac.includes(id) : it.cat === "pe" ? (prog.puesto.pe || "pe_castano") === id : prog.puesto[it.cat] === id; }
 function armarTira() {
   $("tira").innerHTML = CATALOGO[tab].map(([id, , precio]) => {
     const ok = tiene(id);
@@ -415,8 +421,9 @@ function ponerSacar(id) {
   const it = ITEM[id], p = prog.puesto;
   if (it.cat === "ac") {
     if (p.ac.includes(id)) p.ac = p.ac.filter(x => x !== id);
-    else { if (CABEZA.includes(id)) p.ac = p.ac.filter(x => !CABEZA.includes(x)); p.ac.push(id); }
-  } else if (p[it.cat] === id) p[it.cat] = null;
+    else { const g = GRUPOS.find(g => g.includes(id)); if (g) p.ac = p.ac.filter(x => !g.includes(x)); p.ac.push(id); }
+  } else if (it.cat === "pe") p.pe = id;
+  else if (p[it.cat] === id) p[it.cat] = null;
   else {
     p[it.cat] = id;
     if (it.cat === "ve") { p.ar = null; p.ab = null; }
@@ -541,7 +548,7 @@ if (AM()) arrancarAnuncios();
 idioma = prog.idioma || ((navigator.language || "en").slice(0, 2).toLowerCase() === "es" ? "es" : (navigator.language || "").slice(0, 2).toLowerCase() === "pt" ? "pt" : "en");
 aplicarIdioma(); iconosAjustes();
 (function precargar() {
-  const lista = Object.keys(POS).concat(Object.values(TEMAS).map(t => t.fondo), ["fo_cuarto"], JUECES);
+  const lista = Object.keys(POS).concat(Object.values(TEMAS).map(t => t.fondo), ["fo_cuarto", "logo_es", "logo_en", "pe_castano"], JUECES);
   let ok = 0; const fin = () => { ok++; $("carga").querySelector("i").style.width = (ok / lista.length * 100) + "%";
     if (ok === lista.length) { $("carga").remove(); irTitulo(); } };
   lista.forEach(n => { const im = new Image(); im.onload = im.onerror = fin; im.src = "img/" + n + ".webp"; });
