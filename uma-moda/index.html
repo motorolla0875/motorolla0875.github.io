@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Uma Moda</title>
+<meta name="description" content="Vestí a Uma para cada desafío de moda y ganá las estrellas del jurado.">
+<meta name="theme-color" content="#f7d6ea">
+<link rel="icon" href="icono.png">
+<link rel="apple-touch-icon" href="icono-512.png">
+<style>
+@font-face{font-family:'Fredoka';font-weight:500;font-display:swap;src:url(fonts/fredoka-500.woff2) format('woff2')}
+@font-face{font-family:'Fredoka';font-weight:600;font-display:swap;src:url(fonts/fredoka-600.woff2) format('woff2')}
+@font-face{font-family:'Fredoka';font-weight:700;font-display:swap;src:url(fonts/fredoka-700.woff2) format('woff2')}
+:root{
+  --rosa:#ff4fa3; --rosa-osc:#d6247c; --lila:#8e5cf0; --lila-claro:#efe4ff; --crema:#fff7fb;
+  --tinta:#4a1d3f; --oro:#ffc43d; --oro-osc:#d99412; --verde:#2fbf6a;
+  --banner:0px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#f3c4de;overflow:hidden;font-family:Fredoka,system-ui,sans-serif;color:var(--tinta);-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{position:fixed;left:50%;top:0;transform:translateX(-50%);width:min(100vw,calc((100dvh - var(--banner)) * 0.5625));height:calc(100dvh - var(--banner));overflow:hidden;background:var(--crema)}
+.pant{position:absolute;inset:0;display:none;flex-direction:column}
+.pant.on{display:flex}
+.fondo{position:absolute;inset:0;background-size:cover;background-position:center}
+button{font-family:inherit;border:0;cursor:pointer;color:inherit}
+.btn{background:linear-gradient(#ff6fb6,var(--rosa));color:#fff;font-weight:700;font-size:clamp(20px,6.2vw,30px);padding:.5em 1.6em;border-radius:999px;box-shadow:0 6px 0 var(--rosa-osc),0 10px 18px rgba(120,20,70,.25);letter-spacing:.02em;transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--rosa-osc)}
+.btn.verde{background:linear-gradient(#4fdc8a,var(--verde));box-shadow:0 6px 0 #1f8d4c,0 10px 18px rgba(20,90,50,.25)}
+.btn.lila{background:linear-gradient(#a988ff,var(--lila));box-shadow:0 6px 0 #6235c4,0 10px 18px rgba(70,30,140,.25)}
+.btn.chico{font-size:clamp(16px,4.6vw,22px);padding:.45em 1.1em}
+.redondo{width:48px;height:48px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 3px 0 rgba(120,40,90,.25)}
+.redondo svg{width:26px;height:26px}
+.monedas{display:flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:5px 14px 5px 6px;font-weight:700;font-size:20px;box-shadow:0 3px 0 rgba(120,40,90,.2)}
+.monedas svg{width:28px;height:28px}
+.barra{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 8px}
+
+/* Uma */
+.uma{position:absolute;aspect-ratio:768/1376;height:100%;left:50%;transform:translateX(-50%)}
+.uma img{position:absolute;display:block;pointer-events:none}
+
+/* titulo */
+#titulo .marca{position:relative;z-index:2;text-align:center;margin-top:calc(env(safe-area-inset-top,0px) + 4vh)}
+#titulo h1{margin:0;font-size:clamp(46px,15vw,74px);line-height:.9;color:#fff;font-weight:700;letter-spacing:.01em;
+  text-shadow:0 4px 0 var(--rosa-osc),0 8px 0 rgba(90,20,60,.25);-webkit-text-stroke:2px var(--rosa-osc);paint-order:stroke fill}
+#titulo .sub{display:inline-block;margin-top:10px;background:var(--lila);color:#fff;font-weight:600;font-size:clamp(16px,4.8vw,22px);padding:4px 16px;border-radius:999px;box-shadow:0 3px 0 #6235c4}
+#titulo .escenario{position:absolute;left:0;right:0;bottom:19%;height:56%}
+#titulo .abajo{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 4%);display:flex;flex-direction:column;align-items:center;gap:14px;z-index:3}
+#titulo .ajustes{display:flex;gap:12px}
+.idioma{font-weight:700;font-size:16px}
+
+/* niveles */
+#niveles{background:linear-gradient(#ffe3f2,#efe4ff)}
+#niveles h2{margin:0;font-size:26px}
+.grilla{flex:1;overflow-y:auto;padding:8px 16px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-content:start}
+.nivel{aspect-ratio:1;border-radius:22px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:700;font-size:26px;box-shadow:0 4px 0 rgba(140,60,110,.25);position:relative;overflow:hidden}
+.nivel .tema{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.35}
+.nivel span{position:relative}
+.nivel .est{display:flex;gap:1px;position:relative}
+.nivel .est svg{width:16px;height:16px}
+.nivel.cerrado{background:#e9dce6;color:#a58a9c;box-shadow:none}
+.nivel.cerrado .tema{opacity:.12}
+.nivel.actual{outline:4px solid var(--rosa);animation:latido 1.4s ease-in-out infinite}
+@keyframes latido{50%{transform:scale(1.05)}}
+
+/* intro */
+#intro .tarjeta{position:relative;z-index:2;margin:auto 18px;background:rgba(255,255,255,.94);border-radius:28px;padding:22px 18px 24px;text-align:center;box-shadow:0 10px 30px rgba(80,20,60,.25)}
+#intro .num{display:inline-block;background:var(--rosa);color:#fff;font-weight:700;padding:3px 16px;border-radius:999px;font-size:18px}
+#intro h2{margin:12px 0 6px;font-size:clamp(28px,8.5vw,40px);line-height:1.05}
+#intro p{margin:0 0 18px;font-size:19px;color:#7a4b6c}
+#intro .meta{display:flex;justify-content:center;align-items:center;gap:6px;margin-bottom:18px;font-weight:600;color:#7a4b6c}
+#intro .meta svg{width:26px;height:26px}
+
+/* vestidor */
+#vestir .escena{position:relative;flex:1;min-height:0;overflow:hidden}
+#vestir .uma{height:86%;bottom:1%;top:auto}
+#vestir .chip{background:#fff;border-radius:999px;padding:6px 14px;font-weight:700;font-size:17px;box-shadow:0 3px 0 rgba(120,40,90,.2);max-width:52vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#listo{position:absolute;right:12px;bottom:14px;z-index:3}
+.panel{position:relative;background:#fff;border-radius:26px 26px 0 0;box-shadow:0 -6px 20px rgba(80,20,60,.15);padding:10px 0 calc(env(safe-area-inset-bottom,0px) + 10px)}
+.tabs{display:flex;gap:6px;padding:0 10px 10px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1 0 auto;padding:8px 12px;border-radius:999px;background:var(--lila-claro);font-weight:600;font-size:16px;color:#6235c4}
+.tab.on{background:var(--lila);color:#fff}
+.tira{display:flex;gap:10px;overflow-x:auto;padding:4px 12px 6px;scroll-snap-type:x proximity;scrollbar-width:none}
+.tira::-webkit-scrollbar{display:none}
+.item{flex:0 0 auto;width:88px;height:96px;border-radius:20px;background:#fff6fb;border:3px solid #f6d3e7;position:relative;display:grid;place-items:center;scroll-snap-align:start;padding:6px}
+.item img{max-width:100%;max-height:100%;object-fit:contain;pointer-events:none}
+.item.puesto{border-color:var(--rosa);background:#ffe3f2}
+.item.puesto::after{content:"";position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;background:var(--rosa) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat;box-shadow:0 2px 0 var(--rosa-osc)}
+.item.bloq img{filter:grayscale(.6) brightness(.9);opacity:.55}
+.item .precio{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:3px;background:var(--tinta);color:#fff;font-weight:700;font-size:14px;padding:2px 8px 2px 4px;border-radius:999px}
+.item .precio svg{width:16px;height:16px}
+.item .quitar{font-weight:700;color:#b98aa8;font-size:14px;text-align:center;line-height:1.1}
+
+/* desfile */
+#desfile .uma{height:58%;top:10%;transition:none}
+#desfile .uma.camina{animation:camina 2.6s cubic-bezier(.3,.6,.4,1) forwards}
+@keyframes camina{
+  0%{transform:translateX(-50%) translateY(-14%) scale(.5);opacity:0}
+  12%{opacity:1}
+  25%{transform:translateX(-50%) translateY(-10%) scale(.6) rotate(-2deg)}
+  50%{transform:translateX(-50%) translateY(-5%) scale(.78) rotate(2deg)}
+  75%{transform:translateX(-50%) translateY(-1%) scale(.92) rotate(-1.5deg)}
+  100%{transform:translateX(-50%) translateY(0) scale(1)}
+}
+.jurado{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);display:flex;justify-content:center;gap:8px;z-index:3;padding:0 8px}
+.juez{flex:1;max-width:150px;background:rgba(255,255,255,.95);border-radius:20px;padding:6px 6px 8px;text-align:center;box-shadow:0 6px 16px rgba(40,0,40,.3);opacity:0;transform:translateY(30px);transition:all .4s}
+.juez.on{opacity:1;transform:none}
+.juez img{width:100%;aspect-ratio:1;object-fit:cover;object-position:top;border-radius:14px;background:#efe4ff}
+.juez .nota{font-size:30px;font-weight:700;color:var(--rosa);line-height:1;margin-top:4px;transform:scale(0);transition:transform .35s cubic-bezier(.3,1.8,.5,1)}
+.juez .nota.on{transform:scale(1)}
+.juez .dice{font-size:13px;font-weight:600;color:#7a4b6c;min-height:1.2em}
+#resultado{position:absolute;inset:0;z-index:6;display:none;align-items:flex-end;justify-content:center;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px);background:linear-gradient(transparent 45%,rgba(60,10,50,.5))}
+#resultado.on{display:flex}
+#resultado .caja{background:#fff;border-radius:30px;margin:0 22px;padding:22px 18px 24px;text-align:center;width:100%;box-shadow:0 14px 40px rgba(40,0,40,.4)}
+#resultado h2{margin:0 0 8px;font-size:clamp(28px,8.5vw,38px)}
+.estrellas{display:flex;justify-content:center;gap:6px;margin:6px 0 10px}
+.estrellas svg{width:64px;height:64px;transform:scale(0);transition:transform .4s cubic-bezier(.3,1.8,.5,1)}
+.estrellas svg.on{transform:scale(1)}
+.estrellas svg:nth-child(2){margin-top:-14px}
+#resultado .gano{display:flex;justify-content:center;align-items:center;gap:6px;font-size:24px;font-weight:700;margin-bottom:16px}
+#resultado .gano svg{width:32px;height:32px}
+#resultado .botones{display:flex;flex-direction:column;gap:12px;align-items:center}
+
+/* compra */
+#compra{position:absolute;inset:0;z-index:8;display:none;align-items:center;justify-content:center;background:rgba(60,10,50,.45)}
+#compra.on{display:flex}
+#compra .caja{background:#fff;border-radius:28px;padding:18px;width:min(86%,340px);text-align:center}
+#compra .prev{height:140px;display:grid;place-items:center;background:#fff6fb;border-radius:20px;margin-bottom:12px}
+#compra .prev img{max-height:126px;max-width:90%}
+#compra .fila{display:flex;gap:10px;justify-content:center;margin-top:12px}
+#aviso{position:absolute;left:50%;top:18%;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:10px 18px;border-radius:999px;font-weight:600;z-index:9;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+#aviso.on{opacity:1}
+#carga{position:absolute;inset:0;z-index:20;background:var(--crema);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-weight:600}
+#carga .barra-c{width:60%;height:14px;border-radius:999px;background:#f6d3e7;overflow:hidden}
+#carga .barra-c i{display:block;height:100%;width:0;background:var(--rosa);transition:width .2s}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- carga -->
+  <div id="carga"><img src="img/logo.webp" width="120" height="120" style="border-radius:28px" alt=""><div class="barra-c"><i></i></div></div>
+
+  <!-- titulo -->
+  <section class="pant" id="titulo">
+    <div class="fondo" style="background-image:url(img/fo_cuarto.webp)"></div>
+    <div class="marca"><h1 data-t="nombre">Uma Moda</h1><div class="sub" data-t="sub">Juegos de chicas</div></div>
+    <div class="escenario"><div class="uma" id="umaTitulo"></div></div>
+    <div class="abajo"><button class="btn" id="bJugar" data-t="jugar">Jugar</button>
+      <div class="ajustes">
+        <button class="redondo" id="bSonido" aria-label="Sonido"></button>
+        <button class="redondo" id="bMusica" aria-label="Música"></button>
+        <button class="redondo idioma" id="bIdioma" aria-label="Idioma">ES</button>
+      </div></div>
+  </section>
+
+  <!-- niveles -->
+  <section class="pant" id="niveles">
+    <div class="barra">
+      <button class="redondo" id="bVolverTitulo" aria-label="Volver"></button>
+      <h2 data-t="desafios">Desafíos</h2>
+      <div class="monedas" id="monNiv"></div>
+    </div>
+    <div class="grilla" id="grilla"></div>
+  </section>
+
+  <!-- intro del desafio -->
+  <section class="pant" id="intro">
+    <div class="fondo" id="introFondo"></div>
+    <div class="barra"><button class="redondo" id="bVolverNiv" aria-label="Volver"></button><div class="monedas" id="monIntro"></div></div>
+    <div class="tarjeta">
+      <span class="num" id="introNum"></span>
+      <h2 id="introTit"></h2>
+      <p id="introTxt"></p>
+      <div class="meta" id="introMeta"></div>
+      <button class="btn verde" id="bEmpezar" data-t="vestir">Vestir a Uma</button>
+    </div>
+  </section>
+
+  <!-- vestidor -->
+  <section class="pant" id="vestir">
+    <div class="escena">
+      <div class="fondo" id="vestirFondo"></div>
+      <div class="barra">
+        <button class="redondo" id="bSalir" aria-label="Volver"></button>
+        <div class="chip" id="vestirTema"></div>
+        <div class="monedas" id="monVestir"></div>
+      </div>
+      <div class="uma" id="umaVestir"></div>
+      <button class="btn verde chico" id="listo" data-t="listo">¡Lista!</button>
+    </div>
+    <div class="panel">
+      <div class="tabs" id="tabs"></div>
+      <div class="tira" id="tira"></div>
+    </div>
+  </section>
+
+  <!-- desfile -->
+  <section class="pant" id="desfile">
+    <div class="fondo" style="background-image:url(img/fo_pasarela.webp)"></div>
+    <div class="uma" id="umaDesfile"></div>
+    <div class="jurado" id="jurado"></div>
+    <div id="resultado"><div class="caja">
+      <h2 id="resTit"></h2>
+      <div class="estrellas" id="resEst"></div>
+      <div class="gano" id="resGano"></div>
+      <div class="botones" id="resBotones"></div>
+    </div></div>
+  </section>
+
+  <div id="compra"><div class="caja">
+    <div class="prev"><img id="compraImg" alt=""></div>
+    <div id="compraTxt" style="font-weight:600;font-size:19px"></div>
+    <div class="fila"><button class="btn chico lila" id="compraNo" data-t="no">No</button><button class="btn chico verde" id="compraSi"></button></div>
+  </div></div>
+  <div id="aviso"></div>
+</div>
+
+<script>
+"use strict";
+// ═══════════════════════ UMA MODA ═══════════════════════
+// Cada desafío tiene un tema. Vestí a Uma con prendas que vayan con el tema,
+// el jurado pone notas y estrellas. Con las monedas comprás ropa nueva.
+
+const $ = id => document.getElementById(id);
+
+// ───── piezas: posición dentro de la imagen de Uma (768 x 1376) ─────
+const POS = {"base":[39,20,659,1328],"ar_lila":[217,597,342,234],"ab_tutu":[167,825,442,433],"zp_blancas":[266,1252,244,95],"ar_frutilla":[211,597,358,291],"ab_shortjean":[238,882,300,163],"zp_doradas":[267,1258,242,90],"ar_campera":[169,572,437,311],"ab_lunares":[208,812,394,431],"zp_rojas":[253,1237,261,111],"ar_rayo":[231,585,316,283],"ab_dorada":[209,862,357,216],"zp_botasnegras":[247,1154,264,193],"ar_diez":[207,591,367,302],"ab_deporte":[238,887,300,346],"zp_deporte":[250,1227,265,120],"ar_sueter":[148,583,480,315],"ab_corderoy":[165,892,439,261],"zp_lluvia":[240,1147,279,200],"ar_cuello":[208,581,359,292],"ab_escocesa":[205,867,398,176],"zp_guillermina":[266,1037,243,310],"ar_girasol":[270,599,270,238],"ab_polllerajean":[230,831,377,254],"zp_ojotas":[265,1274,246,77],"ar_gasa":[194,600,388,271],"ab_floreada":[170,865,436,423],"zp_chatitas":[132,1282,376,73],"ar_rayas":[211,596,358,287],"ab_jean":[250,877,334,361],"zp_botitas":[254,1232,258,115],"ar_unicornio":[152,595,472,308],"ab_calzas":[180,897,417,368],"zp_plateadas":[263,1259,251,88],"ar_corazon":[211,596,353,311],"ar_buzo":[150,556,477,362],"ar_volados":[222,596,330,322],"ve_princesa":[0,552,759,807],"ve_tul":[36,597,701,540],"ve_jardinero":[208,592,373,545],"ve_lana":[136,561,499,618],"ve_verano":[173,578,427,570],"ac_mono":[208,42,371,201],"ac_cartera":[350,665,243,362],"ac_corona":[239,127,299,129],"ac_anteojos":[212,344,351,144],"ac_flor":[180,55,479,253],"ac_panuelo":[278,554,212,139],"ac_mochila":[38,770,245,374]};
+
+// temas: e escuela · p playa · q parque · f fiesta · d desfile
+// [id, temas, precio]  (precio 0 = la tenés desde el principio)
+const CATALOGO = {
+  ar: [["ar_corazon","eqf",0],["ar_buzo","eq",0],["ar_volados","pqf",0],["ar_frutilla","pq",30],["ar_rayas","pe",30],["ar_diez","qe",30],
+       ["ar_girasol","pq",30],["ar_sueter","eq",40],["ar_cuello","ef",40],["ar_unicornio","eqf",40],["ar_lila","fd",40],["ar_campera","eqd",50],["ar_rayo","df",50],["ar_gasa","fdq",50]],
+  ab: [["ab_shortjean","pq",0],["ab_jean","eq",0],["ab_escocesa","e",0],["ab_deporte","qp",30],["ab_corderoy","eq",30],["ab_calzas","eq",30],
+       ["ab_polllerajean","pqe",40],["ab_lunares","fdq",40],["ab_tutu","fd",50],["ab_floreada","fq",50],["ab_dorada","df",60]],
+  ve: [["ve_verano","pqf",0],["ve_jardinero","eqp",50],["ve_lana","ef",50],["ve_tul","fd",70],["ve_princesa","df",90]],
+  zp: [["zp_blancas","eq",0],["zp_ojotas","p",0],["zp_guillermina","ef",0],["zp_rojas","qe",30],["zp_deporte","q",30],["zp_lluvia","q",30],
+       ["zp_doradas","pf",40],["zp_chatitas","fd",40],["zp_botitas","eq",40],["zp_botasnegras","df",50],["zp_plateadas","dqf",60]],
+  ac: [["ac_mono","ef",0],["ac_panuelo","qe",30],["ac_mochila","e",30],["ac_flor","pqf",40],["ac_anteojos","pd",40],["ac_cartera","fd",40],["ac_corona","df",60]],
+};
+const ITEM = {}; for (const [cat, l] of Object.entries(CATALOGO)) for (const [id, t, p] of l) ITEM[id] = { id, cat, temas: t, precio: p };
+const CABEZA = ["ac_mono", "ac_corona", "ac_flor"];
+// orden de las capas (de atrás para adelante)
+const CAPAS = ["zp", "ab", "ar", "ve", "ac_panuelo", "ac_cartera", "ac_mochila", "ac_anteojos", "ac_mono", "ac_corona", "ac_flor"];
+
+const TEMAS = {
+  e: { fondo: "fo_escuela" }, p: { fondo: "fo_playa" }, q: { fondo: "fo_parque" }, f: { fondo: "fo_fiesta" }, d: { fondo: "fo_pasarela" },
+};
+const ORDEN_TEMAS = ["e", "p", "q", "f", "d"];
+const NIVELES = 30;
+const temaDe = n => ORDEN_TEMAS[n % 5];
+const varianteDe = n => Math.floor(n / 5) % 2;
+const minimoDe = n => n < 10 ? 1 : 2;   // estrellas para pasar
+
+// ───── textos ─────
+const TX = {
+  es: { nombre: "Uma Moda", sub: "Juegos de chicas", jugar: "Jugar", desafios: "Desafíos", vestir: "Vestir a Uma", listo: "¡Lista!",
+    nivel: "Desafío {0}", pasar: "Para pasar: {0}", no: "No", comprar: "Comprar", compraTxt: "¿La comprás?", faltan: "Te faltan monedas",
+    tabs: { ar: "Arriba", ab: "Abajo", ve: "Vestidos", zp: "Zapatos", ac: "Accesorios" }, quitar: "Sacar",
+    res: ["Probá otra vez", "¡Bien!", "¡Muy linda!", "¡Perfecta!"], siguiente: "Siguiente", repetir: "Otra vez", menu: "Desafíos",
+    dice: ["No va con el tema", "Puede mejorar", "¡Me gusta!", "¡Hermosa!", "¡Me encanta!"],
+    temas: { e: [["Primer día de clases", "Vestí a Uma para ir a la escuela."], ["Excursión de la escuela", "Ropa cómoda para salir con el grado."]],
+      p: [["Día de playa", "Algo fresco para el sol y la arena."], ["Vacaciones en el mar", "Lista para la playa y el paseo."]],
+      q: [["Paseo por el parque", "Cómoda y linda para jugar al aire libre."], ["Picnic con amigas", "Un look de primavera para el picnic."]],
+      f: [["Fiesta de cumpleaños", "¡Uma está invitada a un cumple!"], ["Fiesta sorpresa", "Algo que brille para festejar."]],
+      d: [["Gran desfile", "Uma desfila en la pasarela. ¡Que brille!"], ["Noche de gala", "El look más elegante de todos."]] } },
+  en: { nombre: "Uma Fashion", sub: "Dress Up Games", jugar: "Play", desafios: "Challenges", vestir: "Dress up Uma", listo: "Ready!",
+    nivel: "Challenge {0}", pasar: "To pass: {0}", no: "No", comprar: "Buy", compraTxt: "Buy it?", faltan: "Not enough coins",
+    tabs: { ar: "Tops", ab: "Bottoms", ve: "Dresses", zp: "Shoes", ac: "Accessories" }, quitar: "Remove",
+    res: ["Try again", "Good!", "So pretty!", "Perfect!"], siguiente: "Next", repetir: "Again", menu: "Challenges",
+    dice: ["Not the theme", "Could be better", "I like it!", "Lovely!", "I love it!"],
+    temas: { e: [["First day of school", "Dress Uma for school."], ["School trip", "Comfy clothes for a class outing."]],
+      p: [["Beach day", "Something cool for sun and sand."], ["Seaside holiday", "Ready for the beach and a stroll."]],
+      q: [["Walk in the park", "Comfy and cute for playing outside."], ["Picnic with friends", "A spring look for the picnic."]],
+      f: [["Birthday party", "Uma is invited to a party!"], ["Surprise party", "Something sparkly to celebrate."]],
+      d: [["Big fashion show", "Uma walks the runway. Make her shine!"], ["Gala night", "The most elegant look of all."]] } },
+  pt: { nombre: "Uma Moda", sub: "Jogos de meninas", jugar: "Jogar", desafios: "Desafios", vestir: "Vestir a Uma", listo: "Pronta!",
+    nivel: "Desafio {0}", pasar: "Para passar: {0}", no: "Não", comprar: "Comprar", compraTxt: "Comprar?", faltan: "Faltam moedas",
+    tabs: { ar: "Blusas", ab: "Saias e calças", ve: "Vestidos", zp: "Sapatos", ac: "Acessórios" }, quitar: "Tirar",
+    res: ["Tente de novo", "Bom!", "Muito linda!", "Perfeita!"], siguiente: "Próximo", repetir: "De novo", menu: "Desafios",
+    dice: ["Não combina", "Pode melhorar", "Gostei!", "Linda!", "Amei!"],
+    temas: { e: [["Primeiro dia de aula", "Vista a Uma para a escola."], ["Passeio da escola", "Roupa confortável para sair com a turma."]],
+      p: [["Dia de praia", "Algo fresquinho para o sol e a areia."], ["Férias no mar", "Pronta para a praia e o passeio."]],
+      q: [["Passeio no parque", "Confortável e linda para brincar ao ar livre."], ["Piquenique com amigas", "Um look de primavera para o piquenique."]],
+      f: [["Festa de aniversário", "Uma foi convidada para uma festa!"], ["Festa surpresa", "Algo que brilhe para comemorar."]],
+      d: [["Grande desfile", "Uma desfila na passarela. Faça ela brilhar!"], ["Noite de gala", "O look mais elegante de todos."]] } },
+};
+let idioma = "en";
+const T = (k, ...a) => { let s = TX[idioma][k]; a.forEach((v, i) => { s = s.replace("{" + i + "}", v); }); return s; };
+
+// ───── guardado ─────
+const GUARDA = "uma-moda-v1";
+const INICIAL = { estrellas: {}, monedas: 0, tengo: [], puesto: { ar: "ar_corazon", ab: "ab_jean", ve: null, zp: "zp_blancas", ac: [] }, sonido: true, musica: true, idioma: null };
+let prog = JSON.parse(JSON.stringify(INICIAL));
+try { const g = JSON.parse(localStorage.getItem(GUARDA) || "null"); if (g) Object.assign(prog, g); } catch (e) {}
+function guardar() { try { localStorage.setItem(GUARDA, JSON.stringify(prog)); } catch (e) {} }
+const tiene = id => ITEM[id].precio === 0 || prog.tengo.includes(id);
+const nivelActual = () => { let n = 0; while (n < NIVELES && (prog.estrellas[n] || 0) >= minimoDe(n)) n++; return n; };
+
+// ───── íconos (dibujados, sin emojis) ─────
+const ICO = {
+  estrella: (on = true) => `<svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z" fill="${on ? "#ffc43d" : "#e6d3df"}" stroke="${on ? "#d99412" : "#cbb2c2"}" stroke-width="1.4" stroke-linejoin="round"/></svg>`,
+  moneda: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffc43d" stroke="#d99412" stroke-width="1.6"/><circle cx="12" cy="12" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1.6"/><path d="M12 8.2v7.6" stroke="#d99412" stroke-width="2" stroke-linecap="round"/></svg>`,
+  volver: `<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="#d6247c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  candado: `<svg viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="#a58a9c"/><path d="M8 10.5V8a4 4 0 018 0v2.5" fill="none" stroke="#a58a9c" stroke-width="2.4"/></svg>`,
+  sonido: on => `<svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#d6247c"/>${on ? '<path d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11" fill="none" stroke="#d6247c" stroke-width="2" stroke-linecap="round"/>' : '<path d="M15.5 9.5l5 5M20.5 9.5l-5 5" stroke="#d6247c" stroke-width="2.2" stroke-linecap="round"/>'}</svg>`,
+  musica: on => `<svg viewBox="0 0 24 24"><path d="M9 17.5V6l10-2v11.5" fill="none" stroke="#8e5cf0" stroke-width="2"/><circle cx="7" cy="17.5" r="2.6" fill="#8e5cf0"/><circle cx="17" cy="15.5" r="2.6" fill="#8e5cf0"/>${on ? "" : '<path d="M4 4l16 16" stroke="#d6247c" stroke-width="2.4" stroke-linecap="round"/>'}</svg>`,
+};
+
+// ───── sonidos (los mismos de Cocina Uma) y música ─────
+let ac = null; const BUF = {};
+function audio() {
+  if (!ac) {
+    try {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      for (const n of ["toque", "compra", "monedas", "gana", "mal", "listo", "llega"])
+        fetch("snd/" + n + ".mp3").then(r => r.arrayBuffer()).then(b => ac.decodeAudioData(b, d => { BUF[n] = d; })).catch(() => {});
+    } catch (e) {}
+  }
+  if (ac && ac.state === "suspended") ac.resume();
+  musicaSeguir();
+}
+function sfx(n, vol = 0.7, vel = 1) {
+  if (!prog.sonido || !ac || !BUF[n]) return;
+  const s = ac.createBufferSource(), g = ac.createGain();
+  s.buffer = BUF[n]; s.playbackRate.value = vel; g.gain.value = vol; s.connect(g); g.connect(ac.destination); s.start();
+}
+const MUSICA = { menu: new Audio("snd/musica-menu.mp3"), vestir: new Audio("snd/musica-vestir.mp3"), desfile: new Audio("snd/musica-desfile.mp3") };
+for (const m of Object.values(MUSICA)) { m.loop = true; m.volume = 0.4; m.preload = "auto"; }
+const FESTEJO = new Audio("snd/festejo.mp3"); FESTEJO.volume = 0.6;
+let musicaQuiere = "menu";
+function musicaSeguir() {
+  for (const [k, m] of Object.entries(MUSICA)) {
+    const debe = prog.musica && k === musicaQuiere && !document.hidden && !enAnuncio;
+    if (debe && m.paused) m.play().catch(() => {});
+    if (!debe && !m.paused) m.pause();
+  }
+}
+function musica(cual) { if (musicaQuiere !== cual) { musicaQuiere = cual; if (MUSICA[cual]) MUSICA[cual].currentTime = 0; } musicaSeguir(); }
+document.addEventListener("visibilitychange", musicaSeguir);
+document.addEventListener("pointerdown", audio, { capture: true });
+
+// ───── dibujar a Uma ─────
+function piezasPuestas(p = prog.puesto) {
+  const out = [];
+  for (const capa of CAPAS) {
+    if (capa.startsWith("ac_")) { if (p.ac.includes(capa)) out.push(capa); }
+    else if (capa === "ve") { if (p.ve) out.push(p.ve); }
+    else if (!p.ve || capa === "zp") { if (p[capa]) out.push(p[capa]); }
+  }
+  return out;
+}
+function dibujarUma(el, p = prog.puesto) {
+  const ids = ["base"].concat(piezasPuestas(p));
+  el.innerHTML = ids.map(id => { const [x, y, w, h] = POS[id];
+    return `<img src="img/${id}.webp" alt="" style="left:${x / 7.68}%;top:${y / 13.76}%;width:${w / 7.68}%;height:${h / 13.76}%">`; }).join("");
+}
+
+// ───── pantallas ─────
+function mostrar(id) { document.querySelectorAll(".pant").forEach(s => s.classList.toggle("on", s.id === id)); }
+function aviso(txt) { const a = $("aviso"); a.textContent = txt; a.classList.add("on"); clearTimeout(aviso.t); aviso.t = setTimeout(() => a.classList.remove("on"), 1600); }
+function monedas() { const h = ICO.moneda + `<span>${prog.monedas}</span>`; ["monNiv", "monIntro", "monVestir"].forEach(i => { $(i).innerHTML = h; }); }
+function aplicarIdioma() {
+  document.documentElement.lang = idioma;
+  document.querySelectorAll("[data-t]").forEach(el => { el.textContent = T(el.dataset.t); });
+  document.title = T("nombre");
+  $("bIdioma").textContent = idioma.toUpperCase();
+}
+function iconosAjustes() { $("bSonido").innerHTML = ICO.sonido(prog.sonido); $("bMusica").innerHTML = ICO.musica(prog.musica); }
+
+function irTitulo() { mostrar("titulo"); dibujarUma($("umaTitulo")); musica("menu"); }
+function irNiveles() {
+  monedas(); const act = nivelActual();
+  $("grilla").innerHTML = Array.from({ length: NIVELES }, (_, n) => {
+    const est = prog.estrellas[n] || 0, abierto = n <= act;
+    return `<button class="nivel ${abierto ? "" : "cerrado"} ${n === act ? "actual" : ""}" data-n="${n}">
+      <i class="tema" style="background-image:url(img/${TEMAS[temaDe(n)].fondo}.webp)"></i>
+      ${abierto ? `<span>${n + 1}</span><div class="est">${[0, 1, 2].map(i => ICO.estrella(i < est)).join("")}</div>` : ICO.candado}
+    </button>`; }).join("");
+  mostrar("niveles"); musica("menu");
+  const a = $("grilla").querySelector(".actual"); if (a) a.scrollIntoView({ block: "center" });
+}
+let nivel = 0;
+function irIntro(n) {
+  nivel = n; monedas();
+  const t = temaDe(n), [tit, txt] = TX[idioma].temas[t][varianteDe(n)];
+  $("introFondo").style.backgroundImage = `url(img/${TEMAS[t].fondo}.webp)`;
+  $("introNum").textContent = T("nivel", n + 1); $("introTit").textContent = tit; $("introTxt").textContent = txt;
+  $("introMeta").innerHTML = `<span>${T("pasar", "")}</span>` + Array.from({ length: minimoDe(n) }, () => ICO.estrella(true)).join("");
+  mostrar("intro"); musica("menu");
+}
+
+// ───── vestidor ─────
+let tab = "ar";
+function irVestir() {
+  const t = temaDe(nivel);
+  $("vestirFondo").style.backgroundImage = `url(img/${TEMAS[t].fondo}.webp)`;
+  $("vestirTema").textContent = TX[idioma].temas[t][varianteDe(nivel)][0];
+  monedas(); armarTabs(); armarTira(); dibujarUma($("umaVestir"));
+  mostrar("vestir"); musica("vestir");
+}
+function armarTabs() {
+  $("tabs").innerHTML = Object.keys(CATALOGO).map(c => `<button class="tab ${c === tab ? "on" : ""}" data-c="${c}">${TX[idioma].tabs[c]}</button>`).join("");
+}
+function estaPuesto(id) { const it = ITEM[id]; return it.cat === "ac" ? prog.puesto.ac.includes(id) : prog.puesto[it.cat] === id; }
+function armarTira() {
+  $("tira").innerHTML = CATALOGO[tab].map(([id, , precio]) => {
+    const ok = tiene(id);
+    return `<button class="item ${estaPuesto(id) ? "puesto" : ""} ${ok ? "" : "bloq"}" data-id="${id}"><img src="img/${id}.webp" alt="" loading="lazy">
+      ${ok ? "" : `<span class="precio">${ICO.moneda}${precio}</span>`}</button>`;
+  }).join("");
+}
+function ponerSacar(id) {
+  const it = ITEM[id], p = prog.puesto;
+  if (it.cat === "ac") {
+    if (p.ac.includes(id)) p.ac = p.ac.filter(x => x !== id);
+    else { if (CABEZA.includes(id)) p.ac = p.ac.filter(x => !CABEZA.includes(x)); p.ac.push(id); }
+  } else if (p[it.cat] === id) p[it.cat] = null;
+  else {
+    p[it.cat] = id;
+    if (it.cat === "ve") { p.ar = null; p.ab = null; }
+    if (it.cat === "ar" || it.cat === "ab") p.ve = null;
+  }
+  guardar(); dibujarUma($("umaVestir")); armarTira(); sfx("toque", 0.6, 0.9 + Math.random() * 0.3);
+}
+let aComprar = null;
+function pedirCompra(id) {
+  aComprar = id; const it = ITEM[id];
+  $("compraImg").src = `img/${id}.webp`;
+  $("compraTxt").textContent = T("compraTxt");
+  $("compraSi").innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px">${ICO.moneda.replace("<svg", '<svg width="24" height="24"')}${it.precio}</span>`;
+  $("compra").classList.add("on");
+}
+$("compraNo").onclick = () => { $("compra").classList.remove("on"); };
+$("compraSi").onclick = () => {
+  const it = ITEM[aComprar]; $("compra").classList.remove("on");
+  if (prog.monedas < it.precio) { aviso(T("faltan")); sfx("mal", 0.5); return; }
+  prog.monedas -= it.precio; prog.tengo.push(it.id); guardar(); sfx("compra", 0.8); monedas();
+  ponerSacar(it.id);
+};
+$("tabs").onclick = e => { const b = e.target.closest(".tab"); if (!b) return; tab = b.dataset.c; armarTabs(); armarTira(); $("tira").scrollLeft = 0; sfx("toque", 0.5); };
+$("tira").onclick = e => { const b = e.target.closest(".item"); if (!b) return; const id = b.dataset.id; if (tiene(id)) ponerSacar(id); else pedirCompra(id); };
+
+// ───── puntaje y desfile ─────
+function puntaje() {
+  const t = temaDe(nivel), p = prog.puesto, va = id => id && ITEM[id].temas.includes(t);
+  let pts = 0;
+  if (p.ve) pts += va(p.ve) ? 4 : 0;
+  else pts += (va(p.ar) ? 2 : 0) + (va(p.ab) ? 2 : 0);
+  pts += va(p.zp) ? 2 : 0;
+  pts += Math.min(2, p.ac.filter(va).length);
+  return pts;   // máximo 8
+}
+const estrellasDe = pts => pts >= 7 ? 3 : pts >= 5 ? 2 : pts >= 3 ? 1 : 0;
+const JUECES = ["ju_disenadora", "ju_estilista", "ju_influencer"];
+let corriendo = false;
+function desfilar() {
+  if (corriendo) return; corriendo = true;
+  const pts = puntaje(), est = estrellasDe(pts);
+  const notas = JUECES.map(() => Math.max(1, Math.min(10, Math.round(pts / 8 * 10 + (Math.random() * 2 - 1)))));
+  $("jurado").innerHTML = JUECES.map(j => `<div class="juez"><img src="img/${j}.webp" alt=""><div class="nota">0</div><div class="dice"></div></div>`).join("");
+  $("resultado").classList.remove("on"); $("jurado").style.visibility = "";
+  const u = $("umaDesfile"); dibujarUma(u); u.classList.remove("camina"); void u.offsetWidth; u.classList.add("camina");
+  mostrar("desfile"); musica("desfile"); sfx("listo", 0.7);
+  const jz = [...$("jurado").children];
+  jz.forEach((el, i) => setTimeout(() => {
+    el.classList.add("on");
+    setTimeout(() => { const n = el.querySelector(".nota"); n.textContent = notas[i]; n.classList.add("on");
+      el.querySelector(".dice").textContent = TX[idioma].dice[Math.min(4, Math.floor(notas[i] / 2.2))]; sfx("llega", 0.7, 0.9 + notas[i] / 20); }, 500);
+  }, 2700 + i * 1100));
+  setTimeout(() => resultado(est), 2700 + 3 * 1100 + 900);
+}
+function resultado(est) {
+  const antes = prog.estrellas[nivel] || 0, pasa = est >= minimoDe(nivel);
+  let gano = est * 15 + (est > antes && pasa ? 10 : 0);
+  prog.monedas += gano; prog.estrellas[nivel] = Math.max(antes, est); guardar();
+  $("resTit").textContent = TX[idioma].res[est];
+  $("resEst").innerHTML = [0, 1, 2].map(i => ICO.estrella(i < est)).join("");
+  $("resGano").innerHTML = gano ? `+${gano} ${ICO.moneda}` : "";
+  const sig = pasa && nivel < NIVELES - 1;
+  $("resBotones").innerHTML = (sig ? `<button class="btn verde" data-a="sig">${T("siguiente")}</button>` : "") +
+    `<button class="btn ${sig ? "lila chico" : "verde"}" data-a="otra">${T("repetir")}</button><button class="btn lila chico" data-a="menu">${T("menu")}</button>`;
+  $("resultado").classList.add("on"); $("jurado").style.visibility = "hidden";
+  [...$("resEst").children].forEach((s, i) => setTimeout(() => { s.classList.add("on"); if (i < est) sfx("monedas", 0.6, 1 + i * 0.15); }, 300 + i * 350));
+  if (pasa) { MUSICA.desfile.pause(); musicaQuiere = ""; if (prog.musica) { FESTEJO.currentTime = 0; FESTEJO.play().catch(() => {}); } else sfx("gana", 0.8); }
+  else sfx("mal", 0.6);
+  corriendo = false;
+}
+$("resBotones").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return; FESTEJO.pause(); sfx("toque", 0.6);
+  if (b.dataset.a === "sig") irIntro(nivel + 1);
+  else if (b.dataset.a === "otra") irIntro(nivel);
+  else irNiveles();
+};
+
+// ───── botones ─────
+$("bJugar").onclick = () => { sfx("toque"); irNiveles(); };
+$("bVolverTitulo").onclick = () => { sfx("toque"); irTitulo(); };
+$("bVolverNiv").onclick = () => { sfx("toque"); irNiveles(); };
+$("bSalir").onclick = () => { sfx("toque"); irIntro(nivel); };
+$("grilla").onclick = e => { const b = e.target.closest(".nivel"); if (!b || b.classList.contains("cerrado")) return; sfx("toque"); irIntro(+b.dataset.n); };
+$("bEmpezar").onclick = () => { sfx("toque"); antesDeJugar(nivel, irVestir); };
+$("listo").onclick = () => desfilar();
+$("bSonido").onclick = () => { prog.sonido = !prog.sonido; guardar(); iconosAjustes(); sfx("toque"); };
+$("bMusica").onclick = () => { prog.musica = !prog.musica; guardar(); iconosAjustes(); musicaSeguir(); };
+$("bIdioma").onclick = () => { const l = ["es", "en", "pt"]; idioma = l[(l.indexOf(idioma) + 1) % 3]; prog.idioma = idioma; guardar(); aplicarIdioma(); sfx("toque"); };
+["bVolverTitulo", "bVolverNiv", "bSalir"].forEach(i => { $(i).innerHTML = ICO.volver; });
+
+// ───── PUBLICIDAD (Google AdMob, solo en la app de Android) ─────
+// Banner abajo siempre. Anuncio de pantalla completa al empezar el desafío 1, 3, 5... (uno sí, uno no).
+// AHORA SON ANUNCIOS DE PRUEBA de Google. Para producción: cambiar ADS por los bloques reales de AdMob.
+const ADS = { banner: "ca-app-pub-3940256099942544/6300978111", inter: "ca-app-pub-3940256099942544/1033173712" };
+const AM = () => { const C = window.Capacitor; return C && C.isNativePlatform && C.isNativePlatform() && C.getPlatform() === "android" && C.Plugins && C.Plugins.AdMob ? C.Plugins.AdMob : null; };
+let interCargado = false, enAnuncio = false;
+function cargarInter() { const M = AM(); if (!M) return; M.prepareInterstitial({ adId: ADS.inter }).then(() => { interCargado = true; }).catch(() => { interCargado = false; setTimeout(cargarInter, 30000); }); }
+async function arrancarAnuncios() {
+  const M = AM(); if (!M) return;
+  try { const ci = await M.requestConsentInfo(); if (ci && ci.isConsentFormAvailable && ci.status === "REQUIRED") await M.showConsentForm(); } catch (e) {}
+  try { await M.initialize({}); } catch (e) { return; }
+  M.addListener("bannerAdSizeChanged", z => { document.documentElement.style.setProperty("--banner", (z && z.height ? z.height : 0) + "px"); });
+  M.showBanner({ adId: ADS.banner, adSize: "ADAPTIVE_BANNER", position: "BOTTOM_CENTER", margin: 0 }).catch(() => {});
+  cargarInter();
+}
+async function antesDeJugar(n, seguir) {
+  const M = AM();
+  if (!M || n % 2 !== 0 || !interCargado) { if (M && !interCargado) cargarInter(); seguir(); return; }
+  if (enAnuncio) return; enAnuncio = true; musicaSeguir();
+  const hs = []; let fin = false;
+  const listo = () => { if (fin) return; fin = true; hs.forEach(h => { try { h.remove(); } catch (e) {} }); interCargado = false; enAnuncio = false; cargarInter(); seguir(); musicaSeguir(); };
+  try {
+    hs.push(await M.addListener("interstitialAdDismissed", listo));
+    hs.push(await M.addListener("interstitialAdFailedToShow", listo));
+    await M.showInterstitial();
+  } catch (e) { listo(); }
+  setTimeout(listo, 120000);
+}
+if (AM()) arrancarAnuncios();
+
+// ───── arranque: precarga las imágenes ─────
+idioma = prog.idioma || ((navigator.language || "en").slice(0, 2).toLowerCase() === "es" ? "es" : (navigator.language || "").slice(0, 2).toLowerCase() === "pt" ? "pt" : "en");
+aplicarIdioma(); iconosAjustes();
+(function precargar() {
+  const lista = Object.keys(POS).concat(Object.values(TEMAS).map(t => t.fondo), ["fo_cuarto"], JUECES);
+  let ok = 0; const fin = () => { ok++; $("carga").querySelector("i").style.width = (ok / lista.length * 100) + "%";
+    if (ok === lista.length) { $("carga").remove(); irTitulo(); } };
+  lista.forEach(n => { const im = new Image(); im.onload = im.onerror = fin; im.src = "img/" + n + ".webp"; });
+})();
+
+// para las pruebas automáticas
+window.__um = { get prog() { return prog; }, ITEM, puntaje, estrellasDe, irVestir, irIntro, desfilar, ponerSacar, set nivel(v) { nivel = v; } };
+</script>
+</body>
+</html>
