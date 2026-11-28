@@ -505,7 +505,7 @@ function usar(e, inicio) {
     J.prog = J.comida.filter(c => c.fuera).length / J.comida.length; barra();
     if (J.prog >= 1) pasoListo();
   } else if (t === "bichos") {
-    for (const b of J.bichos) if (!b.muere && Math.hypot(b.x - x, b.y - y) < 95) { b.muere = 0.001; b.hx = x; b.hy = y; sfx("aspira", 0.35); setTimeout(() => sfx("plop", 0.7), 250); }
+    for (const b of J.bichos) if (!b.muere && Math.hypot(b.x - x, b.y - y) < 95) { b.muere = 0.001; b.hx = x; b.hy = y; sfx("aspira", 0.6); setTimeout(() => sfx("plop", 0.6), 300); }
   } else if (t === "sarro") {
     if (mov > 0.5 || inicio) {
       loop("cepillo", 0.6);
