@@ -320,15 +320,22 @@ function sfx(n, vol = 0.7, vel = 1) {
   s.buffer = BUF[n]; s.playbackRate.value = vel; g.gain.value = vol; s.connect(g); g.connect(ac.destination); s.start(); return s;
 }
 // sonido en loop mientras se usa una herramienta
-let loopSnd = null, loopNom = "", loopVisto = 0;
+let loopSnd = null, loopGain = null, loopNom = "", loopVisto = 0;
 function loop(n, vol = 0.5) {
   loopVisto = performance.now();
   if (loopNom === n) return; loopStop();
   if (!prog.sonido || !ac || !BUF[n]) return;
-  const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = BUF[n]; s.loop = true; g.gain.value = vol; s.connect(g); g.connect(ac.destination); s.start();
-  loopSnd = s; loopNom = n;
+  const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = BUF[n]; s.loop = true;
+  s.loopStart = 0.06; s.loopEnd = BUF[n].duration - 0.06;   // salta el silencio que agrega el mp3 al principio y al final (si no, el loop "se tilda")
+  g.gain.setValueAtTime(0, ac.currentTime); g.gain.linearRampToValueAtTime(vol, ac.currentTime + 0.08);   // entra suave
+  s.connect(g); g.connect(ac.destination); s.start();
+  loopSnd = s; loopGain = g; loopNom = n;
 }
-function loopStop() { if (loopSnd) { try { loopSnd.stop(); } catch (e) {} } loopSnd = null; loopNom = ""; }
+function loopStop() {
+  if (loopSnd) { const s = loopSnd, g = loopGain, t = ac.currentTime;   // sale suave, sin cortes bruscos
+    try { g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(0, t + 0.15); s.stop(t + 0.17); } catch (e) { try { s.stop(); } catch (e2) {} } }
+  loopSnd = null; loopGain = null; loopNom = "";
+}
 const MUSICA = { menu: new Audio("snd/musica-menu.mp3"), juego: new Audio("snd/musica-juego.mp3") };
 for (const m of Object.values(MUSICA)) { m.loop = true; m.volume = 0.35; m.preload = "auto"; }
 const FESTEJO = new Audio("snd/festejo.mp3"); FESTEJO.volume = 0.6;
@@ -498,7 +505,7 @@ function usar(e, inicio) {
     J.prog = J.comida.filter(c => c.fuera).length / J.comida.length; barra();
     if (J.prog >= 1) pasoListo();
   } else if (t === "bichos") {
-    if (inicio || mov) loop("aspira", 0.35);
+    if (inicio || mov) loop("aspira", 0.22);
     for (const b of J.bichos) if (!b.muere && Math.hypot(b.x - x, b.y - y) < 75) { b.muere = 0.001; b.hx = x; b.hy = y; sfx("plop", 0.7); }
   } else if (t === "sarro") {
     if (mov > 0.5 || inicio) {
@@ -544,7 +551,7 @@ function usar(e, inicio) {
 // ───── dibujo de cada cuadro ─────
 function cuadro(ts) {
   if (!jugando || !J) { loopStop(); return; }
-  if (loopSnd && performance.now() - loopVisto > 220) loopStop();   // si el dedo se quedó quieto o se soltó, el sonido se corta
+  if (loopSnd && performance.now() - loopVisto > 450) loopStop();   // si el dedo se quedó quieto o se soltó, el sonido se corta
   const t = pasoActual(), now = ts / 1000;
   if (J.apretado && t === "lampara" && J.ev) usar(J.ev, false);   // la luz funciona aunque el dedo quede quieto
   cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height);
