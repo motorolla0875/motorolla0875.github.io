@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Dientes Felices</title>
+<title>Uma Médica</title>
 <meta name="description" content="Atendé a los pacientes del consultorio: sacá la comida, atrapá los bichitos, cepillá el sarro y arreglá las caries.">
 <meta name="theme-color" content="#bfe8ff">
 <link rel="icon" href="img/nene_carafeliz.webp">
@@ -254,7 +254,7 @@ const CEPILLOS = [["celeste", 0, 0], ["rosa", 120, 80], ["violeta", 80, 80], ["v
 
 // ───── textos ─────
 const TX = {
-  es: { tit: ["Dientes", "Felices"], nombre: "Dientes Felices", sub: "Juego de dentista", jugar: "Jugar", pacientes: "Pacientes", tienda: "Cepillos", atender: "Atender",
+  es: { tit: ["Uma", "Médica"], nombre: "Uma Médica", sub: "Juego de dentista", jugar: "Jugar", pacientes: "Pacientes", tienda: "Cepillos", atender: "Atender",
     paciente: "Paciente {0}", nombres: { nene: "Tomi", nena: "Sofi" }, viene: "¡Hola, {0}!",
     pasos: { espejo: ["Espejito", "Revisá toda la boca con el espejito"], comida: ["Pinza", "Sacá la comida de los dientes con la pinza"], bichos: ["Aspiradora", "¡Atrapá los bichitos con la aspiradora!"],
       sarro: ["Cepillo", "Cepillá todas las manchas amarillas"], torno: ["Torno", "Limpiá la caries con el torno"], relleno: ["Relleno", "Tocá cada agujerito para rellenarlo"],
@@ -262,7 +262,7 @@ const TX = {
     res: ["", "¡Bien!", "¡Muy bien!", "¡Perfecto!"], siguiente: "Siguiente", repetir: "Otra vez", menu: "Pacientes", doble: "Duplicar con video",
     ratonTit: "¡El Ratón Pérez!", ratonTxt: "Se llevó el diente y te dejó {0} monedas.", gracias: "¡Gracias!",
     no: "No", comprar: "Comprar", usar: "Usar", puesto: "En uso", videoTit: "¡Te faltan monedas!", videoTxt: "Mirá un video y te regalamos {0} monedas.", videoBtn: "Ver video", sinVideo: "No hay videos ahora. Probá en un rato.", gano: "¡Ganaste {0} monedas!" },
-  en: { tit: ["Happy", "Teeth"], nombre: "Happy Teeth", sub: "Dentist game", jugar: "Play", pacientes: "Patients", tienda: "Toothbrushes", atender: "Start",
+  en: { tit: ["Uma", "Doctor"], nombre: "Uma Doctor", sub: "Dentist game", jugar: "Play", pacientes: "Patients", tienda: "Toothbrushes", atender: "Start",
     paciente: "Patient {0}", nombres: { nene: "Tommy", nena: "Sophie" }, viene: "Hi, {0}!",
     pasos: { espejo: ["Mirror", "Check the whole mouth with the mirror"], comida: ["Tweezers", "Take the food out with the tweezers"], bichos: ["Suction", "Catch the germs with the suction!"],
       sarro: ["Brush", "Brush away all the yellow stains"], torno: ["Drill", "Clean the cavity with the drill"], relleno: ["Filling", "Tap each little hole to fill it"],
@@ -270,7 +270,7 @@ const TX = {
     res: ["", "Good!", "Great!", "Perfect!"], siguiente: "Next", repetir: "Again", menu: "Patients", doble: "Double with a video",
     ratonTit: "The Tooth Mouse!", ratonTxt: "He took the tooth and left you {0} coins.", gracias: "Thanks!",
     no: "No", comprar: "Buy", usar: "Use", puesto: "In use", videoTit: "Not enough coins!", videoTxt: "Watch a video and get {0} free coins.", videoBtn: "Watch video", sinVideo: "No videos right now. Try again later.", gano: "You got {0} coins!" },
-  pt: { tit: ["Dentes", "Felizes"], nombre: "Dentes Felizes", sub: "Jogo de dentista", jugar: "Jogar", pacientes: "Pacientes", tienda: "Escovas", atender: "Atender",
+  pt: { tit: ["Uma", "Médica"], nombre: "Uma Médica", sub: "Jogo de dentista", jugar: "Jogar", pacientes: "Pacientes", tienda: "Escovas", atender: "Atender",
     paciente: "Paciente {0}", nombres: { nene: "Tomi", nena: "Sofi" }, viene: "Oi, {0}!",
     pasos: { espejo: ["Espelho", "Examine a boca toda com o espelhinho"], comida: ["Pinça", "Tire a comida dos dentes com a pinça"], bichos: ["Sugador", "Pegue os bichinhos com o sugador!"],
       sarro: ["Escova", "Escove todas as manchas amarelas"], torno: ["Broca", "Limpe a cárie com a broca"], relleno: ["Restauração", "Toque cada buraquinho para preencher"],
@@ -701,7 +701,7 @@ $("bIdioma").onclick = () => { const l = ["es", "en", "pt"]; idioma = l[(l.index
 ["bVolverTitulo", "bVolverNiv", "bSalir", "bVolverTienda"].forEach(i => { $(i).innerHTML = ICO.volver; });
 
 // ───── PUBLICIDAD (Google AdMob, solo en la app de Android) ─────
-// Banner abajo siempre. Anuncio de pantalla completa cada vez que se atiende a un paciente. Video con premio para duplicar monedas o comprar cepillos.
+// Banner abajo siempre. Anuncio de pantalla completa al atender al primer paciente y después en cada paciente, pero con 1:30 de espera mínima entre anuncios. Video con premio para duplicar monedas o comprar cepillos.
 // AHORA SON ANUNCIOS DE PRUEBA de Google. Para producción: cambiar ADS por los bloques reales de AdMob.
 const ADS = { banner: "ca-app-pub-3940256099942544/6300978111", inter: "ca-app-pub-3940256099942544/1033173712", premio: "ca-app-pub-3940256099942544/5224354917" };
 const AM = () => { const C = window.Capacitor; return C && C.isNativePlatform && C.isNativePlatform() && C.getPlatform() === "android" && C.Plugins && C.Plugins.AdMob ? C.Plugins.AdMob : null; };
@@ -737,12 +737,15 @@ function verVideoPremio() {
     setTimeout(() => terminar(dado), 150000);
   });
 }
+const ESPERA_ANUNCIO = 90000;   // 1 minuto y 30 segundos entre anuncios de pantalla completa
+let ultimoInter = 0;
 async function antesDeJugar(n, seguir) {
   const M = AM();
+  if (ultimoInter && Date.now() - ultimoInter < ESPERA_ANUNCIO) { seguir(); return; }   // todavía no pasó 1:30
   if (!M || !interCargado) { if (M && !interCargado) cargarInter(); seguir(); return; }
   if (enAnuncio) return; enAnuncio = true; musicaSeguir();
   const hs = []; let fin = false;
-  const listo = () => { if (fin) return; fin = true; hs.forEach(h => { try { h.remove(); } catch (e) {} }); interCargado = false; enAnuncio = false; cargarInter(); seguir(); musicaSeguir(); };
+  const listo = () => { if (fin) return; fin = true; ultimoInter = Date.now(); hs.forEach(h => { try { h.remove(); } catch (e) {} }); interCargado = false; enAnuncio = false; cargarInter(); seguir(); musicaSeguir(); };
   try {
     hs.push(await M.addListener("interstitialAdDismissed", listo));
     hs.push(await M.addListener("interstitialAdFailedToShow", listo));
