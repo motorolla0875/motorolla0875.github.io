@@ -71,16 +71,16 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
 /* juego */
 #juego{background:#dff3ff}
 #juego .fondo{filter:blur(3px) brightness(1.05);transform:scale(1.06);opacity:.85}
-#pasos{display:flex;gap:5px;flex-wrap:nowrap;overflow:hidden}
-.paso{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.75);display:grid;place-items:center;position:relative;flex:0 0 auto}
-.paso img{width:30px;height:30px;object-fit:contain;opacity:.55}
+#pasos{display:flex;gap:4px;flex-wrap:nowrap;flex:1;min-width:0;justify-content:center}
+.paso{flex:0 1 40px;min-width:0;aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,.75);display:grid;place-items:center;position:relative;flex:0 0 auto}
+.paso img{width:76%;height:76%;object-fit:contain;opacity:.55}
 .paso.ahora{background:#fff;outline:3px solid var(--rosa)}
 .paso.ahora img{opacity:1}
 .paso.hecho{background:var(--menta)}
 .paso.hecho img{opacity:.35}
-.paso.hecho::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/26px no-repeat}
+.paso.hecho::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/70% no-repeat}
 #mesa{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;z-index:2}
-#lienzo{width:100%;aspect-ratio:744/670;display:block;touch-action:none;border-radius:28px}
+#lienzo{width:min(100%,calc(100dvh - var(--banner) - 330px));aspect-ratio:1;display:block;touch-action:none;border-radius:28px}
 #cursor{position:absolute;left:0;top:0;width:34%;max-width:170px;pointer-events:none;z-index:5;display:none;filter:drop-shadow(0 6px 6px rgba(10,40,80,.3))}
 #ayuda{position:relative;z-index:3;display:flex;align-items:flex-end;gap:6px;padding:0 10px}
 #ayuda img{height:clamp(84px,14dvh,130px);flex:0 0 auto}
@@ -168,7 +168,7 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
   <section class="pant" id="juego">
     <div class="fondo" style="background-image:url(img/fo_consultorio.webp)"></div>
     <div class="barra"><button class="redondo" id="bSalir" aria-label="Volver"></button><div id="pasos"></div><div class="monedas mon"></div></div>
-    <div id="mesa"><canvas id="lienzo" width="744" height="670"></canvas></div>
+    <div id="mesa"><canvas id="lienzo" width="944" height="944"></canvas></div>
     <div id="ayuda"><img id="ayudaDra" src="img/dra.webp" alt=""><div class="globo" id="ayudaTxt"></div></div>
     <div id="herr"><button id="herrBtn" aria-label="Herramienta"><img id="herrImg" alt=""></button><div class="prog"><div class="t" id="herrNom"></div><div class="b"><i id="herrBar"></i></div></div></div>
     <img id="cursor" alt="">
@@ -213,7 +213,7 @@ const $ = id => document.getElementById(id);
 // ───── datos de los pacientes (coordenadas en la imagen de 1024 x 1024) ─────
 const PAC = {"nene":{"caries":[[559,646],[466,647],[552,807],[476,807],[617,791],[622,634],[404,637],[415,796],[364,759],[667,757]],"comida":[["nene_comida0",487,630,133,96],["nene_comida1",602,733,44,33],["nene_comida2",440,769,61,64]],"elipse":[513,700,222,112,142],"flojo":[518,626,83,78]},"nena":{"caries":[[558,647],[469,648],[406,642],[621,642],[537,793],[477,792],[391,751]],"comida":[["nena_comida0",467,654,120,76],["nena_comida1",573,741,41,35],["nena_comida2",414,749,71,67]],"elipse":[512,702,186,104,114]}};
 const IMG_LIMPIO = { nene: "nene_limpio", nena: "nena_limpia" };
-const VISTA = [140, 330, 744, 670];          // parte de la cara que se ve en el juego
+const VISTA = [40, 40, 944, 944];            // parte de la imagen que se ve en el juego (la cara entera)
 // herramientas: imagen y punta (fracción de la imagen) donde trabaja
 const HERR = {
   espejo: { img: "espejo", punta: [0.14, 0.12] }, comida: { img: "pinza", punta: [0.97, 0.03] }, bichos: { img: "aspira", punta: [0.93, 0.06] },
@@ -320,8 +320,9 @@ function sfx(n, vol = 0.7, vel = 1) {
   s.buffer = BUF[n]; s.playbackRate.value = vel; g.gain.value = vol; s.connect(g); g.connect(ac.destination); s.start(); return s;
 }
 // sonido en loop mientras se usa una herramienta
-let loopSnd = null, loopNom = "";
+let loopSnd = null, loopNom = "", loopVisto = 0;
 function loop(n, vol = 0.5) {
+  loopVisto = performance.now();
   if (loopNom === n) return; loopStop();
   if (!prog.sonido || !ac || !BUF[n]) return;
   const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = BUF[n]; s.loop = true; g.gain.value = vol; s.connect(g); g.connect(ac.destination); s.start();
@@ -483,6 +484,7 @@ cv.addEventListener("pointerup", soltar); cv.addEventListener("pointercancel", s
 
 function usar(e, inicio) {
   const t = pasoActual(); if (!t || J.paso % 1 || J.fin) return;
+  J.ev = { clientX: e.clientX, clientY: e.clientY };
   moverCursor(e);
   let [x, y] = aImagen(e); y -= LEVANTE;
   const mov = ultimo ? Math.hypot(x - ultimo[0], y - ultimo[1]) : 0; ultimo = [x, y]; J.punta = [x, y];
@@ -541,8 +543,10 @@ function usar(e, inicio) {
 
 // ───── dibujo de cada cuadro ─────
 function cuadro(ts) {
-  if (!jugando || !J) return;
+  if (!jugando || !J) { loopStop(); return; }
+  if (loopSnd && performance.now() - loopVisto > 220) loopStop();   // si el dedo se quedó quieto o se soltó, el sonido se corta
   const t = pasoActual(), now = ts / 1000;
+  if (J.apretado && t === "lampara" && J.ev) usar(J.ev, false);   // la luz funciona aunque el dedo quede quieto
   cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height);
   cx.setTransform(1, 0, 0, 1, -VISTA[0], -VISTA[1]);
   cx.drawImage(img(J.fin && J.q === "nena" && J.brillo > 0.6 ? "nena_feliz" : J.base), 0, 0, 1024, 1024);
