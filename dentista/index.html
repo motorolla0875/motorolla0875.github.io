@@ -241,7 +241,7 @@ function armarNivel(n) {
   if (flojo) t = t.filter(x => x !== "caries").concat(["flojo", "agua"]);
   const d = Math.min(1, n / 26);
   if (t.includes("comida")) L.comida = n < 3 ? 2 : 3;
-  if (t.includes("bichos")) { L.bichos = Math.round(2 + d * 5); L.vel = 0.8 + d * 1.6; }
+  if (t.includes("bichos")) { L.bichos = Math.round(2 + d * 5); L.vel = 0.5 + d * 1.5; }
   if (t.includes("sarro")) L.sarro = 0.35 + d * 0.4;
   if (t.includes("caries")) { L.caries = n < 10 ? 1 : n < 20 ? 2 : 3; t = t.filter(x => x !== "caries").concat(["torno", "relleno", "lampara"]); }
   L.tareas = ORDEN.filter(x => t.includes(x));
@@ -505,8 +505,7 @@ function usar(e, inicio) {
     J.prog = J.comida.filter(c => c.fuera).length / J.comida.length; barra();
     if (J.prog >= 1) pasoListo();
   } else if (t === "bichos") {
-    if (inicio || mov) loop("aspira", 0.22);
-    for (const b of J.bichos) if (!b.muere && Math.hypot(b.x - x, b.y - y) < 95) { b.muere = 0.001; b.hx = x; b.hy = y; sfx("plop", 0.7); }
+    for (const b of J.bichos) if (!b.muere && Math.hypot(b.x - x, b.y - y) < 95) { b.muere = 0.001; b.hx = x; b.hy = y; sfx("aspira", 0.35); setTimeout(() => sfx("plop", 0.7), 250); }
   } else if (t === "sarro") {
     if (mov > 0.5 || inicio) {
       loop("cepillo", 0.6);
@@ -593,7 +592,7 @@ function cuadro(ts) {
     vivos++;
     b.t += 0.05; const v = J.L.vel * (t === "bichos" ? 1 : 0.35);
     b.vx += (Math.random() - 0.5) * 0.5 * v; b.vy += (Math.random() - 0.5) * 0.5 * v;
-    if (t === "bichos" && J.punta) { const dx = b.x - J.punta[0], dy = b.y - J.punta[1], d = Math.hypot(dx, dy); if (d < 140) { b.vx += dx / d * 0.22 * v; b.vy += dy / d * 0.35 * v; } }
+    if (t === "bichos" && J.punta && nivel >= 8) { const dx = b.x - J.punta[0], dy = b.y - J.punta[1], d = Math.hypot(dx, dy); if (d < 140) { b.vx += dx / d * 0.22 * v; b.vy += dy / d * 0.35 * v; } }
     const sp = Math.hypot(b.vx, b.vy), mx = 2.2 * v; if (sp > mx) { b.vx *= mx / sp; b.vy *= mx / sp; }
     b.x += b.vx; b.y += b.vy;
     if (!enBoca(b.x, b.y, 0.72)) { b.vx += (E[0] - b.x) * 0.01; b.vy += (E[1] - b.y) * 0.02; b.x += (E[0] - b.x) * 0.02; b.y += (E[1] - b.y) * 0.02; }
