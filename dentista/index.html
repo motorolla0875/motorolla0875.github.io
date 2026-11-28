@@ -72,8 +72,8 @@ button{font-family:inherit;border:0;cursor:pointer;color:inherit}
 #juego{background:#dff3ff}
 #juego .fondo{filter:blur(3px) brightness(1.05);transform:scale(1.06);opacity:.85}
 #pasos{display:flex;gap:4px;flex-wrap:nowrap;flex:1;min-width:0;justify-content:center}
-.paso{flex:0 1 40px;min-width:0;aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,.75);display:grid;place-items:center;position:relative;flex:0 0 auto}
-.paso img{width:76%;height:76%;object-fit:contain;opacity:.55}
+.paso{flex:0 1 40px;height:40px;min-width:22px;border-radius:12px;background:rgba(255,255,255,.75);display:grid;place-items:center;position:relative;flex:0 0 auto}
+.paso img{width:100%;height:100%;max-width:30px;max-height:30px;object-fit:contain;opacity:.55}
 .paso.ahora{background:#fff;outline:3px solid var(--rosa)}
 .paso.ahora img{opacity:1}
 .paso.hecho{background:var(--menta)}
@@ -242,7 +242,7 @@ function armarNivel(n) {
   const d = Math.min(1, n / 26);
   if (t.includes("comida")) L.comida = n < 3 ? 2 : 3;
   if (t.includes("bichos")) { L.bichos = Math.round(2 + d * 5); L.vel = 0.8 + d * 1.6; }
-  if (t.includes("sarro")) L.sarro = 0.45 + d * 0.55;
+  if (t.includes("sarro")) L.sarro = 0.35 + d * 0.4;
   if (t.includes("caries")) { L.caries = n < 10 ? 1 : n < 20 ? 2 : 3; t = t.filter(x => x !== "caries").concat(["torno", "relleno", "lampara"]); }
   L.tareas = ORDEN.filter(x => t.includes(x));
   return L;
@@ -423,7 +423,7 @@ function empezar() {
     bichos: [], caries: [], diente: null, part: [], brillo: 0, fin: false, punta: null, apretado: false, recorrido: 0, sarro0: 1 };
   // bichitos dentro de la boca
   for (let i = 0; i < L.bichos; i++) {
-    const a = r() * 6.28, d = Math.sqrt(r()) * 0.55;
+    const a = r() * 6.28, d = 0.25 + r() * 0.4;
     J.bichos.push({ x: E[0] + Math.cos(a) * d * E[2], y: E[1] + Math.sin(a) * d * (E[3] + E[4]) / 2, vx: (r() - 0.5) * 2, vy: (r() - 0.5) * 2, t: r() * 6, tipo: r() < 0.5 ? "bicho_verde" : "bicho_violeta", s: 1, muere: 0 });
   }
   // caries en dientes que no tengan comida encima ni sean el diente flojo
