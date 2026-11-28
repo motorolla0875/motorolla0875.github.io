@@ -229,7 +229,7 @@ function armarNivel(n) {
   const r = rnd(n + 7), flojo = [6, 14, 20, 28].includes(n);
   const quien = flojo ? "nene" : (n % 2 ? "nena" : "nene");
   const L = { quien, tareas: [], bichos: 0, vel: 1, sarro: 0, caries: 0, comida: 0 };
-  const fijos = [["espejo", "comida"], ["bichos"], ["sarro"], ["comida", "sarro"], ["bichos", "agua"], ["caries"]];
+  const fijos = [["espejo", "comida"], ["comida", "sarro"], ["sarro"], ["espejo", "comida", "agua"], ["bichos", "agua"], ["caries"]];
   let t;
   if (n < fijos.length) t = fijos[n].slice();
   else {
@@ -240,7 +240,7 @@ function armarNivel(n) {
   }
   if (flojo) t = t.filter(x => x !== "caries").concat(["flojo", "agua"]);
   const d = Math.min(1, n / 26);
-  if (t.includes("comida")) L.comida = n < 3 ? 2 : 3;
+  if (t.includes("comida")) L.comida = n < 1 ? 2 : 3;
   if (t.includes("bichos")) { L.bichos = Math.round(2 + d * 5); L.vel = 0.5 + d * 1.5; }
   if (t.includes("sarro")) L.sarro = 0.35 + d * 0.4;
   if (t.includes("caries")) { L.caries = n < 10 ? 1 : n < 20 ? 2 : 3; t = t.filter(x => x !== "caries").concat(["torno", "relleno", "lampara"]); }
