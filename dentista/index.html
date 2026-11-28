@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Dientes Felices</title>
+<meta name="description" content="Atendé a los pacientes del consultorio: sacá la comida, atrapá los bichitos, cepillá el sarro y arreglá las caries.">
+<meta name="theme-color" content="#bfe8ff">
+<link rel="icon" href="img/nene_carafeliz.webp">
+<style>
+@font-face{font-family:'Fredoka';font-weight:500;font-display:swap;src:url(fonts/fredoka-500.woff2) format('woff2')}
+@font-face{font-family:'Fredoka';font-weight:600;font-display:swap;src:url(fonts/fredoka-600.woff2) format('woff2')}
+@font-face{font-family:'Fredoka';font-weight:700;font-display:swap;src:url(fonts/fredoka-700.woff2) format('woff2')}
+:root{
+  --azul:#2fa8f5; --azul-osc:#1677c4; --menta:#3fd3a8; --menta-osc:#1f9c79; --rosa:#ff6fa8; --rosa-osc:#d63f7d;
+  --crema:#f4fbff; --tinta:#173a5c; --suave:#5b7d9c; --oro:#ffc43d; --oro-osc:#d99412; --banner:0px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#bfe8ff;overflow:hidden;font-family:Fredoka,system-ui,sans-serif;color:var(--tinta);-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{position:fixed;left:50%;top:0;transform:translateX(-50%);width:min(100vw,calc((100dvh - var(--banner)) * 0.5625));height:calc(100dvh - var(--banner));overflow:hidden;background:var(--crema)}
+.pant{position:absolute;inset:0;display:none;flex-direction:column}
+.pant.on{display:flex}
+.fondo{position:absolute;inset:0;background-size:cover;background-position:center}
+button{font-family:inherit;border:0;cursor:pointer;color:inherit}
+.btn{background:linear-gradient(#5cc2ff,var(--azul));color:#fff;font-weight:700;font-size:clamp(20px,6.2vw,30px);padding:.5em 1.6em;border-radius:999px;box-shadow:0 6px 0 var(--azul-osc),0 10px 18px rgba(20,70,120,.25);letter-spacing:.02em;transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--azul-osc)}
+.btn.verde{background:linear-gradient(#6be6c2,var(--menta));box-shadow:0 6px 0 var(--menta-osc),0 10px 18px rgba(20,90,70,.25)}
+.btn.rosa{background:linear-gradient(#ff95c0,var(--rosa));box-shadow:0 6px 0 var(--rosa-osc),0 10px 18px rgba(140,30,80,.25)}
+.btn.chico{font-size:clamp(16px,4.6vw,22px);padding:.45em 1.1em}
+.redondo{width:48px;height:48px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 3px 0 rgba(20,70,120,.22);flex:0 0 auto}
+.redondo svg{width:26px;height:26px}
+.monedas{display:flex;align-items:center;gap:6px;background:#fff;border-radius:999px;padding:5px 14px 5px 6px;font-weight:700;font-size:20px;box-shadow:0 3px 0 rgba(20,70,120,.2)}
+.monedas svg{width:28px;height:28px}
+.barra{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 8px}
+
+/* titulo */
+#titulo .marca{position:relative;z-index:2;text-align:center;margin-top:calc(env(safe-area-inset-top,0px) + 3vh)}
+#titulo h1{margin:0;font-size:clamp(44px,14vw,70px);line-height:.92;color:#fff;font-weight:700;text-shadow:0 4px 0 var(--azul-osc),0 8px 0 rgba(10,40,80,.25);-webkit-text-stroke:2px var(--azul-osc);paint-order:stroke fill}
+#titulo h1 span{display:block;color:#fff6a8;-webkit-text-stroke-color:var(--rosa-osc);text-shadow:0 4px 0 var(--rosa-osc),0 8px 0 rgba(80,10,40,.25)}
+#titulo .sub{display:inline-block;margin-top:10px;background:var(--menta);color:#fff;font-weight:600;font-size:clamp(16px,4.8vw,22px);padding:4px 16px;border-radius:999px;box-shadow:0 3px 0 var(--menta-osc)}
+#titulo .dra{position:absolute;right:2%;bottom:20%;height:40%;z-index:2;filter:drop-shadow(0 8px 10px rgba(10,40,80,.3))}
+#titulo .pac{position:absolute;left:4%;bottom:24%;width:34%;z-index:2;border-radius:50%;border:5px solid #fff;box-shadow:0 8px 16px rgba(10,40,80,.3);animation:flota 3s ease-in-out infinite}
+@keyframes flota{50%{transform:translateY(-8px) rotate(-2deg)}}
+#titulo .abajo{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 4%);display:flex;flex-direction:column;align-items:center;gap:14px;z-index:3}
+#titulo .ajustes{display:flex;gap:12px}
+.idioma{font-weight:700;font-size:16px}
+
+/* niveles */
+#niveles{background:linear-gradient(#dff3ff,#e5fff6)}
+#niveles h2,#tienda h2{margin:0;font-size:26px}
+.grilla{flex:1;overflow-y:auto;padding:8px 16px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-content:start}
+.nivel{aspect-ratio:1;border-radius:22px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:700;font-size:22px;box-shadow:0 4px 0 rgba(20,70,120,.22);position:relative;overflow:hidden;padding:4px}
+.nivel img{width:54%;border-radius:50%;background:#e8f6ff}
+.nivel .est{display:flex;gap:1px}
+.nivel .est svg{width:15px;height:15px}
+.nivel .n{position:absolute;top:4px;left:8px;font-size:16px;color:var(--suave)}
+.nivel.cerrado{background:#dde8f0;color:#9ab;box-shadow:none}
+.nivel.cerrado img{filter:grayscale(1) opacity(.35)}
+.nivel.actual{outline:4px solid var(--rosa);animation:latido 1.4s ease-in-out infinite}
+@keyframes latido{50%{transform:scale(1.05)}}
+
+/* sala */
+#sala .tarjeta{position:relative;z-index:2;margin:auto 18px 22%;background:rgba(255,255,255,.95);border-radius:28px;padding:18px 18px 22px;text-align:center;box-shadow:0 10px 30px rgba(10,40,80,.25)}
+#sala .num{display:inline-block;background:var(--rosa);color:#fff;font-weight:700;padding:3px 16px;border-radius:999px;font-size:18px}
+#sala .cara{width:42%;border-radius:50%;border:5px solid #fff;box-shadow:0 6px 16px rgba(10,40,80,.25);margin:10px auto 4px;display:block;background:#e8f6ff}
+#sala h2{margin:4px 0 8px;font-size:clamp(24px,7.5vw,34px);line-height:1.1}
+#sala .tareas{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+#sala .tareas img{width:46px;height:46px;object-fit:contain;background:#e8f6ff;border-radius:14px;padding:5px}
+#sala .dra{position:absolute;left:0;bottom:calc(env(safe-area-inset-bottom,0px));height:26%;z-index:3;pointer-events:none}
+
+/* juego */
+#juego{background:#dff3ff}
+#juego .fondo{filter:blur(3px) brightness(1.05);transform:scale(1.06);opacity:.85}
+#pasos{display:flex;gap:5px;flex-wrap:nowrap;overflow:hidden}
+.paso{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.75);display:grid;place-items:center;position:relative;flex:0 0 auto}
+.paso img{width:30px;height:30px;object-fit:contain;opacity:.55}
+.paso.ahora{background:#fff;outline:3px solid var(--rosa)}
+.paso.ahora img{opacity:1}
+.paso.hecho{background:var(--menta)}
+.paso.hecho img{opacity:.35}
+.paso.hecho::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/26px no-repeat}
+#mesa{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;z-index:2}
+#lienzo{width:100%;aspect-ratio:744/670;display:block;touch-action:none;border-radius:28px}
+#cursor{position:absolute;left:0;top:0;width:34%;max-width:170px;pointer-events:none;z-index:5;display:none;filter:drop-shadow(0 6px 6px rgba(10,40,80,.3))}
+#ayuda{position:relative;z-index:3;display:flex;align-items:flex-end;gap:6px;padding:0 10px}
+#ayuda img{height:clamp(84px,14dvh,130px);flex:0 0 auto}
+#ayuda .globo{background:#fff;border-radius:20px 20px 20px 4px;padding:10px 14px;font-weight:600;font-size:clamp(16px,4.6vw,20px);box-shadow:0 4px 12px rgba(10,40,80,.2);margin-bottom:24px;flex:1;line-height:1.2}
+#herr{position:relative;z-index:3;background:#fff;border-radius:26px 26px 0 0;box-shadow:0 -6px 20px rgba(10,40,80,.15);padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);display:flex;align-items:center;gap:12px}
+#herrBtn{width:84px;height:84px;border-radius:24px;background:#e8f6ff;display:grid;place-items:center;outline:4px solid var(--rosa);animation:latido 1.4s ease-in-out infinite;flex:0 0 auto}
+#herrBtn img{width:72px;height:72px;object-fit:contain}
+#herr .prog{flex:1}
+#herr .prog .t{font-weight:700;font-size:18px;margin-bottom:6px}
+#herr .prog .b{height:16px;border-radius:999px;background:#e3eef6;overflow:hidden}
+#herr .prog .b i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--menta),var(--azul));transition:width .15s}
+
+/* resultado */
+.capa{position:absolute;inset:0;z-index:8;display:none;align-items:center;justify-content:center;background:rgba(10,40,80,.45)}
+.capa.on{display:flex}
+.capa .caja{background:#fff;border-radius:30px;margin:0 20px;padding:20px 18px 22px;text-align:center;width:100%;max-width:400px;box-shadow:0 14px 40px rgba(10,30,60,.4)}
+#resultado .cara{width:46%;border-radius:50%;border:5px solid #fff;box-shadow:0 6px 16px rgba(10,40,80,.25);margin:-70px auto 6px;display:block;background:#e8f6ff}
+#resultado h2{margin:0 0 4px;font-size:clamp(28px,8.5vw,38px)}
+.estrellas{display:flex;justify-content:center;gap:6px;margin:4px 0 8px}
+.estrellas svg{width:60px;height:60px;transform:scale(0);transition:transform .4s cubic-bezier(.3,1.8,.5,1)}
+.estrellas svg.on{transform:scale(1)}
+.estrellas svg:nth-child(2){margin-top:-14px}
+.gano{display:flex;justify-content:center;align-items:center;gap:6px;font-size:24px;font-weight:700;margin-bottom:14px}
+.gano svg{width:32px;height:32px}
+.botones{display:flex;flex-direction:column;gap:12px;align-items:center}
+#raton .caja img{height:200px;margin-top:-90px;filter:drop-shadow(0 8px 10px rgba(10,40,80,.3))}
+#raton h2{margin:6px 0 4px;font-size:28px}
+#raton p{margin:0 0 14px;font-size:18px;color:var(--suave);font-weight:500}
+
+/* tienda */
+#tienda{background:linear-gradient(#dff3ff,#ffe8f3)}
+#tienda .lista{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:10px 16px 24px;align-content:start}
+.cep{background:#fff;border-radius:24px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 4px 0 rgba(20,70,120,.2);border:3px solid transparent;font-weight:700}
+.cep img{width:80%;aspect-ratio:1;object-fit:contain}
+.cep.puesto{border-color:var(--menta);background:#e9fff7}
+.cep .precio{display:flex;align-items:center;gap:4px;background:var(--tinta);color:#fff;padding:3px 12px 3px 5px;border-radius:999px;font-size:16px}
+.cep .precio svg{width:20px;height:20px}
+.cep .ok{color:var(--menta-osc);font-size:16px}
+#prueba{position:absolute;inset:0;z-index:12;display:none;flex-direction:column;align-items:center;justify-content:center;background:#0e2033;color:#fff;font-weight:600;font-size:22px}
+#prueba.on{display:flex}
+#aviso{position:absolute;left:50%;top:16%;transform:translateX(-50%);background:var(--tinta);color:#fff;padding:10px 18px;border-radius:999px;font-weight:600;z-index:9;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+#aviso.on{opacity:1}
+#carga{position:absolute;inset:0;z-index:20;background:var(--crema);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-weight:600}
+#carga img{width:120px;border-radius:50%}
+#carga .barra-c{width:60%;height:14px;border-radius:999px;background:#d7ecfa;overflow:hidden}
+#carga .barra-c i{display:block;height:100%;width:0;background:var(--azul);transition:width .2s}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="carga"><img src="img/nene_carafeliz.webp" alt=""><div class="barra-c"><i></i></div></div>
+
+  <section class="pant" id="titulo">
+    <div class="fondo" style="background-image:url(img/fo_fachada.webp)"></div>
+    <div class="marca"><h1 id="tit1"></h1><div class="sub" data-t="sub"></div></div>
+    <img class="pac" src="img/nena_carafeliz.webp" alt="">
+    <img class="dra" src="img/dra.webp" alt="">
+    <div class="abajo"><button class="btn" id="bJugar" data-t="jugar"></button>
+      <div class="ajustes">
+        <button class="redondo" id="bTienda" aria-label="Tienda"></button>
+        <button class="redondo" id="bSonido" aria-label="Sonido"></button>
+        <button class="redondo" id="bMusica" aria-label="Música"></button>
+        <button class="redondo idioma" id="bIdioma" aria-label="Idioma">ES</button>
+      </div></div>
+  </section>
+
+  <section class="pant" id="niveles">
+    <div class="barra"><button class="redondo" id="bVolverTitulo" aria-label="Volver"></button><h2 data-t="pacientes"></h2><div class="monedas mon"></div></div>
+    <div class="grilla" id="grilla"></div>
+  </section>
+
+  <section class="pant" id="sala">
+    <div class="fondo" style="background-image:url(img/fo_sala.webp)"></div>
+    <div class="barra"><button class="redondo" id="bVolverNiv" aria-label="Volver"></button><div class="monedas mon"></div></div>
+    <div class="tarjeta">
+      <span class="num" id="salaNum"></span>
+      <img class="cara" id="salaCara" alt="">
+      <h2 id="salaTit"></h2>
+      <div class="tareas" id="salaTareas"></div>
+      <button class="btn verde" id="bAtender" data-t="atender"></button>
+    </div>
+    <img class="dra" src="img/dra.webp" alt="">
+  </section>
+
+  <section class="pant" id="juego">
+    <div class="fondo" style="background-image:url(img/fo_consultorio.webp)"></div>
+    <div class="barra"><button class="redondo" id="bSalir" aria-label="Volver"></button><div id="pasos"></div><div class="monedas mon"></div></div>
+    <div id="mesa"><canvas id="lienzo" width="744" height="670"></canvas></div>
+    <div id="ayuda"><img id="ayudaDra" src="img/dra.webp" alt=""><div class="globo" id="ayudaTxt"></div></div>
+    <div id="herr"><button id="herrBtn" aria-label="Herramienta"><img id="herrImg" alt=""></button><div class="prog"><div class="t" id="herrNom"></div><div class="b"><i id="herrBar"></i></div></div></div>
+    <img id="cursor" alt="">
+  </section>
+
+  <section class="pant" id="tienda">
+    <div class="barra"><button class="redondo" id="bVolverTienda" aria-label="Volver"></button><h2 data-t="tienda"></h2><div class="monedas mon"></div></div>
+    <div class="lista" id="cepillos"></div>
+  </section>
+
+  <div class="capa" id="resultado"><div class="caja">
+    <img class="cara" id="resCara" alt="">
+    <h2 id="resTit"></h2>
+    <div class="estrellas" id="resEst"></div>
+    <div class="gano" id="resGano"></div>
+    <div class="botones" id="resBotones"></div>
+  </div></div>
+  <div class="capa" id="raton"><div class="caja">
+    <img src="img/raton.webp" alt="">
+    <h2 data-t="ratonTit"></h2>
+    <p id="ratonTxt"></p>
+    <button class="btn verde" id="ratonOk" data-t="gracias"></button>
+  </div></div>
+  <div class="capa" id="video"><div class="caja">
+    <div id="videoTit" style="font-weight:700;font-size:23px;margin:4px 0"></div>
+    <div id="videoTxt" style="font-weight:500;font-size:17px;color:var(--suave)"></div>
+    <div class="botones" style="margin-top:16px"><button class="btn verde" id="videoSi"></button><button class="btn chico rosa" id="videoNo" data-t="no"></button></div>
+  </div></div>
+  <div id="prueba"><div>Anuncio de prueba</div><div id="pruebaSeg" style="font-size:44px;font-weight:700;margin-top:10px">3</div></div>
+  <div id="aviso"></div>
+</div>
+
+<script>
+"use strict";
+// ═══════════════════════ DIENTES FELICES ═══════════════════════
+// Llega un paciente con la boca sucia. Paso a paso, con cada herramienta:
+// espejo, pinza (comida), aspiradora (bichitos), cepillo (sarro), torno + relleno + luz (caries),
+// pinza (diente flojo) y agua (enjuague). Al terminar: estrellas y monedas.
+
+const $ = id => document.getElementById(id);
+
+// ───── datos de los pacientes (coordenadas en la imagen de 1024 x 1024) ─────
+const PAC = {"nene":{"caries":[[559,646],[466,647],[552,807],[476,807],[617,791],[622,634],[404,637],[415,796],[364,759],[667,757]],"comida":[["nene_comida0",487,630,133,96],["nene_comida1",602,733,44,33],["nene_comida2",440,769,61,64]],"elipse":[513,700,222,112,142],"flojo":[518,626,83,78]},"nena":{"caries":[[558,647],[469,648],[406,642],[621,642],[537,793],[477,792],[391,751]],"comida":[["nena_comida0",467,654,120,76],["nena_comida1",573,741,41,35],["nena_comida2",414,749,71,67]],"elipse":[512,702,186,104,114]}};
+const IMG_LIMPIO = { nene: "nene_limpio", nena: "nena_limpia" };
+const VISTA = [140, 330, 744, 670];          // parte de la cara que se ve en el juego
+// herramientas: imagen y punta (fracción de la imagen) donde trabaja
+const HERR = {
+  espejo: { img: "espejo", punta: [0.14, 0.12] }, comida: { img: "pinza", punta: [0.97, 0.03] }, bichos: { img: "aspira", punta: [0.93, 0.06] },
+  sarro: { img: "cepillo", punta: [0.8, 0.16] }, torno: { img: "torno", punta: [0.92, 0.07] }, relleno: { img: "relleno", punta: [0.05, 0.95] },
+  lampara: { img: "lampara", punta: [0.84, 0.08] }, flojo: { img: "pinza", punta: [0.97, 0.03] }, agua: { img: "agua", punta: [0.95, 0.14] },
+};
+const ORDEN = ["espejo", "comida", "bichos", "sarro", "torno", "relleno", "lampara", "flojo", "agua"];
+
+// ───── niveles ─────
+const NIVELES = 30;
+function rnd(seed) { let s = seed * 9301 + 49297; return () => { s = (s * 9301 + 49297) % 233280; return s / 233280; }; }
+function armarNivel(n) {
+  const r = rnd(n + 7), flojo = [6, 14, 20, 28].includes(n);
+  const quien = flojo ? "nene" : (n % 2 ? "nena" : "nene");
+  const L = { quien, tareas: [], bichos: 0, vel: 1, sarro: 0, caries: 0, comida: 0 };
+  const fijos = [["espejo", "comida"], ["bichos"], ["sarro"], ["comida", "sarro"], ["bichos", "agua"], ["caries"]];
+  let t;
+  if (n < fijos.length) t = fijos[n].slice();
+  else {
+    const pool = ["comida", "bichos", "sarro", "caries"].sort(() => r() - 0.5);
+    t = pool.slice(0, n < 12 ? 2 : n < 20 ? 3 : 4);
+    if (r() < 0.25) t.push("espejo");
+    t.push("agua");
+  }
+  if (flojo) t = t.filter(x => x !== "caries").concat(["flojo", "agua"]);
+  const d = Math.min(1, n / 26);
+  if (t.includes("comida")) L.comida = n < 3 ? 2 : 3;
+  if (t.includes("bichos")) { L.bichos = Math.round(2 + d * 5); L.vel = 0.8 + d * 1.6; }
+  if (t.includes("sarro")) L.sarro = 0.45 + d * 0.55;
+  if (t.includes("caries")) { L.caries = n < 10 ? 1 : n < 20 ? 2 : 3; t = t.filter(x => x !== "caries").concat(["torno", "relleno", "lampara"]); }
+  L.tareas = ORDEN.filter(x => t.includes(x));
+  return L;
+}
+const NIV = Array.from({ length: NIVELES }, (_, n) => armarNivel(n));
+
+// ───── cepillos de la tienda ─────
+const CEPILLOS = [["celeste", 0, 0], ["rosa", 120, 80], ["violeta", 80, 80], ["verde", -60, 100], ["naranja", 170, 120], ["dorado", 205, 200]];
+
+// ───── textos ─────
+const TX = {
+  es: { tit: ["Dientes", "Felices"], nombre: "Dientes Felices", sub: "Juego de dentista", jugar: "Jugar", pacientes: "Pacientes", tienda: "Cepillos", atender: "Atender",
+    paciente: "Paciente {0}", nombres: { nene: "Tomi", nena: "Sofi" }, viene: "¡Hola, {0}!",
+    pasos: { espejo: ["Espejito", "Revisá toda la boca con el espejito"], comida: ["Pinza", "Sacá la comida de los dientes con la pinza"], bichos: ["Aspiradora", "¡Atrapá los bichitos con la aspiradora!"],
+      sarro: ["Cepillo", "Cepillá todas las manchas amarillas"], torno: ["Torno", "Limpiá la caries con el torno"], relleno: ["Relleno", "Tocá cada agujerito para rellenarlo"],
+      lampara: ["Luz azul", "Pasá la luz azul por cada relleno"], flojo: ["Pinza", "¡Agarrá el diente flojo y tirá!"], agua: ["Agua", "Enjuagá toda la boca con agua"] },
+    res: ["", "¡Bien!", "¡Muy bien!", "¡Perfecto!"], siguiente: "Siguiente", repetir: "Otra vez", menu: "Pacientes", doble: "Duplicar con video",
+    ratonTit: "¡El Ratón Pérez!", ratonTxt: "Se llevó el diente y te dejó {0} monedas.", gracias: "¡Gracias!",
+    no: "No", comprar: "Comprar", usar: "Usar", puesto: "En uso", videoTit: "¡Te faltan monedas!", videoTxt: "Mirá un video y te regalamos {0} monedas.", videoBtn: "Ver video", sinVideo: "No hay videos ahora. Probá en un rato.", gano: "¡Ganaste {0} monedas!" },
+  en: { tit: ["Happy", "Teeth"], nombre: "Happy Teeth", sub: "Dentist game", jugar: "Play", pacientes: "Patients", tienda: "Toothbrushes", atender: "Start",
+    paciente: "Patient {0}", nombres: { nene: "Tommy", nena: "Sophie" }, viene: "Hi, {0}!",
+    pasos: { espejo: ["Mirror", "Check the whole mouth with the mirror"], comida: ["Tweezers", "Take the food out with the tweezers"], bichos: ["Suction", "Catch the germs with the suction!"],
+      sarro: ["Brush", "Brush away all the yellow stains"], torno: ["Drill", "Clean the cavity with the drill"], relleno: ["Filling", "Tap each little hole to fill it"],
+      lampara: ["Blue light", "Shine the blue light on each filling"], flojo: ["Tweezers", "Grab the loose tooth and pull!"], agua: ["Water", "Rinse the whole mouth with water"] },
+    res: ["", "Good!", "Great!", "Perfect!"], siguiente: "Next", repetir: "Again", menu: "Patients", doble: "Double with a video",
+    ratonTit: "The Tooth Mouse!", ratonTxt: "He took the tooth and left you {0} coins.", gracias: "Thanks!",
+    no: "No", comprar: "Buy", usar: "Use", puesto: "In use", videoTit: "Not enough coins!", videoTxt: "Watch a video and get {0} free coins.", videoBtn: "Watch video", sinVideo: "No videos right now. Try again later.", gano: "You got {0} coins!" },
+  pt: { tit: ["Dentes", "Felizes"], nombre: "Dentes Felizes", sub: "Jogo de dentista", jugar: "Jogar", pacientes: "Pacientes", tienda: "Escovas", atender: "Atender",
+    paciente: "Paciente {0}", nombres: { nene: "Tomi", nena: "Sofi" }, viene: "Oi, {0}!",
+    pasos: { espejo: ["Espelho", "Examine a boca toda com o espelhinho"], comida: ["Pinça", "Tire a comida dos dentes com a pinça"], bichos: ["Sugador", "Pegue os bichinhos com o sugador!"],
+      sarro: ["Escova", "Escove todas as manchas amarelas"], torno: ["Broca", "Limpe a cárie com a broca"], relleno: ["Restauração", "Toque cada buraquinho para preencher"],
+      lampara: ["Luz azul", "Passe a luz azul em cada restauração"], flojo: ["Pinça", "Pegue o dente mole e puxe!"], agua: ["Água", "Enxágue a boca toda com água"] },
+    res: ["", "Bom!", "Muito bem!", "Perfeito!"], siguiente: "Próximo", repetir: "De novo", menu: "Pacientes", doble: "Dobrar com vídeo",
+    ratonTit: "O Ratinho do dente!", ratonTxt: "Ele levou o dente e deixou {0} moedas.", gracias: "Obrigado!",
+    no: "Não", comprar: "Comprar", usar: "Usar", puesto: "Em uso", videoTit: "Faltam moedas!", videoTxt: "Assista a um vídeo e ganhe {0} moedas.", videoBtn: "Ver vídeo", sinVideo: "Sem vídeos agora. Tente mais tarde.", gano: "Você ganhou {0} moedas!" },
+};
+let idioma = "en";
+const T = (k, ...a) => { let s = TX[idioma][k]; a.forEach((v, i) => { s = s.replace("{" + i + "}", v); }); return s; };
+
+// ───── guardado ─────
+const GUARDA = "dientes-felices-v1";
+let prog = { estrellas: {}, monedas: 0, cepillos: ["celeste"], cepillo: "celeste", sonido: true, musica: true, idioma: null };
+try { const g = JSON.parse(localStorage.getItem(GUARDA) || "null"); if (g) Object.assign(prog, g); } catch (e) {}
+function guardar() { try { localStorage.setItem(GUARDA, JSON.stringify(prog)); } catch (e) {} }
+const nivelActual = () => { let n = 0; while (n < NIVELES && (prog.estrellas[n] || 0) >= 1) n++; return Math.min(n, NIVELES - 1); };
+const filtroCepillo = () => { const c = CEPILLOS.find(c => c[0] === prog.cepillo) || CEPILLOS[0]; return c[1] ? `hue-rotate(${c[1]}deg) saturate(${c[0] === "dorado" ? 2.2 : 1.4})` : "none"; };
+
+// ───── íconos dibujados ─────
+const ICO = {
+  estrella: (on = true) => `<svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z" fill="${on ? "#ffc43d" : "#dbe6ee"}" stroke="${on ? "#d99412" : "#c2d2de"}" stroke-width="1.4" stroke-linejoin="round"/></svg>`,
+  moneda: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffc43d" stroke="#d99412" stroke-width="1.6"/><circle cx="12" cy="12" r="6.3" fill="none" stroke="#fff3c4" stroke-width="1.6"/><path d="M12 8.2v7.6" stroke="#d99412" stroke-width="2" stroke-linecap="round"/></svg>`,
+  volver: `<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="#1677c4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  candado: `<svg viewBox="0 0 24 24" width="34" height="34"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="#9ab0c0"/><path d="M8 10.5V8a4 4 0 018 0v2.5" fill="none" stroke="#9ab0c0" stroke-width="2.4"/></svg>`,
+  sonido: on => `<svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="#1677c4"/>${on ? '<path d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11" fill="none" stroke="#1677c4" stroke-width="2" stroke-linecap="round"/>' : '<path d="M15.5 9.5l5 5M20.5 9.5l-5 5" stroke="#d63f7d" stroke-width="2.2" stroke-linecap="round"/>'}</svg>`,
+  musica: on => `<svg viewBox="0 0 24 24"><path d="M9 17.5V6l10-2v11.5" fill="none" stroke="#1f9c79" stroke-width="2"/><circle cx="7" cy="17.5" r="2.6" fill="#1f9c79"/><circle cx="17" cy="15.5" r="2.6" fill="#1f9c79"/>${on ? "" : '<path d="M4 4l16 16" stroke="#d63f7d" stroke-width="2.4" stroke-linecap="round"/>'}</svg>`,
+  tienda: `<svg viewBox="0 0 24 24"><rect x="9.2" y="8" width="5.6" height="14" rx="2.8" fill="#2fa8f5"/><rect x="8" y="2" width="8" height="7" rx="2" fill="#fff" stroke="#2fa8f5" stroke-width="1.6"/><path d="M10 3.5v4M12 3.5v4M14 3.5v4" stroke="#9fd8ff" stroke-width="1.2"/></svg>`,
+};
+
+// ───── sonidos y música ─────
+let ac = null; const BUF = {};
+const SFX = ["toque", "compra", "monedas", "gana", "mal", "listo", "llega", "cepillo", "pinza", "miedo", "risa", "agua", "aspira", "torno", "lampara", "plop", "pop", "brillo"];
+function audio() {
+  if (!ac) {
+    try {
+      ac = new (window.AudioContext || window.webkitAudioContext)();
+      for (const n of SFX) fetch("snd/" + n + ".mp3").then(r => r.arrayBuffer()).then(b => ac.decodeAudioData(b, d => { BUF[n] = d; })).catch(() => {});
+    } catch (e) {}
+  }
+  if (ac && ac.state === "suspended") ac.resume();
+  musicaSeguir();
+}
+function sfx(n, vol = 0.7, vel = 1) {
+  if (!prog.sonido || !ac || !BUF[n]) return null;
+  const s = ac.createBufferSource(), g = ac.createGain();
+  s.buffer = BUF[n]; s.playbackRate.value = vel; g.gain.value = vol; s.connect(g); g.connect(ac.destination); s.start(); return s;
+}
+// sonido en loop mientras se usa una herramienta
+let loopSnd = null, loopNom = "";
+function loop(n, vol = 0.5) {
+  if (loopNom === n) return; loopStop();
+  if (!prog.sonido || !ac || !BUF[n]) return;
+  const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = BUF[n]; s.loop = true; g.gain.value = vol; s.connect(g); g.connect(ac.destination); s.start();
+  loopSnd = s; loopNom = n;
+}
+function loopStop() { if (loopSnd) { try { loopSnd.stop(); } catch (e) {} } loopSnd = null; loopNom = ""; }
+const MUSICA = { menu: new Audio("snd/musica-menu.mp3"), juego: new Audio("snd/musica-juego.mp3") };
+for (const m of Object.values(MUSICA)) { m.loop = true; m.volume = 0.35; m.preload = "auto"; }
+const FESTEJO = new Audio("snd/festejo.mp3"); FESTEJO.volume = 0.6;
+let musicaQuiere = "menu";
+function musicaSeguir() {
+  for (const [k, m] of Object.entries(MUSICA)) {
+    const debe = prog.musica && k === musicaQuiere && !document.hidden && !enAnuncio;
+    if (debe && m.paused) m.play().catch(() => {});
+    if (!debe && !m.paused) m.pause();
+  }
+}
+function musica(cual) { if (musicaQuiere !== cual) { musicaQuiere = cual; if (MUSICA[cual]) MUSICA[cual].currentTime = 0; } musicaSeguir(); }
+document.addEventListener("visibilitychange", () => { musicaSeguir(); if (document.hidden) loopStop(); });
+document.addEventListener("pointerdown", audio, { capture: true });
+
+// ───── imágenes ─────
+const IM = {};
+function img(n) { return IM[n]; }
+
+// ───── pantallas ─────
+function mostrar(id) { document.querySelectorAll(".pant").forEach(s => s.classList.toggle("on", s.id === id)); if (id !== "juego") { jugando = false; loopStop(); } }
+function aviso(txt) { const a = $("aviso"); a.textContent = txt; a.classList.add("on"); clearTimeout(aviso.t); aviso.t = setTimeout(() => a.classList.remove("on"), 1700); }
+function monedas() { document.querySelectorAll(".mon").forEach(el => { el.innerHTML = ICO.moneda + `<span>${prog.monedas}</span>`; }); }
+function aplicarIdioma() {
+  document.documentElement.lang = idioma;
+  document.querySelectorAll("[data-t]").forEach(el => { el.textContent = T(el.dataset.t); });
+  $("tit1").innerHTML = `${TX[idioma].tit[0]}<span>${TX[idioma].tit[1]}</span>`;
+  document.title = T("nombre"); $("bIdioma").textContent = idioma.toUpperCase();
+}
+function iconosAjustes() { $("bSonido").innerHTML = ICO.sonido(prog.sonido); $("bMusica").innerHTML = ICO.musica(prog.musica); $("bTienda").innerHTML = ICO.tienda; }
+
+function irTitulo() { mostrar("titulo"); musica("menu"); }
+function irNiveles() {
+  monedas(); const act = nivelActual();
+  $("grilla").innerHTML = NIV.map((L, n) => {
+    const est = prog.estrellas[n] || 0, abierto = n <= act;
+    return `<button class="nivel ${abierto ? "" : "cerrado"} ${n === act ? "actual" : ""}" data-n="${n}">
+      <span class="n">${n + 1}</span>${abierto ? `<img src="img/${L.quien}_${est ? "carafeliz" : "cara"}.webp" alt="">
+      <div class="est">${[0, 1, 2].map(i => ICO.estrella(i < est)).join("")}</div>` : ICO.candado}</button>`; }).join("");
+  mostrar("niveles"); musica("menu");
+  const a = $("grilla").querySelector(".actual"); if (a) a.scrollIntoView({ block: "center" });
+}
+let nivel = 0;
+function irSala(n) {
+  nivel = n; monedas(); const L = NIV[n];
+  $("salaNum").textContent = T("paciente", n + 1);
+  $("salaCara").src = `img/${L.quien}_cara.webp`;
+  $("salaTit").textContent = T("viene", TX[idioma].nombres[L.quien]);
+  $("salaTareas").innerHTML = L.tareas.map(t => `<img src="img/${HERR[t].img}.webp" alt="">`).join("");
+  mostrar("sala"); musica("menu"); setTimeout(() => sfx("miedo", 0.5), 250);
+}
+
+// ───── TRATAMIENTO ─────
+const cv = $("lienzo"), cx = cv.getContext("2d");
+const sarroCv = document.createElement("canvas"); sarroCv.width = sarroCv.height = 1024; const sx = sarroCv.getContext("2d");
+const chico = document.createElement("canvas"); chico.width = chico.height = 128; const chx = chico.getContext("2d", { willReadFrequently: true });
+const PUNTOS = {};   // puntos de los dientes (para el sarro)
+let J = null, jugando = false;
+
+function puntosDientes(q) {
+  if (PUNTOS[q]) return PUNTOS[q];
+  const c = document.createElement("canvas"); c.width = c.height = 256; const x = c.getContext("2d"); x.drawImage(img(q + "_dientes"), 0, 0, 256, 256);
+  const d = x.getImageData(0, 0, 256, 256).data, out = [];
+  for (let y = 0; y < 256; y += 2) for (let X = 0; X < 256; X += 2) if (d[(y * 256 + X) * 4] > 128) out.push([X * 4 + 2, y * 4 + 2]);
+  return (PUNTOS[q] = out);
+}
+function contarSarro() {
+  chx.clearRect(0, 0, 128, 128); chx.drawImage(sarroCv, 0, 0, 128, 128);
+  const d = chx.getImageData(0, 0, 128, 128).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 40) n++; return n;
+}
+function dibujarSarro(q, cant, r) {
+  sx.clearRect(0, 0, 1024, 1024); sx.globalCompositeOperation = "source-over";
+  const P = puntosDientes(q), blobs = Math.round(8 + cant * 22);
+  for (let i = 0; i < blobs; i++) {
+    const [x, y] = P[Math.floor(r() * P.length)];
+    for (let k = 0; k < 5; k++) {
+      const rr = 10 + r() * 20, ox = (r() - 0.5) * 34, oy = (r() - 0.5) * 22;
+      sx.fillStyle = `rgba(${200 + r() * 30 | 0},${168 + r() * 30 | 0},${50 + r() * 40 | 0},0.9)`;
+      sx.beginPath(); sx.ellipse(x + ox, y + oy, rr, rr * 0.8, r() * 3, 0, 7); sx.fill();
+    }
+    sx.fillStyle = "rgba(150,110,30,.55)";
+    for (let k = 0; k < 3; k++) { sx.beginPath(); sx.arc(x + (r() - 0.5) * 30, y + (r() - 0.5) * 20, 3 + r() * 4, 0, 7); sx.fill(); }
+  }
+  sx.globalCompositeOperation = "destination-in"; sx.drawImage(img(q + "_dientes"), 0, 0, 1024, 1024); sx.globalCompositeOperation = "source-over";
+}
+
+function empezar() {
+  const L = NIV[nivel], q = L.quien, P = PAC[q], r = rnd(nivel * 31 + 3);
+  const E = P.elipse;
+  J = { L, q, P, r, paso: 0, t0: performance.now(), prog: 0, base: L.tareas.includes("flojo") ? "nene_flojo" : IMG_LIMPIO[q],
+    comida: P.comida.slice(0, L.comida).map(([n, x, y, w, h]) => ({ n, x, y, w, h, fuera: 0 })),
+    bichos: [], caries: [], diente: null, part: [], brillo: 0, fin: false, punta: null, apretado: false, recorrido: 0, sarro0: 1 };
+  // bichitos dentro de la boca
+  for (let i = 0; i < L.bichos; i++) {
+    const a = r() * 6.28, d = Math.sqrt(r()) * 0.55;
+    J.bichos.push({ x: E[0] + Math.cos(a) * d * E[2], y: E[1] + Math.sin(a) * d * (E[3] + E[4]) / 2, vx: (r() - 0.5) * 2, vy: (r() - 0.5) * 2, t: r() * 6, tipo: r() < 0.5 ? "bicho_verde" : "bicho_violeta", s: 1, muere: 0 });
+  }
+  // caries en dientes que no tengan comida encima ni sean el diente flojo
+  const libres = P.caries.filter(([x, y]) => !J.comida.some(c => x > c.x - 20 && x < c.x + c.w + 20 && y > c.y - 20 && y < c.y + c.h + 20) &&
+    !(P.flojo && L.tareas.includes("flojo") && x > P.flojo[0] - 20 && x < P.flojo[0] + P.flojo[2] + 20 && y > P.flojo[1] - 20 && y < P.flojo[1] + P.flojo[3] + 20));
+  for (let i = 0; i < L.caries && i < libres.length; i++) J.caries.push({ x: libres[i][0], y: libres[i][1], etapa: 0, p: 0, seed: r() * 10 });
+  if (L.tareas.includes("flojo")) { const [x, y, w, h] = P.flojo; J.diente = { x, y, w, h, dx: 0, dy: 0, agarrado: false, fuera: false, vuela: 0 }; }
+  if (L.sarro) dibujarSarro(q, L.sarro, r); else sx.clearRect(0, 0, 1024, 1024);
+  J.sarro0 = Math.max(1, contarSarro());
+  $("pasos").innerHTML = L.tareas.map((t, i) => `<div class="paso" data-i="${i}"><img src="img/${HERR[t].img}.webp" alt=""></div>`).join("");
+  monedas(); mostrar("juego"); musica("juego"); jugando = true; ponerPaso(0);
+  requestAnimationFrame(cuadro);
+}
+function pasoActual() { return J.L.tareas[J.paso]; }
+function ponerPaso(i) {
+  J.paso = i; J.prog = 0; J.recorrido = 0;
+  [...$("pasos").children].forEach((el, k) => { el.className = "paso" + (k < i ? " hecho" : k === i ? " ahora" : ""); });
+  const t = pasoActual(); if (!t) return;
+  const [nom, txt] = TX[idioma].pasos[t];
+  $("herrImg").src = `img/${HERR[t].img}.webp`; $("herrImg").style.filter = t === "sarro" ? filtroCepillo() : "none";
+  $("cursor").src = `img/${HERR[t].img}.webp`; $("cursor").style.filter = (t === "sarro" ? filtroCepillo() + " " : "") + "drop-shadow(0 6px 6px rgba(10,40,80,.3))";
+  $("herrNom").textContent = nom; $("ayudaTxt").textContent = txt; $("ayudaDra").src = "img/dra.webp";
+  barra();
+}
+function barra() { $("herrBar").style.width = Math.round(Math.min(1, J.prog) * 100) + "%"; }
+function pasoListo() {
+  loopStop(); sfx("listo", 0.7); sfx("brillo", 0.5);
+  $("ayudaDra").src = "img/dra_ok.webp";
+  for (let i = 0; i < 14; i++) chispa(J.P.elipse[0] + (Math.random() - 0.5) * 300, J.P.elipse[1] + (Math.random() - 0.5) * 160);
+  if (J.paso + 1 >= J.L.tareas.length) { J.fin = true; setTimeout(terminar, 900); return; }
+  const sig = J.paso + 1; J.prog = 1; barra(); setTimeout(() => { if (J && !J.fin) ponerPaso(sig); }, 650);
+  J.paso += 0.5;   // pausa entre pasos (mientras tanto no se puede usar la herramienta)
+}
+
+// partículas
+function chispa(x, y, tipo = "brillo") { J.part.push({ x, y, vx: (Math.random() - 0.5) * 3, vy: -1 - Math.random() * 2.5, v: 1, tipo, r: 6 + Math.random() * 8 }); }
+
+// coordenadas
+function aImagen(e) {
+  const b = cv.getBoundingClientRect();
+  return [VISTA[0] + (e.clientX - b.left) / b.width * VISTA[2], VISTA[1] + (e.clientY - b.top) / b.height * VISTA[3]];
+}
+const LEVANTE = 70;   // la herramienta trabaja un poco arriba del dedo, así se ve
+function enBoca(x, y, m = 1) { const E = J.P.elipse; const ry = y < E[1] ? E[3] : E[4]; return ((x - E[0]) / (E[2] * m)) ** 2 + ((y - E[1]) / (ry * m)) ** 2 <= 1; }
+
+function moverCursor(e) {
+  const c = $("cursor"), t = pasoActual(); if (!t || J.paso % 1) { c.style.display = "none"; return; }
+  const app = $("app").getBoundingClientRect(), w = c.offsetWidth || 120, h = w * (c.naturalHeight / (c.naturalWidth || 1));
+  const [px, py] = HERR[t].punta;
+  c.style.display = "block";
+  c.style.transform = `translate(${e.clientX - app.left - px * w}px,${e.clientY - app.top - LEVANTE * cv.getBoundingClientRect().width / VISTA[2] - py * h}px)`;
+}
+let ultimo = null;
+cv.addEventListener("pointerdown", e => { if (!jugando || !J || J.fin) return; cv.setPointerCapture(e.pointerId); J.apretado = true; ultimo = null; J.ux = J.uy = null; usar(e, true); });
+cv.addEventListener("pointermove", e => { if (!jugando || !J || !J.apretado) return; usar(e, false); });
+const soltar = () => { if (!J) return; J.apretado = false; J.punta = null; $("cursor").style.display = "none"; loopStop(); if (J.diente && J.diente.agarrado && !J.diente.fuera) { J.diente.agarrado = false; J.diente.dx = J.diente.dy = 0; J.base = "nene_flojo"; } };
+cv.addEventListener("pointerup", soltar); cv.addEventListener("pointercancel", soltar);
+
+function usar(e, inicio) {
+  const t = pasoActual(); if (!t || J.paso % 1 || J.fin) return;
+  moverCursor(e);
+  let [x, y] = aImagen(e); y -= LEVANTE;
+  const mov = ultimo ? Math.hypot(x - ultimo[0], y - ultimo[1]) : 0; ultimo = [x, y]; J.punta = [x, y];
+  if (t === "espejo") {
+    if (enBoca(x, y, 1.1)) { J.recorrido += mov; J.prog = J.recorrido / 1600; if (Math.random() < 0.15) chispa(x, y); }
+    if (J.prog >= 1) pasoListo(); barra();
+  } else if (t === "comida") {
+    for (const c of J.comida) if (!c.fuera && x > c.x - 25 && x < c.x + c.w + 25 && y > c.y - 25 && y < c.y + c.h + 25) {
+      c.fuera = 0.001; c.vx = (c.x + c.w / 2 < 512 ? -1 : 1) * 9; c.vy = -12; sfx("pinza", 0.8); setTimeout(() => sfx("plop", 0.5, 1.3), 150);
+    }
+    J.prog = J.comida.filter(c => c.fuera).length / J.comida.length; barra();
+    if (J.prog >= 1) pasoListo();
+  } else if (t === "bichos") {
+    if (inicio || mov) loop("aspira", 0.35);
+    for (const b of J.bichos) if (!b.muere && Math.hypot(b.x - x, b.y - y) < 75) { b.muere = 0.001; b.hx = x; b.hy = y; sfx("plop", 0.7); }
+  } else if (t === "sarro") {
+    if (mov > 0.5 || inicio) {
+      loop("cepillo", 0.6);
+      sx.globalCompositeOperation = "destination-out"; sx.lineCap = "round"; sx.lineWidth = 84;
+      sx.beginPath(); sx.moveTo(x - (mov ? (x - (J.ux || x)) : 0), y - (mov ? (y - (J.uy || y)) : 0)); sx.lineTo(x, y); sx.stroke();
+      sx.beginPath(); sx.arc(x, y, 42, 0, 7); sx.fill(); sx.globalCompositeOperation = "source-over";
+      if (Math.random() < 0.3) chispa(x, y, "espuma");
+      J.ux = x; J.uy = y;
+      if (!J.cuenta || performance.now() - J.cuenta > 150) { J.cuenta = performance.now(); J.prog = 1 - contarSarro() / J.sarro0; if (J.prog > 0.86) { sx.clearRect(0, 0, 1024, 1024); J.prog = 1; pasoListo(); } barra(); }
+    }
+  } else if (t === "torno" || t === "lampara") {
+    const etapa = t === "torno" ? 0 : 2;
+    let toca = false;
+    for (const c of J.caries) if (c.etapa === etapa && Math.hypot(c.x - x, c.y - y) < 48) {
+      toca = true; c.p += t === "torno" ? Math.max(mov, 2) / 220 : 1 / 50;
+      if (Math.random() < 0.4) chispa(c.x, c.y, t === "torno" ? "polvo" : "luz");
+      if (c.p >= 1) { c.etapa++; c.p = 0; sfx(t === "torno" ? "plop" : "brillo", 0.6); }
+    }
+    if (toca) loop(t, 0.45); else loopStop();
+    const todas = J.caries.length, lis = J.caries.filter(c => c.etapa > etapa).length;
+    J.prog = (lis + J.caries.filter(c => c.etapa === etapa).reduce((s, c) => s + Math.min(1, c.p), 0)) / todas; barra();
+    if (lis === todas) pasoListo();
+  } else if (t === "relleno") {
+    for (const c of J.caries) if (c.etapa === 1 && Math.hypot(c.x - x, c.y - y) < 50) { c.etapa = 2; c.p = 0; sfx("pop", 0.5, 1.4); for (let i = 0; i < 5; i++) chispa(c.x, c.y); }
+    J.prog = J.caries.filter(c => c.etapa >= 2).length / J.caries.length; barra();
+    if (J.prog >= 1) pasoListo();
+  } else if (t === "flojo") {
+    const d = J.diente;
+    if (!d.agarrado && !d.fuera && x > d.x - 30 && x < d.x + d.w + 30 && y > d.y - 30 && y < d.y + d.h + 40) { d.agarrado = true; d.ax = x; d.ay = y; J.base = "nene_hueco"; sfx("pinza", 0.8); }
+    if (d.agarrado && !d.fuera) {
+      d.dx = (x - d.ax) * 0.55; d.dy = (y - d.ay) * 0.55; const dist = Math.hypot(d.dx, d.dy);
+      J.prog = Math.min(1, dist / 70); barra();
+      if (dist > 70) { d.fuera = true; d.agarrado = false; d.vuela = 1; d.vx = d.dx * 0.25; d.vy = -14; sfx("pop", 0.9); J.raton = true; setTimeout(() => sfx("risa", 0.6), 400); pasoListo(); }
+    }
+  } else if (t === "agua") {
+    if (enBoca(x, y, 1.05)) { loop("agua", 0.5); J.recorrido += Math.max(mov, 1); J.prog = J.recorrido / 1900; for (let i = 0; i < 2; i++) chispa(x + (Math.random() - 0.5) * 30, y, "gota"); }
+    else loopStop();
+    barra(); if (J.prog >= 1) pasoListo();
+  }
+}
+
+// ───── dibujo de cada cuadro ─────
+function cuadro(ts) {
+  if (!jugando || !J) return;
+  const t = pasoActual(), now = ts / 1000;
+  cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height);
+  cx.setTransform(1, 0, 0, 1, -VISTA[0], -VISTA[1]);
+  cx.drawImage(img(J.fin && J.q === "nena" && J.brillo > 0.6 ? "nena_feliz" : J.base), 0, 0, 1024, 1024);
+  // caries
+  for (const c of J.caries) {
+    if (c.etapa === 0) { const g = cx.createRadialGradient(c.x, c.y, 2, c.x, c.y, 20); g.addColorStop(0, "#2a1408"); g.addColorStop(0.6, "#5a3214"); g.addColorStop(1, "rgba(120,80,30,0)");
+      cx.fillStyle = g; cx.beginPath(); cx.ellipse(c.x, c.y, 19 * (1 - c.p * 0.3), 16, c.seed, 0, 7); cx.fill(); }
+    else if (c.etapa === 1) { cx.fillStyle = "#c79a9a"; cx.beginPath(); cx.ellipse(c.x, c.y, 14, 12, 0, 0, 7); cx.fill(); cx.fillStyle = "#9c6b6f"; cx.beginPath(); cx.ellipse(c.x, c.y + 2, 9, 7, 0, 0, 7); cx.fill(); }
+    else if (c.etapa === 2) { const g = cx.createRadialGradient(c.x - 4, c.y - 4, 1, c.x, c.y, 16); g.addColorStop(0, "#fff"); g.addColorStop(1, `rgba(${170 + c.p * 80},${220 + c.p * 30},255,1)`);
+      cx.fillStyle = g; cx.beginPath(); cx.ellipse(c.x, c.y, 15, 13, 0, 0, 7); cx.fill(); }
+  }
+  // sarro
+  cx.drawImage(sarroCv, 0, 0);
+  // comida
+  for (const c of J.comida) {
+    if (c.fuera) { if (c.fuera > 1.4) continue; c.fuera += 0.03; c.x += c.vx; c.y += c.vy; c.vy += 1.1; cx.globalAlpha = Math.max(0, 1 - c.fuera / 1.4); }
+    cx.drawImage(img(c.n), c.x, c.y, c.w, c.h); cx.globalAlpha = 1;
+  }
+  // diente flojo
+  if (J.diente && J.base !== "nene_flojo") {
+    const d = J.diente;
+    if (d.vuela) { d.vuela += 0.03; d.dx += d.vx; d.dy += d.vy; d.vy += 1.2; }
+    if (!d.vuela || d.vuela < 2) { cx.save(); cx.translate(d.x + d.w / 2 + d.dx, d.y + d.h / 2 + d.dy); cx.rotate(d.dx / 200 + (d.vuela ? d.vuela * 2 : 0)); cx.drawImage(img("nene_dienteflojo"), -d.w / 2, -d.h / 2, d.w, d.h); cx.restore(); }
+  } else if (J.diente && t === "flojo" && !J.apretado) {   // se mueve un poquito para que se note que está flojo
+    const d = J.diente, a = Math.sin(now * 9) * 0.05; cx.save(); cx.beginPath(); cx.rect(d.x - 4, d.y - 4, d.w + 8, d.h + 8); cx.clip();
+    cx.drawImage(img("nene_hueco"), 0, 0, 1024, 1024); cx.translate(d.x + d.w / 2, d.y); cx.rotate(a); cx.drawImage(img("nene_dienteflojo"), -d.w / 2, 0, d.w, d.h); cx.restore();
+  }
+  // bichitos
+  const E = J.P.elipse;
+  let vivos = 0;
+  for (const b of J.bichos) {
+    if (b.muere) {
+      if (b.muere > 1) continue; b.muere += 0.05;
+      b.x += (b.hx - b.x) * 0.25; b.y += (b.hy - b.y) * 0.25; b.s = 1 - b.muere;
+      cx.save(); cx.translate(b.x, b.y); cx.rotate(b.muere * 8); const s = 110 * b.s; cx.drawImage(img("bicho_aplastado"), -s / 2, -s / 2 * 0.8, s, s * 0.8); cx.restore(); continue;
+    }
+    vivos++;
+    b.t += 0.05; const v = J.L.vel * (t === "bichos" ? 1 : 0.35);
+    b.vx += (Math.random() - 0.5) * 0.5 * v; b.vy += (Math.random() - 0.5) * 0.5 * v;
+    if (t === "bichos" && J.punta) { const dx = b.x - J.punta[0], dy = b.y - J.punta[1], d = Math.hypot(dx, dy); if (d < 160) { b.vx += dx / d * 0.35 * v; b.vy += dy / d * 0.35 * v; } }
+    const sp = Math.hypot(b.vx, b.vy), mx = 2.2 * v; if (sp > mx) { b.vx *= mx / sp; b.vy *= mx / sp; }
+    b.x += b.vx; b.y += b.vy;
+    if (!enBoca(b.x, b.y, 0.72)) { b.vx += (E[0] - b.x) * 0.01; b.vy += (E[1] - b.y) * 0.02; b.x += (E[0] - b.x) * 0.02; b.y += (E[1] - b.y) * 0.02; }
+    const s = 108 + Math.sin(b.t * 2) * 6;
+    cx.save(); cx.translate(b.x, b.y + Math.sin(b.t * 3) * 3); cx.rotate(Math.sin(b.t) * 0.15); cx.drawImage(img(b.tipo), -s / 2, -s / 2 * 0.88, s, s * 0.88); cx.restore();
+  }
+  if (t === "bichos" && J.paso % 1 === 0) {
+    J.prog = 1 - vivos / Math.max(1, J.bichos.length); barra();
+    if (vivos === 0 && J.bichos.every(b => b.muere > 1)) pasoListo();
+  }
+  // luz de la lámpara / punta de la herramienta
+  if (J.punta && t === "lampara") { const g = cx.createRadialGradient(J.punta[0], J.punta[1], 0, J.punta[0], J.punta[1], 60); g.addColorStop(0, "rgba(120,200,255,.55)"); g.addColorStop(1, "rgba(120,200,255,0)"); cx.fillStyle = g; cx.beginPath(); cx.arc(J.punta[0], J.punta[1], 60, 0, 7); cx.fill(); }
+  // partículas
+  for (const p of J.part) {
+    p.x += p.vx; p.y += p.vy; p.v -= 0.025;
+    if (p.tipo === "gota") { p.vy += 0.35; cx.fillStyle = `rgba(150,215,255,${p.v})`; cx.beginPath(); cx.ellipse(p.x, p.y, p.r * 0.6, p.r * 0.8, 0, 0, 7); cx.fill(); }
+    else if (p.tipo === "espuma") { cx.fillStyle = `rgba(255,255,255,${p.v * 0.9})`; cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 7); cx.fill(); cx.strokeStyle = `rgba(160,215,255,${p.v})`; cx.lineWidth = 2; cx.stroke(); }
+    else if (p.tipo === "polvo") { cx.fillStyle = `rgba(120,80,40,${p.v})`; cx.beginPath(); cx.arc(p.x, p.y, p.r * 0.4, 0, 7); cx.fill(); }
+    else { estrellita(p.x, p.y, p.r * p.v + 2, p.tipo === "luz" ? `rgba(130,200,255,${p.v})` : `rgba(255,236,140,${p.v})`); }
+  }
+  J.part = J.part.filter(p => p.v > 0);
+  if (J.fin) { J.brillo = Math.min(1, J.brillo + 0.02); if (Math.random() < 0.5) chispa(E[0] + (Math.random() - 0.5) * E[2] * 1.6, E[1] + (Math.random() - 0.5) * 180); }
+  requestAnimationFrame(cuadro);
+}
+function estrellita(x, y, r, c) { cx.fillStyle = c; cx.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rr = i % 2 ? r * 0.35 : r; cx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } cx.closePath(); cx.fill(); }
+
+// ───── final ─────
+function terminar() {
+  loopStop(); sfx("risa", 0.7);
+  const seg = (performance.now() - J.t0) / 1000, meta = 6 + J.L.tareas.length * 7;
+  const est = seg <= meta ? 3 : seg <= meta * 1.7 ? 2 : 1;
+  const antes = prog.estrellas[nivel] || 0;
+  const gano = est * 15 + (antes === 0 ? 10 : 0);
+  prog.monedas += gano; prog.estrellas[nivel] = Math.max(antes, est); guardar();
+  ultimaGanancia = gano;
+  $("resCara").src = `img/${J.q}_carafeliz.webp`;
+  $("resTit").textContent = TX[idioma].res[est];
+  $("resEst").innerHTML = [0, 1, 2].map(i => ICO.estrella(i < est)).join("");
+  $("resGano").innerHTML = `+${gano} ${ICO.moneda}`;
+  const sig = nivel < NIVELES - 1;
+  $("resBotones").innerHTML = `<button class="btn rosa chico" data-a="doble">${T("doble")}</button>` + (sig ? `<button class="btn verde" data-a="sig">${T("siguiente")}</button>` : "") +
+    `<button class="btn chico" data-a="otra">${T("repetir")}</button>`;
+  setTimeout(() => {
+    $("resultado").classList.add("on");
+    [...$("resEst").children].forEach((s, i) => setTimeout(() => { s.classList.add("on"); if (i < est) sfx("monedas", 0.6, 1 + i * 0.15); }, 300 + i * 350));
+    MUSICA.juego.pause(); musicaQuiere = "";
+    if (prog.musica) { FESTEJO.currentTime = 0; FESTEJO.play().catch(() => {}); } else sfx("gana", 0.8);
+  }, 1200);
+}
+let ultimaGanancia = 0;
+const RATON = 50;
+$("resBotones").onclick = async e => {
+  const b = e.target.closest("button"); if (!b) return; sfx("toque", 0.6);
+  if (b.dataset.a === "doble") {
+    b.disabled = true; FESTEJO.pause();
+    const ok = await verVideoPremio();
+    if (!ok) { aviso(T("sinVideo")); b.disabled = false; return; }
+    prog.monedas += ultimaGanancia; guardar(); monedas(); sfx("monedas", 0.8); aviso(T("gano", ultimaGanancia)); b.remove();
+    $("resGano").innerHTML = `+${ultimaGanancia * 2} ${ICO.moneda}`; return;
+  }
+  FESTEJO.pause(); $("resultado").classList.remove("on");
+  const ir = () => { if (b.dataset.a === "sig") irSala(nivel + 1); else irSala(nivel); };
+  if (J && J.raton) { J.raton = false; prog.monedas += RATON; guardar(); monedas(); $("ratonTxt").textContent = T("ratonTxt", RATON); $("raton").classList.add("on"); sfx("monedas", 0.8); $("ratonOk").onclick = () => { sfx("toque"); $("raton").classList.remove("on"); ir(); }; }
+  else ir();
+};
+
+// ───── tienda de cepillos ─────
+function irTienda() {
+  monedas();
+  $("cepillos").innerHTML = CEPILLOS.map(([id, hue, precio]) => {
+    const tengo = prog.cepillos.includes(id), puesto = prog.cepillo === id, f = hue ? `hue-rotate(${hue}deg) saturate(${id === "dorado" ? 2.2 : 1.4})` : "none";
+    return `<button class="cep ${puesto ? "puesto" : ""}" data-id="${id}"><img src="img/cepillo.webp" style="filter:${f}" alt="">
+      ${puesto ? `<span class="ok">${T("puesto")}</span>` : tengo ? `<span class="ok">${T("usar")}</span>` : `<span class="precio">${ICO.moneda}${precio}</span>`}</button>`; }).join("");
+  mostrar("tienda"); musica("menu");
+}
+$("cepillos").onclick = e => {
+  const b = e.target.closest(".cep"); if (!b) return; const c = CEPILLOS.find(c => c[0] === b.dataset.id);
+  if (prog.cepillos.includes(c[0])) { prog.cepillo = c[0]; guardar(); sfx("toque"); irTienda(); return; }
+  if (prog.monedas < c[2]) { ofrecerVideo(); return; }
+  prog.monedas -= c[2]; prog.cepillos.push(c[0]); prog.cepillo = c[0]; guardar(); sfx("compra", 0.8); irTienda();
+};
+const PREMIO = 100;
+function ofrecerVideo() {
+  sfx("mal", 0.4); $("videoTit").textContent = T("videoTit"); $("videoTxt").textContent = T("videoTxt", PREMIO);
+  $("videoSi").textContent = `${T("videoBtn")} +${PREMIO}`; $("video").classList.add("on");
+}
+$("videoNo").onclick = () => { $("video").classList.remove("on"); sfx("toque"); };
+$("videoSi").onclick = async () => {
+  $("video").classList.remove("on");
+  const ok = await verVideoPremio(); if (!ok) { aviso(T("sinVideo")); return; }
+  prog.monedas += PREMIO; guardar(); sfx("monedas", 0.8); aviso(T("gano", PREMIO)); irTienda();
+};
+
+// ───── botones ─────
+$("bJugar").onclick = () => { sfx("toque"); irNiveles(); };
+$("bTienda").onclick = () => { sfx("toque"); irTienda(); };
+$("bVolverTitulo").onclick = () => { sfx("toque"); irTitulo(); };
+$("bVolverTienda").onclick = () => { sfx("toque"); irTitulo(); };
+$("bVolverNiv").onclick = () => { sfx("toque"); irNiveles(); };
+$("bSalir").onclick = () => { sfx("toque"); irSala(nivel); };
+$("grilla").onclick = e => { const b = e.target.closest(".nivel"); if (!b || b.classList.contains("cerrado")) return; sfx("toque"); irSala(+b.dataset.n); };
+$("bAtender").onclick = () => { sfx("toque"); antesDeJugar(nivel, empezar); };
+$("bSonido").onclick = () => { prog.sonido = !prog.sonido; guardar(); iconosAjustes(); sfx("toque"); };
+$("bMusica").onclick = () => { prog.musica = !prog.musica; guardar(); iconosAjustes(); musicaSeguir(); };
+$("bIdioma").onclick = () => { const l = ["es", "en", "pt"]; idioma = l[(l.indexOf(idioma) + 1) % 3]; prog.idioma = idioma; guardar(); aplicarIdioma(); sfx("toque"); };
+["bVolverTitulo", "bVolverNiv", "bSalir", "bVolverTienda"].forEach(i => { $(i).innerHTML = ICO.volver; });
+
+// ───── PUBLICIDAD (Google AdMob, solo en la app de Android) ─────
+// Banner abajo siempre. Anuncio de pantalla completa cada vez que se atiende a un paciente. Video con premio para duplicar monedas o comprar cepillos.
+// AHORA SON ANUNCIOS DE PRUEBA de Google. Para producción: cambiar ADS por los bloques reales de AdMob.
+const ADS = { banner: "ca-app-pub-3940256099942544/6300978111", inter: "ca-app-pub-3940256099942544/1033173712", premio: "ca-app-pub-3940256099942544/5224354917" };
+const AM = () => { const C = window.Capacitor; return C && C.isNativePlatform && C.isNativePlatform() && C.getPlatform() === "android" && C.Plugins && C.Plugins.AdMob ? C.Plugins.AdMob : null; };
+let interCargado = false, enAnuncio = false;
+function cargarInter() { const M = AM(); if (!M) return; M.prepareInterstitial({ adId: ADS.inter }).then(() => { interCargado = true; }).catch(() => { interCargado = false; setTimeout(cargarInter, 30000); }); }
+async function arrancarAnuncios() {
+  const M = AM(); if (!M) return;
+  try { const ci = await M.requestConsentInfo(); if (ci && ci.isConsentFormAvailable && ci.status === "REQUIRED") await M.showConsentForm(); } catch (e) {}
+  try { await M.initialize({}); } catch (e) { return; }
+  M.addListener("bannerAdSizeChanged", z => { document.documentElement.style.setProperty("--banner", (z && z.height ? z.height : 0) + "px"); });
+  M.showBanner({ adId: ADS.banner, adSize: "ADAPTIVE_BANNER", position: "BOTTOM_CENTER", margin: 0 }).catch(() => {});
+  cargarInter(); cargarPremio();
+}
+let premioCargado = false;
+function cargarPremio() { const M = AM(); if (!M) return; M.prepareRewardVideoAd({ adId: ADS.premio }).then(() => { premioCargado = true; }).catch(() => { premioCargado = false; setTimeout(cargarPremio, 30000); }); }
+function verVideoPremio() {
+  const M = AM();
+  if (!M) {   // en la web: un anuncio de prueba de 3 segundos
+    return new Promise(ok => { const p = $("prueba"); let n = 3; $("pruebaSeg").textContent = n; p.classList.add("on");
+      const t = setInterval(() => { n--; $("pruebaSeg").textContent = n; if (n <= 0) { clearInterval(t); p.classList.remove("on"); ok(true); } }, 1000); });
+  }
+  return new Promise(async ok => {
+    let dado = false, fin = false; const hs = [];
+    const terminar = r => { if (fin) return; fin = true; hs.forEach(h => { try { h.remove(); } catch (e) {} }); premioCargado = false; enAnuncio = false; cargarPremio(); musicaSeguir(); ok(r); };
+    try {
+      if (!premioCargado) await M.prepareRewardVideoAd({ adId: ADS.premio });
+      enAnuncio = true; musicaSeguir();
+      hs.push(await M.addListener("onRewardedVideoAdReward", () => { dado = true; }));
+      hs.push(await M.addListener("onRewardedVideoAdDismissed", () => terminar(dado)));
+      hs.push(await M.addListener("onRewardedVideoAdFailedToShow", () => terminar(false)));
+      M.showRewardVideoAd().then(() => { dado = true; }).catch(() => terminar(false));
+    } catch (e) { terminar(false); }
+    setTimeout(() => terminar(dado), 150000);
+  });
+}
+async function antesDeJugar(n, seguir) {
+  const M = AM();
+  if (!M || !interCargado) { if (M && !interCargado) cargarInter(); seguir(); return; }
+  if (enAnuncio) return; enAnuncio = true; musicaSeguir();
+  const hs = []; let fin = false;
+  const listo = () => { if (fin) return; fin = true; hs.forEach(h => { try { h.remove(); } catch (e) {} }); interCargado = false; enAnuncio = false; cargarInter(); seguir(); musicaSeguir(); };
+  try {
+    hs.push(await M.addListener("interstitialAdDismissed", listo));
+    hs.push(await M.addListener("interstitialAdFailedToShow", listo));
+    await M.showInterstitial();
+  } catch (e) { listo(); }
+  setTimeout(listo, 120000);
+}
+if (AM()) arrancarAnuncios();
+
+// ───── arranque: precarga ─────
+idioma = prog.idioma || ((navigator.language || "en").slice(0, 2).toLowerCase() === "es" ? "es" : (navigator.language || "").slice(0, 2).toLowerCase() === "pt" ? "pt" : "en");
+aplicarIdioma(); iconosAjustes();
+(function precargar() {
+  const lista = ["nene_limpio", "nene_flojo", "nene_hueco", "nena_limpia", "nena_feliz", "nene_dienteflojo:png", "nene_dientes:png", "nena_dientes:png",
+    "nene_comida0:png", "nene_comida1:png", "nene_comida2:png", "nena_comida0:png", "nena_comida1:png", "nena_comida2:png",
+    "espejo", "pinza", "aspira", "cepillo", "torno", "relleno", "lampara", "agua", "bicho_verde", "bicho_violeta", "bicho_aplastado", "dra", "dra_ok", "raton",
+    "fo_fachada", "fo_sala", "fo_consultorio", "nene_cara", "nena_cara", "nene_carafeliz", "nena_carafeliz"];
+  let ok = 0; const fin = () => { ok++; $("carga").querySelector("i").style.width = (ok / lista.length * 100) + "%";
+    if (ok === lista.length) { $("carga").remove(); irTitulo(); } };
+  lista.forEach(s => { const [n, ext] = s.split(":"); const im = new Image(); im.onload = im.onerror = fin; im.src = `img/${n}.${ext || "webp"}`; IM[n] = im; });
+})();
+
+// para las pruebas automáticas
+window.__df = { get J() { return J; }, get prog() { return prog; }, NIV, irSala, empezar, set nivel(v) { nivel = v; }, ponerPaso, pasoListo };
+</script>
+</body>
+</html>
